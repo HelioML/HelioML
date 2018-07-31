@@ -53,6 +53,21 @@ characters in `generate_textbook.py` (called by `make textbook`), and if you not
 be included in this script, please open an issue
 [at the textbook template issues page](https://github.com/choldgraf/textbook-jekyll-template/issues)
 
+## Differences between Jupyter Notebook markdown and Jekyll Markdown
+
+There aren't too many differences between Jupyter Notebook and Jekyll Markdown,
+but they are annoying and tough to spot when they do arise. Below is a list of
+known differences between these two flavors of markdown and their behavior:
+
+* Jupyter Markdown disables Markdown tables, Jekyll Markdown does not.
+* Because of this, it is **highly recommended** to always wrap your multi-line equations
+  in `$$` blocks.
+* There are some differences in escaping between Jupyter and Jekyll Markdown.
+  This isn't because of the flavor of Jekyll markdown, so much as the fact that
+  Jekyll tries to be clever with escape characters before it builds. Sometimes
+  you need to use *two* escapes in order to make things render properly. Make
+  sure you double-check your output when using escape characters!
+
 ## What if I have an issue or question?
 
 If you've got questions, concerns, or suggestions, please open an issue at

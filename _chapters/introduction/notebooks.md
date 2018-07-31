@@ -34,10 +34,12 @@ $$
 
 or
 
+$$
 \begin{align*}
-\mbox{mean} auto_{detect} \\ \\
+\mbox{use} latex_{style} \\ \\
 math blocks
 \end{align*}
+$$
 
 But make sure you \\$Escape \\$your \\$dollar signs \\$you want to keep!
 
