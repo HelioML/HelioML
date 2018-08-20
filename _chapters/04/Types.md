@@ -17,10 +17,12 @@ Every value has a type, and the built-in `type` function returns the type of the
 One type we have encountered already is a built-in function. Python indicates that the type is a `builtin_function_or_method`; the distinction between a *function* and a *method* is not important at this stage.
 
 
+
 {:.input_area}
 ```python
 type(abs)
 ```
+
 
 
 

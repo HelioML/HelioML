@@ -17,10 +17,12 @@ From an existing string, related strings can be constructed using string methods
 For example, the following method generates an uppercased version of a string.
 
 
+
 {:.input_area}
 ```python
 "loud".upper()
 ```
+
 
 
 
@@ -35,10 +37,12 @@ For example, the following method generates an uppercased version of a string.
 Perhaps the most important method is `replace`, which replaces all instances of a substring within the string. The `replace` method takes two arguments, the text to be replaced and its replacement.
 
 
+
 {:.input_area}
 ```python
 'hitchhiker'.replace('hi', 'ma')
 ```
+
 
 
 
@@ -53,6 +57,7 @@ Perhaps the most important method is `replace`, which replaces all instances of 
 String methods can also be invoked using variable names, as long as those names are bound to strings. So, for instance, the following two-step process generates the word "degrade" starting from "train" by first creating "ingrain" and then applying a second replacement.
 
 
+
 {:.input_area}
 ```python
 s = "train"
@@ -60,6 +65,7 @@ t = s.replace('t', 'ing')
 u = t.replace('in', 'de')
 u
 ```
+
 
 
 
@@ -74,10 +80,12 @@ u
 Note that the line `t = s.replace('t', 'ing')` doesn't change the string `s`, which is still "train".  The method call `s.replace('t', 'ing')` just has a value, which is the string "ingrain".
 
 
+
 {:.input_area}
 ```python
 s
 ```
+
 
 
 

@@ -20,6 +20,7 @@ Computers are designed to perform numerical calculations, but there are some imp
 The type of a number is evident from the way it is displayed: `int` values have no decimal point and `float` values always have a decimal point. 
 
 
+
 {:.input_area}
 ```python
 # Some int values
@@ -29,10 +30,12 @@ The type of a number is evident from the way it is displayed: `int` values have 
 
 
 
+
 {:.output_data_text}
 ```
 2
 ```
+
 
 
 
@@ -45,10 +48,12 @@ The type of a number is evident from the way it is displayed: `int` values have 
 
 
 
+
 {:.output_data_text}
 ```
 4
 ```
+
 
 
 
@@ -61,10 +66,12 @@ The type of a number is evident from the way it is displayed: `int` values have 
 
 
 
+
 {:.output_data_text}
 ```
 -1234567890000000000
 ```
+
 
 
 
@@ -78,6 +85,7 @@ The type of a number is evident from the way it is displayed: `int` values have 
 
 
 
+
 {:.output_data_text}
 ```
 1.2
@@ -86,10 +94,12 @@ The type of a number is evident from the way it is displayed: `int` values have 
 
 
 
+
 {:.input_area}
 ```python
 3.0
 ```
+
 
 
 
@@ -104,10 +114,12 @@ The type of a number is evident from the way it is displayed: `int` values have 
 When a `float` value is combined with an `int` value using some arithmetic operator, then the result is always a `float` value. In most cases, two integers combine to form another integer, but any number (`int` or `float`) divided by another will be a `float` value. Very large or very small `float` values are displayed using scientific notation.
 
 
+
 {:.input_area}
 ```python
 1.5 + 2
 ```
+
 
 
 
@@ -120,10 +132,12 @@ When a `float` value is combined with an `int` value using some arithmetic opera
 
 
 
+
 {:.input_area}
 ```python
 3 / 1
 ```
+
 
 
 
@@ -136,10 +150,12 @@ When a `float` value is combined with an `int` value using some arithmetic opera
 
 
 
+
 {:.input_area}
 ```python
 -12345678900000000000.0
 ```
+
 
 
 
@@ -154,10 +170,12 @@ When a `float` value is combined with an `int` value using some arithmetic opera
 The `type` function can be used to find the type of any number.
 
 
+
 {:.input_area}
 ```python
 type(3)
 ```
+
 
 
 
@@ -170,10 +188,12 @@ int
 
 
 
+
 {:.input_area}
 ```python
 type(3 / 1)
 ```
+
 
 
 
@@ -188,11 +208,13 @@ float
 The `type` of an expression is the type of its final value. So, the `type` function will never indicate that the type of an expression is a name, because names are always evaluated to their assigned values.
 
 
+
 {:.input_area}
 ```python
 x = 3
 type(x) # The type of x is an int, not a name
 ```
+
 
 
 
@@ -205,10 +227,12 @@ int
 
 
 
+
 {:.input_area}
 ```python
 type(x + 2.5)
 ```
+
 
 
 
@@ -231,10 +255,12 @@ Float values are very flexible, but they do have limits.
 The first limit can be observed in two ways. If the result of a computation is a very large number, then it is represented as infinite. If the result is a very small number, then it is represented as zero.
 
 
+
 {:.input_area}
 ```python
 2e306 * 10
 ```
+
 
 
 
@@ -247,10 +273,12 @@ The first limit can be observed in two ways. If the result of a computation is a
 
 
 
+
 {:.input_area}
 ```python
 2e306 * 100
 ```
+
 
 
 
@@ -263,10 +291,12 @@ inf
 
 
 
+
 {:.input_area}
 ```python
 2e-322 / 10
 ```
+
 
 
 
@@ -279,10 +309,12 @@ inf
 
 
 
+
 {:.input_area}
 ```python
 2e-322 / 100
 ```
+
 
 
 
@@ -297,10 +329,12 @@ inf
 The second limit can be observed by an expression that involves numbers with more than 15 significant digits. These extra digits are discarded before any arithmetic is carried out.
 
 
+
 {:.input_area}
 ```python
 0.6666666666666666 - 0.6666666666666666123456789
 ```
+
 
 
 
@@ -315,10 +349,12 @@ The second limit can be observed by an expression that involves numbers with mor
 The third limit can be observed when taking the difference between two expressions that should be equivalent. For example, the expression `2 ** 0.5` computes the square root of 2, but squaring this value does not exactly recover 2.
 
 
+
 {:.input_area}
 ```python
 2 ** 0.5
 ```
+
 
 
 
@@ -331,10 +367,12 @@ The third limit can be observed when taking the difference between two expressio
 
 
 
+
 {:.input_area}
 ```python
 (2 ** 0.5) * (2 ** 0.5)
 ```
+
 
 
 
@@ -347,10 +385,12 @@ The third limit can be observed when taking the difference between two expressio
 
 
 
+
 {:.input_area}
 ```python
 (2 ** 0.5) * (2 ** 0.5) - 2
 ```
+
 
 
 

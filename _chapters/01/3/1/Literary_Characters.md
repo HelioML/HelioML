@@ -15,6 +15,7 @@ redirect_from:
 *The Adventures of Huckleberry Finn* describes a journey that Huck and Jim take along the Mississippi River. Tom Sawyer joins them towards the end as the action heats up. Having loaded the text, we can quickly visualize how many times these characters have each been mentioned at any point in the book.
 
 
+
 {:.input_area}
 ```python
 # Count how many times the names Jim, Tom, and Huck appear in each chapter.
@@ -34,6 +35,7 @@ plots.title('Cumulative Number of Times Each Name Appears', y=1.08);
 ```
 
 
+
 ![png](../../../../images/chapters/01/3/1/Literary_Characters_1_0.png)
 
 
@@ -44,12 +46,14 @@ You can see that Jim is a central character by the large number of times his nam
 *Little Women* is a story of four sisters growing up together during the civil war. In this book, chapter numbers are spelled out and chapter titles are written in all capital letters.
 
 
+
 {:.input_area}
 ```python
 # The chapters of Little Women, in a table
 
 Table().with_column('Chapters', little_women_chapters)
 ```
+
 
 
 
@@ -102,6 +106,7 @@ Table().with_column('Chapters', little_women_chapters)
 We can track the mentions of main characters to learn about the plot of this book as well.  The protagonist Jo interacts with her sisters Meg, Beth, and Amy regularly, up until Chapter 27 when she moves to New York alone.
 
 
+
 {:.input_area}
 ```python
 # Counts of names in the chapters of Little Women
@@ -121,6 +126,7 @@ cum_counts = counts.cumsum().with_column('Chapter', np.arange(1, 48, 1))
 cum_counts.plot(column_for_xticks=5)
 plots.title('Cumulative Number of Times Each Name Appears', y=1.08);
 ```
+
 
 
 ![png](../../../../images/chapters/01/3/1/Literary_Characters_6_0.png)
