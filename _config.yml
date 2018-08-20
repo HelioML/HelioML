@@ -6,7 +6,7 @@ title                    : "HelioML: A book about machine learning, statistics, 
 title_separator          : "-"
 name                     : "Monica Bobra and James Mason"
 description              : ""
-url                      : "https://helioml.github.io/HelioML/" # the base hostname & protocol for your site e.g. "https://mmistakes.github.io"
+url                      : "https://helioml.github.io" # the base hostname & protocol for your site e.g. "https://mmistakes.github.io"
 baseurl                  : "/" # the subpath of your site, e.g. "/blog". Defaults to "/"
 repository               : # GitHub username/repo-name for this site
 teaser                   : # path of fallback teaser image, e.g. "/assets/images/500x300.png"
