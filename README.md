@@ -1,23 +1,9 @@
-# Textbooks with Jupyter and Jekyll
+# HelioML
 
-This repository / website is a template for hosting your own textbook using
-Jupyter Notebooks and Jekyll.
+HelioML is a book about machine learning, statistics, and data mining for heliophysics.
 
-<img src="images/logo/logo.png" width=200 />
+The idea behind the book is to put together a collection of interactive Jupyter notebooks, written in Python, that explicitly shows the reader how to use machine learning techniques on various kinds of heliophysics data sets to reproduce published results. 
 
-Here are some highlights:
+This book is built using markdown and Jupyter notebooks with a website that's based on Jekyll and has a Binder plugin. If you click on any chapter -- for example, Chapter 3-1 -- and then click on the "Interact" button on the top of the page, it will spin up an instance of [Binder](https://mybinder.org). A user can then run, or modify and execute, all the code in the chapter.
 
-* All course content is written in markdown and Jupyter Notebooks, stored in `notebooks/`
-* This site comes packaged with helper scripts to convert these into Jekyll pages (in `scripts/`)
-* Pages can have [Binder](https://mybinder.org) or JupyterHub links automatically added for interactivity.
-* The website itself is based on Jekyll, and is highly extensible and can be freely-hosted on GitHub.
-
-This repository comes with some sample textbook files from the Data 8 course
-for Data Science at UC Berkeley. You can update these materials and all site
-content with your own, and have a Jupyter-based textbook ready to go shortly!
-
-Here are a few links of interest:
-
-* **[A demo of the hosted textbook](http://predictablynoisy.com/textbooks-with-jupyter/ )**
-* **[A short guide to deploying your own textbook](https://predictablynoisy.com/textbooks-with-jupyter/guide/01_overview/)**
-* **[The markdown version of the guide in this repo](_guide/)**
+The format of this book is based on UC Berkeley's Data 8 course, which has a digital-only textbook called [Computational and Inferential Thinking](https://www.inferentialthinking.com/), and built using a workflow developed by [Chris Holdgraf](https://predictablynoisy.com/textbooks-with-jupyter/chapters/introduction/intro).
