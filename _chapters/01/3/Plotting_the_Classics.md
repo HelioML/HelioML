@@ -19,6 +19,7 @@ This example is meant to illustrate some of the broad themes of this text. Don't
 First, we read the text of both books into lists of chapters, called `huck_finn_chapters` and `little_women_chapters`. In Python, a name cannot contain any spaces, and so we will often use an underscore `_` to stand in for a space. The `=` in the lines below give a name on the left to the result of some computation described on the right. A *uniform resource locator* or *URL* is an address on the Internet for some content; in this case, the text of a book. The `#` symbol starts a comment, which is ignored by the computer but helpful for people reading the code.
 
 
+
 {:.input_area}
 ```python
 # Read two books, fast!
@@ -32,7 +33,9 @@ little_women_text = read_url(little_women_url)
 little_women_chapters = little_women_text.split('CHAPTER ')[1:]
 ```
 
+
 While a computer cannot understand the text of a book, it can provide us with some insight into the structure of the text. The name `huck_finn_chapters` is currently bound to a list of all the chapters in the book. We can place them into a table to see how each chapter begins.
+
 
 
 {:.input_area}
@@ -41,6 +44,7 @@ While a computer cannot understand the text of a book, it can provide us with so
 
 Table().with_column('Chapters', huck_finn_chapters)
 ```
+
 
 
 

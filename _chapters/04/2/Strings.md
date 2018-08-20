@@ -17,10 +17,12 @@ Much of the world's data is text, and a piece of text represented in a computer 
 The meaning of an expression depends both upon its structure and the types of values that are being combined. So, for instance, adding two strings together produces another string. This expression is still an addition expression, but it is combining a different type of value.
 
 
+
 {:.input_area}
 ```python
 "data" + "science"
 ```
+
 
 
 
@@ -35,10 +37,12 @@ The meaning of an expression depends both upon its structure and the types of va
 Addition is completely literal; it combines these two strings together without regard for their contents. It doesn't add a space because these are different words; that's up to the programmer (you) to specify.
 
 
+
 {:.input_area}
 ```python
 "data" + " " + "science"
 ```
+
 
 
 
@@ -53,10 +57,12 @@ Addition is completely literal; it combines these two strings together without r
 Single and double quotes can both be used to create strings: `'hi'` and `"hi"` are identical expressions. Double quotes are often preferred because they allow you to include apostrophes inside of strings.
 
 
+
 {:.input_area}
 ```python
 "This won't work with a single-quoted string!"
 ```
+
 
 
 
@@ -73,10 +79,12 @@ Why not? Try it out.
 The `str` function returns a string representation of any value. Using this function, strings can be constructed that have embedded values.
 
 
+
 {:.input_area}
 ```python
 "That's " + str(1 + 1) + ' ' + str(True)
 ```
+
 
 
 

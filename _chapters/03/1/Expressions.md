@@ -18,10 +18,12 @@ Programming languages are much simpler than human languages. Nonetheless, there 
 Programs are made up of *expressions*, which describe to the computer how to combine pieces of data. For example, a multiplication expression consists of a `*` symbol between two numerical expressions. Expressions, such as `3 * 4`, are *evaluated* by the computer. The value (the result of *evaluation*) of the last expression in each cell, `12` in this case, is displayed below the cell.
 
 
+
 {:.input_area}
 ```python
 3 * 4
 ```
+
 
 
 
@@ -36,10 +38,12 @@ Programs are made up of *expressions*, which describe to the computer how to com
 The grammar rules of a programming language are rigid. In Python, the `*` symbol cannot appear twice in a row. The computer will not try to interpret an expression that differs from its prescribed expression structures. Instead, it will show a `SyntaxError` error. The *Syntax* of a language is its set of grammar rules, and a `SyntaxError` indicates that an expression structure doesn't match any of the rules of the language.
 
 
+
 {:.input_area}
 ```python
 3 * * 4
 ```
+
 
 
 {:.output_traceback_line}
@@ -55,10 +59,12 @@ SyntaxError: invalid syntax
 Small changes to an expression can change its meaning entirely. Below, the space between the `*`'s has been removed. Because `**` appears between two numerical expressions, the expression is a well-formed *exponentiation* expression (the first number raised to the power of the second: 3 times 3 times 3 times 3). The symbols `*` and `**` are called *operators*, and the values they combine are called *operands*.
 
 
+
 {:.input_area}
 ```python
 3 ** 4
 ```
+
 
 
 
@@ -84,10 +90,12 @@ Small changes to an expression can change its meaning entirely. Below, the space
 Python expressions obey the same familiar rules of *precedence* as in algebra: multiplication and division occur before addition and subtraction. Parentheses can be used to group together smaller expressions within a larger expression.
 
 
+
 {:.input_area}
 ```python
 1 + 2 * 3 * 4 * 5 / 6 ** 3 + 7 + 8 - 9 + 10
 ```
+
 
 
 
@@ -100,10 +108,12 @@ Python expressions obey the same familiar rules of *precedence* as in algebra: m
 
 
 
+
 {:.input_area}
 ```python
 1 + 2 * (3 * 4 * 5 / 6) ** 3 + 7 + 8 - 9 + 10
 ```
+
 
 
 

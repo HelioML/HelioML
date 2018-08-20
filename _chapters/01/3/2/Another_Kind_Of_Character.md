@@ -17,6 +17,7 @@ In some situations, the relationships between quantities allow us to make predic
 As an example of visualizing information derived from multiple sources, let us first use the computer to get some information that would be tedious to acquire by hand. In the context of novels, the word "character" has a second meaning: a printed symbol such as a letter or number or punctuation symbol. Here, we ask the computer to count the number of characters and the number of periods in each chapter of both *Huckleberry Finn* and *Little Women*.
 
 
+
 {:.input_area}
 ```python
 # In each chapter, count the number of all characters;
@@ -33,13 +34,16 @@ chars_periods_little_women = Table().with_columns([
     ])
 ```
 
+
 Here are the data for *Huckleberry Finn*. Each row of the table corresponds to one chapter of the novel and displays the number of characters as well as the number of periods in the chapter. Not surprisingly, chapters with fewer characters also tend to have fewer periods, in general – the shorter the chapter, the fewer sentences there tend to be, and vice versa. The relation is not entirely predictable, however, as sentences are of varying lengths and can involve other punctuation such as question marks. 
+
 
 
 {:.input_area}
 ```python
 chars_periods_huck_finn
 ```
+
 
 
 
@@ -92,10 +96,12 @@ chars_periods_huck_finn
 Here are the corresponding data for *Little Women*.
 
 
+
 {:.input_area}
 ```python
 chars_periods_little_women
 ```
+
 
 
 
@@ -150,6 +156,7 @@ You can see that the chapters of *Little Women* are in general longer than those
 In the plot below, there is a dot for each chapter in each book. Blue dots correspond to *Huckleberry Finn* and gold dots to *Little Women*. The horizontal axis represents the number of periods and the vertical axis represents the number of characters.
 
 
+
 {:.input_area}
 ```python
 plots.figure(figsize=(6, 6))
@@ -162,6 +169,7 @@ plots.scatter(chars_periods_little_women.column(1),
 plots.xlabel('Number of periods in chapter')
 plots.ylabel('Number of characters in chapter');
 ```
+
 
 
 ![png](../../../../images/chapters/01/3/2/Another_Kind_Of_Character_7_0.png)
