@@ -22,8 +22,8 @@ chapters:
   url: chapters/01/james-intro
 - children:
   - class: level_1
-    title: 2.1 John Snow and the Broad Street Pump
-    url: chapters/02/1/observation-and-visualization-john-snow-and-the-broad-street-pump
+    title: 2.1 cme svm updated for pyastro
+    url: chapters/02/1/cme_svm_updated_for_pyastro
   class: level_0
   title: 2. Monica Intro
   url: chapters/02/Monica-Intro
