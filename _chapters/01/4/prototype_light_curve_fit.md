@@ -1,6 +1,6 @@
 ---
 interact_link: notebooks/01/4/prototype_light_curve_fit.ipynb
-title: '1.4 James' Test'
+title: '1.4 prototype light curve fit'
 permalink: 'chapters/01/4/prototype_light_curve_fit'
 previouschapter:
   url: chapters/01/3/2/Another_Kind_Of_Character
