@@ -15,11 +15,8 @@ chapters:
   url: chapters/introduction/intro
 - children:
   - class: level_1
-    title: 1.1 Introduction
-    url: chapters/01/1/intro
-  - class: level_1
-    title: 1.2 prototype light curve fit
-    url: chapters/01/2/prototype_light_curve_fit
+    title: 1.1 prototype light curve fit
+    url: chapters/01/1/prototype_light_curve_fit
   class: level_0
   title: 1. James Intro
   url: chapters/01/james-intro

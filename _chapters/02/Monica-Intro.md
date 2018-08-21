@@ -1,14 +1,14 @@
 ---
-title: '2. Causality and Experiments'
-permalink: 'chapters/02/causality-and-experiments'
+title: '2. Monica Intro'
+permalink: 'chapters/02/Monica-Intro'
 previouschapter:
-  url: chapters/01/2/prototype_light_curve_fit
-  title: '1.2 prototype light curve fit'
+  url: chapters/01/1/prototype_light_curve_fit
+  title: '1.1 prototype light curve fit'
 nextchapter:
   url: chapters/02/1/observation-and-visualization-john-snow-and-the-broad-street-pump
   title: '2.1 John Snow and the Broad Street Pump'
 redirect_from:
-  - 'chapters/02/causality-and-experiments'
+  - 'chapters/02/monica-intro'
 ---
 Causality and Experiments
 ======================

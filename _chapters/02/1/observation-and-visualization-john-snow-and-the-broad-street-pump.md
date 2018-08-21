@@ -2,11 +2,11 @@
 title: '2.1 John Snow and the Broad Street Pump'
 permalink: 'chapters/02/1/observation-and-visualization-john-snow-and-the-broad-street-pump'
 previouschapter:
-  url: chapters/02/causality-and-experiments
-  title: '2. Causality and Experiments'
+  url: chapters/02/Monica-Intro
+  title: '2. Monica Intro'
 nextchapter:
-  url: chapters/02/2/snow-s-grand-experiment
-  title: '2.2 Snow’s “Grand Experiment”'
+  url: 
+  title: ''
 redirect_from:
   - 'chapters/02/1/observation-and-visualization-john-snow-and-the-broad-street-pump'
 ---
