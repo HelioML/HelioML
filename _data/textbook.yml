@@ -35,6 +35,9 @@ chapters:
   - class: level_2
     title: 1.3.2 Another Kind of Character
     url: chapters/01/3/2/Another_Kind_Of_Character
+  - class: level_1
+    title: 1.4 prototype light curve fit
+    url: chapters/01/4/prototype_light_curve_fit
   class: level_0
   title: 1. Data Science
   url: chapters/01/what-is-data-science
