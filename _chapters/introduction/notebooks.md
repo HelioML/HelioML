@@ -6,8 +6,8 @@ previouschapter:
   url: chapters/introduction/markdown
   title: 'Adding markdown files'
 nextchapter:
-  url: chapters/01/what-is-data-science
-  title: '1. Data Science'
+  url: chapters/01/james-intro
+  title: '1. James Intro'
 redirect_from:
   - 'chapters/introduction/notebooks'
 ---

@@ -1,15 +1,15 @@
 ---
-interact_link: notebooks/01/4/prototype_light_curve_fit.ipynb
-title: '1.4 prototype light curve fit'
-permalink: 'chapters/01/4/prototype_light_curve_fit'
+interact_link: notebooks/01/2/prototype_light_curve_fit.ipynb
+title: '1.2 prototype light curve fit'
+permalink: 'chapters/01/2/prototype_light_curve_fit'
 previouschapter:
-  url: chapters/01/3/2/Another_Kind_Of_Character
-  title: '1.3.2 Another Kind of Character'
+  url: chapters/01/1/intro
+  title: '1.1 Introduction'
 nextchapter:
   url: chapters/02/causality-and-experiments
   title: '2. Causality and Experiments'
 redirect_from:
-  - 'chapters/01/4/prototype-light-curve-fit'
+  - 'chapters/01/2/prototype-light-curve-fit'
 ---
 
 
@@ -103,7 +103,7 @@ plt.errorbar(light_curve_df.index, light_curve_df['irradiance'], yerr=light_curv
 
 
 
-![png](../../../images/chapters/01/4/prototype_light_curve_fit_1_0.png)
+![png](../../../images/chapters/01/2/prototype_light_curve_fit_1_0.png)
 
 
 
@@ -218,7 +218,7 @@ if plots_save_path and np.size(gamma) > 1:
 
 
 
-![png](../../../images/chapters/01/4/prototype_light_curve_fit_6_0.png)
+![png](../../../images/chapters/01/2/prototype_light_curve_fit_6_0.png)
 
 
 
@@ -254,7 +254,7 @@ if plots_save_path:
 
 
 
-![png](../../../images/chapters/01/4/prototype_light_curve_fit_8_0.png)
+![png](../../../images/chapters/01/2/prototype_light_curve_fit_8_0.png)
 
 
 
