@@ -3,93 +3,224 @@ chapters:
 - class: level_0
   title: Home
   url: /
+- class: level_0
+  title: Announcements
+  url: /announcements
+- class: level_0
+  title: Readme
+  url: /README
+- class: level_0
+  title: Index
+  url: /index
+- class: level_0
+  title: Syllabus
+  url: /syllabus
 - children:
+  - class: level_2
+    title: Programming-in-python
+    url: /_chapters/03/programming-in-python
+  - class: level_3
+    title: Expressions
+    url: /_chapters/03/1/Expressions
+  - class: level_3
+    title: Introduction To Tables
+    url: /_chapters/03/4/Introduction_to_Tables
+  - class: level_3
+    title: Calls
+    url: /_chapters/03/3/Calls
+  - class: level_3
+    title: Names
+    url: /_chapters/03/2/Names
+  - class: level_4
+    title: Growth
+    url: /_chapters/03/2/1/Growth
+  - class: level_2
+    title: Types
+    url: /_chapters/04/Types
+  - class: level_3
+    title: Numbers
+    url: /_chapters/04/1/Numbers
+  - class: level_3
+    title: Comparison
+    url: /_chapters/04/3/Comparison
+  - class: level_3
+    title: Strings
+    url: /_chapters/04/2/Strings
+  - class: level_4
+    title: String Methods
+    url: /_chapters/04/2/1/String_Methods
+  - class: level_2
+    title: Causality-and-experiments
+    url: /_chapters/02/causality-and-experiments
+  - class: level_3
+    title: Observation-and-visualization-john-snow-and-the-broad-street-pump
+    url: /_chapters/02/1/observation-and-visualization-john-snow-and-the-broad-street-pump
+  - class: level_3
+    title: Randomization
+    url: /_chapters/02/4/randomization
+  - class: level_3
+    title: Establishing-causality
+    url: /_chapters/02/3/establishing-causality
+  - class: level_3
+    title: Snow-s-grand-experiment
+    url: /_chapters/02/2/snow-s-grand-experiment
+  - class: level_3
+    title: Endnote
+    url: /_chapters/02/5/endnote
+  - class: level_2
+    title: Markdown
+    url: /_chapters/introduction/markdown
+  - class: level_2
+    title: Intro
+    url: /_chapters/introduction/intro
+  - class: level_2
+    title: Notebooks
+    url: /_chapters/introduction/notebooks
+  - class: level_2
+    title: What-is-data-science
+    url: /_chapters/01/what-is-data-science
+  - class: level_3
+    title: Intro
+    url: /_chapters/01/1/intro
+  - class: level_4
+    title: Computational-tools
+    url: /_chapters/01/1/1/computational-tools
+  - class: level_4
+    title: Statistical-techniques
+    url: /_chapters/01/1/2/statistical-techniques
+  - class: level_3
+    title: Plotting The Classics
+    url: /_chapters/01/3/Plotting_the_Classics
+  - class: level_4
+    title: Literary Characters
+    url: /_chapters/01/3/1/Literary_Characters
+  - class: level_4
+    title: Another Kind Of Character
+    url: /_chapters/01/3/2/Another_Kind_Of_Character
+  - class: level_3
+    title: Why-data-science
+    url: /_chapters/01/2/why-data-science
   - class: level_1
-    title: Adding markdown files
-    url: chapters/introduction/markdown
+    title: 2018-02-02-second-announcement
+    url: /_posts/2018-02-02-second-announcement
   - class: level_1
-    title: Adding notebooks
-    url: chapters/introduction/notebooks
+    title: 2018-05-13-introduction
+    url: /_posts/2018-05-13-introduction
+  - class: level_1
+    title: 2018-02-05-third-announcement
+    url: /_posts/2018-02-05-third-announcement
+  - class: level_1
+    title: 2018-01-02-first-announcements
+    url: /_posts/2018-01-02-first-announcements
+  - class: level_1
+    title: Publish
+    url: /_guide/05_publish
+  - class: level_1
+    title: Faq
+    url: /_guide/06_faq
+  - class: level_1
+    title: Setup
+    url: /_guide/02_setup
+  - class: level_1
+    title: Overview
+    url: /_guide/01_overview
+  - class: level_1
+    title: Configure
+    url: /_guide/03_configure
+  - class: level_1
+    title: Advanced
+    url: /_guide/07_advanced
+  - class: level_1
+    title: Build
+    url: /_guide/04_build
+  - class: level_2
+    title: Programming-in-python
+    url: /chapters/03/programming-in-python
+  - class: level_3
+    title: Expressions
+    url: /chapters/03/1/Expressions
+  - class: level_3
+    title: Introduction To Tables
+    url: /chapters/03/4/Introduction_to_Tables
+  - class: level_3
+    title: Calls
+    url: /chapters/03/3/Calls
+  - class: level_3
+    title: Names
+    url: /chapters/03/2/Names
+  - class: level_4
+    title: Growth
+    url: /chapters/03/2/1/Growth
+  - class: level_2
+    title: Types
+    url: /chapters/04/Types
+  - class: level_3
+    title: Numbers
+    url: /chapters/04/1/Numbers
+  - class: level_3
+    title: Comparison
+    url: /chapters/04/3/Comparison
+  - class: level_3
+    title: Strings
+    url: /chapters/04/2/Strings
+  - class: level_4
+    title: String Methods
+    url: /chapters/04/2/1/String_Methods
+  - class: level_2
+    title: Causality-and-experiments
+    url: /chapters/02/causality-and-experiments
+  - class: level_3
+    title: Observation-and-visualization-john-snow-and-the-broad-street-pump
+    url: /chapters/02/1/observation-and-visualization-john-snow-and-the-broad-street-pump
+  - class: level_3
+    title: Randomization
+    url: /chapters/02/4/randomization
+  - class: level_3
+    title: Establishing-causality
+    url: /chapters/02/3/establishing-causality
+  - class: level_3
+    title: Snow-s-grand-experiment
+    url: /chapters/02/2/snow-s-grand-experiment
+  - class: level_3
+    title: Endnote
+    url: /chapters/02/5/endnote
+  - class: level_2
+    title: Markdown
+    url: /chapters/introduction/markdown
+  - class: level_2
+    title: Intro
+    url: /chapters/introduction/intro
+  - class: level_2
+    title: Notebooks
+    url: /chapters/introduction/notebooks
+  - class: level_2
+    title: What-is-data-science
+    url: /chapters/01/what-is-data-science
+  - class: level_3
+    title: Intro
+    url: /chapters/01/1/intro
+  - class: level_4
+    title: Computational-tools
+    url: /chapters/01/1/1/computational-tools
+  - class: level_4
+    title: Statistical-techniques
+    url: /chapters/01/1/2/statistical-techniques
+  - class: level_3
+    title: Prototype Light Curve Fit
+    url: /chapters/01/4/prototype_light_curve_fit
+  - class: level_3
+    title: Plotting The Classics
+    url: /chapters/01/3/Plotting_the_Classics
+  - class: level_4
+    title: Literary Characters
+    url: /chapters/01/3/1/Literary_Characters
+  - class: level_4
+    title: Another Kind Of Character
+    url: /chapters/01/3/2/Another_Kind_Of_Character
+  - class: level_3
+    title: Why-data-science
+    url: /chapters/01/2/why-data-science
   class: level_0
-  title: Quickstart
-  url: chapters/introduction/intro
-- children:
-  - class: level_1
-    title: 1.1 Introduction
-    url: chapters/01/1/intro
-  - class: level_2
-    title: 1.1.1 Computational Tools
-    url: chapters/01/1/1/computational-tools
-  - class: level_2
-    title: 1.1.2 Statistical Techniques
-    url: chapters/01/1/2/statistical-techniques
-  - class: level_1
-    title: 1.2 Why Data Science?
-    url: chapters/01/2/why-data-science
-  - class: level_1
-    title: 1.3 Plotting the Classics
-    url: chapters/01/3/Plotting_the_Classics
-  - class: level_2
-    title: 1.3.1 Literary Characters
-    url: chapters/01/3/1/Literary_Characters
-  - class: level_2
-    title: 1.3.2 Another Kind of Character
-    url: chapters/01/3/2/Another_Kind_Of_Character
-  class: level_0
-  title: 1. Data Science
-  url: chapters/01/what-is-data-science
-- children:
-  - class: level_1
-    title: 2.1 John Snow and the Broad Street Pump
-    url: chapters/02/1/observation-and-visualization-john-snow-and-the-broad-street-pump
-  - class: level_1
-    title: "2.2 Snow\u2019s \u201CGrand Experiment\u201D"
-    url: chapters/02/2/snow-s-grand-experiment
-  - class: level_1
-    title: 2.3 Establishing Causality
-    url: chapters/02/3/establishing-causality
-  - class: level_1
-    title: 2.4 Randomization
-    url: chapters/02/4/randomization
-  - class: level_1
-    title: 2.5 Endnote
-    url: chapters/02/5/endnote
-  class: level_0
-  title: 2. Causality and Experiments
-  url: chapters/02/causality-and-experiments
-- children:
-  - class: level_1
-    title: 3.1 Expressions
-    url: chapters/03/1/Expressions
-  - class: level_1
-    title: 3.2 Names
-    url: chapters/03/2/Names
-  - class: level_2
-    title: '3.2.1 Example: Growth Rates'
-    url: chapters/03/2/1/Growth
-  - class: level_1
-    title: 3.3 Call Expressions
-    url: chapters/03/3/Calls
-  - class: level_1
-    title: 3.4 Introduction to Tables
-    url: chapters/03/4/Introduction_to_Tables
-  class: level_0
-  title: 3. Programming in Python
-  url: chapters/03/programming-in-python
-- children:
-  - class: level_1
-    title: 4.1 Numbers
-    url: chapters/04/1/Numbers
-  - class: level_1
-    title: 4.2 Strings
-    url: chapters/04/2/Strings
-  - class: level_2
-    title: 4.2.1 String Methods
-    url: chapters/04/2/1/String_Methods
-  - class: level_1
-    title: 4.3 Comparisons
-    url: chapters/04/3/Comparison
-  class: level_0
-  title: 4. Data Types
-  url: chapters/04/Types
-first_chapter_url: chapters/introduction/intro
+  title: About
+  url: /about
+first_chapter_url: /announcements
