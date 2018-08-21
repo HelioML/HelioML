@@ -5,6 +5,16 @@ chapters:
   url: /
 - children:
   - class: level_1
+    title: Adding markdown files
+    url: chapters/introduction/markdown
+  - class: level_1
+    title: Adding notebooks
+    url: chapters/introduction/notebooks
+  class: level_0
+  title: Quickstart
+  url: chapters/introduction/intro
+- children:
+  - class: level_1
     title: 1.1 Introduction
     url: chapters/01/1/intro
   - class: level_1
@@ -19,5 +29,5 @@ chapters:
     url: chapters/02/1/observation-and-visualization-john-snow-and-the-broad-street-pump
   class: level_0
   title: 2. Monica Intro
-  url: chapters/02/monica-intro
-first_chapter_url: chapters/01/james-intro
+  url: chapters/02/Monica-Intro
+first_chapter_url: chapters/introduction/intro
