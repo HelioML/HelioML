@@ -2,30 +2,14 @@
 permalink: /
 ---
 
-# Textbooks with Jupyter and Jekyll
+Machine Learning, Statistics, and Data Mining for Heliophysics
+======================================
 
-This repository / website is a template for hosting your own textbook using
-Jupyter Notebooks and Jekyll.
+**By [Monica Bobra](https://web.stanford.edu/~mbobra/) and [James Mason](http://jamespaulmason.strikingly.com/)**
 
-Here are some highlights:
+This is a book about machine learning, statistics, and data mining for heliophysics.
 
-* All course content is written in markdown and Jupyter Notebooks, stored in `notebooks/`
-* This site comes packaged with helper scripts to convert these into Jekyll pages (in `scripts/`)
-* Pages can have [Binder](https://mybinder.org) or JupyterHub links automatically added for interactivity.
-* The website itself is based on Jekyll, and is highly extensible and can be freely-hosted on GitHub.
+This book includes a collection of interactive Jupyter notebooks, written in Python, that explicitly shows the reader how to use machine learning, statistics, and data minining techniques on various kinds of heliophysics data sets to reproduce published results. 
 
-This repository comes with some sample textbook files from the Data 8 course
-for Data Science at UC Berkeley. You can update these materials and all site
-content with your own, and have a Jupyter-based textbook ready to go shortly!
-
-Here are a few links of interest:
-
-* **[A short guide to deploying your own textbook](https://predictablynoisy.com/textbooks-with-jupyter/guide/01_overview/)**
-* **[The github repository for the guide and demo](https://github.com/choldgraf/textbooks-with-jupyter)**
-
-
-## To get started
-
-* **To see a demo of the textbook, click the "textbook" link above**.
-* **To start building your own Jupyter textbook**, click **[guide](https://predictablynoisy.com/textbooks-with-jupyter/guide/01_overview)**
-  in the navbar above.
+The contents of this book are licensed for free consumption under the following license:  
+[Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)](https://creativecommons.org/licenses/by-nc-nd/4.0/)
