@@ -11,7 +11,7 @@
   * [1.3 Plotting the Classics](notebooks/01/3/Plotting_the_Classics.ipynb)
     * [1.3.1 Literary Characters](notebooks/01/3/1/Literary_Characters.ipynb)
     * [1.3.2 Another Kind of Character](notebooks/01/3/2/Another_Kind_Of_Character.ipynb)
-  * [1.4 James' Test](notebooks/01/4/prototype_light_curve_fit.ipynb)
+  * [1.4 prototype light curve fit](notebooks/01/4/prototype_light_curve_fit.ipynb)
 * [2. Causality and Experiments](notebooks/02/causality-and-experiments.md)
   * [2.1 John Snow and the Broad Street Pump](notebooks/02/1/observation-and-visualization-john-snow-and-the-broad-street-pump.md)
   * [2.2 Snow’s “Grand Experiment”](notebooks/02/2/snow-s-grand-experiment.md)
