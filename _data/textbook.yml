@@ -3,8 +3,12 @@ chapters:
 - class: level_0
   title: Home
   url: /
-- class: level_0
-  title: Intro
+- children:
+  - class: level_1
+    title: Acknowledgements
+    url: chapters/introduction/acknowledgements
+  class: level_0
+  title: Introduction
   url: chapters/introduction/intro
 - children:
   - class: level_1
