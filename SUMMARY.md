@@ -1,8 +1,6 @@
 # Summary
 
-* [Quickstart](notebooks/introduction/intro.md)
-  * [Adding markdown files](notebooks/introduction/markdown.md)
-  * [Adding notebooks](notebooks/introduction/notebooks.ipynb)
+* [Intro](notebooks/introduction/intro.md)
 * [1. James Intro](notebooks/01/james-intro.md)
   * [1.1 prototype light curve fit](notebooks/01/1/prototype_light_curve_fit.ipynb)
 * [2. Monica Intro](notebooks/02/Monica-Intro.md)

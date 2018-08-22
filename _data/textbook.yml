@@ -3,15 +3,8 @@ chapters:
 - class: level_0
   title: Home
   url: /
-- children:
-  - class: level_1
-    title: Adding markdown files
-    url: chapters/introduction/markdown
-  - class: level_1
-    title: Adding notebooks
-    url: chapters/introduction/notebooks
-  class: level_0
-  title: Quickstart
+- class: level_0
+  title: Intro
   url: chapters/introduction/intro
 - children:
   - class: level_1
