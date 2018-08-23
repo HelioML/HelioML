@@ -1,12 +1,12 @@
 ---
-title: 'Quickstart'
+title: 'Introduction'
 permalink: 'chapters/introduction/intro'
 previouschapter:
   url: 
   title: ''
 nextchapter:
-  url: chapters/introduction/markdown
-  title: 'Adding markdown files'
+  url: chapters/introduction/acknowledgements
+  title: 'Acknowledgements'
 redirect_from:
   - 'chapters/introduction/intro'
   - '/'

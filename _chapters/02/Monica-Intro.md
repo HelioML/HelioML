@@ -5,8 +5,8 @@ previouschapter:
   url: chapters/01/1/prototype_light_curve_fit
   title: '1.1 prototype light curve fit'
 nextchapter:
-  url: chapters/02/1/observation-and-visualization-john-snow-and-the-broad-street-pump
-  title: '2.1 John Snow and the Broad Street Pump'
+  url: chapters/02/1/cme_svm_updated_for_pyastro
+  title: '2.1 cme svm updated for pyastro'
 redirect_from:
   - 'chapters/02/monica-intro'
 ---

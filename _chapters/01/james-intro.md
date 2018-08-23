@@ -2,8 +2,8 @@
 title: '1. James Intro'
 permalink: 'chapters/01/james-intro'
 previouschapter:
-  url: chapters/introduction/notebooks
-  title: 'Adding notebooks'
+  url: chapters/introduction/acknowledgements
+  title: 'Acknowledgements'
 nextchapter:
   url: chapters/01/1/prototype_light_curve_fit
   title: '1.1 prototype light curve fit'

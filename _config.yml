@@ -21,7 +21,7 @@ textbook_repo_base       : "https://github.com/"  # The site on which the textbo
 textbook_repo_org        : "HelioML"  # The username or organization that owns this repository
 textbook_repo_name       : "HelioML"  # The name of the repository on the web
 textbook_repo_branch     : "master"  # The branch on which your textbook is hosted.
-number_chapters          : false  # Whether to number the chapers in the sidebar for the textbook
+number_chapters          : true  # Whether to number the chapers in the sidebar for the textbook
 chapter_titles           : true  # Whether to include the title of the chapter at the top of each chapter
 textbook_only            : true  # If 'true', the home page will be the first chapter of the textbook, and *only* the sidebar is shown
 use_jupyterlab           : false  # If 'true', interact links will use JupyterLab as the interface
