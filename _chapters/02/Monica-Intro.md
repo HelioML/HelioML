@@ -1,14 +1,15 @@
 ---
-title: '2. Monica Intro'
-permalink: 'chapters/02/Monica-Intro'
+title: 'Monica-intro'
+permalink: '/chapters/02/Monica-Intro'
 previouschapter:
-  url: chapters/01/1/prototype_light_curve_fit
-  title: '1.1 prototype light curve fit'
+  url: 
+  title: ''
 nextchapter:
-  url: chapters/02/1/cme_svm_updated_for_pyastro
-  title: '2.1 cme svm updated for pyastro'
+  url: /chapters/02/1/cme_svm_updated_for_pyastro
+  title: 'Cme Svm Updated For Pyastro'
 redirect_from:
-  - 'chapters/02/monica-intro'
+  - '/chapters/02/monica-intro'
+  - '/'
 ---
 Causality and Experiments
 ======================

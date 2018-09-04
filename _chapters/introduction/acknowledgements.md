@@ -1,14 +1,14 @@
 ---
 title: 'Acknowledgements'
-permalink: 'chapters/introduction/acknowledgements'
+permalink: '/chapters/introduction/acknowledgements'
 previouschapter:
-  url: chapters/introduction/intro
-  title: 'Introduction'
+  url: /chapters/introduction/intro
+  title: 'Intro'
 nextchapter:
-  url: chapters/01/james-intro
-  title: '1. James Intro'
+  url: /chapters/01/james-intro
+  title: 'James-intro'
 redirect_from:
-  - 'chapters/introduction/acknowledgements'
+  - '/chapters/introduction/acknowledgements'
 ---
 # Acknowledgements
 

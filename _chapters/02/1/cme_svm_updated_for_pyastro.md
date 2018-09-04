@@ -1,15 +1,15 @@
 ---
 interact_link: notebooks/02/1/cme_svm_updated_for_pyastro.ipynb
-title: '2.1 cme svm updated for pyastro'
-permalink: 'chapters/02/1/cme_svm_updated_for_pyastro'
+title: 'Cme Svm Updated For Pyastro'
+permalink: '/chapters/02/1/cme_svm_updated_for_pyastro'
 previouschapter:
-  url: chapters/02/Monica-Intro
-  title: '2. Monica Intro'
+  url: /chapters/02/Monica-Intro
+  title: 'Monica-intro'
 nextchapter:
-  url: 
-  title: ''
+  url: /chapters/introduction/intro
+  title: 'Intro'
 redirect_from:
-  - 'chapters/02/1/cme-svm-updated-for-pyastro'
+  - '/chapters/02/1/cme-svm-updated-for-pyastro'
 ---
 
 # predicting coronal mass ejections using machine learning methods
