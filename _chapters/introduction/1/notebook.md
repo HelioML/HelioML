@@ -1,15 +1,15 @@
 ---
-interact_link: notebooks/introduction/1/prototype_light_curve_fit.ipynb
-title: 'prototype light curve fit'
-permalink: 'chapters/introduction/1/prototype_light_curve_fit'
+interact_link: notebooks/introduction/1/notebook.ipynb
+title: 'Notebook'
+permalink: 'chapters/introduction/1/notebook'
 previouschapter:
-  url: chapters/introduction/What-Is-This-Book-About?
-  title: 'James Intro'
+  url: chapters/introduction/introduction
+  title: 'Introduction'
 nextchapter:
   url: chapters/02/Predicting-Coronal-Mass-Ejections
   title: 'Predicting Coronal Mass Ejections'
 redirect_from:
-  - 'chapters/introduction/1/prototype-light-curve-fit'
+  - 'chapters/introduction/1/notebook'
 ---
 
 
@@ -103,7 +103,7 @@ plt.errorbar(light_curve_df.index, light_curve_df['irradiance'], yerr=light_curv
 
 
 
-![png](../../../images/chapters/introduction/1/prototype_light_curve_fit_1_0.png)
+![png](../../../images/chapters/introduction/1/notebook_1_0.png)
 
 
 
@@ -218,7 +218,7 @@ if plots_save_path and np.size(gamma) > 1:
 
 
 
-![png](../../../images/chapters/introduction/1/prototype_light_curve_fit_6_0.png)
+![png](../../../images/chapters/introduction/1/notebook_6_0.png)
 
 
 
@@ -254,7 +254,7 @@ if plots_save_path:
 
 
 
-![png](../../../images/chapters/introduction/1/prototype_light_curve_fit_8_0.png)
+![png](../../../images/chapters/introduction/1/notebook_8_0.png)
 
 
 

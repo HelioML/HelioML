@@ -11,8 +11,8 @@ chapters:
   url: chapters/acknowledgements
 - children:
   - class: level_1
-    title: prototype light curve fit
-    url: chapters/introduction/1/prototype_light_curve_fit
+    title: Notebook
+    url: chapters/introduction/1/notebook
   class: level_0
   title: 3. Introduction
   url: chapters/introduction/introduction
