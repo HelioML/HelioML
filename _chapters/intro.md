@@ -1,14 +1,15 @@
 ---
-title: 'Intro'
-permalink: '/chapters/introduction/intro'
+title: '0. Introduction'
+permalink: 'chapters/intro'
 previouschapter:
-  url: /chapters/02/1/cme_svm_updated_for_pyastro
-  title: 'Cme Svm Updated For Pyastro'
+  url: 
+  title: ''
 nextchapter:
-  url: /chapters/introduction/acknowledgements
-  title: 'Acknowledgements'
+  url: chapters/acknowledgements
+  title: '1. Acknowledgements'
 redirect_from:
-  - '/chapters/introduction/intro'
+  - 'chapters/intro'
+  - '/'
 ---
 # Machine Learning, Statistics, and Data Mining for Heliophysics
 
