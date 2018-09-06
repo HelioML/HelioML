@@ -15,6 +15,8 @@ redirect_from:
 
 **By [Monica Bobra](https://web.stanford.edu/~mbobra/) and [James Mason](http://jamespaulmason.strikingly.com/)**
 
+Contributions by Carlos José Díaz Baso and Mark Cheung.
+
 This is a book about machine learning, statistics, and data mining for heliophysics.
 
 This book includes a collection of interactive Jupyter notebooks, written in Python, that explicitly shows the reader how to use machine learning, statistics, and data minining techniques on various kinds of heliophysics data sets to reproduce published results. 

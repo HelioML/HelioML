@@ -1,17 +1,18 @@
 ---
-title: '2. Predicting Coronal Mass Ejections'
+title: 'Predicting Coronal Mass Ejections'
 permalink: 'chapters/02/Predicting-Coronal-Mass-Ejections'
 previouschapter:
-  url: chapters/01/1/prototype_light_curve_fit
-  title: '1.1 prototype light curve fit'
+  url: chapters/introduction/1/notebook
+  title: 'Notebook'
 nextchapter:
   url: chapters/02/1/notebook
-  title: '2.1 Notebook'
+  title: 'Notebook'
 redirect_from:
   - 'chapters/02/predicting-coronal-mass-ejections'
 ---
 Predicting Coronal Mass Ejections
 =================================
+*by Monica Bobra*
 
 A Coronal Mass Ejection (CME) throws magnetic flux and plasma from the Sun into interplanetary space. In fact, CMEs and solar flares are considered “a single magnetically driven event” ([Webb & Howard 2012](http://adsabs.harvard.edu/abs/2012LRSP....9....3W)), wherein a flare unassociated with a CME is called a confined or compact flare. <br>
 

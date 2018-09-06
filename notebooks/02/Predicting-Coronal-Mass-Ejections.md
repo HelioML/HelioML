@@ -1,5 +1,6 @@
 Predicting Coronal Mass Ejections
 =================================
+*by Monica Bobra*
 
 A Coronal Mass Ejection (CME) throws magnetic flux and plasma from the Sun into interplanetary space. In fact, CMEs and solar flares are considered “a single magnetically driven event” ([Webb & Howard 2012](http://adsabs.harvard.edu/abs/2012LRSP....9....3W)), wherein a flare unassociated with a CME is called a confined or compact flare. <br>
 
