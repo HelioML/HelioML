@@ -5,8 +5,8 @@ previouschapter:
   url: chapters/acknowledgements
   title: 'Acknowledgements'
 nextchapter:
-  url: chapters/introduction/1/prototype_light_curve_fit
-  title: 'prototype light curve fit'
+  url: chapters/introduction/1/notebook
+  title: 'Notebook'
 redirect_from:
   - 'chapters/introduction/introduction'
 ---

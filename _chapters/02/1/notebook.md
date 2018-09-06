@@ -1,10 +1,10 @@
 ---
 interact_link: notebooks/02/1/notebook.ipynb
-title: '2.1 Notebook'
+title: 'Notebook'
 permalink: 'chapters/02/1/notebook'
 previouschapter:
   url: chapters/02/Predicting-Coronal-Mass-Ejections
-  title: '2. Predicting Coronal Mass Ejections'
+  title: 'Predicting Coronal Mass Ejections'
 nextchapter:
   url: 
   title: ''

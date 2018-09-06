@@ -1,12 +1,12 @@
 ---
-title: '1. Acknowledgements'
+title: 'Acknowledgements'
 permalink: 'chapters/acknowledgements'
 previouschapter:
-  url: chapters/intro
-  title: '0. Introduction'
+  url: chapters/title
+  title: 'Title'
 nextchapter:
-  url: chapters/01/james-intro
-  title: '2. James Intro'
+  url: chapters/introduction/introduction
+  title: 'Introduction'
 redirect_from:
   - 'chapters/acknowledgements'
 ---
