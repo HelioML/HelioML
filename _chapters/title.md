@@ -1,14 +1,14 @@
 ---
-title: '0. Introduction'
-permalink: 'chapters/intro'
+title: 'Title'
+permalink: 'chapters/title'
 previouschapter:
   url: 
   title: ''
 nextchapter:
   url: chapters/acknowledgements
-  title: '1. Acknowledgements'
+  title: 'Acknowledgements'
 redirect_from:
-  - 'chapters/intro'
+  - 'chapters/title'
   - '/'
 ---
 # Machine Learning, Statistics, and Data Mining for Heliophysics
