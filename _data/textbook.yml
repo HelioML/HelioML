@@ -4,23 +4,23 @@ chapters:
   title: Home
   url: /
 - class: level_0
-  title: 1. 0. Introduction
+  title: 1. Introduction
   url: chapters/intro
 - class: level_0
-  title: 2. 1. Acknowledgements
+  title: 2. Acknowledgements
   url: chapters/acknowledgements
 - children:
   - class: level_1
-    title: 2.1 prototype light curve fit
+    title: prototype light curve fit
     url: chapters/01/1/prototype_light_curve_fit
   class: level_0
-  title: 3. 2. James Intro
+  title: 3. James Intro
   url: chapters/01/james-intro
 - children:
   - class: level_1
-    title: 3.1 Notebook
+    title: Notebook
     url: chapters/02/1/notebook
   class: level_0
-  title: 4. 3. Predicting Coronal Mass Ejections
+  title: 4. Predicting Coronal Mass Ejections
   url: chapters/02/Predicting-Coronal-Mass-Ejections
 first_chapter_url: chapters/intro
