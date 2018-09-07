@@ -15,7 +15,7 @@ redirect_from:
 
 **By [Monica Bobra](https://web.stanford.edu/~mbobra/) and [James Mason](http://jamespaulmason.strikingly.com/)**
 
-Contributions by Carlos José Díaz Baso and Mark Cheung.
+Contributions by Carlos José Díaz Baso, Mark Cheung, and Andrés Asensio Ramos
 
 This is a book about machine learning, statistics, and data mining for heliophysics.
 
