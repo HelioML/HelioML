@@ -26,7 +26,7 @@ chapters:
 - children:
   - class: level_1
     title: Notebook
-    url: chapters/02/1/notebook
+    url: chapters/03/1/notebook
   class: level_0
   title: 5. Enhancing SDO Images
   url: chapters/03/Enhancing-SDO-images

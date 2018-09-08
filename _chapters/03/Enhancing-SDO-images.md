@@ -5,7 +5,7 @@ previouschapter:
   url: chapters/02/1/notebook
   title: 'Notebook'
 nextchapter:
-  url: chapters/02/1/notebook
+  url: chapters/03/1/notebook
   title: 'Notebook'
 redirect_from:
   - 'chapters/03/enhancing-sdo-images'
