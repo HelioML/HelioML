@@ -3,8 +3,8 @@ interact_link: notebooks/03/1/notebook.ipynb
 title: 'Notebook'
 permalink: 'chapters/03/1/notebook'
 previouschapter:
-  url: chapters/03/Enhancing-SDO-images
-  title: 'Enhancing sdo images'
+  url: chapters/03/Enhancing_SDO_images
+  title: 'Enhancing SDO Images'
 nextchapter:
   url: 
   title: ''

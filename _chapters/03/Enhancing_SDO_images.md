@@ -1,6 +1,6 @@
 ---
-title: 'Enhancing sdo images'
-permalink: 'chapters/03/Enhancing-SDO-images'
+title: 'Enhancing SDO Images'
+permalink: 'chapters/03/Enhancing_SDO_images'
 previouschapter:
   url: chapters/02/1/notebook
   title: 'Notebook'

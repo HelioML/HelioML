@@ -3,11 +3,11 @@ interact_link: notebooks/02/1/notebook.ipynb
 title: 'Notebook'
 permalink: 'chapters/02/1/notebook'
 previouschapter:
-  url: chapters/02/Predicting-Coronal-Mass-Ejections
-  title: 'Predicting coronal mass ejections'
+  url: chapters/02/Predicting_Coronal_Mass_Ejections
+  title: 'Predicting Coronal Mass Ejections'
 nextchapter:
-  url: chapters/03/Enhancing-SDO-images
-  title: 'Enhancing sdo images'
+  url: chapters/03/Enhancing_SDO_images
+  title: 'Enhancing SDO Images'
 redirect_from:
   - 'chapters/02/1/notebook'
 ---

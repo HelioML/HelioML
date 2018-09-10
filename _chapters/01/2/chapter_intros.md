@@ -1,12 +1,12 @@
 ---
-title: 'Chapter intros'
-permalink: 'chapters/01/2/chapter-intros'
+title: 'Chapter Intros'
+permalink: 'chapters/01/2/chapter_intros'
 previouschapter:
   url: chapters/01/1/example_fitting_time_series
   title: 'Example Fitting Time Series'
 nextchapter:
-  url: chapters/01/3/other-references
-  title: 'Other references'
+  url: chapters/01/3/other_references
+  title: 'Other References'
 redirect_from:
   - 'chapters/01/2/chapter-intros'
 ---

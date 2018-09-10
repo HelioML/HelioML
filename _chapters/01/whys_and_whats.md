@@ -1,6 +1,6 @@
 ---
-title: 'Whys and whats'
-permalink: 'chapters/01/whys-and-whats'
+title: 'Whys And Whats'
+permalink: 'chapters/01/whys_and_whats'
 previouschapter:
   url: chapters/acknowledgements
   title: 'Acknowledgements'

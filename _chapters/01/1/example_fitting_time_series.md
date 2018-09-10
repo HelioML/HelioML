@@ -3,11 +3,11 @@ interact_link: notebooks/01/1/example_fitting_time_series.ipynb
 title: 'Example Fitting Time Series'
 permalink: 'chapters/01/1/example_fitting_time_series'
 previouschapter:
-  url: chapters/01/whys-and-whats
-  title: 'Whys and whats'
+  url: chapters/01/whys_and_whats
+  title: 'Whys And Whats'
 nextchapter:
-  url: chapters/01/2/chapter-intros
-  title: 'Chapter intros'
+  url: chapters/01/2/chapter_intros
+  title: 'Chapter Intros'
 redirect_from:
   - 'chapters/01/1/example-fitting-time-series'
 ---

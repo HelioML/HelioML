@@ -5,8 +5,8 @@ previouschapter:
   url: chapters/title
   title: 'Title'
 nextchapter:
-  url: chapters/01/whys-and-whats
-  title: 'Whys and whats'
+  url: chapters/01/whys_and_whats
+  title: 'Whys And Whats'
 redirect_from:
   - 'chapters/acknowledgements'
 ---

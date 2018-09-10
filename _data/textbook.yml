@@ -14,26 +14,26 @@ chapters:
     title: Example Fitting Time Series
     url: chapters/01/1/example_fitting_time_series
   - class: level_1
-    title: Chapter intros
-    url: chapters/01/2/chapter-intros
+    title: Chapter Intros
+    url: chapters/01/2/chapter_intros
   - class: level_1
-    title: Other references
-    url: chapters/01/3/other-references
+    title: Other References
+    url: chapters/01/3/other_references
   class: level_0
-  title: 3. Whys and whats
-  url: chapters/01/whys-and-whats
+  title: 3. Whys And Whats
+  url: chapters/01/whys_and_whats
 - children:
   - class: level_1
     title: Notebook
     url: chapters/02/1/notebook
   class: level_0
-  title: 4. Predicting coronal mass ejections
-  url: chapters/02/Predicting-Coronal-Mass-Ejections
+  title: 4. Predicting Coronal Mass Ejections
+  url: chapters/02/Predicting_Coronal_Mass_Ejections
 - children:
   - class: level_1
     title: Notebook
     url: chapters/03/1/notebook
   class: level_0
-  title: 5. Enhancing sdo images
-  url: chapters/03/Enhancing-SDO-images
+  title: 5. Enhancing SDO Images
+  url: chapters/03/Enhancing_SDO_images
 first_chapter_url: chapters/title
