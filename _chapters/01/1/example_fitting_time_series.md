@@ -33,6 +33,8 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 %matplotlib inline
+import seaborn as sns
+plt.style.use('seaborn')
 from scipy.io.idl import readsav
 from sklearn.pipeline import make_pipeline
 from sklearn.model_selection import validation_curve, ShuffleSplit
@@ -40,45 +42,7 @@ from sklearn.metrics import explained_variance_score, make_scorer
 from sklearn.svm import SVR
 
 # Custom modules
-from jpm_number_printing import latex_float
-```
-
-
-
-{:.output_traceback_line}
-```
----------------------------------------------------------------------------
-```
-
-{:.output_traceback_line}
-```
-ModuleNotFoundError                       Traceback (most recent call last)
-```
-
-{:.output_traceback_line}
-```
-<ipython-input-1-f34116b9061a> in <module>()
-      1 # Standard modules
-      2 import numpy as np
-----> 3 import pandas as pd
-      4 import matplotlib.pyplot as plt
-      5 from sklearn.pipeline import make_pipeline
-
-```
-
-{:.output_traceback_line}
-```
-ModuleNotFoundError: No module named 'pandas'
-```
-
-
-
-
-{:.input_area}
-```python
-# TODO: move these defaults closer to where they are used
-minimum_score = 0.3
-plots_save_path='./'
+from jpm_time_conversions import metatimes_to_seconds_since_start, datetimeindex_to_human
 ```
 
 
@@ -89,35 +53,70 @@ Next we will load up the data. You can download that dataset from [here](https:/
 {:.input_area}
 ```python
 idl_generated_data = readsav('./Example Dimming Light Curve.sav')
-light_curve_df = pd.DataFrame({'irradiance': idl_generated_data.irradiance[:, 3]})
-light_curve_df.index = yyyydoy_sod_to_datetime(idl_generated_data.yyyydoy, idl_generated_data.sod) # Convert EVE to datetime
+light_curve_df = pd.DataFrame({'irradiance':idl_generated_data.irradiance.byteswap().newbyteorder(),  # [W/m^2]
+                               'uncertainty':idl_generated_data.uncertainty.byteswap().newbyteorder()})  # [%]
+light_curve_df.index = pd.DatetimeIndex(idl_generated_data.datetime.astype(str))
 light_curve_df.head()
 ```
 
 
 
-{:.output_traceback_line}
-```
----------------------------------------------------------------------------
-```
 
-{:.output_traceback_line}
-```
-NameError                                 Traceback (most recent call last)
-```
 
-{:.output_traceback_line}
-```
-<ipython-input-3-1777e8a1e163> in <module>()
-----> 1 idl_generated_data = readsav('./Example Dimming Light Curve.sav')
-      2 light_curve_df = pd.DataFrame({'irradiance': idl_generated_data.irradiance[:, 3]})
+<div markdown="0">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
 
-```
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
 
-{:.output_traceback_line}
-```
-NameError: name 'readsav' is not defined
-```
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>irradiance</th>
+      <th>uncertainty</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>2012-04-16 17:43:20</th>
+      <td>0.246831</td>
+      <td>0.052733</td>
+    </tr>
+    <tr>
+      <th>2012-04-16 17:44:19</th>
+      <td>0.399922</td>
+      <td>0.085439</td>
+    </tr>
+    <tr>
+      <th>2012-04-16 17:45:18</th>
+      <td>0.275836</td>
+      <td>0.058930</td>
+    </tr>
+    <tr>
+      <th>2012-04-16 17:46:17</th>
+      <td>0.319487</td>
+      <td>0.068255</td>
+    </tr>
+    <tr>
+      <th>2012-04-16 17:47:16</th>
+      <td>0.920058</td>
+      <td>0.196561</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
 
 
 Next we'll plot the data so we can get a quick idea of what we're working with. 
@@ -126,13 +125,15 @@ Next we'll plot the data so we can get a quick idea of what we're working with.
 
 {:.input_area}
 ```python
-# prototype only: just taking a look at the data
-light_curve_dif.plot(light_curve_df.index, light_curve_df['irradiance'], yerr=light_curve_df['uncertainty'], fmt='o');
+plt.errorbar(x=light_curve_df.index, y=light_curve_df['irradiance'], yerr=light_curve_df['uncertainty'], fmt='o')
+plt.title("t$_0$ = " + datetimeindex_to_human(light_curve_df.index)[0])
+plt.xlabel('time')
+plt.ylabel('irradiance [%]');
 ```
 
 
 
-![png](../../../images/chapters/01/1/example_fitting_time_series_9_0.png)
+![png](../../../images/chapters/01/1/example_fitting_time_series_8_0.png)
 
 
 So sure, these are some measurements of ultraviolet light from the sun. But looking at it, it could be almost anything. It's just a time series. Your eye can naturally trace some basic shapes in the data; you can pretty easily see through the noise. But what we'd like is to have just that smooth curve. The original motivation that lead to the example was to be able to parameterize the depth and slope of that dip about a quarter of the way through; that's a coronal dimming and it contains information about a violent coronal mass ejection that resulted in some bad space weather. If interested, you can read the papers about this coronal dimming work [here](https://ui.adsabs.harvard.edu/#abs/2016SPD....4740402M/abstract) and [here](https://ui.adsabs.harvard.edu/#abs/2014ApJ...789...61M/abstract).
@@ -160,7 +161,7 @@ Next we'll do a bit of cleaning. Most machine learning methods cannot accept mis
 finite_irradiance_indices = np.isfinite(y)
 X = X[finite_irradiance_indices]
 X = X.reshape(len(X), 1)
-uncertainty = uncertainty[np.isfinite(y)]
+uncertainty = light_curve_df['uncertainty'].values[np.isfinite(y)]
 y = y[finite_irradiance_indices]
 ```
 
@@ -197,30 +198,6 @@ evs = make_scorer(explained_variance_score)
 ```
 
 
-
-{:.output_traceback_line}
-```
----------------------------------------------------------------------------
-```
-
-{:.output_traceback_line}
-```
-NameError                                 Traceback (most recent call last)
-```
-
-{:.output_traceback_line}
-```
-<ipython-input-6-e80882a59f97> in <module>()
-----> 1 evs = make_scorer(explained_variance_score)
-
-```
-
-{:.output_traceback_line}
-```
-NameError: name 'make_scorer' is not defined
-```
-
-
 The last bit of prep before we can figure out which fit is best is to decide which data will be used to train the data and which will be used to score the fit. This concept is probably new to those who haven't dealt with machine learning before. It comes from one of the fundamental purposes of the discipline: prediction. If I'd like to validate my model without waiting for new data to come in (if new data are even still being generated), then I can simply allocate some of my existing data for training and treat the other chunk like new incoming data to validate and quantify how good the predictions are. Relatedly, a common problem is that if you fit _all_ of the data, your model will do a really good job of fitting that data, but do terrible with any new data. It's sort of like overfitting. We'll come back to that next, but first, lets just split the data 50/50. A shuffle split picks a uniformly random selection of data points. This way we can be sure our data still span the whole time series, instead of just picking e.g., the first quarter of data to train on. With the ```n_splits``` optional input, we can decide how many different sets we want to make. In other words, choose some random points to train on. Now choose another random set of points to train on. Repeat, repeat, repeat for as many times as you define with ```n_splits```. This helps make our results more robust. You can play around with how many splits you need to get final results (later) that don't vary much. We've already done that and found that 20 works pretty well. 
 
 
@@ -253,20 +230,18 @@ train_score, val_score = validation_curve(jpm_svr(), X, y,
 
 {:.input_area}
 ```python
-p1 = plt.plot(gamma, np.median(train_score, 1), label='training score')
-p2 = plt.plot(gamma, np.median(val_score, 1), label='validation score')
-ax = plt.axes()
+p1 = plt.semilogx(gamma, np.median(train_score, 1), label='training score')
+p2 = plt.semilogx(gamma, np.median(val_score, 1), label='validation score')
 plt.title("t$_0$ = " + datetimeindex_to_human(light_curve_df.index)[0])
-ax.set_xscale('log')
 plt.xlabel('gamma')
 plt.ylabel('score')
 plt.ylim(0, 1)
-plt.legend(loc='best')
+plt.legend(loc='best');
 ```
 
 
 
-![png](../../../images/chapters/01/1/example_fitting_time_series_26_0.png)
+![png](../../../images/chapters/01/1/example_fitting_time_series_25_0.png)
 
 
 This is a pretty iconic looking validation curve. The major common features are all there. The training score starts low for low values of the hyperparameter ($\gamma$ in this case for SVR). It then monotonically increases across the whole range. In other words, ever more complicated models do a better job of fitting the training data. Where things get interesting is when you look at the validation score. It too starts out low for low values of $\gamma$, but it is also low at very high $\gamma$. In the middle somewhere we find a peak. This tells us that a complicated model can do an excellent job with data it is trained on, but does terrible when that learned model is applied to new data. In more traditional terms, you can think of the gap between the training and validation score at high $\gamma$ as overfitting and the terrible scores at low $\gamma$ as underfitting. That peak in the middle is our best fit. So lets now programmatically grab that peak value of $\gamma$. Note that for each of the ```n_splits``` in our ```shuffle_split```, we have a different set of scores. That's why in the plot and below, we're taking a median across axis 1. 
@@ -283,6 +258,17 @@ print('Best score: {}'.format(str(best_fit_score)))
 print('Best fit gamma: {}'.format(str(best_fit_gamma)))
 ```
 
+
+{:.output_stream}
+```
+Scores: [ 0.05810709  0.07735265  0.08855199  0.14776661  0.26287847  0.30074971
+  0.29640407  0.31145192  0.33880241  0.4013065   0.47063705  0.47233082
+  0.4572113   0.43226532  0.438913    0.43992565  0.39942845  0.24488572
+ -0.08454969 -1.04669821]
+Best score: 0.4723308172198826
+Best fit gamma: 7.847599703514607e-08
+
+```
 
 Now that we've identified which gamma results in the best fit, we can actually run that fit on the data and include uncertainties as well. Unfortunately, validation curve doesn't let us pass uncertainties in yet, but there is an active issue on the GitHub repository to do so. The API expects us to provide sample weight instead of uncertainty, so we just do an inverse. Then we run the SVR fit with our best gamma. Finally, we _predict_. This is the common parlance in machine learning but in this context what we're really getting back is the y values of the fit. 
 
@@ -307,12 +293,12 @@ plt.plot(X.ravel(), y_fit, linewidth=6, label='Fit')
 plt.title("t$_0$ = " + datetimeindex_to_human(light_curve_df.index)[0])
 plt.xlabel('time [seconds since start]')
 plt.ylabel('irradiance [%]')
-plt.legend(loc='best')
+plt.legend(loc='best');
 ```
 
 
 
-![png](../../../images/chapters/01/1/example_fitting_time_series_32_0.png)
+![png](../../../images/chapters/01/1/example_fitting_time_series_31_0.png)
 
 
 ## Recap

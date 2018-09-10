@@ -12,3 +12,6 @@ dependencies:
     - nbformat
     - nbclean
     - pandas
+    - scipy
+    - sklearn
+    - seaborn
