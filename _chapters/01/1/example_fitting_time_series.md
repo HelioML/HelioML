@@ -4,10 +4,10 @@ title: 'Example Fitting Time Series'
 permalink: 'chapters/01/1/example_fitting_time_series'
 previouschapter:
   url: chapters/01/whys-and-whats
-  title: 'Whys-and-whats'
+  title: 'Whys and whats'
 nextchapter:
   url: chapters/01/2/chapter-intros
-  title: 'Chapter-intros'
+  title: 'Chapter intros'
 redirect_from:
   - 'chapters/01/1/example-fitting-time-series'
 ---
@@ -45,6 +45,8 @@ from sklearn.svm import SVR
 from jpm_time_conversions import metatimes_to_seconds_since_start, datetimeindex_to_human
 ```
 
+
+## Load and clean data
 
 Next we will load up the data. You can download that dataset from [here](https://www.dropbox.com/s/bt5oh244mt4jw72/Example%20Dimming%20Light%20Curve.sav?dl=0) and then just update the path below as necessary to point to it. We're using [pandas](https://pandas.pydata.org/) DataFrames largely because they are highly compatible with scikit-learn, as we'll see later. Finally, we'll use the ```head()``` function to take a quick look at the data. 
 
@@ -133,7 +135,7 @@ plt.ylabel('irradiance [%]');
 
 
 
-![png](../../../images/chapters/01/1/example_fitting_time_series_8_0.png)
+![png](../../../images/chapters/01/1/example_fitting_time_series_9_0.png)
 
 
 So sure, these are some measurements of ultraviolet light from the sun. But looking at it, it could be almost anything. It's just a time series. Your eye can naturally trace some basic shapes in the data; you can pretty easily see through the noise. But what we'd like is to have just that smooth curve. The original motivation that lead to the example was to be able to parameterize the depth and slope of that dip about a quarter of the way through; that's a coronal dimming and it contains information about a violent coronal mass ejection that resulted in some bad space weather. If interested, you can read the papers about this coronal dimming work [here](https://ui.adsabs.harvard.edu/#abs/2016SPD....4740402M/abstract) and [here](https://ui.adsabs.harvard.edu/#abs/2014ApJ...789...61M/abstract).
@@ -165,6 +167,8 @@ uncertainty = light_curve_df['uncertainty'].values[np.isfinite(y)]
 y = y[finite_irradiance_indices]
 ```
 
+
+## Best fit determination
 
 Here, we're just defining a quick helper function that we'll be using in the next section. We'll come back and explain this momentarily.
 
@@ -232,7 +236,7 @@ train_score, val_score = validation_curve(jpm_svr(), X, y,
 ```python
 p1 = plt.semilogx(gamma, np.median(train_score, 1), label='training score')
 p2 = plt.semilogx(gamma, np.median(val_score, 1), label='validation score')
-plt.title("t$_0$ = " + datetimeindex_to_human(light_curve_df.index)[0])
+plt.title('Validation Curve')
 plt.xlabel('gamma')
 plt.ylabel('score')
 plt.ylim(0, 1)
@@ -241,7 +245,7 @@ plt.legend(loc='best');
 
 
 
-![png](../../../images/chapters/01/1/example_fitting_time_series_25_0.png)
+![png](../../../images/chapters/01/1/example_fitting_time_series_27_0.png)
 
 
 This is a pretty iconic looking validation curve. The major common features are all there. The training score starts low for low values of the hyperparameter ($\gamma$ in this case for SVR). It then monotonically increases across the whole range. In other words, ever more complicated models do a better job of fitting the training data. Where things get interesting is when you look at the validation score. It too starts out low for low values of $\gamma$, but it is also low at very high $\gamma$. In the middle somewhere we find a peak. This tells us that a complicated model can do an excellent job with data it is trained on, but does terrible when that learned model is applied to new data. In more traditional terms, you can think of the gap between the training and validation score at high $\gamma$ as overfitting and the terrible scores at low $\gamma$ as underfitting. That peak in the middle is our best fit. So lets now programmatically grab that peak value of $\gamma$. Note that for each of the ```n_splits``` in our ```shuffle_split```, we have a different set of scores. That's why in the plot and below, we're taking a median across axis 1. 
@@ -270,7 +274,9 @@ Best fit gamma: 7.847599703514607e-08
 
 ```
 
-Now that we've identified which gamma results in the best fit, we can actually run that fit on the data and include uncertainties as well. Unfortunately, validation curve doesn't let us pass uncertainties in yet, but there is an active issue on the GitHub repository to do so. The API expects us to provide sample weight instead of uncertainty, so we just do an inverse. Then we run the SVR fit with our best gamma. Finally, we _predict_. This is the common parlance in machine learning but in this context what we're really getting back is the y values of the fit. 
+## Fitting the data
+
+Now that we've identified which gamma results in the best fit, we can actually run that fit on the data and include uncertainties as well. Unfortunately, validation curve doesn't let us pass uncertainties in yet, but there is [an active issue on the GitHub repository to do so](https://github.com/scikit-learn/scikit-learn/issues/10252). The API expects us to provide sample weight instead of uncertainty, so we just do an inverse. Then we run the SVR fit with our best gamma. Finally, we _predict_. This is the common parlance in machine learning but in this context what we're really getting back is the y values of the fit. 
 
 
 
@@ -298,7 +304,7 @@ plt.legend(loc='best');
 
 
 
-![png](../../../images/chapters/01/1/example_fitting_time_series_31_0.png)
+![png](../../../images/chapters/01/1/example_fitting_time_series_34_0.png)
 
 
 ## Recap

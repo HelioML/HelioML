@@ -1,12 +1,12 @@
 ---
-title: 'Other-references'
+title: 'Other references'
 permalink: 'chapters/01/3/other-references'
 previouschapter:
   url: chapters/01/2/chapter-intros
-  title: 'Chapter-intros'
+  title: 'Chapter intros'
 nextchapter:
   url: chapters/02/Predicting-Coronal-Mass-Ejections
-  title: 'Predicting-coronal-mass-ejections'
+  title: 'Predicting coronal mass ejections'
 redirect_from:
   - 'chapters/01/3/other-references'
 ---

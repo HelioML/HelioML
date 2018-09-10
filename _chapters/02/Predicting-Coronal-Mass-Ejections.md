@@ -1,9 +1,9 @@
 ---
-title: 'Predicting-coronal-mass-ejections'
+title: 'Predicting coronal mass ejections'
 permalink: 'chapters/02/Predicting-Coronal-Mass-Ejections'
 previouschapter:
   url: chapters/01/3/other-references
-  title: 'Other-references'
+  title: 'Other references'
 nextchapter:
   url: chapters/02/1/notebook
   title: 'Notebook'

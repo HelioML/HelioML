@@ -4,10 +4,10 @@ title: 'Notebook'
 permalink: 'chapters/02/1/notebook'
 previouschapter:
   url: chapters/02/Predicting-Coronal-Mass-Ejections
-  title: 'Predicting-coronal-mass-ejections'
+  title: 'Predicting coronal mass ejections'
 nextchapter:
   url: chapters/03/Enhancing-SDO-images
-  title: 'Enhancing-sdo-images'
+  title: 'Enhancing sdo images'
 redirect_from:
   - 'chapters/02/1/notebook'
 ---
