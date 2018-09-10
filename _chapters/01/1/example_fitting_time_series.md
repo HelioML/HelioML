@@ -1,15 +1,15 @@
 ---
 interact_link: notebooks/01/1/example_fitting_time_series.ipynb
 title: 'Example Fitting Time Series'
-permalink: '/chapters/01/1/example_fitting_time_series'
+permalink: 'chapters/01/1/example_fitting_time_series'
 previouschapter:
-  url: /chapters/01/whys-and-whats
+  url: chapters/01/whys-and-whats
   title: 'Whys-and-whats'
 nextchapter:
-  url: /chapters/01/2/chapter-intros
+  url: chapters/01/2/chapter-intros
   title: 'Chapter-intros'
 redirect_from:
-  - '/chapters/01/1/example-fitting-time-series'
+  - 'chapters/01/1/example-fitting-time-series'
 ---
 
 # Example 1: Fitting a time series
@@ -132,7 +132,7 @@ light_curve_dif.plot(light_curve_df.index, light_curve_df['irradiance'], yerr=li
 
 
 
-![png](../../../images/./_chapters/01/1/example_fitting_time_series_9_0.png)
+![png](../../../images/chapters/01/1/example_fitting_time_series_9_0.png)
 
 
 So sure, these are some measurements of ultraviolet light from the sun. But looking at it, it could be almost anything. It's just a time series. Your eye can naturally trace some basic shapes in the data; you can pretty easily see through the noise. But what we'd like is to have just that smooth curve. The original motivation that lead to the example was to be able to parameterize the depth and slope of that dip about a quarter of the way through; that's a coronal dimming and it contains information about a violent coronal mass ejection that resulted in some bad space weather. If interested, you can read the papers about this coronal dimming work [here](https://ui.adsabs.harvard.edu/#abs/2016SPD....4740402M/abstract) and [here](https://ui.adsabs.harvard.edu/#abs/2014ApJ...789...61M/abstract).
@@ -266,7 +266,7 @@ plt.legend(loc='best')
 
 
 
-![png](../../../images/./_chapters/01/1/example_fitting_time_series_26_0.png)
+![png](../../../images/chapters/01/1/example_fitting_time_series_26_0.png)
 
 
 This is a pretty iconic looking validation curve. The major common features are all there. The training score starts low for low values of the hyperparameter ($\gamma$ in this case for SVR). It then monotonically increases across the whole range. In other words, ever more complicated models do a better job of fitting the training data. Where things get interesting is when you look at the validation score. It too starts out low for low values of $\gamma$, but it is also low at very high $\gamma$. In the middle somewhere we find a peak. This tells us that a complicated model can do an excellent job with data it is trained on, but does terrible when that learned model is applied to new data. In more traditional terms, you can think of the gap between the training and validation score at high $\gamma$ as overfitting and the terrible scores at low $\gamma$ as underfitting. That peak in the middle is our best fit. So lets now programmatically grab that peak value of $\gamma$. Note that for each of the ```n_splits``` in our ```shuffle_split```, we have a different set of scores. That's why in the plot and below, we're taking a median across axis 1. 
@@ -312,7 +312,7 @@ plt.legend(loc='best')
 
 
 
-![png](../../../images/./_chapters/01/1/example_fitting_time_series_32_0.png)
+![png](../../../images/chapters/01/1/example_fitting_time_series_32_0.png)
 
 
 ## Recap

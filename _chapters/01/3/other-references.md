@@ -1,14 +1,14 @@
 ---
 title: 'Other-references'
-permalink: '/chapters/01/3/other-references'
+permalink: 'chapters/01/3/other-references'
 previouschapter:
-  url: /chapters/01/2/chapter-intros
+  url: chapters/01/2/chapter-intros
   title: 'Chapter-intros'
 nextchapter:
-  url: /chapters/02/Predicting-Coronal-Mass-Ejections
+  url: chapters/02/Predicting-Coronal-Mass-Ejections
   title: 'Predicting-coronal-mass-ejections'
 redirect_from:
-  - '/chapters/01/3/other-references'
+  - 'chapters/01/3/other-references'
 ---
 Other References
 ====================

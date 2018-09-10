@@ -4,7 +4,7 @@ title: 'Notebook'
 permalink: 'chapters/03/1/notebook'
 previouschapter:
   url: chapters/03/Enhancing-SDO-images
-  title: 'Enhancing SDO Images'
+  title: 'Enhancing-sdo-images'
 nextchapter:
   url: 
   title: ''

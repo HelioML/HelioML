@@ -1,14 +1,14 @@
 ---
 title: 'Whys-and-whats'
-permalink: '/chapters/01/whys-and-whats'
+permalink: 'chapters/01/whys-and-whats'
 previouschapter:
-  url: /chapters/introduction/acknowledgements
+  url: chapters/acknowledgements
   title: 'Acknowledgements'
 nextchapter:
-  url: /chapters/01/1/prototype_light_curve_fit
-  title: 'Prototype Light Curve Fit'
+  url: chapters/01/1/example_fitting_time_series
+  title: 'Example Fitting Time Series'
 redirect_from:
-  - '/chapters/01/whys-and-whats'
+  - 'chapters/01/whys-and-whats'
 ---
 What Is This Book and Why Does It Exist?
 ====================
@@ -17,7 +17,7 @@ This is a book that lives at the crossroads of heliophysics and machine learning
 
 # Why? 
 ## Why heliophysics?
-Simply put, we now live in a time where there are too much solar and solar-influences data for humans to digest. Recent and upcoming observatories generate petabytes of data, for example, from the [Solar Dynamics Observatory](TODO: link to Pesnell 2012 paper) launched in 2010 and the upcoming [Daniel K. Inoye <TODO: spelling?> Solar Telescope](TODO: link to website? is there a paper yet?). The datasets we have access to are varied and rich. The [Heliophysics System Observatory (HSO)](https://www.nasa.gov/content/goddard/heliophysics-system-observatory-hso) is a term that was coined specifically to describe this. It consists of dozens of satellites spanning the solar system. While the HSO focuses on spacecraft, there is no shortage of ground-based observations of the sun and the earth's response to it. Together, these data span at least decades and vary wildly in their resolution in time, space, and wavelength and in their observational target. More measurements of the sun and its impacts exist now than at any time in human history. Nearly all of these data are freely available. There's no indication that the firehose will be constricting in the future. However, the human brain evolves on very slow timescales, so there's little hope that we'll be able to glance at billions of observations and identify the connections and patterns contained within. Fortunately, we're a clever species and are building tools in our machines that can do exactly that. 
+Simply put, we now live in a time where there are too much solar and solar-influences data for humans to digest. Recent and upcoming observatories generate petabytes of data, for example, from the [Solar Dynamics Observatory](TODO: link to Pesnell 2012 paper) launched in 2010 and the upcoming [Daniel K. Inouye Solar Telescope](TODO: link to website? is there a paper yet?). The datasets we have access to are varied and rich. The [Heliophysics System Observatory (HSO)](https://www.nasa.gov/content/goddard/heliophysics-system-observatory-hso) is a term that was coined specifically to describe this. It consists of dozens of satellites spanning the solar system. While the HSO focuses on spacecraft, there is no shortage of ground-based observations of the sun and the earth's response to it. Together, these data span at least decades and vary wildly in their resolution in time, space, and wavelength and in their observational target. More measurements of the sun and its impacts exist now than at any time in human history. Nearly all of these data are freely available. There's no indication that the firehose will be constricting in the future. However, the human brain evolves on very slow timescales, so there's little hope that we'll be able to glance at billions of observations and identify the connections and patterns contained within. Fortunately, we're a clever species and are building tools in our machines that can do exactly that. 
 
 ## Why machine learning?
 As with all computing, machine learning is, at its core, an augmentation of our natural capabilities. In particular, machine learning is particularly good at handling large amount of data, including disparate data and high-dimensional data. That is exactly the situation we find ourselves in with heliophysics data, e.g., the HSO. The strengths of machine learning are specifically designed to fill the niche where our brains do not excel. Of course, this isn't putting us out of a job. The main outputs of machine learning tend to be _identification_ and/or _prediction_, but the _understanding_ still can only be found between keyboard and chair. It is up to us to determine if there is any physical meaning in the results. Nevertheless, we can leverage the huge ML effort in computer science to widen discovery space. Analyzing data in its full dimensionality to find patterns without needing to first reduce it to something we can plot on a screen is a major boon. Machine learning also gives us the tools to remove unimportant information and collapse data to as few dimensions as we like while precisely quantifying what we're losing by doing so. Thus, we can pull from the strengths of both our machines and our brains to make better predictions and gain a deeper understanding of nature. 

@@ -5,39 +5,35 @@ chapters:
   url: /
 - class: level_0
   title: 1. Title
-  url: /chapters/title
+  url: chapters/title
+- class: level_0
+  title: 2. Acknowledgements
+  url: chapters/acknowledgements
 - children:
   - class: level_1
-    title: Whys-and-whats
-    url: /chapters/01/whys-and-whats
-  - class: level_2
     title: Example Fitting Time Series
-    url: /chapters/01/1/example_fitting_time_series
-  - class: level_2
+    url: chapters/01/1/example_fitting_time_series
+  - class: level_1
     title: Chapter-intros
-    url: /chapters/01/2/chapter-intros
-  - class: level_2
+    url: chapters/01/2/chapter-intros
+  - class: level_1
     title: Other-references
-    url: /chapters/01/3/other-references
-  - class: level_1
-    title: Predicting-coronal-mass-ejections
-    url: /chapters/02/Predicting-Coronal-Mass-Ejections
-  - class: level_2
-    title: Notebook
-    url: /chapters/02/1/notebook
-  - class: level_1
-    title: Introduction
-    url: /chapters/introduction/introduction
-  - class: level_2
-    title: Notebook
-    url: /chapters/introduction/1/Notebook
-  - class: level_1
-    title: Enhancing-sdo-images
-    url: /chapters/03/Enhancing-SDO-images
-  - class: level_2
-    title: Notebook
-    url: /chapters/03/1/notebook
+    url: chapters/01/3/other-references
   class: level_0
-  title: 2. Acknowledgements
-  url: /chapters/acknowledgements
-first_chapter_url: /chapters/title
+  title: 3. Whys-and-whats
+  url: chapters/01/whys-and-whats
+- children:
+  - class: level_1
+    title: Notebook
+    url: chapters/02/1/notebook
+  class: level_0
+  title: 4. Predicting-coronal-mass-ejections
+  url: chapters/02/Predicting-Coronal-Mass-Ejections
+- children:
+  - class: level_1
+    title: Notebook
+    url: chapters/03/1/notebook
+  class: level_0
+  title: 5. Enhancing-sdo-images
+  url: chapters/03/Enhancing-SDO-images
+first_chapter_url: chapters/title

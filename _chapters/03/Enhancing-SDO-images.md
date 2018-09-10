@@ -1,5 +1,5 @@
 ---
-title: 'Enhancing SDO Images'
+title: 'Enhancing-sdo-images'
 permalink: 'chapters/03/Enhancing-SDO-images'
 previouschapter:
   url: chapters/02/1/notebook
