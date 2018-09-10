@@ -23,3 +23,7 @@ This book includes a collection of interactive Jupyter notebooks, written in Pyt
 
 The contents of this book are licensed for free consumption under the following license:  
 [Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)](https://creativecommons.org/licenses/by-nc-nd/4.0/)
+
+|Version|Date|DOI|
+|-------|----|---|
+| [v0.1.0](https://github.com/HelioML/HelioML/releases/tag/v0.1.0) | 2018-09-10 | [![10.5281/zenodo.1412825](https://zenodo.org/badge/DOI/10.5281/zenodo.1412825.svg)](https://doi.org/10.5281/zenodo.1412825) |
