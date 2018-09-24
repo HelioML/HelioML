@@ -48,7 +48,7 @@ from jpm_time_conversions import metatimes_to_seconds_since_start, datetimeindex
 
 ## Load and clean data
 
-Next we will load up the data. You can download that dataset from [here](https://www.dropbox.com/s/bt5oh244mt4jw72/Example%20Dimming%20Light%20Curve.sav?dl=0) and then just update the path below as necessary to point to it. We're using [pandas](https://pandas.pydata.org/) DataFrames largely because they are highly compatible with scikit-learn, as we'll see later. Finally, we'll use the ```head()``` function to take a quick look at the data. 
+Next we will load up the data. You can download that dataset from [here](https://www.dropbox.com/s/hmrb6eajwv6g6ec/Example%20Dimming%20Light%20Curve.sav?dl=0) or from the HelioML folder containing this notebook and then just update the path below as necessary to point to it. We're using [pandas](https://pandas.pydata.org/) DataFrames largely because they are highly compatible with scikit-learn, as we'll see later. Finally, we'll use the ```head()``` function to take a quick look at the data. 
 
 
 
