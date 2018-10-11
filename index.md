@@ -16,4 +16,4 @@ The contents of this book are licensed for free consumption under the following 
 
 |Version|Date|DOI|
 |-------|----|---|
-| [v0.1.0](https://github.com/HelioML/HelioML/releases/tag/v0.1.0) | 2018-09-10 | [[10.5281/zenodo.1412825](https://doi.org/10.5281/zenodo.1412825) |
+| [v0.1.0](https://github.com/HelioML/HelioML/releases/tag/v0.1.0) | 2018-09-10 | [![10.5281/zenodo.1412825](https://zenodo.org/badge/DOI/10.5281/zenodo.1412825.svg)](https://doi.org/10.5281/zenodo.1412825) |
