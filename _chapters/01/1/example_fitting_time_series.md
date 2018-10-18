@@ -127,7 +127,10 @@ Next we'll plot the data so we can get a quick idea of what we're working with.
 
 {:.input_area}
 ```python
-plt.errorbar(x=light_curve_df.index, y=light_curve_df['irradiance'], yerr=light_curve_df['uncertainty'], fmt='o')
+plt.errorbar(x=light_curve_df.index, 
+             y=light_curve_df['irradiance'], 
+             yerr=light_curve_df['uncertainty'], 
+             fmt='o')
 plt.title("t$_0$ = " + datetimeindex_to_human(light_curve_df.index)[0])
 plt.xlabel('time')
 plt.ylabel('irradiance [%]');
@@ -177,7 +180,7 @@ Here, we're just defining a quick helper function that we'll be using in the nex
 {:.input_area}
 ```python
 # Helper function for compatibility with validation_curve
-def jpm_svr(gamma=5e-8, **kwargs):
+def svr_pipe(gamma=5e-8, **kwargs):
     return make_pipeline(SVR(kernel='rbf', C=1e3, gamma=gamma, **kwargs))
 ```
 
@@ -214,7 +217,7 @@ shuffle_split = ShuffleSplit(n_splits=20, train_size=0.5, test_size=0.5, random_
 
 Now we can get to the validation curve. First we'll discuss the input, then run it, plot it, and discuss it. 
 
-The first input makes use of our earlier helper function, ```jpm_svr()```. All this function does is make a pipeline around the SVR function. Pipelines in scikit-learn are pretty nifty. They result in an object that has the same API as any other model type, but allow you to wrap up a whole bunch of different methods together. For example, you could wrap up a bunch of pre-processing like Impute in here. In this case, our helper function is just allowing us to input a variety of $\gamma$s in a single call to validation curve. 
+The first input makes use of our earlier helper function, ```svr_pipe()```. All this function does is make a pipeline around the SVR function. Pipelines in scikit-learn are pretty nifty. They result in an object that has the same API as any other model type, but allow you to wrap up a whole bunch of different methods together. For example, you could wrap up a bunch of pre-processing like Impute in here. In this case, our helper function is just allowing us to input a variety of $\gamma$s in a single call to validation curve. 
 
 The next inputs are just the X and y arrays. Pretty straight forward. Next we define the name of the parameter that is going to be varied: $\gamma$ in this case. Models other than SVR would have other hyperparameters and may even have more than one. Then we pass in that array of different $\gamma$s to vary. 
 
@@ -224,7 +227,7 @@ Next we've got a few optional inputs. ```cv``` is the cross-validation strategy.
 
 {:.input_area}
 ```python
-train_score, val_score = validation_curve(jpm_svr(), X, y,
+train_score, val_score = validation_curve(svr_pipe(), X, y,
                                           'svr__gamma',
                                           gamma, cv=shuffle_split, n_jobs=3, scoring=evs)
 ```
@@ -265,14 +268,25 @@ print('Best fit gamma: {}'.format(str(best_fit_gamma)))
 
 {:.output_stream}
 ```
-Scores: [ 0.05810709  0.07735265  0.08855199  0.14776661  0.26287847  0.30074971
-  0.29640407  0.31145192  0.33880241  0.4013065   0.47063705  0.47233082
-  0.4572113   0.43226532  0.438913    0.43992565  0.39942845  0.24488572
- -0.08454969 -1.04669821]
-Best score: 0.4723308172198826
-Best fit gamma: 7.847599703514607e-08
+Scores: [ 0.04951443  0.06154749  0.07106599  0.12581001  0.2614409   0.3100576
+  0.31646112  0.32533225  0.36214982  0.42087804  0.48439067  0.47046177
+  0.46230723  0.43604148  0.43099558  0.43167014  0.4187839   0.29498409
+  0.00914969 -0.54841982]
+Best score: 0.48439066930449953
+Best fit gamma: 4.281332398719396e-08
 
 ```
+
+## Explore!
+Here's a chance to play around with the tools you've seen so far. Here are some suggestions to try out: 
+* Try different ranges of gamma and see what happens to the plot. 
+* Try changing n_jobs to see how it affects processing time. Open up your Activity Monitor (macOS) or Task Manager (Windows) to see the multiple threads and their impact on your CPU usage. 
+* Try different scoring methods. You can import [any of these different regression metrics](http://scikit-learn.org/stable/modules/classes.html#regression-metrics) (follow the import example at the top of the notebook) and feed them to the `make_scorer()` above. 
+* Try a different number of splits (`n_splits`) in `ShuffleSplit()`.
+* Try different `train_size` and `test_size` in `ShuffleSplit()`. 
+* Try a totally different method of splitting the data between training and testing. You can import [any of these splitter classes](http://scikit-learn.org/stable/modules/classes.html#splitter-classes) (follow the import example at the top of the notebook) and use them in place of `ShuffleSplit()`.
+
+You can use the cells below (and add more if you like) to produce new plots/best fit numbers and compare them. Or just use the cells as a scratch space. You are now a human learning machine learning.
 
 ## Fitting the data
 
@@ -304,8 +318,15 @@ plt.legend(loc='best');
 
 
 
-![png](../../../images/chapters/01/1/example_fitting_time_series_34_0.png)
+![png](../../../images/chapters/01/1/example_fitting_time_series_35_0.png)
 
+
+## Explore!
+Here's another chance to see how your changes impact the final result: the fit to the data. Here's some suggestions: 
+* Input your favorite number as the `best_fit_gamma` and see how the fit does.
+* Try a different penalty parameter (`C`). The default value is 1.0. We used 1e3. 
+* Try a different kernel. You can use any of [these kernels](http://scikit-learn.org/stable/modules/generated/sklearn.svm.SVR.html). Warning: be careful with the 'linear' kernel because it can take a long time to fit depending on the other parameters.
+* Try modifying the `sample_weight` to see how that impacts the fit.
 
 ## Recap
 In this example, we've used a familiar goal -- fitting a time series -- as a way to introduce some common machine learning concepts. In particular, we introduced data cleaning (e.g., ```Impute```), training vs validation/prediction data sets (e.g., ```shuffle_split```), and validation (e.g., ```validation_curve```). 
