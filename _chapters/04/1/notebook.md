@@ -206,8 +206,14 @@ for axes in ax:
     axes.get_yaxis().set_visible(False)
 ```
 
-<IMG SRC="../../../images/chapters/04/1/notebook_16_0.png" width="100%">
-<IMG SRC="../../../images/chapters/04/1/notebook_16_1.png" width="100%">
+
+
+![png](../../../images/chapters/04/1/notebook_16_0.png)
+
+
+
+![png](../../../images/chapters/04/1/notebook_16_1.png)
+
 
 <b>Figure 1:</b> Left to Right: <i>SDO</i>/AIA images in 171 Å, 211 Å, and 94 Å (top, left to right), with the corresponding DEM bins (chosen at the peak sensitivity of each of the <i>SDO</i>/AIA channels) shown below. In the DEM bins (bottom) it is clear that there are some pixels that have solutions of DEM = $zero$, as explicitly seen as dark regions/clusters of pixels on and off disk.
 
