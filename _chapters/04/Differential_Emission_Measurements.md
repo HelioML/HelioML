@@ -23,6 +23,7 @@ The `DeepEM` example presented here takes every DEM solution with no regards to 
 This notebook was developed with [PyTorch](https://pytorch.org/), and `DeepEM` is currently under development at https://github.com/PaulJWright/DeepEM.
 
 <IMG SRC="./1/docs/DeepEM_171_211.gif" width="100%">
+![png](./1/docs/DeepEM_171_211.gif)
 
 Example of the `DeepEM` solutions for logT ~ 5.9 K and 6.3 K in comparison to the Basis Pursuit (and <i>SDO</i>/AIA images) for the same temperature.
 
