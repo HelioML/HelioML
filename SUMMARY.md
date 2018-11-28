@@ -10,3 +10,5 @@
   * [Notebook](notebooks/02/1/notebook.ipynb)
 * [Enhancing SDO Images](notebooks/03/Enhancing_SDO_images.md)
   * [Notebook](notebooks/03/1/notebook.ipynb)
+* [Differential Emission Measurements](notebooks/04/Differential_Emission_Measurements.md)
+  * [Notebook](notebooks/04/1/notebook.ipynb)

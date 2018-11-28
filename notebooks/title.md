@@ -2,7 +2,7 @@
 
 **By [Monica Bobra](https://web.stanford.edu/~mbobra/) and [James Mason](http://jamespaulmason.strikingly.com/)**
 
-Contributions by Carlos José Díaz Baso, Mark Cheung, and Andrés Asensio Ramos
+Contributions by Carlos José Díaz Baso, Andrés Asensio Ramos, Mark Cheung, Paul Wright, Mark Cheung, Rajat Thomas, Richard Galvez, Alexandre Szenicer, Meng Jin, Andrés Muñoz-Jaramillo, and David Fouhey.
 
 This is a book about machine learning, statistics, and data mining for heliophysics.
 
@@ -13,4 +13,4 @@ The contents of this book are licensed for free consumption under the following 
 
 |Version|Date|DOI|
 |-------|----|---|
-| [v0.1.0](https://github.com/HelioML/HelioML/releases/tag/v0.1.0) | 2018-09-10 | [![10.5281/zenodo.1412825](https://zenodo.org/badge/DOI/10.5281/zenodo.1412825.svg)](https://doi.org/10.5281/zenodo.1412825) |
+| [v0.1.0](https://github.com/HelioML/HelioML/releases/tag/v0.1.0) | 2018-09-10 | [https://doi.org/10.5281/zenodo.1412825](https://doi.org/10.5281/zenodo.1412825) |
