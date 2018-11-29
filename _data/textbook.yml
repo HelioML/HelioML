@@ -14,8 +14,8 @@ chapters:
     title: Example Fitting Time Series
     url: chapters/01/1/example_fitting_time_series
   - class: level_1
-    title: Chapter Intros
-    url: chapters/01/2/chapter_intros
+    title: What's In This Book?
+    url: chapters/01/2/whats_in_this_book
   - class: level_1
     title: Other References
     url: chapters/01/3/other_references
