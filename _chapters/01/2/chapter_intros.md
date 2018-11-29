@@ -13,16 +13,16 @@ redirect_from:
 What You'll See in the Chapters to Come
 ====================
 
-In this introductory chapter, we've barely scratched the surface of heliophysics and of machine learning. We specifically chose an example that would hopefully be a more familiar starting point for heliophysicists and for data scientists. In the following chapters, we'll dive a deeper into examples from real, active research being done, most of which has also been published in peer-review journals. The rabbit hole goes deeper still, and we provide some other references in the next section. 
+In this introductory chapter, we've barely scratched the surface of heliophysics and of machine learning. We specifically chose an example familiar to heliophysicists and for data scientists. In the following chapters, we'll dive a deeper into examples from active research, most of which is published in peer-reviewed scientific journals. Finally, we provide some other references in the next section. 
 
 # Available Now
 
 ## Chapter 3 (This Chapter)
 * Authors: James Paul Mason
-* Objective: Fitting time series data -- extreme ultraviolet irradiance emission line light curves
+* Objective: Fitting time series measurements of extreme ultraviolet irradiance emission line light curves
 * ML method(s): 
     * Data cleaning via Imputing (`sklearn.preprocessing.Imputer`)
-    * Training vs. prediction via shuffle splitting the available data (`sklearn.model_selection.ShuffleSplit`)
+    * Training vs. prediction via shuffle splitting (`sklearn.model_selection.ShuffleSplit`)
     * Regression via Support Vector Machines (`sklearn.svm.SVR`)
     * Validation (`sklearn.model_selection.validation_curve`)
 * Data source(s): Solar Dynamics Observatory (SDO) / Extreme Ultraviolet Variability Experiment (EVE)
@@ -47,16 +47,8 @@ In this introductory chapter, we've barely scratched the surface of heliophysics
     * Applying penalties for optimization via `keras.regularizers.l2'`
 * Data source(s): SDO/HMI
 
-# Upcoming
-
 ## Chapter 6
-* Authors: Paul Wright
+* Authors: Paul Wright, Mark Cheung, Rajat Thomas, Richard Galvez, Alexandre Szenicer, Meng Jin, Andrés Muñoz-Jaramillo, and David Fouhey
 * Objective: Simulating data from a lost instrument (EVE) based on another of a totally different type (AIA); DEMs
-* ML method(s): ? 
+* ML method(s): Deep convolutional neural networks
 * Data source(s): SDO/AIA, SDO/EVE
-
-## Chapter 7
-* Authors: Sophie Murray
-* Objective: Forecasting space weather
-* ML method(s): ?
-* Data source(s): ? 
