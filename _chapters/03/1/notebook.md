@@ -6,8 +6,8 @@ previouschapter:
   url: chapters/03/Enhancing_SDO_images
   title: 'Enhancing SDO Images'
 nextchapter:
-  url: 
-  title: ''
+  url: chapters/04/Differential_Emission_Measurements
+  title: 'Differential Emission Measurements'
 redirect_from:
   - 'chapters/03/1/notebook'
 ---

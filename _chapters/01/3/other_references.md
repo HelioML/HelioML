@@ -2,8 +2,8 @@
 title: 'Other References'
 permalink: 'chapters/01/3/other_references'
 previouschapter:
-  url: chapters/01/2/chapter_intros
-  title: 'Chapter Intros'
+  url: chapters/01/2/whats_in_this_book
+  title: 'What's In This Book?'
 nextchapter:
   url: chapters/02/Predicting_Coronal_Mass_Ejections
   title: 'Predicting Coronal Mass Ejections'

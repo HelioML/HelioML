@@ -6,8 +6,8 @@ previouschapter:
   url: chapters/01/whys_and_whats
   title: 'Whys And Whats'
 nextchapter:
-  url: chapters/01/2/chapter_intros
-  title: 'Chapter Intros'
+  url: chapters/01/2/whats_in_this_book
+  title: 'What's In This Book?'
 redirect_from:
   - 'chapters/01/1/example-fitting-time-series'
 ---
