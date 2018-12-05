@@ -13,7 +13,11 @@ redirect_from:
 What's In This Book?
 ====================
 
-In this introductory chapter, we've barely scratched the surface of heliophysics and of machine learning. We specifically chose an example familiar to heliophysicists and to data scientists. In the following chapters, we'll cover examples from active research. Each chapter provides the motivation for the research and all of the code necessary to reproduce the results of a paper published in a peer-reviewed scientific journal. These chapters cover a variety of topics, but they all employ machine learning methods to heliophysics, which includes the study of the Sun and its effects on our solar system -- the Earth, planets, minor objects, and all of the space in between.
+In this introductory chapter, we've barely scratched the surface of heliophysics and of machine learning. We specifically chose an example familiar to heliophysicists and to data scientists. 
+
+In the following chapters, we'll cover examples from active research. Each chapter provides the motivation for the research and all of the code necessary to reproduce the results of a paper published in a peer-reviewed scientific journal. These chapters cover a variety of topics, but they all employ machine learning methods to heliophysics, which includes the study of the Sun and its effects on our solar system -- the Earth, planets, minor objects, and all of the space in between. 
+
+Below is a short summary of each chapter. Each summary gives a brief overview of the machine learning methods and data types involved in solving a specific research problem. Each ">" symbol is designed to drill down from a general idea into a specific one. If some of these terms don't make sense, don't worry! The chapters explain each scientific and machine learning concept in detail.
 
 ## Chapter 3 (This Chapter)
 * Author(s): James Paul Mason
