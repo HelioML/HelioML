@@ -2,7 +2,7 @@
 
 **By [Monica Bobra](https://web.stanford.edu/~mbobra/) and [James Mason](http://jamespaulmason.strikingly.com/)**
 
-Contributions by Carlos José Díaz Baso, Andrés Asensio Ramos, Mark Cheung, Paul Wright, Mark Cheung, Rajat Thomas, Richard Galvez, Alexandre Szenicer, Meng Jin, Andrés Muñoz-Jaramillo, and David Fouhey.
+Contributions by Carlos José Díaz Baso, Andrés Asensio Ramos, Paul Wright, Mark Cheung, Rajat Thomas, Richard Galvez, Alexandre Szenicer, Meng Jin, Andrés Muñoz-Jaramillo, and David Fouhey.
 
 This is a book about machine learning, statistics, and data mining for heliophysics.
 
