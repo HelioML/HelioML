@@ -1,14 +1,14 @@
 ---
-title: 'Acknowledgements'
-permalink: 'chapters/acknowledgements'
-previouschapter:
-  url: chapters/title
-  title: 'Title'
-nextchapter:
-  url: chapters/01/whys_and_whats
-  title: 'Whys And Whats'
 redirect_from:
-  - 'chapters/acknowledgements'
+  - "/acknowledgements"
+title: 'Acknowledgements'
+prev_page:
+  url: /title
+  title: 'Title'
+next_page:
+  url: /01/whys_and_whats
+  title: 'Whys and Whats'
+comment: "***PROGRAMMATICALLY GENERATED, DO NOT EDIT. SEE ORIGINAL FILES IN /notebooks***"
 ---
 # Acknowledgements
 

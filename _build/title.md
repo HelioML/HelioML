@@ -1,21 +1,21 @@
 ---
+redirect_from:
+  - "/title"
+  - "/"
 title: 'Title'
-permalink: 'chapters/title'
-previouschapter:
+prev_page:
   url: 
   title: ''
-nextchapter:
-  url: chapters/acknowledgements
+next_page:
+  url: /acknowledgements
   title: 'Acknowledgements'
-redirect_from:
-  - 'chapters/title'
-  - '/'
+comment: "***PROGRAMMATICALLY GENERATED, DO NOT EDIT. SEE ORIGINAL FILES IN /notebooks***"
 ---
 # Machine Learning, Statistics, and Data Mining for Heliophysics
 
 **By [Monica Bobra](https://web.stanford.edu/~mbobra/) and [James Mason](http://jamespaulmason.strikingly.com/)**
 
-Contributions by Carlos José Díaz Baso, Andrés Asensio Ramos, Mark Cheung, Paul Wright, Mark Cheung, Rajat Thomas, Richard Galvez, Alexandre Szenicer, Meng Jin, Andrés Muñoz-Jaramillo, and David Fouhey.
+Contributions by Carlos José Díaz Baso, Andrés Asensio Ramos, Paul Wright, Mark Cheung, Rajat Thomas, Richard Galvez, Alexandre Szenicer, Meng Jin, Andrés Muñoz-Jaramillo, and David Fouhey.
 
 This is a book about machine learning, statistics, and data mining for heliophysics.
 

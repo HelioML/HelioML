@@ -1,15 +1,15 @@
 ---
-interact_link: notebooks/04/1/notebook.ipynb
-title: 'Notebook'
-permalink: 'chapters/04/1/notebook'
-previouschapter:
-  url: chapters/04/Differential_Emission_Measurements
+redirect_from:
+  - "/04/1/notebook"
+interact_link: content//mbobra/Stanford/github/HelioML/notebooks/04/1/notebook.ipynb
+title: 'notebook'
+prev_page:
+  url: /04/Differential_Emission_Measurements
   title: 'Differential Emission Measurements'
-nextchapter:
+next_page:
   url: 
   title: ''
-redirect_from:
-  - 'chapters/04/1/notebook'
+comment: "***PROGRAMMATICALLY GENERATED, DO NOT EDIT. SEE ORIGINAL FILES IN /notebooks***"
 ---
 
 # DeepEM: A Deep Learning Approach for DEM Inversion
@@ -208,11 +208,11 @@ for axes in ax:
 
 
 
-![png](../../../images/chapters/04/1/notebook_16_0.png)
+![png](../../images/04/1/notebook_16_0.png)
 
 
 
-![png](../../../images/chapters/04/1/notebook_16_1.png)
+![png](../../images/04/1/notebook_16_1.png)
 
 
 <b>Figure 1:</b> Left to Right: <i>SDO</i>/AIA images in 171 Å, 211 Å, and 94 Å (top, left to right), with the corresponding DEM bins (chosen at the peak sensitivity of each of the <i>SDO</i>/AIA channels) shown below. In the DEM bins (bottom) it is clear that there are some pixels that have solutions of DEM = $zero$, as explicitly seen as dark regions/clusters of pixels on and off disk.
@@ -433,7 +433,7 @@ plt.show()
 
 
 
-![png](../../../images/chapters/04/1/notebook_28_0.png)
+![png](../../images/04/1/notebook_28_0.png)
 
 
 <b>Figure 2:</b> Training and Validation MSE loss (blue, orange) as a function of Epoch.
@@ -527,15 +527,15 @@ for axes in ax:
 
 
 
-![png](../../../images/chapters/04/1/notebook_36_0.png)
+![png](../../images/04/1/notebook_36_0.png)
 
 
 
-![png](../../../images/chapters/04/1/notebook_36_1.png)
+![png](../../images/04/1/notebook_36_1.png)
 
 
 
-![png](../../../images/chapters/04/1/notebook_36_2.png)
+![png](../../images/04/1/notebook_36_2.png)
 
 
 <b>Figure 3</b>: Left to Right: <i>SDO</i>/AIA images in 171 Å, 211 Å, and 94 Å (left, top to bottom), with the corresponding DEM bins from Basis Pursuit (chosen at the peak sensitivity of each of the <i>SDO</i>/AIA channels) shown below (middle, top to bottom). The right-hand column shows the DeepEM solutions that correspond to the same bins as the Basis Pursuit solutions. DeepEM provides solutions that are similar to Basis Pursuit, but importantly, provides DEM solutions for every pixel.
@@ -598,7 +598,7 @@ EMinv, EMTru = PlotTotalEM(em_unscaled,em_pred_unscaled,lgtaxis,status)
 
 
 
-![png](../../../images/chapters/04/1/notebook_41_0.png)
+![png](../../images/04/1/notebook_41_0.png)
 
 
 <b>Figure 4</b>: Average Basis Pursuit DEM (plotted as mean emission measure, black line) and the Average DeepEM solution (dashed line). It is clear that this simple implementation of DeepEM provides, on average, DEMs that are similar to Basis Pursuit (Cheung <i>et al</i> 2015).
@@ -697,15 +697,15 @@ for axes in ax:
 
 
 
-![png](../../../images/chapters/04/1/notebook_50_0.png)
+![png](../../images/04/1/notebook_50_0.png)
 
 
 
-![png](../../../images/chapters/04/1/notebook_50_1.png)
+![png](../../images/04/1/notebook_50_1.png)
 
 
 
-![png](../../../images/chapters/04/1/notebook_50_2.png)
+![png](../../images/04/1/notebook_50_2.png)
 
 
 <b>Figure 5:</b> Top to Bottom: <i>SDO</i>/AIA images in 171 Å, 211 Å, and 94 Å (left, top to bottom) with the corresponding synthesised observations from Basis Pursuit (middle, top to bottom) and DeepEM (right, top to bottom). DeepEM provides synthetic observations that are similar to Basis Pursuit, with the addition of being able to reconstruct <i>SDO</i>/AIA observations where the basis pursuit solution was $zero$.
@@ -823,15 +823,15 @@ for axes in ax:
 
 
 
-![png](../../../images/chapters/04/1/notebook_62_0.png)
+![png](../../images/04/1/notebook_62_0.png)
 
 
 
-![png](../../../images/chapters/04/1/notebook_62_1.png)
+![png](../../images/04/1/notebook_62_1.png)
 
 
 
-![png](../../../images/chapters/04/1/notebook_62_2.png)
+![png](../../images/04/1/notebook_62_2.png)
 
 
 <b>Figure A1</b>: Left to Right: <i>SDO</i>/AIA images in 171 Å, 211 Å, and 94 Å (left, top to bottom) for the training set, with the corresponding DEM bins from Basis Pursuit (chosen at the peak sensitivity of each of the <i>SDO</i>/AIA channels) shown below (middle, top to bottom). The right-hand column shows the DeepEM solutions that correspond to the same bins as the Basis Pursuit solutions. DeepEM provides solutions that are similar to Basis Pursuit, but importantly, provides DEM solutions for every pixel.
@@ -888,15 +888,15 @@ for axes in ax:
 
 
 
-![png](../../../images/chapters/04/1/notebook_65_0.png)
+![png](../../images/04/1/notebook_65_0.png)
 
 
 
-![png](../../../images/chapters/04/1/notebook_65_1.png)
+![png](../../images/04/1/notebook_65_1.png)
 
 
 
-![png](../../../images/chapters/04/1/notebook_65_2.png)
+![png](../../images/04/1/notebook_65_2.png)
 
 
 <b>Figure A2:</b> Top to Bottom: <i>SDO</i>/AIA images in 171 Å, 211 Å, and 94 Å (left, top to bottom) with the corresponding synthesised observations from Basis Pursuit (middle, top to bottom) and DeepEM (right, top to bottom). DeepEM provides synthetic observations that are similar to Basis Pursuit, with the addition of solutions where the basis pursuit solution was $zero$.

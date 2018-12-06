@@ -1,15 +1,15 @@
 ---
-interact_link: notebooks/02/1/notebook.ipynb
-title: 'Notebook'
-permalink: 'chapters/02/1/notebook'
-previouschapter:
-  url: chapters/02/Predicting_Coronal_Mass_Ejections
-  title: 'Predicting Coronal Mass Ejections'
-nextchapter:
-  url: chapters/03/Enhancing_SDO_images
-  title: 'Enhancing SDO Images'
 redirect_from:
-  - 'chapters/02/1/notebook'
+  - "/02/1/notebook"
+interact_link: content//mbobra/Stanford/github/HelioML/notebooks/02/1/notebook.ipynb
+title: 'notebook'
+prev_page:
+  url: /02/Predicting_Coronal_Mass_Ejections
+  title: 'Predicting Coronal Mass Ejections'
+next_page:
+  url: /03/Enhancing_SDO_images
+  title: 'Enhancing SDO Images'
+comment: "***PROGRAMMATICALLY GENERATED, DO NOT EDIT. SEE ORIGINAL FILES IN /notebooks***"
 ---
 
 # Predicting Coronal Mass Ejections
@@ -1058,7 +1058,7 @@ fig.set_size_inches(10, 5)
 
 
 
-![png](../../../images/chapters/02/1/notebook_68_0.png)
+![png](../../images/02/1/notebook_68_0.png)
 
 
 As such, we confirm that high k-values result in a high variance. We find it reasonable to use the stratified 10-fold cross-validation method to compute the TSS and will follow this recommendation. Therefore we report this score as our final result:

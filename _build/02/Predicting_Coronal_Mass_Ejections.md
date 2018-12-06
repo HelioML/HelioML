@@ -1,14 +1,14 @@
 ---
-title: 'Predicting Coronal Mass Ejections'
-permalink: 'chapters/02/Predicting_Coronal_Mass_Ejections'
-previouschapter:
-  url: chapters/01/3/other_references
-  title: 'Other References'
-nextchapter:
-  url: chapters/02/1/notebook
-  title: 'Notebook'
 redirect_from:
-  - 'chapters/02/predicting-coronal-mass-ejections'
+  - "/02/predicting-coronal-mass-ejections"
+title: 'Predicting Coronal Mass Ejections'
+prev_page:
+  url: /01/3/other_references
+  title: 'Other References'
+next_page:
+  url: /02/1/notebook
+  title: 'notebook'
+comment: "***PROGRAMMATICALLY GENERATED, DO NOT EDIT. SEE ORIGINAL FILES IN /notebooks***"
 ---
 Predicting Coronal Mass Ejections
 =================================

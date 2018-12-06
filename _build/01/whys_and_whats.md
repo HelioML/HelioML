@@ -1,14 +1,14 @@
 ---
-title: 'Whys And Whats'
-permalink: 'chapters/01/whys_and_whats'
-previouschapter:
-  url: chapters/acknowledgements
-  title: 'Acknowledgements'
-nextchapter:
-  url: chapters/01/1/example_fitting_time_series
-  title: 'Example Fitting Time Series'
 redirect_from:
-  - 'chapters/01/whys-and-whats'
+  - "/01/whys-and-whats"
+title: 'Whys and Whats'
+prev_page:
+  url: /acknowledgements
+  title: 'Acknowledgements'
+next_page:
+  url: /01/1/example_fitting_time_series
+  title: 'Example Fitting Time Series'
+comment: "***PROGRAMMATICALLY GENERATED, DO NOT EDIT. SEE ORIGINAL FILES IN /notebooks***"
 ---
 What Is This Book and Why Does It Exist?
 ====================

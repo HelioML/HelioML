@@ -1,14 +1,14 @@
 ---
-title: 'Enhancing SDO Images'
-permalink: 'chapters/03/Enhancing_SDO_images'
-previouschapter:
-  url: chapters/02/1/notebook
-  title: 'Notebook'
-nextchapter:
-  url: chapters/03/1/notebook
-  title: 'Notebook'
 redirect_from:
-  - 'chapters/03/enhancing-sdo-images'
+  - "/03/enhancing-sdo-images"
+title: 'Enhancing SDO Images'
+prev_page:
+  url: /02/1/notebook
+  title: 'notebook'
+next_page:
+  url: /03/1/notebook
+  title: 'notebook'
+comment: "***PROGRAMMATICALLY GENERATED, DO NOT EDIT. SEE ORIGINAL FILES IN /notebooks***"
 ---
 Enhancing SDO/HMI images using deep learning
 ============================================

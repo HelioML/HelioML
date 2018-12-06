@@ -12,9 +12,6 @@
 # divider: true if this entry should just be rendered as a horizontal divider
 #   in the sidebar. All other values are ignored.
 
-- divider: true
-- header: HelioML
-
 - title: Title
   url: /title
   not_numbered: true
@@ -25,6 +22,7 @@
 
 - title: Whys and Whats
   url: /01/whys_and_whats
+  not_numbered: true
   sections:
   - title: Example Fitting Time Series
     url: /01/1/example_fitting_time_series

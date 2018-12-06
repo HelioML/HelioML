@@ -1,15 +1,15 @@
 ---
-interact_link: notebooks/03/1/notebook.ipynb
-title: 'Notebook'
-permalink: 'chapters/03/1/notebook'
-previouschapter:
-  url: chapters/03/Enhancing_SDO_images
-  title: 'Enhancing SDO Images'
-nextchapter:
-  url: chapters/04/Differential_Emission_Measurements
-  title: 'Differential Emission Measurements'
 redirect_from:
-  - 'chapters/03/1/notebook'
+  - "/03/1/notebook"
+interact_link: content//mbobra/Stanford/github/HelioML/notebooks/03/1/notebook.ipynb
+title: 'notebook'
+prev_page:
+  url: /03/Enhancing_SDO_images
+  title: 'Enhancing SDO Images'
+next_page:
+  url: /04/Differential_Emission_Measurements
+  title: 'Differential Emission Measurements'
+comment: "***PROGRAMMATICALLY GENERATED, DO NOT EDIT. SEE ORIGINAL FILES IN /notebooks***"
 ---
 
 # Enhancing SDO/HMI images using deep learning
@@ -208,7 +208,7 @@ plt.tight_layout()
 
 
 
-![png](../../../images/chapters/03/1/notebook_19_0.png)
+![png](../../images/03/1/notebook_19_0.png)
 
 
 ### General training process
@@ -618,7 +618,7 @@ Ideal resolution: 1.11 [arcsec]
 
 
 
-![png](../../../images/chapters/03/1/notebook_37_2.png)
+![png](../../images/03/1/notebook_37_2.png)
 
 
 
@@ -720,7 +720,7 @@ plt.tight_layout()
 
 
 
-![png](../../../images/chapters/03/1/notebook_39_0.png)
+![png](../../images/03/1/notebook_39_0.png)
 
 
 <a id="fig:database"></a>
@@ -884,7 +884,7 @@ plt.locator_params(axis='y', nbins=4)
 
 
 
-![png](../../../images/chapters/03/1/notebook_54_0.png)
+![png](../../images/03/1/notebook_54_0.png)
 
 
 However, we note that structures seen in the limb, such as elongated granules, share some similarity to some penumbral filaments, so these cases are already present in the training set.
@@ -909,7 +909,7 @@ plt.tight_layout()
 
 
 
-![png](../../../images/chapters/03/1/notebook_56_0.png)
+![png](../../images/03/1/notebook_56_0.png)
 
 
 ### A magnetogram example: AR 11158
@@ -1064,7 +1064,7 @@ plt.tight_layout()
 
 
 
-![png](../../../images/chapters/03/1/notebook_69_0.png)
+![png](../../images/03/1/notebook_69_0.png)
 
 
 <a id="fig:compara2"></a>

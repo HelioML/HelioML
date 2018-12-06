@@ -16,7 +16,7 @@
 
 #######################################################################################
 # Jekyll site settings
-title: "HelioML: A book about machine learning, statistics, and data mining for heliophysics"
+title: "HelioML"
 author: "Monica Bobra and James Mason"
 description: >- # this means to ignore newlines until "baseurl:"
   "A book about machine learning, statistics, and data mining for heliophysics"

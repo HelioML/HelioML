@@ -1,14 +1,14 @@
 ---
-title: 'Differential Emission Measurements'
-permalink: 'chapters/04/Differential_Emission_Measurements'
-previouschapter:
-  url: chapters/03/1/notebook
-  title: 'Notebook'
-nextchapter:
-  url: chapters/04/1/notebook
-  title: 'Notebook'
 redirect_from:
-  - 'chapters/04/differential-emission-measurements'
+  - "/04/differential-emission-measurements"
+title: 'Differential Emission Measurements'
+prev_page:
+  url: /03/1/notebook
+  title: 'notebook'
+next_page:
+  url: /04/1/notebook
+  title: 'notebook'
+comment: "***PROGRAMMATICALLY GENERATED, DO NOT EDIT. SEE ORIGINAL FILES IN /notebooks***"
 ---
 DeepEM: A Deep Learning Approach for DEM Inversion
 ============================================

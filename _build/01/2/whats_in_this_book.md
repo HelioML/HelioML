@@ -1,14 +1,14 @@
 ---
-title: 'What's In This Book?'
-permalink: 'chapters/01/2/whats_in_this_book'
-previouschapter:
-  url: chapters/01/1/example_fitting_time_series
-  title: 'Example Fitting Time Series'
-nextchapter:
-  url: chapters/01/3/other_references
-  title: 'Other References'
 redirect_from:
-  - 'chapters/01/2/whats-in-this-book'
+  - "/01/2/whats-in-this-book"
+title: 'What's In This Book?'
+prev_page:
+  url: /01/1/example_fitting_time_series
+  title: 'Example Fitting Time Series'
+next_page:
+  url: /01/3/other_references
+  title: 'Other References'
+comment: "***PROGRAMMATICALLY GENERATED, DO NOT EDIT. SEE ORIGINAL FILES IN /notebooks***"
 ---
 What's In This Book?
 ====================
