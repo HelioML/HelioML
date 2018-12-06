@@ -4,10 +4,10 @@ redirect_from:
 title: 'Enhancing SDO Images'
 prev_page:
   url: /02/1/notebook
-  title: 'notebook'
+  title: 'Notebook'
 next_page:
   url: /03/1/notebook
-  title: 'notebook'
+  title: 'Notebook'
 comment: "***PROGRAMMATICALLY GENERATED, DO NOT EDIT. SEE ORIGINAL FILES IN /notebooks***"
 ---
 Enhancing SDO/HMI images using deep learning

@@ -7,8 +7,8 @@ prev_page:
   url: /01/whys_and_whats
   title: 'Whys and Whats'
 next_page:
-  url: /01/2/whats_in_this_book
-  title: 'What's In This Book?'
+  url: /01/2/in_this_book
+  title: 'In This Book'
 comment: "***PROGRAMMATICALLY GENERATED, DO NOT EDIT. SEE ORIGINAL FILES IN /notebooks***"
 ---
 

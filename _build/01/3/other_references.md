@@ -3,8 +3,8 @@ redirect_from:
   - "/01/3/other-references"
 title: 'Other References'
 prev_page:
-  url: /01/2/whats_in_this_book
-  title: 'What's In This Book?'
+  url: /01/2/in_this_book
+  title: 'In This Book'
 next_page:
   url: /02/Predicting_Coronal_Mass_Ejections
   title: 'Predicting Coronal Mass Ejections'

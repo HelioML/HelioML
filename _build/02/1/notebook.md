@@ -2,7 +2,7 @@
 redirect_from:
   - "/02/1/notebook"
 interact_link: content//mbobra/Stanford/github/HelioML/notebooks/02/1/notebook.ipynb
-title: 'notebook'
+title: 'Notebook'
 prev_page:
   url: /02/Predicting_Coronal_Mass_Ejections
   title: 'Predicting Coronal Mass Ejections'

@@ -4,10 +4,10 @@ redirect_from:
 title: 'Differential Emission Measurements'
 prev_page:
   url: /03/1/notebook
-  title: 'notebook'
+  title: 'Notebook'
 next_page:
   url: /04/1/notebook
-  title: 'notebook'
+  title: 'Notebook'
 comment: "***PROGRAMMATICALLY GENERATED, DO NOT EDIT. SEE ORIGINAL FILES IN /notebooks***"
 ---
 DeepEM: A Deep Learning Approach for DEM Inversion

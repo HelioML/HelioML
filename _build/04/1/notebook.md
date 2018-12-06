@@ -2,7 +2,7 @@
 redirect_from:
   - "/04/1/notebook"
 interact_link: content//mbobra/Stanford/github/HelioML/notebooks/04/1/notebook.ipynb
-title: 'notebook'
+title: 'Notebook'
 prev_page:
   url: /04/Differential_Emission_Measurements
   title: 'Differential Emission Measurements'

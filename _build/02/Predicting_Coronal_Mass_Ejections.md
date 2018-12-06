@@ -7,7 +7,7 @@ prev_page:
   title: 'Other References'
 next_page:
   url: /02/1/notebook
-  title: 'notebook'
+  title: 'Notebook'
 comment: "***PROGRAMMATICALLY GENERATED, DO NOT EDIT. SEE ORIGINAL FILES IN /notebooks***"
 ---
 Predicting Coronal Mass Ejections
