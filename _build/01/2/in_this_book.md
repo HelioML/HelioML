@@ -1,7 +1,7 @@
 ---
 redirect_from:
-  - "/01/2/whats-in-this-book"
-title: 'What's In This Book?'
+  - "/01/2/in-this-book"
+title: 'In This Book'
 prev_page:
   url: /01/1/example_fitting_time_series
   title: 'Example Fitting Time Series'
