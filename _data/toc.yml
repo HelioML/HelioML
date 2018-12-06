@@ -22,7 +22,6 @@
 
 - title: Whys and Whats
   url: /01/whys_and_whats
-  not_numbered: true
   sections:
   - title: Example Fitting Time Series
     url: /01/1/example_fitting_time_series
