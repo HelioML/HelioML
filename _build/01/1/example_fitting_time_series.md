@@ -14,7 +14,7 @@ comment: "***PROGRAMMATICALLY GENERATED, DO NOT EDIT. SEE ORIGINAL FILES IN /not
 
 # Example 1: Fitting a time series
 
-Alright, we hope that was a sufficiently grandiose introduction. Now it's time to get our hands dirty and work through an example. We'll start very simple and throughout the book delve deeper. 
+All right, we hope that was a sufficiently grandiose introduction. Now it's time to get our hands dirty and work through an example. We'll start very simple and throughout the book delve deeper. 
 
 This notebook loads up some actual measurements of the sun over time, cleans the data, and then uses machine learning techniques to fit those data. 
 
