@@ -8,7 +8,7 @@ prev_page:
 next_page:
   url: /01/1/example_fitting_time_series
   title: 'Example Fitting Time Series'
-comment: "***PROGRAMMATICALLY GENERATED, DO NOT EDIT. SEE ORIGINAL FILES IN /notebooks***"
+comment: "***PROGRAMMATICALLY GENERATED, DO NOT EDIT. SEE ORIGINAL FILES IN /content***"
 ---
 What Is This Book and Why Does It Exist?
 ====================

@@ -1,7 +1,7 @@
 ---
 redirect_from:
   - "/01/1/example-fitting-time-series"
-interact_link: content//mbobra/Stanford/github/HelioML/notebooks/01/1/example_fitting_time_series.ipynb
+interact_link: content/01/1/example_fitting_time_series.ipynb
 title: 'Example Fitting Time Series'
 prev_page:
   url: /01/whys_and_whats
@@ -9,7 +9,7 @@ prev_page:
 next_page:
   url: /01/2/in_this_book
   title: 'In This Book'
-comment: "***PROGRAMMATICALLY GENERATED, DO NOT EDIT. SEE ORIGINAL FILES IN /notebooks***"
+comment: "***PROGRAMMATICALLY GENERATED, DO NOT EDIT. SEE ORIGINAL FILES IN /content***"
 ---
 
 # Example 1: Fitting a time series

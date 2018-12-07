@@ -1,7 +1,7 @@
 ---
 redirect_from:
   - "/04/1/notebook"
-interact_link: content//mbobra/Stanford/github/HelioML/notebooks/04/1/notebook.ipynb
+interact_link: content/04/1/notebook.ipynb
 title: 'Notebook'
 prev_page:
   url: /04/Differential_Emission_Measurements
@@ -9,7 +9,7 @@ prev_page:
 next_page:
   url: 
   title: ''
-comment: "***PROGRAMMATICALLY GENERATED, DO NOT EDIT. SEE ORIGINAL FILES IN /notebooks***"
+comment: "***PROGRAMMATICALLY GENERATED, DO NOT EDIT. SEE ORIGINAL FILES IN /content***"
 ---
 
 # DeepEM: A Deep Learning Approach for DEM Inversion

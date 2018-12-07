@@ -9,7 +9,7 @@ prev_page:
 next_page:
   url: /acknowledgements
   title: 'Acknowledgements'
-comment: "***PROGRAMMATICALLY GENERATED, DO NOT EDIT. SEE ORIGINAL FILES IN /notebooks***"
+comment: "***PROGRAMMATICALLY GENERATED, DO NOT EDIT. SEE ORIGINAL FILES IN /content***"
 ---
 # Machine Learning, Statistics, and Data Mining for Heliophysics
 

@@ -8,7 +8,7 @@ prev_page:
 next_page:
   url: /02/1/notebook
   title: 'Notebook'
-comment: "***PROGRAMMATICALLY GENERATED, DO NOT EDIT. SEE ORIGINAL FILES IN /notebooks***"
+comment: "***PROGRAMMATICALLY GENERATED, DO NOT EDIT. SEE ORIGINAL FILES IN /content***"
 ---
 Predicting Coronal Mass Ejections
 =================================

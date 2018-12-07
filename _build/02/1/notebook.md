@@ -1,7 +1,7 @@
 ---
 redirect_from:
   - "/02/1/notebook"
-interact_link: content//mbobra/Stanford/github/HelioML/notebooks/02/1/notebook.ipynb
+interact_link: content/02/1/notebook.ipynb
 title: 'Notebook'
 prev_page:
   url: /02/Predicting_Coronal_Mass_Ejections
@@ -9,7 +9,7 @@ prev_page:
 next_page:
   url: /03/Enhancing_SDO_images
   title: 'Enhancing SDO Images'
-comment: "***PROGRAMMATICALLY GENERATED, DO NOT EDIT. SEE ORIGINAL FILES IN /notebooks***"
+comment: "***PROGRAMMATICALLY GENERATED, DO NOT EDIT. SEE ORIGINAL FILES IN /content***"
 ---
 
 # Predicting Coronal Mass Ejections

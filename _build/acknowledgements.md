@@ -8,7 +8,7 @@ prev_page:
 next_page:
   url: /01/whys_and_whats
   title: 'Whys and Whats'
-comment: "***PROGRAMMATICALLY GENERATED, DO NOT EDIT. SEE ORIGINAL FILES IN /notebooks***"
+comment: "***PROGRAMMATICALLY GENERATED, DO NOT EDIT. SEE ORIGINAL FILES IN /content***"
 ---
 # Acknowledgements
 

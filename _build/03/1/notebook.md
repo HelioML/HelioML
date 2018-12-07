@@ -1,7 +1,7 @@
 ---
 redirect_from:
   - "/03/1/notebook"
-interact_link: content//mbobra/Stanford/github/HelioML/notebooks/03/1/notebook.ipynb
+interact_link: content/03/1/notebook.ipynb
 title: 'Notebook'
 prev_page:
   url: /03/Enhancing_SDO_images
@@ -9,7 +9,7 @@ prev_page:
 next_page:
   url: /04/Differential_Emission_Measurements
   title: 'Differential Emission Measurements'
-comment: "***PROGRAMMATICALLY GENERATED, DO NOT EDIT. SEE ORIGINAL FILES IN /notebooks***"
+comment: "***PROGRAMMATICALLY GENERATED, DO NOT EDIT. SEE ORIGINAL FILES IN /content***"
 ---
 
 # Enhancing SDO/HMI images using deep learning

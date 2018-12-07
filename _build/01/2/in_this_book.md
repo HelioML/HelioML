@@ -8,7 +8,7 @@ prev_page:
 next_page:
   url: /01/3/other_references
   title: 'Other References'
-comment: "***PROGRAMMATICALLY GENERATED, DO NOT EDIT. SEE ORIGINAL FILES IN /notebooks***"
+comment: "***PROGRAMMATICALLY GENERATED, DO NOT EDIT. SEE ORIGINAL FILES IN /content***"
 ---
 What's In This Book?
 ====================

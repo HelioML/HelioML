@@ -8,7 +8,7 @@ prev_page:
 next_page:
   url: /02/Predicting_Coronal_Mass_Ejections
   title: 'Predicting Coronal Mass Ejections'
-comment: "***PROGRAMMATICALLY GENERATED, DO NOT EDIT. SEE ORIGINAL FILES IN /notebooks***"
+comment: "***PROGRAMMATICALLY GENERATED, DO NOT EDIT. SEE ORIGINAL FILES IN /content***"
 ---
 Other References
 ====================
