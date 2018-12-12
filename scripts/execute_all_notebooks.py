@@ -6,7 +6,8 @@ from glob import glob
 from subprocess import check_call
 from tqdm import tqdm
 
-ipynb_files = glob('./notebooks/**/*.ipynb', recursive=True)
+ipynb_files = glob('../content/**/*/*.ipynb', recursive=True)
+print("The ipython notebooks live here:",ipynb_files)
 failed_files = []
 for ifile in tqdm(ipynb_files):
     call = 'jupyter nbconvert --inplace --ExecutePreprocessor.kernel_name=python3 --to notebook --execute {}'.format(ifile)

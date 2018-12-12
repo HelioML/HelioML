@@ -15,3 +15,14 @@ dependencies:
     - scipy
     - sklearn
     - seaborn
+    - sunpy
+    - astropy
+    - mpld3
+    - matplotlib
+    - urllib
+    - json
+    - datetime
+    - lime
+    - os
+    - time
+    - torch
