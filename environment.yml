@@ -15,14 +15,14 @@ dependencies:
     - scipy
     - sklearn
     - seaborn
-    - sunpy
-    - astropy
+    - sunpy==0.9.5
+    - suds-jurko
+    - astropy==3.1
+    - drms
     - mpld3
     - matplotlib
-    - urllib
-    - json
     - datetime
     - lime
-    - os
-    - time
     - torch
+    - keras
+    - jupyter_contrib_nbextensions
