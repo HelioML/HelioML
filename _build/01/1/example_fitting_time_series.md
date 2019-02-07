@@ -65,7 +65,7 @@ light_curve_df.head()
 
 
 
-<div markdown="0">
+<div markdown="0" class="output output_html">
 <div>
 <style scoped>
     .dataframe tbody tr th:only-of-type {
@@ -138,7 +138,9 @@ plt.ylabel('irradiance [%]');
 
 
 
+{:.output .output_png}
 ![png](../../images/01/1/example_fitting_time_series_9_0.png)
+
 
 
 So sure, these are some measurements of ultraviolet light from the sun. But looking at it, it could be almost anything. It's just a time series. Your eye can naturally trace some basic shapes in the data; you can pretty easily see through the noise. But what we'd like is to have just that smooth curve. The original motivation that lead to the example was to be able to parameterize the depth and slope of that dip about a quarter of the way through; that's a coronal dimming and it contains information about a violent coronal mass ejection that resulted in some bad space weather. If interested, you can read the papers about this coronal dimming work [here](https://ui.adsabs.harvard.edu/#abs/2016SPD....4740402M/abstract) and [here](https://ui.adsabs.harvard.edu/#abs/2014ApJ...789...61M/abstract).
@@ -248,7 +250,9 @@ plt.legend(loc='best');
 
 
 
+{:.output .output_png}
 ![png](../../images/01/1/example_fitting_time_series_27_0.png)
+
 
 
 This is a pretty iconic looking validation curve. The major common features are all there. The training score starts low for low values of the hyperparameter ($\gamma$ in this case for SVR). It then monotonically increases across the whole range. In other words, ever more complicated models do a better job of fitting the training data. Where things get interesting is when you look at the validation score. It too starts out low for low values of $\gamma$, but it is also low at very high $\gamma$. In the middle somewhere we find a peak. This tells us that a complicated model can do an excellent job with data it is trained on, but does terrible when that learned model is applied to new data. In more traditional terms, you can think of the gap between the training and validation score at high $\gamma$ as overfitting and the terrible scores at low $\gamma$ as underfitting. That peak in the middle is our best fit. So lets now programmatically grab that peak value of $\gamma$. Note that for each of the ```n_splits``` in our ```shuffle_split```, we have a different set of scores. That's why in the plot and below, we're taking a median across axis 1. 
@@ -266,13 +270,13 @@ print('Best fit gamma: {}'.format(str(best_fit_gamma)))
 ```
 
 
-{:.output_stream}
+{:.output .output_stream}
 ```
-Scores: [ 0.04951443  0.06154749  0.07106599  0.12581001  0.2614409   0.3100576
-  0.31646112  0.32533225  0.36214982  0.42087804  0.48439067  0.47046177
-  0.46230723  0.43604148  0.43099558  0.43167014  0.4187839   0.29498409
-  0.00914969 -0.54841982]
-Best score: 0.48439066930449953
+Scores: [ 0.05195524  0.03391803  0.04768922  0.10671474  0.27127605  0.33552685
+  0.34430115  0.36286517  0.37951346  0.42362163  0.45909345  0.45650719
+  0.44508229  0.43914381  0.41708402  0.43395816  0.40950255  0.29077434
+ -0.03509505 -0.9674281 ]
+Best score: 0.4590934471580122
 Best fit gamma: 4.281332398719396e-08
 
 ```
@@ -318,7 +322,9 @@ plt.legend(loc='best');
 
 
 
+{:.output .output_png}
 ![png](../../images/01/1/example_fitting_time_series_35_0.png)
+
 
 
 ## Explore!

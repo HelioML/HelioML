@@ -1,6 +1,4 @@
 ---
-redirect_from:
-  - "/04/1/notebook"
 interact_link: content/04/1/notebook.ipynb
 title: 'Notebook'
 prev_page:
@@ -208,11 +206,15 @@ for axes in ax:
 
 
 
+{:.output .output_png}
 ![png](../../images/04/1/notebook_16_0.png)
 
 
 
+
+{:.output .output_png}
 ![png](../../images/04/1/notebook_16_1.png)
+
 
 
 <b>Figure 1:</b> Left to Right: <i>SDO</i>/AIA images in 171 Å, 211 Å, and 94 Å (top, left to right), with the corresponding DEM bins (chosen at the peak sensitivity of each of the <i>SDO</i>/AIA channels) shown below. In the DEM bins (bottom) it is clear that there are some pixels that have solutions of DEM = $zero$, as explicitly seen as dark regions/clusters of pixels on and off disk.
@@ -356,63 +358,63 @@ print(ttime)
 ```
 
 
-{:.output_stream}
+{:.output .output_stream}
 ```
 [0]: 0.0% complete: 
-Epoch:  0 trn_loss:  3.328942060470581 val_loss:  3.5720224380493164
-Epoch:  10 trn_loss:  1.6681122779846191 val_loss:  1.82981538772583
-Epoch:  20 trn_loss:  0.8270796537399292 val_loss:  0.9576936364173889
-Epoch:  30 trn_loss:  0.5821843147277832 val_loss:  0.7041575908660889
-Epoch:  40 trn_loss:  0.5572682619094849 val_loss:  0.6688917279243469
-Epoch:  50 trn_loss:  0.5128538012504578 val_loss:  0.62626713514328
-Epoch:  60 trn_loss:  0.4758664667606354 val_loss:  0.5860872864723206
-Epoch:  70 trn_loss:  0.4503079950809479 val_loss:  0.5547241568565369
-Epoch:  80 trn_loss:  0.42846399545669556 val_loss:  0.526684045791626
-Epoch:  90 trn_loss:  0.41002219915390015 val_loss:  0.504288911819458
-Epoch:  100 trn_loss:  0.3946799635887146 val_loss:  0.4836472272872925
-Epoch:  110 trn_loss:  0.3812086284160614 val_loss:  0.4666471481323242
-Epoch:  120 trn_loss:  0.3687494397163391 val_loss:  0.4511677026748657
+Epoch:  0 trn_loss:  2.8627679347991943 val_loss:  3.107328414916992
+Epoch:  10 trn_loss:  1.4905387163162231 val_loss:  1.6681591272354126
+Epoch:  20 trn_loss:  0.7912401556968689 val_loss:  0.9268097281455994
+Epoch:  30 trn_loss:  0.56581711769104 val_loss:  0.6886234879493713
+Epoch:  40 trn_loss:  0.5408100485801697 val_loss:  0.6432310938835144
+Epoch:  50 trn_loss:  0.49489152431488037 val_loss:  0.5940018892288208
+Epoch:  60 trn_loss:  0.46208664774894714 val_loss:  0.5669369697570801
+Epoch:  70 trn_loss:  0.43767115473747253 val_loss:  0.5357973575592041
+Epoch:  80 trn_loss:  0.41696393489837646 val_loss:  0.5086144804954529
+Epoch:  90 trn_loss:  0.40023043751716614 val_loss:  0.4870341122150421
+Epoch:  100 trn_loss:  0.3856879472732544 val_loss:  0.4700956344604492
+Epoch:  110 trn_loss:  0.37217652797698975 val_loss:  0.4535712003707886
+Epoch:  120 trn_loss:  0.3590889573097229 val_loss:  0.43708673119544983
 [125]: 25.0% complete: 
-Epoch:  130 trn_loss:  0.3568281829357147 val_loss:  0.43708622455596924
-Epoch:  140 trn_loss:  0.34481948614120483 val_loss:  0.42316001653671265
-Epoch:  150 trn_loss:  0.3325572609901428 val_loss:  0.40893223881721497
-Epoch:  160 trn_loss:  0.3206677734851837 val_loss:  0.3941940665245056
-Epoch:  170 trn_loss:  0.3089371919631958 val_loss:  0.3809552490711212
-Epoch:  180 trn_loss:  0.29662102460861206 val_loss:  0.3658013343811035
-Epoch:  190 trn_loss:  0.2858353853225708 val_loss:  0.3530679941177368
-Epoch:  200 trn_loss:  0.2759355306625366 val_loss:  0.3411480188369751
-Epoch:  210 trn_loss:  0.2670588195323944 val_loss:  0.3305090665817261
-Epoch:  220 trn_loss:  0.2591996192932129 val_loss:  0.3207198977470398
-Epoch:  230 trn_loss:  0.2523084282875061 val_loss:  0.311989426612854
-Epoch:  240 trn_loss:  0.246346578001976 val_loss:  0.3043992817401886
+Epoch:  130 trn_loss:  0.34632638096809387 val_loss:  0.4223099946975708
+Epoch:  140 trn_loss:  0.33389201760292053 val_loss:  0.40718716382980347
+Epoch:  150 trn_loss:  0.32165592908859253 val_loss:  0.39250582456588745
+Epoch:  160 trn_loss:  0.309338241815567 val_loss:  0.3770708441734314
+Epoch:  170 trn_loss:  0.2976858615875244 val_loss:  0.36374589800834656
+Epoch:  180 trn_loss:  0.2868950068950653 val_loss:  0.3506329357624054
+Epoch:  190 trn_loss:  0.27694597840309143 val_loss:  0.3385855555534363
+Epoch:  200 trn_loss:  0.26837119460105896 val_loss:  0.32800352573394775
+Epoch:  210 trn_loss:  0.2608393430709839 val_loss:  0.31857526302337646
+Epoch:  220 trn_loss:  0.254223495721817 val_loss:  0.3104727268218994
+Epoch:  230 trn_loss:  0.2483656406402588 val_loss:  0.3033764362335205
+Epoch:  240 trn_loss:  0.24302402138710022 val_loss:  0.2972638010978699
 [250]: 50.0% complete: 
-Epoch:  250 trn_loss:  0.241195946931839 val_loss:  0.2977723479270935
-Epoch:  260 trn_loss:  0.2366849035024643 val_loss:  0.2920348644256592
-Epoch:  270 trn_loss:  0.23266059160232544 val_loss:  0.28685781359672546
-Epoch:  280 trn_loss:  0.22896899282932281 val_loss:  0.28227299451828003
-Epoch:  290 trn_loss:  0.22538073360919952 val_loss:  0.27806150913238525
-Epoch:  300 trn_loss:  0.2220344990491867 val_loss:  0.2743688225746155
-Epoch:  310 trn_loss:  0.21884138882160187 val_loss:  0.2709724009037018
-Epoch:  320 trn_loss:  0.2158205509185791 val_loss:  0.2678989768028259
-Epoch:  330 trn_loss:  0.21288469433784485 val_loss:  0.26472389698028564
-Epoch:  340 trn_loss:  0.21004413068294525 val_loss:  0.2616737484931946
-Epoch:  350 trn_loss:  0.20724453032016754 val_loss:  0.25884389877319336
-Epoch:  360 trn_loss:  0.2044813632965088 val_loss:  0.2559853792190552
-Epoch:  370 trn_loss:  0.201777383685112 val_loss:  0.25315842032432556
+Epoch:  250 trn_loss:  0.23786398768424988 val_loss:  0.29172074794769287
+Epoch:  260 trn_loss:  0.23308508098125458 val_loss:  0.2865757644176483
+Epoch:  270 trn_loss:  0.22846972942352295 val_loss:  0.2814153730869293
+Epoch:  280 trn_loss:  0.22421219944953918 val_loss:  0.2771376669406891
+Epoch:  290 trn_loss:  0.22016769647598267 val_loss:  0.2730095088481903
+Epoch:  300 trn_loss:  0.21627956628799438 val_loss:  0.2690524756908417
+Epoch:  310 trn_loss:  0.21255624294281006 val_loss:  0.26530033349990845
+Epoch:  320 trn_loss:  0.2088664323091507 val_loss:  0.26161888241767883
+Epoch:  330 trn_loss:  0.20535150170326233 val_loss:  0.25857970118522644
+Epoch:  340 trn_loss:  0.20196974277496338 val_loss:  0.25551971793174744
+Epoch:  350 trn_loss:  0.19869889318943024 val_loss:  0.25214439630508423
+Epoch:  360 trn_loss:  0.1956496685743332 val_loss:  0.24938362836837769
+Epoch:  370 trn_loss:  0.19282153248786926 val_loss:  0.24671685695648193
 [375]: 75.0% complete: 
-Epoch:  380 trn_loss:  0.19900348782539368 val_loss:  0.2499287873506546
-Epoch:  390 trn_loss:  0.19637078046798706 val_loss:  0.24727076292037964
-Epoch:  400 trn_loss:  0.1936444491147995 val_loss:  0.24451886117458344
-Epoch:  410 trn_loss:  0.1910942643880844 val_loss:  0.24197131395339966
-Epoch:  420 trn_loss:  0.18861205875873566 val_loss:  0.23903696238994598
-Epoch:  430 trn_loss:  0.18618348240852356 val_loss:  0.2365807741880417
-Epoch:  440 trn_loss:  0.18382203578948975 val_loss:  0.23406410217285156
-Epoch:  450 trn_loss:  0.18153594434261322 val_loss:  0.23166057467460632
-Epoch:  460 trn_loss:  0.17931421101093292 val_loss:  0.2293083369731903
-Epoch:  470 trn_loss:  0.1771312803030014 val_loss:  0.22700132429599762
-Epoch:  480 trn_loss:  0.17498815059661865 val_loss:  0.22472193837165833
-Epoch:  490 trn_loss:  0.17292694747447968 val_loss:  0.22251540422439575
-Training time = 46.060962200164795 seconds
+Epoch:  380 trn_loss:  0.1902017742395401 val_loss:  0.24409322440624237
+Epoch:  390 trn_loss:  0.18775495886802673 val_loss:  0.24159757792949677
+Epoch:  400 trn_loss:  0.18544846773147583 val_loss:  0.23915234208106995
+Epoch:  410 trn_loss:  0.1832517385482788 val_loss:  0.236699178814888
+Epoch:  420 trn_loss:  0.18109755218029022 val_loss:  0.23419442772865295
+Epoch:  430 trn_loss:  0.1789519488811493 val_loss:  0.23149272799491882
+Epoch:  440 trn_loss:  0.17688563466072083 val_loss:  0.22891315817832947
+Epoch:  450 trn_loss:  0.17486175894737244 val_loss:  0.22617216408252716
+Epoch:  460 trn_loss:  0.17291627824306488 val_loss:  0.2238183319568634
+Epoch:  470 trn_loss:  0.17102813720703125 val_loss:  0.22140638530254364
+Epoch:  480 trn_loss:  0.1691480278968811 val_loss:  0.218905970454216
+Epoch:  490 trn_loss:  0.1671428680419922 val_loss:  0.21600347757339478
+Training time = 2077.592899084091 seconds
 
 ```
 
@@ -433,7 +435,9 @@ plt.show()
 
 
 
+{:.output .output_png}
 ![png](../../images/04/1/notebook_28_0.png)
+
 
 
 <b>Figure 2:</b> Training and Validation MSE loss (blue, orange) as a function of Epoch.
@@ -471,9 +475,9 @@ print(performance)
 ```
 
 
-{:.output_stream}
+{:.output .output_stream}
 ```
-Number of DEM solutions per second = 10867316.634142485
+Number of DEM solutions per second = 229173.30232755907
 
 ```
 
@@ -527,15 +531,21 @@ for axes in ax:
 
 
 
+{:.output .output_png}
 ![png](../../images/04/1/notebook_36_0.png)
 
 
 
+
+{:.output .output_png}
 ![png](../../images/04/1/notebook_36_1.png)
 
 
 
+
+{:.output .output_png}
 ![png](../../images/04/1/notebook_36_2.png)
+
 
 
 <b>Figure 3</b>: Left to Right: <i>SDO</i>/AIA images in 171 Å, 211 Å, and 94 Å (left, top to bottom), with the corresponding DEM bins from Basis Pursuit (chosen at the peak sensitivity of each of the <i>SDO</i>/AIA channels) shown below (middle, top to bottom). The right-hand column shows the DeepEM solutions that correspond to the same bins as the Basis Pursuit solutions. DeepEM provides solutions that are similar to Basis Pursuit, but importantly, provides DEM solutions for every pixel.
@@ -598,7 +608,9 @@ EMinv, EMTru = PlotTotalEM(em_unscaled,em_pred_unscaled,lgtaxis,status)
 
 
 
+{:.output .output_png}
 ![png](../../images/04/1/notebook_41_0.png)
+
 
 
 <b>Figure 4</b>: Average Basis Pursuit DEM (plotted as mean emission measure, black line) and the Average DeepEM solution (dashed line). It is clear that this simple implementation of DeepEM provides, on average, DEMs that are similar to Basis Pursuit (Cheung <i>et al</i> 2015).
@@ -697,15 +709,21 @@ for axes in ax:
 
 
 
+{:.output .output_png}
 ![png](../../images/04/1/notebook_50_0.png)
 
 
 
+
+{:.output .output_png}
 ![png](../../images/04/1/notebook_50_1.png)
 
 
 
+
+{:.output .output_png}
 ![png](../../images/04/1/notebook_50_2.png)
+
 
 
 <b>Figure 5:</b> Top to Bottom: <i>SDO</i>/AIA images in 171 Å, 211 Å, and 94 Å (left, top to bottom) with the corresponding synthesised observations from Basis Pursuit (middle, top to bottom) and DeepEM (right, top to bottom). DeepEM provides synthetic observations that are similar to Basis Pursuit, with the addition of being able to reconstruct <i>SDO</i>/AIA observations where the basis pursuit solution was $zero$.
@@ -823,15 +841,21 @@ for axes in ax:
 
 
 
+{:.output .output_png}
 ![png](../../images/04/1/notebook_62_0.png)
 
 
 
+
+{:.output .output_png}
 ![png](../../images/04/1/notebook_62_1.png)
 
 
 
+
+{:.output .output_png}
 ![png](../../images/04/1/notebook_62_2.png)
+
 
 
 <b>Figure A1</b>: Left to Right: <i>SDO</i>/AIA images in 171 Å, 211 Å, and 94 Å (left, top to bottom) for the training set, with the corresponding DEM bins from Basis Pursuit (chosen at the peak sensitivity of each of the <i>SDO</i>/AIA channels) shown below (middle, top to bottom). The right-hand column shows the DeepEM solutions that correspond to the same bins as the Basis Pursuit solutions. DeepEM provides solutions that are similar to Basis Pursuit, but importantly, provides DEM solutions for every pixel.
@@ -888,15 +912,21 @@ for axes in ax:
 
 
 
+{:.output .output_png}
 ![png](../../images/04/1/notebook_65_0.png)
 
 
 
+
+{:.output .output_png}
 ![png](../../images/04/1/notebook_65_1.png)
 
 
 
+
+{:.output .output_png}
 ![png](../../images/04/1/notebook_65_2.png)
+
 
 
 <b>Figure A2:</b> Top to Bottom: <i>SDO</i>/AIA images in 171 Å, 211 Å, and 94 Å (left, top to bottom) with the corresponding synthesised observations from Basis Pursuit (middle, top to bottom) and DeepEM (right, top to bottom). DeepEM provides synthetic observations that are similar to Basis Pursuit, with the addition of solutions where the basis pursuit solution was $zero$.

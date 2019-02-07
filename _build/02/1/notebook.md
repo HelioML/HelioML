@@ -1,6 +1,4 @@
 ---
-redirect_from:
-  - "/02/1/notebook"
 interact_link: content/02/1/notebook.ipynb
 title: 'Notebook'
 prev_page:
@@ -28,7 +26,7 @@ YouTubeVideo("lPvD8o9Q3ac")
 
 
 
-<div markdown="0">
+<div markdown="0" class="output output_html">
 
         <iframe
             width="400"
@@ -124,7 +122,7 @@ events_list = events_list.reset_index(drop=True)
 ```
 
 
-{:.output_stream}
+{:.output .output_stream}
 ```
 Getting data from https://kauai.ccmc.gsfc.nasa.gov/DONKI/WS/get/FLR?startDate=2010-05-01&endDate=2018-08-01
 
@@ -144,7 +142,7 @@ events_list = events_list.reset_index(drop=True)
 ```
 
 
-{:.output_stream}
+{:.output .output_stream}
 ```
 2011-08-09T08:40:00-SEP-001 not a CME, dropping row
 2011-09-07T06:00:00-SEP-001 not a CME, dropping row
@@ -216,7 +214,7 @@ print('There are', number_of_donki_mistakes, 'DONKI mistakes so far.')
 ```
 
 
-{:.output_stream}
+{:.output .output_stream}
 ```
 Missing NOAA number: nan X1.4 2011-09-22 11:01:00 should be 11302 ; changing now.
 Missing NOAA number: nan X1.3 2012-03-07 01:14:00 should be 11430 ; changing now.
@@ -258,7 +256,7 @@ print('Grabbed all the GOES data; there are', len(listofresults), 'events.')
 ```
 
 
-{:.output_stream}
+{:.output .output_stream}
 ```
 Grabbed all the GOES data; there are 793 events.
 
@@ -296,7 +294,7 @@ print('There are', number_of_donki_mistakes, 'DONKI mistakes so far.')
 ```
 
 
-{:.output_stream}
+{:.output .output_stream}
 ```
 Messed up NOAA number: 11943 X1.2 2014-01-07 18:32:00 should be 11944 ; changing now.
 Messed up NOAA number: 12051 M1.2 2014-05-07 16:29:00 should be 12055 ; changing now.
@@ -361,7 +359,7 @@ print('There are', number_of_donki_mistakes, 'DONKI mistakes so far.')
 ```
 
 
-{:.output_stream}
+{:.output .output_stream}
 ```
 Messed up time: 11429 X1.1 2012-03-05 04:05:00 should be 2012-03-05 04:09:00 ; changing now.
 DONKI flare peak time 2012-03-10 17:27:00 has no match; dropping row.
@@ -561,7 +559,7 @@ print("There are", len(CME_data), "CME events in the positive class.")
 ```
 
 
-{:.output_stream}
+{:.output .output_stream}
 ```
 There are 79 CME events in the positive class.
 
@@ -599,7 +597,7 @@ print("There are", counter_negative, "events in the negative class.")
 ```
 
 
-{:.output_stream}
+{:.output .output_stream}
 ```
 There are 142 events in the positive class.
 There are 651 events in the negative class.
@@ -644,13 +642,32 @@ Here is the number of events associated with the negative class:
 
 {:.input_area}
 ```python
+import datetime
+datetime.datetime.now()
+```
+
+
+
+
+
+{:.output .output_data_text}
+```
+datetime.datetime(2018, 12, 19, 11, 28, 51, 451523)
+```
+
+
+
+
+
+{:.input_area}
+```python
 no_CME_data = negative_result[0]
 negative_class = negative_result[1]
 print("There are", len(no_CME_data), "no-CME events in the negative class.")
 ```
 
 
-{:.output_stream}
+{:.output .output_stream}
 ```
 There are 428 no-CME events in the negative class.
 
@@ -695,7 +712,7 @@ print("There are", CME_data.shape[0], "flares with associated CMEs.")
 ```
 
 
-{:.output_stream}
+{:.output .output_stream}
 ```
 There are 428 flares with no associated CMEs.
 There are 79 flares with associated CMEs.
@@ -751,7 +768,7 @@ mpld3.enable_notebook()
 
 
 
-<div markdown="0">
+<div markdown="0" class="output output_html">
 
 
 <style>
@@ -821,7 +838,7 @@ print(scores)
 ```
 
 
-{:.output_stream}
+{:.output .output_stream}
 ```
 [2.58434622e-01 1.80613220e+00 2.75720486e+00 2.68994023e+00
  8.06933033e-02 1.84214703e-03 1.39527704e+00 1.88377723e+00
@@ -855,7 +872,7 @@ plt.show()
 
 
 
-<div markdown="0">
+<div markdown="0" class="output output_html">
 
 
 <style>
@@ -1058,7 +1075,9 @@ fig.set_size_inches(10, 5)
 
 
 
-![png](../../images/02/1/notebook_68_0.png)
+{:.output .output_png}
+![png](../../images/02/1/notebook_69_0.png)
+
 
 
 As such, we confirm that high k-values result in a high variance. We find it reasonable to use the stratified 10-fold cross-validation method to compute the TSS and will follow this recommendation. Therefore we report this score as our final result:
@@ -1072,7 +1091,7 @@ print("The TSS equals", array_of_avg_TSS[9],
 ```
 
 
-{:.output_stream}
+{:.output .output_stream}
 ```
 The TSS equals 0.6289981947876684 plus or minus 0.14972842704649209 .
 
@@ -1118,7 +1137,7 @@ exp.show_in_notebook(show_table=False, show_all=False)
 ```
 
 
-{:.output_stream}
+{:.output .output_stream}
 ```
 Here is the prediction explanation for NOAA Active Region 11165 (HARPNUM  394 ),
  which produced a M1.5 class flare on 2011.03.06_07:54_TAI .
@@ -1126,7 +1145,7 @@ Here is the prediction explanation for NOAA Active Region 11165 (HARPNUM  394 ),
 ```
 
 
-<div markdown="0">
+<div markdown="0" class="output output_html">
 <html>
         <meta http-equiv="content-type" content="text/html; charset=UTF8">
         <head><script>var lime =
@@ -36969,7 +36988,7 @@ for i in range(len(explained_list)):
 ```
 
 
-{:.output_stream}
+{:.output .output_stream}
 ```
 The following condition: Mean angle of field from radial <= -0.73 
  predicts CME with a model weight of 0.14645464122872082 .
