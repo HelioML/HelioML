@@ -25,15 +25,23 @@ def is_not_in(lines, check):
             is_in = False
     return is_in
 
+def replace_in_file(from_text, to_text, filename):
+    with open(filename, "r") as sources:
+        lines = sources.readlines()
+    with open(filename, "w") as sources:
+        for line in lines:
+            sources.write(line.replace(from_text, to_text))
+
 ####################################################
 # Delete old build and create a new one
 curdir = op.dirname(op.abspath(__file__))
 if op.isdir(op.join(curdir, 'site', '_build')):
     sh.rmtree(op.join(curdir, 'site', '_build'))
 
+print("Building site for test suite...")
 cmd = ["python", op.join(curdir, "..", "generate_book.py"),
        "--site-root", op.join(curdir, "site"), "--path-template", op.join(curdir, "..", "templates", "jekyllmd.tpl")]
-out = subprocess.call(cmd)
+out = subprocess.check_call(cmd)
 
 ####################################################
 # Check outputs
@@ -80,3 +88,17 @@ def test_split_yaml():
             (['foo\n'], ['baz\n', 'barf\n']))
     assert (_split_yaml(['   \n', ' \n', '---\n', 'foo\n', '---\n', 'baz\n', 'barf\n']) ==
             (['foo\n'], ['baz\n', 'barf\n']))
+
+def test_notebook_update():
+    source_file = op.join(curdir, 'site', 'content', 'tests', 'features.md')
+    target_file = op.join(curdir, 'site', '_build', 'tests', 'features.md')
+    source_text = 'https://'
+    target_text = 'www.'
+    # replace source_text with target_text in source_file
+    assert is_not_in(open(target_file).readlines(), target_text)
+    replace_in_file(source_text, target_text, source_file)
+    out = subprocess.check_call(cmd)
+    assert is_in(open(target_file).readlines(), target_text)
+    replace_in_file(target_text, source_text, source_file)
+    out = subprocess.check_call(cmd)
+    assert is_not_in(open(target_file).readlines(), target_text)

@@ -21,7 +21,7 @@
   padding: $spacing-unit-small 0;
   overflow-x: auto;
   @include mq($from: tablet) {
-    padding-left: $spacing-unit;
+    padding-left: $spacing-unit-small;
     padding-right: $spacing-unit;
   }
 
@@ -38,6 +38,11 @@
 /**
  * Jupyter notebook styling
  */
+
+div.input_area {
+  // Ensures that items within this div can be positioned absolutely
+  position: relative;
+}
 
 .input_area pre,
 .output_text pre {
@@ -61,8 +66,11 @@
 /* [5] */
 code {
   padding: 4px;
-
   @include inuit-font-size(14px);
+}
+
+pre.highlight code {
+  display: block;
 }
 
 blockquote {
@@ -103,11 +111,14 @@ blockquote {
 
 .output_png img,
 p img {
-  width: 100% !important;
   max-width: 500px;
   display: block;
   margin-left: auto;
   margin-right: auto;
+}
+
+.output_png img {
+  width: 100% !important;
 }
 
 .hl-ipython3 pre::before,
