@@ -8,6 +8,7 @@ from nbclean import NotebookCleaner
 from tqdm import tqdm
 import numpy as np
 from glob import glob
+from uuid import uuid4
 import argparse
 
 DESCRIPTION = ("Convert a collection of Jupyter Notebooks into Jekyll "
@@ -26,6 +27,8 @@ parser.add_argument("--path-config", default=None, help="Path to the Jekyll conf
 parser.add_argument("--path-toc", default=None, help="Path to the Table of Contents YAML file")
 parser.add_argument("--overwrite", action='store_true', help="Overwrite md files if they already exist.")
 parser.add_argument("--execute", action='store_true', help="Execute notebooks before converting to MD.")
+parser.add_argument("--local-build", action='store_true',
+                    help="Specify you are building site locally for later upload.")
 parser.set_defaults(overwrite=False, execute=False)
 
 # Defaults
@@ -75,6 +78,28 @@ def _copy_non_content_files():
         sh.copy2(ifile, new_path)
 
 
+def _case_sensitive_fs(path):
+    """True when filesystem at `path` is case sensitive, False otherwise.
+
+    Checks this by attempting to write two files, one w/ upper case, one
+    with lower. If after this only one file exists, the system is case-insensitive.
+
+    Makes directory `path` if it does not exist.
+    """
+    if not op.exists(path):
+        os.makedirs(path)
+    root = op.join(path, uuid4().hex)
+    fnames = [root + suffix for suffix in 'aA']
+    try:
+        for fname in fnames:
+            with open(fname, 'wt') as fobj:
+                fobj.write('text')
+        written = glob(root + '*')
+    finally:
+        for fname in written:
+            os.unlink(fname)
+    return len(written) == 2
+
 
 if __name__ == '__main__':
     ###############################################################################
@@ -118,6 +143,7 @@ if __name__ == '__main__':
 
     n_skipped_files = 0
     n_built_files = 0
+    case_check = _case_sensitive_fs(BUILD_FOLDER) and args.local_build
     print("Convert and copy notebook/md files...")
     for ix_file, page in enumerate(tqdm(list(toc))):
         url_page = page.get('url', None)
@@ -146,7 +172,8 @@ if __name__ == '__main__':
         path_new_folder = path_url_folder.replace(os.sep + CONTENT_FOLDER_NAME, os.sep + BUILD_FOLDER_NAME)
         path_new_file = op.join(path_new_folder, op.basename(path_url_page).replace('.ipynb', '.md'))
 
-        if overwrite is False and op.exists(path_new_file):
+        if overwrite is False and op.exists(path_new_file) \
+           and os.stat(path_new_file).st_mtime > os.stat(path_url_page).st_mtime:
             n_skipped_files += 1
             continue
 
@@ -233,9 +260,20 @@ if __name__ == '__main__':
         # Front-matter YAML
         yaml_fm = []
         yaml_fm += ['---']
-        yaml_fm += ['redirect_from:']
-        yaml_fm += ['  - "{}"'.format(_prepare_url(url_page).replace('_', '-').lower())]
+        # In case pre-existing links are sanitized
+        sanitized = url_page.lower().replace('_', '-')
+        if sanitized != url_page:
+            if case_check and url_page.lower() == sanitized:
+                raise RuntimeError(
+                    'Redirect {} clashes with page {} for local build on '
+                    'case-insensitive FS\n'.format(sanitized, url_page) +
+                    'Rename source page to lower case or build on a case '
+                    'sensitive FS, e.g. case-sensitive disk image on Mac')
+            yaml_fm += ['redirect_from:']
+            yaml_fm += ['  - "{}"'.format(sanitized)]
         if ix_file == 0:
+            if not sanitized != url_page:
+                yaml_fm += ['redirect_from:']
             yaml_fm += ['  - "/"']
         if path_url_page.endswith('.ipynb'):
             interact_path = 'content/' + path_url_page.split('content/')[-1]
@@ -271,7 +309,7 @@ if __name__ == '__main__':
     print("\n===========")
     print("Generated {} new files\nSkipped {} already-built files".format(n_built_files, n_skipped_files))
     if n_built_files == 0:
-        print("Delete the markdown files in '{}' for any pages that you wish to re-build.".format(BUILD_FOLDER_NAME))
+        print("Delete the markdown files in '{}' for any pages that you wish to re-build, or use --overwrite option to re-build all.".format(BUILD_FOLDER_NAME))
     print("\nYour Jupyter Book is now in `{}/`.".format(BUILD_FOLDER_NAME))
     print("\nDemo your Jupyter book with `make serve` or push to GitHub!")
 
