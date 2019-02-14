@@ -1,6 +1,5 @@
 ---
 redirect_from:
-  - "/title"
   - "/"
 title: 'Title'
 prev_page:

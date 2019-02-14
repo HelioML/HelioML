@@ -1,6 +1,4 @@
 ---
-redirect_from:
-  - "/03/1/notebook"
 interact_link: content/03/1/notebook.ipynb
 title: 'Notebook'
 prev_page:
@@ -208,7 +206,9 @@ plt.tight_layout()
 
 
 
+{:.output .output_png}
 ![png](../../images/03/1/notebook_19_0.png)
+
 
 
 ### General training process
@@ -320,7 +320,7 @@ keras.__version__
 
 
 
-{:.output_data_text}
+{:.output .output_data_text}
 ```
 '2.1.1'
 ```
@@ -394,7 +394,7 @@ model.summary()
 ```
 
 
-{:.output_stream}
+{:.output .output_stream}
 ```
 __________________________________________________________________________________________________
 Layer (type)                    Output Shape         Param #     Connected to                     
@@ -600,7 +600,7 @@ plt.legend()
 ```
 
 
-{:.output_stream}
+{:.output .output_stream}
 ```
 Ideal resolution: 1.11 [arcsec]
 
@@ -610,7 +610,7 @@ Ideal resolution: 1.11 [arcsec]
 
 
 
-{:.output_data_text}
+{:.output .output_data_text}
 ```
 <matplotlib.legend.Legend at 0x7faf8ac79ef0>
 ```
@@ -618,7 +618,9 @@ Ideal resolution: 1.11 [arcsec]
 
 
 
+{:.output .output_png}
 ![png](../../images/03/1/notebook_37_2.png)
+
 
 
 
@@ -720,7 +722,9 @@ plt.tight_layout()
 
 
 
+{:.output .output_png}
 ![png](../../images/03/1/notebook_39_0.png)
+
 
 
 <a id="fig:database"></a>
@@ -838,7 +842,7 @@ run enhance.py -i samples/nhmi.fits -t intensity -o output/hmi_enhanced.fits
 ```
 
 
-{:.output_stream}
+{:.output .output_stream}
 ```
 Model : intensity
 Setting up network...
@@ -854,7 +858,7 @@ Overwriting...
 ```
 
 
-{:.output_data_text}
+{:.output .output_data_text}
 ```
 <Figure size 900x600 with 0 Axes>
 ```
@@ -884,7 +888,9 @@ plt.locator_params(axis='y', nbins=4)
 
 
 
+{:.output .output_png}
 ![png](../../images/03/1/notebook_54_0.png)
+
 
 
 However, we note that structures seen in the limb, such as elongated granules, share some similarity to some penumbral filaments, so these cases are already present in the training set.
@@ -909,7 +915,9 @@ plt.tight_layout()
 
 
 
+{:.output .output_png}
 ![png](../../images/03/1/notebook_56_0.png)
+
 
 
 ### A magnetogram example: AR 11158
@@ -1064,7 +1072,9 @@ plt.tight_layout()
 
 
 
+{:.output .output_png}
 ![png](../../images/03/1/notebook_69_0.png)
+
 
 
 <a id="fig:compara2"></a>
