@@ -56,7 +56,7 @@ jupyterhub_interact_text         : "Interact"  # The text that interact buttons 
 
 # Binder link settings
 use_binder_button                : true  # If 'true', add a binder button for interactive links
-binderhub_url                    : "http://34.73.10.155/"  # The URL for your BinderHub.
+binderhub_url                    : "http://34.73.10.155"  # The URL for your BinderHub.
 binder_repo_base                 : "https://github.com/"  # The site on which the textbook repository is hosted
 binder_repo_org                  : "HelioML"  # The username or organization that owns this repository
 binder_repo_name                 : "HelioML"  # The name of the repository on the web
