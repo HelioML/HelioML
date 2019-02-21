@@ -19,7 +19,7 @@ In the following chapters, we'll cover examples from active research. Each chapt
 
 Below is a short summary of each chapter. Each summary gives a brief overview of the machine learning methods and data types involved in solving a specific research problem. Each ">" symbol is designed to drill down from a general idea into a specific one. If some of these terms don't make sense, don't worry! The chapters explain each scientific and machine learning concept in detail.
 
-## Chapter 3 (This Chapter)
+## Chapter 1 (This Chapter)
 * Author(s): James Paul Mason
 * Objective: Fit time series measurements of solar ultraviolet light to contrast new and familiar concepts
 * ML method(s) and concepts: 
@@ -31,7 +31,7 @@ Below is a short summary of each chapter. Each summary gives a brief overview of
 	* Solar spectral irradiance¹ > extreme ultraviolet light > extracted emission line time series > SDO²/EVE³
 	
 
-## Chapter 4
+## Chapter 2
 * Author(s): Monica Bobra
 * Objective: Predict solar flares (outbursts of high energy light) and coronal mass ejections (outbursts of particles) based on measurements of the sun's surface magnetic field
 * ML method(s) and concepts: 
@@ -42,7 +42,7 @@ Below is a short summary of each chapter. Each summary gives a brief overview of
 	* Solar spectral irradiance > soft x-ray light > extracted flare peak intensity and time > GOES⁵/XRS⁶ flare event database
 	* Solar disk-blocked coronal images > visible light > extracted ejection occurrence and time > SOHO⁷/LASCO⁸ and STEREO⁹/SECCHI¹⁰/COR¹¹ coronal mass ejection database
 
-## Chapter 5
+## Chapter 3
 * Author(s): Carlos José Díaz Baso and Andrés Asensio Ramos
 * Objective: Rapid and robust image resolution enhancement 
 * ML method(s) and concepts: 
@@ -54,7 +54,7 @@ Below is a short summary of each chapter. Each summary gives a brief overview of
 	* Solar surface images > visible light > SDO/HMI
 	* Solar surface images > visible light > Hinode/SOT¹²
 
-## Chapter 6
+## Chapter 4
 * Author(s): Paul Wright, Mark Cheung, Rajat Thomas, Richard Galvez, Alexandre Szenicer, Meng Jin, Andrés Muñoz-Jaramillo, and David Fouhey
 * Objective: Simulating data from a lost instrument (EVE) based on another of a totally different type (AIA¹³)
 * ML method(s) and concepts: 
