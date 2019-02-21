@@ -10,9 +10,15 @@ next_page:
 comment: "***PROGRAMMATICALLY GENERATED, DO NOT EDIT. SEE ORIGINAL FILES IN /content***"
 ---
 
-# Predicting Coronal Mass Ejections
+# predicting coronal mass ejections using machine learning methods
 
-To predict Coronal Mass Ejections, or CMEs, we'll look at every active region observed by the Helioseismic and Magnetic Imager (HMI) instrument on NASA's Solar Dynamics Observatory (SDO) satellite over the last eight years. Each active region is characterized by a bunch of features. These features describe the magnetic field at the solar surface. One feature, for example, is the total energy contained within an active region. Another is the total flux through an active region. We have 18 features, all of which are calculated every 12 minutes throughout an active region's lifetime. Since an active region can evolve rapidly -- see the movie below, which shows the evolution of a sunspot as observed in continuum intensity with the SDO/HMI instrument -- these features can change quite rapidly, too. See [Bobra et al., 2014](http://link.springer.com/article/10.1007%2Fs11207-014-0529-3) for more information on how we calculate these features. <br>
+A Coronal Mass Ejection (CME) throws magnetic flux and plasma from the Sun into interplanetary space. These eruptions are actually related to solar flares -- in fact, CMEs and solar flares are considered “a single magnetically driven event” ([Webb & Howard 2012](http://adsabs.harvard.edu/abs/2012LRSP....9....3W)), wherein a flare unassociated with a CME is called a confined or compact flare. <br>
+
+In general, the more energetic a flare, the more likely it is to be associated with a CME ([Yashiro et al. 2005](http://adsabs.harvard.edu/abs/2005JGRA..11012S05Y)) -- but this is not, by any means, a rule. For example, [Sun et al. (2015)](http://adsabs.harvard.edu/abs/2015ApJ...804L..28S) found that the largest active region in the last 24 years, shown below, produced 6 X-class flares but not a single observed CME.<br>
+
+In this notebook, we will be predicting whether or not a flaring active region will also emit a CME using a machine learning algorithm from the scikit-learn package called Support Vector Machine.
+
+The analysis that follows is published in [Bobra & Ilonidis, 2016, <i> Astrophysical Journal</i>, 821, 127](http://adsabs.harvard.edu/abs/2016ApJ...821..127B). If you use any of this code, we ask that you cite Bobra & Ilonidis (2016).
 
 
 
@@ -40,12 +46,12 @@ YouTubeVideo("lPvD8o9Q3ac")
 
 
 
-After calculating these features, we will assign each active region one of two labels:
+To do this analysis, we'll look at every active region observed by the Helioseismic and Magnetic Imager instrument on NASA's Solar Dynamics Observatory (SDO) satellite over the last eight years. Each active region is characterized by a bunch of features. These features describe the magnetic field at the solar surface. One feature, for example, is the total energy contained within an active region. Another is the total flux through an active region. We have 18 features, all of which are calculated every 12 minutes throughout an active region's lifetime. See [Bobra et al., 2014](http://link.springer.com/article/10.1007%2Fs11207-014-0529-3) for more information on how we calculate these features. <br>
+
+We'll then ascribe each active region to one of two classes:
 
 1. The positive class contains flaring active regions that did produce a CME. 
 2. The negative class contains flaring active regions that did not produce a CME. 
-
-Finally, we'll divide our data into two categories: a training set, and a testing set. We will use the features and labels in our training set to train our learning algorithm, called a Support Vector Machine. And we'll use the features alone -- without any labels -- in our testing set to predict which active regions produce a CME. By comparing the learning algorithm's predictions against the active region's true behavior, we will determine the performance our of predictive model.
 
 First, we'll import some modules.
 
@@ -93,7 +99,7 @@ Let's first query the [DONKI database](http://kauai.ccmc.gsfc.nasa.gov/DONKI/) t
 # request the data
 baseurl = "https://kauai.ccmc.gsfc.nasa.gov/DONKI/WS/get/FLR?"
 t_start = "2010-05-01"
-t_end = "2018-08-01"
+t_end = "2018-04-01"
 url = baseurl+"startDate="+t_start+"&endDate="+t_end
 
 # if there's no response at this time, print warning
@@ -124,7 +130,7 @@ events_list = events_list.reset_index(drop=True)
 
 {:.output .output_stream}
 ```
-Getting data from https://kauai.ccmc.gsfc.nasa.gov/DONKI/WS/get/FLR?startDate=2010-05-01&endDate=2018-08-01
+Getting data from https://kauai.ccmc.gsfc.nasa.gov/DONKI/WS/get/FLR?startDate=2010-05-01&endDate=2018-04-01
 
 ```
 
@@ -134,7 +140,7 @@ Getting data from https://kauai.ccmc.gsfc.nasa.gov/DONKI/WS/get/FLR?startDate=20
 ```python
 # drop the rows that aren't linked to CME events
 for i in range(events_list.shape[0]):
-    value = events_list.ix[i]['linkedEvents'][0]['activityID']
+    value = events_list.loc[i]['linkedEvents'][0]['activityID']
     if not "CME" in value:
         print(value, "not a CME, dropping row")
         events_list = events_list.drop([i])
@@ -191,12 +197,12 @@ number_of_donki_mistakes = 0  # count the number of DONKI mistakes
 event_list_drops = []
 
 for i in range(events_list.shape[0]):
-    if (np.isnan(events_list.ix[i]['activeRegionNum'])):
+    if (np.isnan(events_list.loc[i]['activeRegionNum'])):
         time = events_list['peakTime'].iloc[i]
         time_range = TimeRange(time, time)
         listofresults = sunpy.instr.goes.get_goes_event_list(time_range, 'M1')
         if (listofresults[0]['noaa_active_region'] == 0):
-            print(events_list.ix[i]['activeRegionNum'], events_list.ix[i]
+            print(events_list.loc[i]['activeRegionNum'], events_list.loc[i]
                   ['classType'], "has no match in the GOES flare database ; dropping row.")
             event_list_drops.append(i)
             number_of_donki_mistakes += 1
@@ -377,14 +383,1723 @@ There are 42 DONKI mistakes so far.
 
 ```
 
-Our final table of events that fall into the positive class is in the pandas dataframe called `events_list`. Feel free to un-comment the line below and print this dataframe.
+This is our final table of events that fall into the positive class:
 
 
 
 {:.input_area}
 ```python
-# print events_list
+events_list
 ```
+
+
+
+
+
+<div markdown="0" class="output output_html">
+<div>
+<style>
+    .dataframe thead tr:only-child th {
+        text-align: right;
+    }
+
+    .dataframe thead th {
+        text-align: left;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>activeRegionNum</th>
+      <th>beginTime</th>
+      <th>classType</th>
+      <th>endTime</th>
+      <th>flrID</th>
+      <th>instruments</th>
+      <th>linkedEvents</th>
+      <th>peakTime</th>
+      <th>sourceLocation</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>11158.0</td>
+      <td>2011-02-15T01:44Z</td>
+      <td>X2.2</td>
+      <td>2011-02-15T02:06Z</td>
+      <td>2011-02-15T01:44:00-FLR-001</td>
+      <td>[{'displayName': 'GOES15: SEM/XRS 1.0-8.0', 'i...</td>
+      <td>[{'activityID': '2011-02-15T02:25:00-CME-001'}]</td>
+      <td>2011-02-15 01:56:00</td>
+      <td>S20W10</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>11163.0</td>
+      <td>2011-02-24T07:23Z</td>
+      <td>M3.5</td>
+      <td>2011-02-24T07:42Z</td>
+      <td>2011-02-24T07:23:00-FLR-001</td>
+      <td>[{'displayName': 'GOES15: SEM/XRS 1.0-8.0', 'i...</td>
+      <td>[{'activityID': '2011-02-24T08:00:00-CME-001'}]</td>
+      <td>2011-02-24 07:35:00</td>
+      <td>N14E87</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>11166.0</td>
+      <td>2011-03-07T13:44Z</td>
+      <td>M2.0</td>
+      <td>2011-03-07T15:08Z</td>
+      <td>2011-03-07T13:44:00-FLR-001</td>
+      <td>[{'displayName': 'GOES15: SEM/XRS 1.0-8.0', 'i...</td>
+      <td>[{'activityID': '2011-03-07T14:40:00-CME-001'}]</td>
+      <td>2011-03-07 14:30:00</td>
+      <td>N11E21</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>11164.0</td>
+      <td>2011-03-07T19:43Z</td>
+      <td>M3.7</td>
+      <td>2011-03-07T21:40Z</td>
+      <td>2011-03-07T19:43:00-FLR-001</td>
+      <td>[{'displayName': 'GOES15: SEM/XRS 1.0-8.0', 'i...</td>
+      <td>[{'activityID': '2011-03-07T20:12:00-CME-001'}]</td>
+      <td>2011-03-07 20:12:00</td>
+      <td>N30W48</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>11171.0</td>
+      <td>2011-03-08T03:37Z</td>
+      <td>M1.5</td>
+      <td>2011-03-08T04:20Z</td>
+      <td>2011-03-08T03:37:00-FLR-001</td>
+      <td>[{'displayName': 'GOES15: SEM/XRS 1.0-8.0', 'i...</td>
+      <td>[{'activityID': '2011-03-08T05:00:00-CME-001'}]</td>
+      <td>2011-03-08 03:58:00</td>
+      <td>S21E72</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>11226.0</td>
+      <td>2011-06-07T06:16Z</td>
+      <td>M2.5</td>
+      <td>2011-06-07T06:59Z</td>
+      <td>2011-06-07T06:16:00-FLR-001</td>
+      <td>[{'displayName': 'GOES15: SEM/XRS 1.0-8.0', 'i...</td>
+      <td>[{'activityID': '2011-06-07T06:50:00-CME-001'}...</td>
+      <td>2011-06-07 06:41:00</td>
+      <td>S22W53</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>11261.0</td>
+      <td>2011-08-03T13:17Z</td>
+      <td>M6.0</td>
+      <td>2011-08-03T14:10Z</td>
+      <td>2011-08-03T13:17:00-FLR-001</td>
+      <td>[{'displayName': 'GOES15: SEM/XRS 1.0-8.0', 'i...</td>
+      <td>[{'activityID': '2011-08-03T13:55:00-CME-001'}]</td>
+      <td>2011-08-03 13:48:00</td>
+      <td>N17W29</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>11261.0</td>
+      <td>2011-08-04T03:41Z</td>
+      <td>M9.3</td>
+      <td>2011-08-04T04:04Z</td>
+      <td>2011-08-04T03:41:00-FLR-001</td>
+      <td>[{'displayName': 'GOES15: SEM/XRS 1.0-8.0', 'i...</td>
+      <td>[{'activityID': '2011-08-04T04:10:00-CME-001'}...</td>
+      <td>2011-08-04 03:57:00</td>
+      <td>N15W39</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>11283.0</td>
+      <td>2011-09-07T22:32Z</td>
+      <td>X1.8</td>
+      <td>2011-09-07T22:44Z</td>
+      <td>2011-09-07T22:32:00-FLR-001</td>
+      <td>[{'displayName': 'GOES15: SEM/XRS 1.0-8.0', 'i...</td>
+      <td>[{'activityID': '2011-09-07T23:24:00-CME-001'}]</td>
+      <td>2011-09-07 22:38:00</td>
+      <td>N15W31</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>11302.0</td>
+      <td>2011-09-22T10:29Z</td>
+      <td>X1.4</td>
+      <td>2011-09-22T11:44Z</td>
+      <td>2011-09-22T10:29:00-FLR-001</td>
+      <td>[{'displayName': 'GOES15: SEM/XRS 1.0-8.0', 'i...</td>
+      <td>[{'activityID': '2011-09-22T11:24:00-CME-001'}...</td>
+      <td>2011-09-22 11:01:00</td>
+      <td>N09E89</td>
+    </tr>
+    <tr>
+      <th>10</th>
+      <td>11402.0</td>
+      <td>2012-01-23T03:38Z</td>
+      <td>M8.7</td>
+      <td>2012-01-23T04:34Z</td>
+      <td>2012-01-23T03:38:00-FLR-001</td>
+      <td>[{'displayName': 'GOES15: SEM/XRS 1.0-8.0', 'i...</td>
+      <td>[{'activityID': '2012-01-23T04:00:00-CME-001'}...</td>
+      <td>2012-01-23 03:59:00</td>
+      <td>N28W20</td>
+    </tr>
+    <tr>
+      <th>11</th>
+      <td>11402.0</td>
+      <td>2012-01-27T17:37Z</td>
+      <td>X1.8</td>
+      <td>2012-01-27T18:56Z</td>
+      <td>2012-01-27T17:37:00-FLR-001</td>
+      <td>[{'displayName': 'GOES15: SEM/XRS 1.0-8.0', 'i...</td>
+      <td>[{'activityID': '2012-01-27T16:39:00-CME-001'}...</td>
+      <td>2012-01-27 18:37:00</td>
+      <td>N31W90</td>
+    </tr>
+    <tr>
+      <th>12</th>
+      <td>11429.0</td>
+      <td>2012-03-05T03:30Z</td>
+      <td>X1.1</td>
+      <td>2012-03-05T04:43Z</td>
+      <td>2012-03-05T03:30:00-FLR-001</td>
+      <td>[{'displayName': 'GOES15: SEM/XRS 1.0-8.0', 'i...</td>
+      <td>[{'activityID': '2012-03-05T04:00:00-CME-001'}]</td>
+      <td>2012-03-05 04:09:00</td>
+      <td>N19W58</td>
+    </tr>
+    <tr>
+      <th>13</th>
+      <td>11429.0</td>
+      <td>2012-03-07T00:02Z</td>
+      <td>X5.4</td>
+      <td>2012-03-07T00:40Z</td>
+      <td>2012-03-07T00:00:00-FLR-001</td>
+      <td>[{'displayName': 'GOES15: SEM/XRS 1.0-8.0', 'i...</td>
+      <td>[{'activityID': '2012-03-07T00:36:00-CME-001'}...</td>
+      <td>2012-03-07 00:24:00</td>
+      <td>N18E31</td>
+    </tr>
+    <tr>
+      <th>14</th>
+      <td>11430.0</td>
+      <td>2012-03-07T01:05Z</td>
+      <td>X1.3</td>
+      <td>2012-03-07T01:23Z</td>
+      <td>2012-03-07T01:05:00-FLR-001</td>
+      <td>[{'displayName': 'GOES15: SEM/XRS 1.0-8.0', 'i...</td>
+      <td>[{'activityID': '2012-03-07T00:36:00-CME-001'}...</td>
+      <td>2012-03-07 01:14:00</td>
+      <td>N17E27</td>
+    </tr>
+    <tr>
+      <th>15</th>
+      <td>11429.0</td>
+      <td>2012-03-09T03:22Z</td>
+      <td>M6.3</td>
+      <td>2012-03-09T04:18Z</td>
+      <td>2012-03-09T03:22:00-FLR-001</td>
+      <td>[{'displayName': 'GOES15: SEM/XRS 1.0-8.0', 'i...</td>
+      <td>[{'activityID': '2012-03-09T04:25:00-CME-001'}]</td>
+      <td>2012-03-09 03:53:00</td>
+      <td>N17E02</td>
+    </tr>
+    <tr>
+      <th>16</th>
+      <td>11429.0</td>
+      <td>2012-03-10T17:32Z</td>
+      <td>M8.4</td>
+      <td>2012-03-10T18:30Z</td>
+      <td>2012-03-10T17:32:00-FLR-001</td>
+      <td>[{'displayName': 'GOES15: SEM/XRS 1.0-8.0', 'i...</td>
+      <td>[{'activityID': '2012-03-10T18:09:00-CME-001'}]</td>
+      <td>2012-03-10 17:44:00</td>
+      <td>N18W22</td>
+    </tr>
+    <tr>
+      <th>17</th>
+      <td>11429.0</td>
+      <td>2012-03-13T16:21Z</td>
+      <td>M7.9</td>
+      <td>2012-03-13T18:25Z</td>
+      <td>2012-03-13T16:21:00-FLR-001</td>
+      <td>[{'displayName': 'GOES15: SEM/XRS 1.0-8.0', 'i...</td>
+      <td>[{'activityID': '2012-03-13T17:52:00-CME-001'}...</td>
+      <td>2012-03-13 17:41:00</td>
+      <td>N18W59</td>
+    </tr>
+    <tr>
+      <th>18</th>
+      <td>11476.0</td>
+      <td>2012-05-17T00:30Z</td>
+      <td>M5.1</td>
+      <td>2012-05-17T02:14Z</td>
+      <td>2012-05-17T00:30:00-FLR-001</td>
+      <td>[{'displayName': 'GOES15: SEM/XRS 1.0-8.0', 'i...</td>
+      <td>[{'activityID': '2012-05-17T01:48:00-CME-001'}...</td>
+      <td>2012-05-17 01:47:00</td>
+      <td>N06W90</td>
+    </tr>
+    <tr>
+      <th>19</th>
+      <td>11504.0</td>
+      <td>2012-06-13T11:29Z</td>
+      <td>M1.2</td>
+      <td>2012-06-13T14:31Z</td>
+      <td>2012-06-13T11:29:00-FLR-001</td>
+      <td>[{'displayName': 'GOES15: SEM/XRS 1.0-8.0', 'i...</td>
+      <td>[{'activityID': '2012-06-13T14:00:00-CME-001'}]</td>
+      <td>2012-06-13 13:17:00</td>
+      <td>S18E21</td>
+    </tr>
+    <tr>
+      <th>20</th>
+      <td>11504.0</td>
+      <td>2012-06-14T12:52Z</td>
+      <td>M1.9</td>
+      <td>2012-06-14T15:56Z</td>
+      <td>2012-06-14T12:52:00-FLR-001</td>
+      <td>[{'displayName': 'GOES15: SEM/XRS 1.0-8.0', 'i...</td>
+      <td>[{'activityID': '2012-06-14T14:09:00-CME-001'}]</td>
+      <td>2012-06-14 14:35:00</td>
+      <td>S17W00</td>
+    </tr>
+    <tr>
+      <th>21</th>
+      <td>11515.0</td>
+      <td>2012-07-06T23:01Z</td>
+      <td>X1.1</td>
+      <td>2012-07-06T23:14Z</td>
+      <td>2012-07-06T23:01:00-FLR-001</td>
+      <td>[{'displayName': 'GOES15: SEM/XRS 1.0-8.0', 'i...</td>
+      <td>[{'activityID': '2012-07-06T23:12:00-CME-001'}...</td>
+      <td>2012-07-06 23:08:00</td>
+      <td>S17W50</td>
+    </tr>
+    <tr>
+      <th>22</th>
+      <td>11520.0</td>
+      <td>2012-07-12T15:37Z</td>
+      <td>X1.4</td>
+      <td>2012-07-12T17:30Z</td>
+      <td>2012-07-12T15:37:00-FLR-001</td>
+      <td>[{'displayName': 'GOES15: SEM/XRS 1.0-8.0', 'i...</td>
+      <td>[{'activityID': '2012-07-12T16:54:00-CME-001'}...</td>
+      <td>2012-07-12 16:49:00</td>
+      <td>S14W02</td>
+    </tr>
+    <tr>
+      <th>23</th>
+      <td>11520.0</td>
+      <td>2012-07-17T12:03Z</td>
+      <td>M1.8</td>
+      <td>2012-07-17T19:04Z</td>
+      <td>2012-07-17T12:03:00-FLR-001</td>
+      <td>[{'displayName': 'GOES15: SEM/XRS 1.0-8.0', 'i...</td>
+      <td>[{'activityID': '2012-07-17T14:24:00-CME-001'}...</td>
+      <td>2012-07-17 17:15:00</td>
+      <td>S15W88</td>
+    </tr>
+    <tr>
+      <th>24</th>
+      <td>11520.0</td>
+      <td>2012-07-19T04:17Z</td>
+      <td>M7.7</td>
+      <td>2012-07-19T06:56Z</td>
+      <td>2012-07-19T04:17:00-FLR-001</td>
+      <td>[{'displayName': 'GOES15: SEM/XRS 1.0-8.0', 'i...</td>
+      <td>[{'activityID': '2012-07-19T05:36:00-CME-001'}]</td>
+      <td>2012-07-19 05:58:00</td>
+      <td>S17W91</td>
+    </tr>
+    <tr>
+      <th>25</th>
+      <td>11532.0</td>
+      <td>2012-07-28T20:44Z</td>
+      <td>M6.2</td>
+      <td>2012-07-28T21:04Z</td>
+      <td>2012-07-28T20:44:00-FLR-001</td>
+      <td>[{'displayName': 'GOES15: SEM/XRS 1.0-8.0', 'i...</td>
+      <td>[{'activityID': '2012-07-28T21:24:00-CME-001'}]</td>
+      <td>2012-07-28 20:56:00</td>
+      <td>S20E49</td>
+    </tr>
+    <tr>
+      <th>26</th>
+      <td>11611.0</td>
+      <td>2012-11-08T02:09Z</td>
+      <td>M1.7</td>
+      <td>2012-11-08T04:40Z</td>
+      <td>2012-11-08T02:09:00-FLR-001</td>
+      <td>[{'displayName': 'GOES15: SEM/XRS 1.0-8.0', 'i...</td>
+      <td>[{'activityID': '2012-11-08T11:09:00-CME-001'}]</td>
+      <td>2012-11-08 02:23:00</td>
+      <td>S10E70</td>
+    </tr>
+    <tr>
+      <th>27</th>
+      <td>11618.0</td>
+      <td>2012-11-21T15:10Z</td>
+      <td>M3.5</td>
+      <td>2012-11-21T15:38Z</td>
+      <td>2012-11-21T15:10:00-FLR-001</td>
+      <td>[{'displayName': 'GOES15: SEM/XRS 1.0-8.0', 'i...</td>
+      <td>[{'activityID': '2012-11-21T16:24:00-CME-001'}]</td>
+      <td>2012-11-21 15:30:00</td>
+      <td>N08W00</td>
+    </tr>
+    <tr>
+      <th>28</th>
+      <td>11692.0</td>
+      <td>2013-03-15T05:51Z</td>
+      <td>M1.2</td>
+      <td>2013-03-15T14:30Z</td>
+      <td>2013-03-15T05:51:00-FLR-001</td>
+      <td>[{'displayName': 'GOES15: SEM/XRS 1.0-8.0', 'i...</td>
+      <td>[{'activityID': '2013-03-15T06:54:00-CME-001'}...</td>
+      <td>2013-03-15 06:58:00</td>
+      <td>N20E08</td>
+    </tr>
+    <tr>
+      <th>29</th>
+      <td>11719.0</td>
+      <td>2013-04-11T06:55Z</td>
+      <td>M6.5</td>
+      <td>2013-04-11T07:29Z</td>
+      <td>2013-04-11T06:55:00-FLR-001</td>
+      <td>[{'displayName': 'GOES15: SEM/XRS 1.0-8.0', 'i...</td>
+      <td>[{'activityID': '2013-04-11T07:36:00-CME-001'}...</td>
+      <td>2013-04-11 07:16:00</td>
+      <td>N07E13</td>
+    </tr>
+    <tr>
+      <th>30</th>
+      <td>11748.0</td>
+      <td>2013-05-13T01:53Z</td>
+      <td>X1.6</td>
+      <td>2013-05-13T02:32Z</td>
+      <td>2013-05-13T01:53:00-FLR-001</td>
+      <td>[{'displayName': 'GOES15: SEM/XRS 1.0-8.0', 'i...</td>
+      <td>[{'activityID': '2013-05-13T02:54:00-CME-001'}...</td>
+      <td>2013-05-13 02:17:00</td>
+      <td>N10E89</td>
+    </tr>
+    <tr>
+      <th>31</th>
+      <td>11748.0</td>
+      <td>2013-05-13T15:40Z</td>
+      <td>X2.8</td>
+      <td>2013-05-13T16:16Z</td>
+      <td>2013-05-13T15:40:00-FLR-001</td>
+      <td>[{'displayName': 'GOES15: SEM/XRS 1.0-8.0', 'i...</td>
+      <td>[{'activityID': '2013-05-13T16:18:00-CME-001'}...</td>
+      <td>2013-05-13 16:05:00</td>
+      <td>N10E89</td>
+    </tr>
+    <tr>
+      <th>32</th>
+      <td>11748.0</td>
+      <td>2013-05-14T01:00Z</td>
+      <td>X3.2</td>
+      <td>2013-05-14T01:20Z</td>
+      <td>2013-05-14T01:00:00-FLR-001</td>
+      <td>[{'displayName': 'GOES15: SEM/XRS 1.0-8.0', 'i...</td>
+      <td>[{'activityID': '2013-05-14T01:30:00-CME-001'}]</td>
+      <td>2013-05-14 01:11:00</td>
+      <td>N10E89</td>
+    </tr>
+    <tr>
+      <th>33</th>
+      <td>11748.0</td>
+      <td>2013-05-15T01:25Z</td>
+      <td>X1.2</td>
+      <td>2013-05-15T01:58Z</td>
+      <td>2013-05-15T01:25:00-FLR-001</td>
+      <td>[{'displayName': 'GOES15: SEM/XRS 1.0-8.0', 'i...</td>
+      <td>[{'activityID': '2013-05-15T02:18:00-CME-001'}...</td>
+      <td>2013-05-15 01:48:00</td>
+      <td>N11E63</td>
+    </tr>
+    <tr>
+      <th>34</th>
+      <td>11745.0</td>
+      <td>2013-05-22T12:30Z</td>
+      <td>M5.0</td>
+      <td>2013-05-22T17:10Z</td>
+      <td>2013-05-22T12:30:00-FLR-001</td>
+      <td>[{'displayName': 'GOES15: SEM/XRS 1.0-8.0', 'i...</td>
+      <td>[{'activityID': '2013-05-22T13:24:00-CME-001'}...</td>
+      <td>2013-05-22 13:32:00</td>
+      <td>N13W75</td>
+    </tr>
+    <tr>
+      <th>35</th>
+      <td>11875.0</td>
+      <td>2013-10-22T21:15Z</td>
+      <td>M4.3</td>
+      <td>2013-10-22T21:32Z</td>
+      <td>2013-10-22T21:15:00-FLR-001</td>
+      <td>[{'displayName': 'GOES15: SEM/XRS 1.0-8.0', 'i...</td>
+      <td>[{'activityID': '2013-10-22T22:00:00-CME-001'}]</td>
+      <td>2013-10-22 21:20:00</td>
+      <td>N05E03</td>
+    </tr>
+    <tr>
+      <th>36</th>
+      <td>11877.0</td>
+      <td>2013-10-24T00:22Z</td>
+      <td>M9.3</td>
+      <td>2013-10-24T00:35Z</td>
+      <td>2013-10-24T00:22:00-FLR-001</td>
+      <td>[{'displayName': 'GOES15: SEM/XRS 1.0-8.0', 'i...</td>
+      <td>[{'activityID': '2013-10-24T01:48:00-CME-001'}]</td>
+      <td>2013-10-24 00:30:00</td>
+      <td>S13E09</td>
+    </tr>
+    <tr>
+      <th>37</th>
+      <td>11882.0</td>
+      <td>2013-10-25T07:53Z</td>
+      <td>X1.7</td>
+      <td>2013-10-25T08:09Z</td>
+      <td>2013-10-25T07:53:00-FLR-001</td>
+      <td>[{'displayName': 'GOES15: SEM/XRS 1.0-8.0', 'i...</td>
+      <td>[{'activityID': '2013-10-25T08:24:00-CME-001'}...</td>
+      <td>2013-10-25 08:01:00</td>
+      <td>S08E73</td>
+    </tr>
+    <tr>
+      <th>38</th>
+      <td>11882.0</td>
+      <td>2013-10-25T14:52Z</td>
+      <td>X2.1</td>
+      <td>2013-10-25T15:12Z</td>
+      <td>2013-10-25T14:52:00-FLR-001</td>
+      <td>[{'displayName': 'GOES15: SEM/XRS 1.0-8.0', 'i...</td>
+      <td>[{'activityID': '2013-10-25T15:12:00-CME-001'}]</td>
+      <td>2013-10-25 15:03:00</td>
+      <td>S08E65</td>
+    </tr>
+    <tr>
+      <th>39</th>
+      <td>11884.0</td>
+      <td>2013-10-26T19:24Z</td>
+      <td>M3.1</td>
+      <td>2013-10-26T19:30Z</td>
+      <td>2013-10-26T19:24:00-FLR-001</td>
+      <td>[{'displayName': 'GOES15: SEM/XRS 1.0-8.0', 'i...</td>
+      <td>[{'activityID': '2013-10-26T20:09:00-CME-001'}]</td>
+      <td>2013-10-26 19:27:00</td>
+      <td>S09E77</td>
+    </tr>
+    <tr>
+      <th>40</th>
+      <td>11875.0</td>
+      <td>2013-10-28T01:41Z</td>
+      <td>X1.0</td>
+      <td>2013-10-28T02:12Z</td>
+      <td>2013-10-28T01:41:00-FLR-001</td>
+      <td>[{'displayName': 'GOES15: SEM/XRS 1.0-8.0', 'i...</td>
+      <td>[{'activityID': '2013-10-28T02:12:00-CME-001'}]</td>
+      <td>2013-10-28 02:03:00</td>
+      <td>N07W634</td>
+    </tr>
+    <tr>
+      <th>41</th>
+      <td>11875.0</td>
+      <td>2013-10-28T04:32Z</td>
+      <td>M5.1</td>
+      <td>2013-10-28T04:46Z</td>
+      <td>2013-10-28T04:32:00-FLR-001</td>
+      <td>[{'displayName': 'GOES15: SEM/XRS 1.0-8.0', 'i...</td>
+      <td>[{'activityID': '2013-10-28T04:48:00-CME-001'}]</td>
+      <td>2013-10-28 04:41:00</td>
+      <td>N07W65</td>
+    </tr>
+    <tr>
+      <th>42</th>
+      <td>11875.0</td>
+      <td>2013-10-29T21:48Z</td>
+      <td>X2.3</td>
+      <td>2013-10-29T22:01Z</td>
+      <td>2013-10-29T21:48:00-FLR-001</td>
+      <td>[{'displayName': 'GOES15: SEM/XRS 1.0-8.0', 'i...</td>
+      <td>[{'activityID': '2013-10-29T22:12:00-CME-001'}]</td>
+      <td>2013-10-29 21:54:00</td>
+      <td>N07W89</td>
+    </tr>
+    <tr>
+      <th>43</th>
+      <td>11890.0</td>
+      <td>2013-11-08T04:20Z</td>
+      <td>X1.1</td>
+      <td>2013-11-08T04:29Z</td>
+      <td>2013-11-08T04:20:00-FLR-001</td>
+      <td>[{'displayName': 'GOES15: SEM/XRS 1.0-8.0', 'i...</td>
+      <td>[{'activityID': '2013-11-08T06:09:00-CME-001'}]</td>
+      <td>2013-11-08 04:26:00</td>
+      <td>S10E11</td>
+    </tr>
+    <tr>
+      <th>44</th>
+      <td>11890.0</td>
+      <td>2013-11-10T05:08Z</td>
+      <td>X1.1</td>
+      <td>2013-11-10T05:18Z</td>
+      <td>2013-11-10T05:08:00-FLR-001</td>
+      <td>[{'displayName': 'GOES15: SEM/XRS 1.0-8.0', 'i...</td>
+      <td>[{'activityID': '2013-11-10T05:39:00-CME-001'}]</td>
+      <td>2013-11-10 05:14:00</td>
+      <td>S11W16</td>
+    </tr>
+    <tr>
+      <th>45</th>
+      <td>11893.0</td>
+      <td>2013-11-19T10:14Z</td>
+      <td>X1.0</td>
+      <td>2013-11-19T10:34Z</td>
+      <td>2013-11-19T10:14:00-FLR-001</td>
+      <td>[{'displayName': 'GOES15: SEM/XRS 1.0-8.0', 'i...</td>
+      <td>[{'activityID': '2013-11-19T10:39:00-CME-001'}]</td>
+      <td>2013-11-19 10:26:00</td>
+      <td>S13W69</td>
+    </tr>
+    <tr>
+      <th>46</th>
+      <td>11943.0</td>
+      <td>2014-01-04T18:47Z</td>
+      <td>M4.0</td>
+      <td>2014-01-04T20:23Z</td>
+      <td>2014-01-04T18:47:00-FLR-001</td>
+      <td>[{'displayName': 'GOES15: SEM/XRS 1.0-8.0', 'i...</td>
+      <td>[{'activityID': '2014-01-04T21:25:00-CME-001'}]</td>
+      <td>2014-01-04 19:46:00</td>
+      <td>S11E33</td>
+    </tr>
+    <tr>
+      <th>47</th>
+      <td>11936.0</td>
+      <td>2014-01-04T22:12Z</td>
+      <td>M1.9</td>
+      <td>2014-01-04T23:22Z</td>
+      <td>2014-01-04T22:12:00-FLR-001</td>
+      <td>[{'displayName': 'GOES15: SEM/XRS 1.0-8.0', 'i...</td>
+      <td>[{'activityID': '2014-01-05T00:54:00-CME-001'}]</td>
+      <td>2014-01-04 22:52:00</td>
+      <td>S14W89</td>
+    </tr>
+    <tr>
+      <th>48</th>
+      <td>11944.0</td>
+      <td>2014-01-07T18:02Z</td>
+      <td>X1.2</td>
+      <td>2014-01-07T18:58Z</td>
+      <td>2014-01-07T18:02:00-FLR-001</td>
+      <td>[{'displayName': 'GOES15: SEM/XRS 1.0-8.0', 'i...</td>
+      <td>[{'activityID': '2014-01-07T18:24:00-CME-001'}...</td>
+      <td>2014-01-07 18:32:00</td>
+      <td>S15W10</td>
+    </tr>
+    <tr>
+      <th>49</th>
+      <td>11947.0</td>
+      <td>2014-01-08T03:39Z</td>
+      <td>M3.6</td>
+      <td>2014-01-08T03:54Z</td>
+      <td>2014-01-08T03:39:00-FLR-001</td>
+      <td>[{'displayName': 'GOES15: SEM/XRS 1.0-8.0', 'i...</td>
+      <td>[{'activityID': '2014-01-08T04:12:00-CME-001'}]</td>
+      <td>2014-01-08 03:47:00</td>
+      <td>N11W88</td>
+    </tr>
+    <tr>
+      <th>50</th>
+      <td>11967.0</td>
+      <td>2014-01-30T07:54Z</td>
+      <td>M1.1</td>
+      <td>2014-01-30T08:41Z</td>
+      <td>2014-01-30T07:54:00-FLR-001</td>
+      <td>[{'displayName': 'GOES15: SEM/XRS 1.0-8.0', 'i...</td>
+      <td>[{'activityID': '2014-01-30T08:36:00-CME-001'}]</td>
+      <td>2014-01-30 08:11:00</td>
+      <td>S14E45</td>
+    </tr>
+    <tr>
+      <th>51</th>
+      <td>11967.0</td>
+      <td>2014-01-30T15:48Z</td>
+      <td>M6.6</td>
+      <td>2014-01-30T16:28Z</td>
+      <td>2014-01-30T15:48:00-FLR-001</td>
+      <td>[{'displayName': 'GOES15: SEM/XRS 1.0-8.0', 'i...</td>
+      <td>[{'activityID': '2014-01-30T16:24:00-CME-001'}]</td>
+      <td>2014-01-30 16:11:00</td>
+      <td>S12E61</td>
+    </tr>
+    <tr>
+      <th>52</th>
+      <td>11974.0</td>
+      <td>2014-02-11T03:22Z</td>
+      <td>M1.7</td>
+      <td>2014-02-11T03:39Z</td>
+      <td>2014-02-11T03:22:00-FLR-001</td>
+      <td>[{'displayName': 'GOES15: SEM/XRS 1.0-8.0', 'i...</td>
+      <td>[{'activityID': '2014-02-11T05:24:00-CME-001'}]</td>
+      <td>2014-02-11 03:31:00</td>
+      <td>S13E16</td>
+    </tr>
+    <tr>
+      <th>53</th>
+      <td>11990.0</td>
+      <td>2014-02-25T00:41Z</td>
+      <td>X4.9</td>
+      <td>2014-02-25T01:03Z</td>
+      <td>2014-02-25T00:41:00-FLR-001</td>
+      <td>[{'displayName': 'GOES15: SEM/XRS 1.0-8.0', 'i...</td>
+      <td>[{'activityID': '2014-02-25T01:25:00-CME-001'}...</td>
+      <td>2014-02-25 00:49:00</td>
+      <td>S15E77</td>
+    </tr>
+    <tr>
+      <th>54</th>
+      <td>12017.0</td>
+      <td>2014-03-29T17:36Z</td>
+      <td>X1.0</td>
+      <td>2014-03-29T17:54Z</td>
+      <td>2014-03-29T17:36:00-FLR-001</td>
+      <td>[{'displayName': 'GOES15: SEM/XRS 1.0-8.0', 'i...</td>
+      <td>[{'activityID': '2014-03-29T18:39:00-CME-001'}]</td>
+      <td>2014-03-29 17:48:00</td>
+      <td>N10W32</td>
+    </tr>
+    <tr>
+      <th>55</th>
+      <td>12027.0</td>
+      <td>2014-04-02T13:18Z</td>
+      <td>M6.5</td>
+      <td>2014-04-02T14:28Z</td>
+      <td>2014-04-02T13:18:00-FLR-001</td>
+      <td>[{'displayName': 'GOES15: SEM/XRS 1.0-8.0', 'i...</td>
+      <td>[{'activityID': '2014-04-02T13:55:00-CME-001'}...</td>
+      <td>2014-04-02 14:05:00</td>
+      <td>N12E53</td>
+    </tr>
+    <tr>
+      <th>56</th>
+      <td>12036.0</td>
+      <td>2014-04-18T12:31Z</td>
+      <td>M7.3</td>
+      <td>2014-04-18T13:20Z</td>
+      <td>2014-04-18T12:31:00-FLR-001</td>
+      <td>[{'displayName': 'GOES15: SEM/XRS 1.0-8.0', 'i...</td>
+      <td>[{'activityID': '2014-04-18T13:09:00-CME-001'}...</td>
+      <td>2014-04-18 13:03:00</td>
+      <td>S18W29</td>
+    </tr>
+    <tr>
+      <th>57</th>
+      <td>12035.0</td>
+      <td>2014-04-25T00:17Z</td>
+      <td>X1.3</td>
+      <td>2014-04-25T00:38Z</td>
+      <td>2014-04-25T00:17:00-FLR-001</td>
+      <td>[{'displayName': 'GOES15: SEM/XRS 1.0-8.0', 'i...</td>
+      <td>[{'activityID': '2014-04-25T00:48:00-CME-001'}]</td>
+      <td>2014-04-25 00:27:00</td>
+      <td>S14W29</td>
+    </tr>
+    <tr>
+      <th>58</th>
+      <td>12051.0</td>
+      <td>2014-05-06T08:40Z</td>
+      <td>M1.8</td>
+      <td>2014-05-06T09:24Z</td>
+      <td>2014-05-06T08:40:00-FLR-001</td>
+      <td>[{'displayName': 'GOES15: SEM/XRS 1.0-8.0', 'i...</td>
+      <td>[{'activityID': '2014-05-06T09:12:00-CME-001'}]</td>
+      <td>2014-05-06 09:03:00</td>
+      <td>S13W87</td>
+    </tr>
+    <tr>
+      <th>59</th>
+      <td>12051.0</td>
+      <td>2014-05-06T22:01Z</td>
+      <td>M1.0</td>
+      <td>2014-05-06T22:20Z</td>
+      <td>2014-05-06T22:01:00-FLR-001</td>
+      <td>[{'displayName': 'GOES15: SEM/XRS 1.0-8.0', 'i...</td>
+      <td>[{'activityID': '2014-05-06T22:17:00-CME-001'}]</td>
+      <td>2014-05-06 22:09:00</td>
+      <td>S09W91</td>
+    </tr>
+    <tr>
+      <th>60</th>
+      <td>12055.0</td>
+      <td>2014-05-07T16:07Z</td>
+      <td>M1.2</td>
+      <td>2014-05-07T13:03Z</td>
+      <td>2014-05-07T16:07:00-FLR-001</td>
+      <td>[{'displayName': 'GOES15: SEM/XRS 1.0-8.0', 'i...</td>
+      <td>[{'activityID': '2014-05-07T16:39:00-CME-001'}]</td>
+      <td>2014-05-07 16:29:00</td>
+      <td>S12W90</td>
+    </tr>
+    <tr>
+      <th>61</th>
+      <td>12087.0</td>
+      <td>2014-06-10T11:38Z</td>
+      <td>X2.2</td>
+      <td>2014-06-10T11:47Z</td>
+      <td>2014-06-10T11:38:00-FLR-001</td>
+      <td>[{'displayName': 'GOES15: SEM/XRS 1.0-8.0', 'i...</td>
+      <td>[{'activityID': '2014-06-10T12:24:00-CME-001'}]</td>
+      <td>2014-06-10 11:42:00</td>
+      <td>S18E85</td>
+    </tr>
+    <tr>
+      <th>62</th>
+      <td>12087.0</td>
+      <td>2014-06-10T12:38Z</td>
+      <td>X1.5</td>
+      <td>2014-06-10T13:07Z</td>
+      <td>2014-06-10T12:38:00-FLR-001</td>
+      <td>[{'displayName': 'GOES15: SEM/XRS 1.0-8.0', 'i...</td>
+      <td>[{'activityID': '2014-06-10T13:09:00-CME-001'}]</td>
+      <td>2014-06-10 12:52:00</td>
+      <td>S19E89</td>
+    </tr>
+    <tr>
+      <th>63</th>
+      <td>12085.0</td>
+      <td>2014-06-12T21:39Z</td>
+      <td>M3.1</td>
+      <td>2014-06-12T22:52Z</td>
+      <td>2014-06-12T21:39:00-FLR-001</td>
+      <td>[{'displayName': 'GOES15: SEM/XRS 1.0-8.0', 'i...</td>
+      <td>[{'activityID': '2014-06-12T22:12:00-CME-001'}]</td>
+      <td>2014-06-12 22:16:00</td>
+      <td>S23W58</td>
+    </tr>
+    <tr>
+      <th>64</th>
+      <td>12106.0</td>
+      <td>2014-07-01T11:04Z</td>
+      <td>M1.4</td>
+      <td>2014-07-01T11:50Z</td>
+      <td>2014-07-01T11:04:00-FLR-001</td>
+      <td>[{'displayName': 'GOES15: SEM/XRS 1.0-8.0', 'i...</td>
+      <td>[{'activityID': '2014-07-01T12:39:00-CME-001'}]</td>
+      <td>2014-07-01 11:23:00</td>
+      <td>N12E60</td>
+    </tr>
+    <tr>
+      <th>65</th>
+      <td>12113.0</td>
+      <td>2014-07-08T16:08Z</td>
+      <td>M6.5</td>
+      <td>2014-07-08T16:30Z</td>
+      <td>2014-07-08T16:08:00-FLR-001</td>
+      <td>[{'displayName': 'GOES15: SEM/XRS 1.0-8.0', 'i...</td>
+      <td>[{'activityID': '2014-07-08T16:54:00-CME-001'}]</td>
+      <td>2014-07-08 16:20:00</td>
+      <td>N12E56</td>
+    </tr>
+    <tr>
+      <th>66</th>
+      <td>12127.0</td>
+      <td>2014-08-01T18:00Z</td>
+      <td>M1.5</td>
+      <td>2014-08-01T18:48Z</td>
+      <td>2014-08-01T18:00:00-FLR-001</td>
+      <td>[{'displayName': 'GOES15: SEM/XRS 1.0-8.0', 'i...</td>
+      <td>[{'activityID': '2014-08-01T18:54:00-CME-001'}]</td>
+      <td>2014-08-01 18:13:00</td>
+      <td>S09E13</td>
+    </tr>
+    <tr>
+      <th>67</th>
+      <td>12149.0</td>
+      <td>2014-08-21T13:19Z</td>
+      <td>M3.4</td>
+      <td>2014-08-21T13:31Z</td>
+      <td>2014-08-21T13:19:00-FLR-001</td>
+      <td>[{'displayName': 'GOES15: SEM/XRS 1.0-8.0', 'i...</td>
+      <td>[{'activityID': '2014-08-21T14:36:00-CME-001'}]</td>
+      <td>2014-08-21 13:31:00</td>
+      <td>N11E90</td>
+    </tr>
+    <tr>
+      <th>68</th>
+      <td>12146.0</td>
+      <td>2014-08-25T14:46Z</td>
+      <td>M2.0</td>
+      <td>2014-08-25T15:11Z</td>
+      <td>2014-08-25T14:46:00-FLR-001</td>
+      <td>[{'displayName': 'GOES15: SEM/XRS 1.0-8.0', 'i...</td>
+      <td>[{'activityID': '2014-08-25T15:36:00-CME-001'}]</td>
+      <td>2014-08-25 15:11:00</td>
+      <td>N06W39</td>
+    </tr>
+    <tr>
+      <th>69</th>
+      <td>12146.0</td>
+      <td>2014-08-25T20:06Z</td>
+      <td>M3.9</td>
+      <td>2014-08-25T20:29Z</td>
+      <td>2014-08-25T20:06:00-FLR-001</td>
+      <td>[{'displayName': 'GOES15: SEM/XRS 1.0-8.0', 'i...</td>
+      <td>[{'activityID': '2014-08-25T21:24:00-CME-001'}]</td>
+      <td>2014-08-25 20:21:00</td>
+      <td>N07W43</td>
+    </tr>
+    <tr>
+      <th>70</th>
+      <td>12158.0</td>
+      <td>2014-09-10T17:21Z</td>
+      <td>X1.6</td>
+      <td>2014-09-10T18:20Z</td>
+      <td>2014-09-10T17:21:00-FLR-001</td>
+      <td>[{'displayName': 'GOES15: SEM/XRS 1.0-8.0', 'i...</td>
+      <td>[{'activityID': '2014-09-10T18:18:00-CME-001'}...</td>
+      <td>2014-09-10 17:45:00</td>
+      <td>N15E05</td>
+    </tr>
+    <tr>
+      <th>71</th>
+      <td>12157.0</td>
+      <td>2014-09-14T02:03Z</td>
+      <td>M1.5</td>
+      <td>2014-09-14T02:36Z</td>
+      <td>2014-09-14T02:03:00-FLR-001</td>
+      <td>[{'displayName': 'GOES15: SEM/XRS 1.0-8.0', 'i...</td>
+      <td>[{'activityID': '2014-09-14T03:12:00-CME-001'}]</td>
+      <td>2014-09-14 02:16:00</td>
+      <td>S14W49</td>
+    </tr>
+    <tr>
+      <th>72</th>
+      <td>12172.0</td>
+      <td>2014-09-23T23:02Z</td>
+      <td>M2.3</td>
+      <td>2014-09-23T23:28Z</td>
+      <td>2014-09-23T23:02:00-FLR-001</td>
+      <td>[{'displayName': 'GOES15: SEM/XRS 1.0-8.0', 'i...</td>
+      <td>[{'activityID': '2014-09-24T00:24:00-CME-001'}]</td>
+      <td>2014-09-23 23:16:00</td>
+      <td>S30W35</td>
+    </tr>
+    <tr>
+      <th>73</th>
+      <td>12173.0</td>
+      <td>2014-09-28T02:39Z</td>
+      <td>M5.1</td>
+      <td>2014-09-28T03:19Z</td>
+      <td>2014-09-28T02:39:00-FLR-001</td>
+      <td>[{'displayName': 'GOES15: SEM/XRS 1.0-8.0', 'i...</td>
+      <td>[{'activityID': '2014-09-28T03:36:00-CME-001'}]</td>
+      <td>2014-09-28 02:58:00</td>
+      <td>S11W17</td>
+    </tr>
+    <tr>
+      <th>74</th>
+      <td>12173.0</td>
+      <td>2014-10-02T18:49Z</td>
+      <td>M7.3</td>
+      <td>2014-10-02T19:14Z</td>
+      <td>2014-10-02T18:49:00-FLR-001</td>
+      <td>[{'displayName': 'GOES15: SEM/XRS 1.0-8.0', 'i...</td>
+      <td>[{'activityID': '2014-10-02T19:24:00-CME-001'}]</td>
+      <td>2014-10-02 19:01:00</td>
+      <td>S14W88</td>
+    </tr>
+    <tr>
+      <th>75</th>
+      <td>12192.0</td>
+      <td>2014-10-16T12:58Z</td>
+      <td>M4.3</td>
+      <td>2014-10-16T13:05Z</td>
+      <td>2014-10-16T12:58:00-FLR-001</td>
+      <td>[{'displayName': 'GOES15: SEM/XRS 1.0-8.0', 'i...</td>
+      <td>[{'activityID': '2014-10-16T13:26:00-CME-001'}]</td>
+      <td>2014-10-16 13:03:00</td>
+      <td>S13E88</td>
+    </tr>
+    <tr>
+      <th>76</th>
+      <td>12192.0</td>
+      <td>2014-10-24T07:37Z</td>
+      <td>M4.0</td>
+      <td>2014-10-24T07:53Z</td>
+      <td>2014-10-24T07:37:00-FLR-001</td>
+      <td>[{'displayName': 'GOES15: SEM/XRS 1.0-8.0', 'i...</td>
+      <td>[{'activityID': '2014-10-24T08:12:00-CME-001'}]</td>
+      <td>2014-10-24 07:48:00</td>
+      <td>S19W05</td>
+    </tr>
+    <tr>
+      <th>77</th>
+      <td>12205.0</td>
+      <td>2014-11-03T11:23Z</td>
+      <td>M2.2</td>
+      <td>2014-11-03T12:17Z</td>
+      <td>2014-11-03T11:23:00-FLR-001</td>
+      <td>[{'displayName': 'GOES15: SEM/XRS 1.0-8.0', 'i...</td>
+      <td>[{'activityID': '2014-11-03T12:12:00-CME-001'}]</td>
+      <td>2014-11-03 11:53:00</td>
+      <td>N17E89</td>
+    </tr>
+    <tr>
+      <th>78</th>
+      <td>12205.0</td>
+      <td>2014-11-03T22:15Z</td>
+      <td>M6.5</td>
+      <td>2014-11-03T22:53Z</td>
+      <td>2014-11-03T22:15:00-FLR-001</td>
+      <td>[{'displayName': 'GOES15: SEM/XRS 1.0-8.0', 'i...</td>
+      <td>[{'activityID': '2014-11-03T23:12:00-CME-001'}]</td>
+      <td>2014-11-03 22:40:00</td>
+      <td>N18E90</td>
+    </tr>
+    <tr>
+      <th>79</th>
+      <td>12205.0</td>
+      <td>2014-11-04T07:59Z</td>
+      <td>M2.6</td>
+      <td>2014-11-04T08:51Z</td>
+      <td>2014-11-04T07:59:00-FLR-001</td>
+      <td>[{'displayName': 'GOES15: SEM/XRS 1.0-8.0', 'i...</td>
+      <td>[{'activityID': '2014-11-04T09:12:00-CME-001'}]</td>
+      <td>2014-11-04 08:38:00</td>
+      <td>N14E89</td>
+    </tr>
+    <tr>
+      <th>80</th>
+      <td>12205.0</td>
+      <td>2014-11-04T08:52Z</td>
+      <td>M2.3</td>
+      <td>2014-11-04T09:13Z</td>
+      <td>2014-11-04T08:52:00-FLR-001</td>
+      <td>[{'displayName': 'GOES15: SEM/XRS 1.0-8.0', 'i...</td>
+      <td>[{'activityID': '2014-11-04T09:12:00-CME-001'}]</td>
+      <td>2014-11-04 09:04:00</td>
+      <td>N13E89</td>
+    </tr>
+    <tr>
+      <th>81</th>
+      <td>12205.0</td>
+      <td>2014-11-05T09:26Z</td>
+      <td>M7.9</td>
+      <td>2014-11-05T09:55Z</td>
+      <td>2014-11-05T09:26:00-FLR-001</td>
+      <td>[{'displayName': 'GOES15: SEM/XRS 1.0-8.0', 'i...</td>
+      <td>[{'activityID': '2014-11-05T10:12:00-CME-001'}]</td>
+      <td>2014-11-05 09:47:00</td>
+      <td>N16E63</td>
+    </tr>
+    <tr>
+      <th>82</th>
+      <td>12205.0</td>
+      <td>2014-11-05T18:50Z</td>
+      <td>M2.9</td>
+      <td>2014-11-05T20:15Z</td>
+      <td>2014-11-05T18:50:00-FLR-001</td>
+      <td>[{'displayName': 'GOES15: SEM/XRS 1.0-8.0', 'i...</td>
+      <td>[{'activityID': '2014-11-05T20:00:00-CME-001'}]</td>
+      <td>2014-11-05 19:44:00</td>
+      <td>N16E69</td>
+    </tr>
+    <tr>
+      <th>83</th>
+      <td>12205.0</td>
+      <td>2014-11-06T03:32Z</td>
+      <td>M5.4</td>
+      <td>2014-11-06T04:02Z</td>
+      <td>2014-11-06T03:32:00-FLR-001</td>
+      <td>[{'displayName': 'GOES15: SEM/XRS 1.0-8.0', 'i...</td>
+      <td>[{'activityID': '2014-11-06T04:00:00-CME-001'}]</td>
+      <td>2014-11-06 03:46:00</td>
+      <td>N16E53</td>
+    </tr>
+    <tr>
+      <th>84</th>
+      <td>12205.0</td>
+      <td>2014-11-07T04:12Z</td>
+      <td>M2.0</td>
+      <td>2014-11-07T04:38Z</td>
+      <td>2014-11-07T04:12:00-FLR-001</td>
+      <td>[{'displayName': 'GOES15: SEM/XRS 1.0-8.0', 'i...</td>
+      <td>[{'activityID': '2014-11-07T04:17:00-CME-001'}]</td>
+      <td>2014-11-07 04:25:00</td>
+      <td>N17E45</td>
+    </tr>
+    <tr>
+      <th>85</th>
+      <td>12205.0</td>
+      <td>2014-11-07T16:53Z</td>
+      <td>X1.6</td>
+      <td>2014-11-07T17:34Z</td>
+      <td>2014-11-07T16:53:00-FLR-001</td>
+      <td>[{'displayName': 'GOES15: SEM/XRS 1.0-8.0', 'i...</td>
+      <td>[{'activityID': '2014-11-07T18:08:00-CME-001'}]</td>
+      <td>2014-11-07 17:26:00</td>
+      <td>N15E35</td>
+    </tr>
+    <tr>
+      <th>86</th>
+      <td>12209.0</td>
+      <td>2014-11-15T20:38Z</td>
+      <td>M3.7</td>
+      <td>2014-11-15T20:50Z</td>
+      <td>2014-11-15T20:38:00-FLR-001</td>
+      <td>[{'displayName': 'GOES15: SEM/XRS 1.0-8.0', 'i...</td>
+      <td>[{'activityID': '2014-11-15T21:12:00-CME-001'}]</td>
+      <td>2014-11-15 20:46:00</td>
+      <td>S15E44</td>
+    </tr>
+    <tr>
+      <th>87</th>
+      <td>12241.0</td>
+      <td>2014-12-17T01:41Z</td>
+      <td>M1.1</td>
+      <td>2014-12-17T01:57Z</td>
+      <td>2014-12-17T01:41:00-FLR-001</td>
+      <td>[{'displayName': 'GOES15: SEM/XRS 1.0-8.0', 'i...</td>
+      <td>[{'activityID': '2014-12-17T02:00:00-CME-001'}]</td>
+      <td>2014-12-17 01:50:00</td>
+      <td>S11E37</td>
+    </tr>
+    <tr>
+      <th>88</th>
+      <td>12242.0</td>
+      <td>2014-12-17T04:25Z</td>
+      <td>M8.7</td>
+      <td>2014-12-17T05:20Z</td>
+      <td>2014-12-17T04:25:00-FLR-001</td>
+      <td>[{'displayName': 'GOES15: SEM/XRS 1.0-8.0', 'i...</td>
+      <td>[{'activityID': '2014-12-17T05:00:00-CME-001'}]</td>
+      <td>2014-12-17 04:51:00</td>
+      <td>S18E08</td>
+    </tr>
+    <tr>
+      <th>89</th>
+      <td>12241.0</td>
+      <td>2014-12-18T21:41Z</td>
+      <td>M6.9</td>
+      <td>2014-12-18T22:25Z</td>
+      <td>2014-12-18T21:41:00-FLR-001</td>
+      <td>[{'displayName': 'GOES15: SEM/XRS 1.0-8.0', 'i...</td>
+      <td>[{'activityID': '2014-12-19T00:27:00-CME-001'}]</td>
+      <td>2014-12-18 21:58:00</td>
+      <td>S11E10</td>
+    </tr>
+    <tr>
+      <th>90</th>
+      <td>12242.0</td>
+      <td>2014-12-20T00:11Z</td>
+      <td>X1.8</td>
+      <td>2014-12-20T00:55Z</td>
+      <td>2014-12-20T00:11:00-FLR-001</td>
+      <td>[{'displayName': 'GOES15: SEM/XRS 1.0-8.0', 'i...</td>
+      <td>[{'activityID': '2014-12-20T01:25:00-CME-001'}]</td>
+      <td>2014-12-20 00:28:00</td>
+      <td>S19W28</td>
+    </tr>
+    <tr>
+      <th>91</th>
+      <td>12257.0</td>
+      <td>2015-01-13T04:13Z</td>
+      <td>M5.6</td>
+      <td>2015-01-13T04:38Z</td>
+      <td>2015-01-13T04:13:00-FLR-001</td>
+      <td>[{'displayName': 'GOES15: SEM/XRS 1.0-8.0', 'i...</td>
+      <td>[{'activityID': '2015-01-13T05:24:00-CME-001'}]</td>
+      <td>2015-01-13 04:24:00</td>
+      <td>N07W69</td>
+    </tr>
+    <tr>
+      <th>92</th>
+      <td>12280.0</td>
+      <td>2015-02-09T22:59Z</td>
+      <td>M2.4</td>
+      <td>2015-02-10T00:12Z</td>
+      <td>2015-02-09T22:59:00-FLR-001</td>
+      <td>[{'displayName': 'GOES15: SEM/XRS 1.0-8.0', 'i...</td>
+      <td>[{'activityID': '2015-02-09T23:24:00-CME-001'}]</td>
+      <td>2015-02-09 23:35:00</td>
+      <td>N15E52</td>
+    </tr>
+    <tr>
+      <th>93</th>
+      <td>12297.0</td>
+      <td>2015-03-06T04:14Z</td>
+      <td>M3.0</td>
+      <td>2015-03-06T05:27Z</td>
+      <td>2015-03-06T04:14:00-FLR-001</td>
+      <td>[{'displayName': 'GOES15: SEM/XRS 1.0-8.0', 'i...</td>
+      <td>[{'activityID': '2015-03-06T04:49:00-CME-001'}...</td>
+      <td>2015-03-06 04:57:00</td>
+      <td>S20E90</td>
+    </tr>
+    <tr>
+      <th>94</th>
+      <td>12297.0</td>
+      <td>2015-03-06T06:55Z</td>
+      <td>M1.5</td>
+      <td>2015-03-06T08:28Z</td>
+      <td>2015-03-06T06:55:00-FLR-001</td>
+      <td>[{'displayName': 'GOES15: SEM/XRS 1.0-8.0', 'i...</td>
+      <td>[{'activityID': '2015-03-06T07:12:00-CME-001'}]</td>
+      <td>2015-03-06 08:15:00</td>
+      <td>S20E90</td>
+    </tr>
+    <tr>
+      <th>95</th>
+      <td>12297.0</td>
+      <td>2015-03-07T21:45Z</td>
+      <td>M9.2</td>
+      <td>2015-03-07T22:58Z</td>
+      <td>2015-03-07T21:45:00-FLR-001</td>
+      <td>[{'displayName': 'GOES15: SEM/XRS 1.0-8.0', 'i...</td>
+      <td>[{'activityID': '2015-03-07T22:24:00-CME-001'}]</td>
+      <td>2015-03-07 22:22:00</td>
+      <td>S20E78</td>
+    </tr>
+    <tr>
+      <th>96</th>
+      <td>12297.0</td>
+      <td>2015-03-09T23:29Z</td>
+      <td>M5.8</td>
+      <td>2015-03-10T00:12Z</td>
+      <td>2015-03-09T23:29:00-FLR-001</td>
+      <td>[{'displayName': 'GOES15: SEM/XRS 1.0-8.0', 'i...</td>
+      <td>[{'activityID': '2015-03-10T00:00:00-CME-001'}]</td>
+      <td>2015-03-09 23:53:00</td>
+      <td>S17E39</td>
+    </tr>
+    <tr>
+      <th>97</th>
+      <td>12297.0</td>
+      <td>2015-03-10T03:19Z</td>
+      <td>M5.1</td>
+      <td>2015-03-10T03:28Z</td>
+      <td>2015-03-10T03:19:00-FLR-001</td>
+      <td>[{'displayName': 'GOES15: SEM/XRS 1.0-8.0', 'i...</td>
+      <td>[{'activityID': '2015-03-10T03:36:00-CME-001'}]</td>
+      <td>2015-03-10 03:24:00</td>
+      <td>S16E38</td>
+    </tr>
+    <tr>
+      <th>98</th>
+      <td>12297.0</td>
+      <td>2015-03-11T16:11Z</td>
+      <td>X2.2</td>
+      <td>2015-03-11T16:29Z</td>
+      <td>2015-03-11T16:11:00-FLR-001</td>
+      <td>[{'displayName': 'GOES15: SEM/XRS 1.0-8.0', 'i...</td>
+      <td>[{'activityID': '2015-03-11T18:00:00-CME-001'}]</td>
+      <td>2015-03-11 16:22:00</td>
+      <td>S16E26</td>
+    </tr>
+    <tr>
+      <th>99</th>
+      <td>12297.0</td>
+      <td>2015-03-17T22:49Z</td>
+      <td>M1.0</td>
+      <td>2015-03-17T23:48Z</td>
+      <td>2015-03-17T22:49:00-FLR-001</td>
+      <td>[{'displayName': 'GOES15: SEM/XRS 1.0-8.0', 'i...</td>
+      <td>[{'activityID': '2015-03-18T00:12:00-CME-001'}]</td>
+      <td>2015-03-17 23:34:00</td>
+      <td>S17W64</td>
+    </tr>
+    <tr>
+      <th>100</th>
+      <td>12321.0</td>
+      <td>2015-04-12T08:51Z</td>
+      <td>M1.1</td>
+      <td>2015-04-12T10:44Z</td>
+      <td>2015-04-12T08:51:00-FLR-001</td>
+      <td>[{'displayName': 'GOES15: SEM/XRS 1.0-8.0', 'i...</td>
+      <td>[{'activityID': '2015-04-12T10:00:00-CME-001'}]</td>
+      <td>2015-04-12 09:50:00</td>
+      <td>N11E78</td>
+    </tr>
+    <tr>
+      <th>101</th>
+      <td>12322.0</td>
+      <td>2015-04-23T09:18Z</td>
+      <td>M1.1</td>
+      <td>2015-04-23T10:07Z</td>
+      <td>2015-04-23T09:18:00-FLR-001</td>
+      <td>[{'displayName': 'GOES15: SEM/XRS 1.0-8.0', 'i...</td>
+      <td>[{'activityID': '2015-04-23T09:36:00-CME-001'}]</td>
+      <td>2015-04-23 10:07:00</td>
+      <td>N07W80</td>
+    </tr>
+    <tr>
+      <th>102</th>
+      <td>12339.0</td>
+      <td>2015-05-05T22:05Z</td>
+      <td>X2.7</td>
+      <td>2015-05-05T22:15Z</td>
+      <td>2015-05-05T22:05:00-FLR-001</td>
+      <td>[{'displayName': 'GOES15: SEM/XRS 1.0-8.0', 'i...</td>
+      <td>[{'activityID': '2015-05-05T22:24:00-CME-001'}]</td>
+      <td>2015-05-05 22:11:00</td>
+      <td>N15E79</td>
+    </tr>
+    <tr>
+      <th>103</th>
+      <td>12371.0</td>
+      <td>2015-06-18T16:33Z</td>
+      <td>M3.0</td>
+      <td>2015-06-18T18:25Z</td>
+      <td>2015-06-18T16:33:00-FLR-001</td>
+      <td>[{'displayName': 'GOES15: SEM/XRS 1.0-8.0', 'i...</td>
+      <td>[{'activityID': '2015-06-18T17:24:00-CME-001'}]</td>
+      <td>2015-06-18 17:36:00</td>
+      <td>N15E45</td>
+    </tr>
+    <tr>
+      <th>104</th>
+      <td>12371.0</td>
+      <td>2015-06-21T01:02Z</td>
+      <td>M2.0</td>
+      <td>2015-06-21T02:00Z</td>
+      <td>2015-06-21T01:02:00-FLR-001</td>
+      <td>[{'displayName': 'GOES15: SEM/XRS 1.0-8.0', 'i...</td>
+      <td>[{'activityID': '2015-06-21T02:48:00-CME-001'}...</td>
+      <td>2015-06-21 01:42:00</td>
+      <td>N13E12</td>
+    </tr>
+    <tr>
+      <th>105</th>
+      <td>12371.0</td>
+      <td>2015-06-21T02:06Z</td>
+      <td>M2.6</td>
+      <td>2015-06-21T03:02Z</td>
+      <td>2015-06-21T02:06:00-FLR-001</td>
+      <td>[{'displayName': 'GOES15: SEM/XRS 1.0-8.0', 'i...</td>
+      <td>[{'activityID': '2015-06-21T02:48:00-CME-001'}...</td>
+      <td>2015-06-21 02:36:00</td>
+      <td>N13E12</td>
+    </tr>
+    <tr>
+      <th>106</th>
+      <td>12371.0</td>
+      <td>2015-06-22T17:39Z</td>
+      <td>M6.5</td>
+      <td>2015-06-22T18:51Z</td>
+      <td>2015-06-22T17:39:00-FLR-001</td>
+      <td>[{'displayName': 'GOES15: SEM/XRS 1.0-8.0', 'i...</td>
+      <td>[{'activityID': '2015-06-22T18:36:00-CME-001'}]</td>
+      <td>2015-06-22 18:23:00</td>
+      <td>N13W05</td>
+    </tr>
+    <tr>
+      <th>107</th>
+      <td>12371.0</td>
+      <td>2015-06-25T08:02Z</td>
+      <td>M7.9</td>
+      <td>2015-06-25T09:05Z</td>
+      <td>2015-06-25T08:02:00-FLR-001</td>
+      <td>[{'displayName': 'GOES15: SEM/XRS 1.0-8.0', 'i...</td>
+      <td>[{'activityID': '2015-06-25T08:36:00-CME-001'}...</td>
+      <td>2015-06-25 08:16:00</td>
+      <td>N13W40</td>
+    </tr>
+    <tr>
+      <th>108</th>
+      <td>12403.0</td>
+      <td>2015-08-21T09:34Z</td>
+      <td>M1.4</td>
+      <td>2015-08-21T10:07Z</td>
+      <td>2015-08-21T09:34:00-FLR-001</td>
+      <td>[{'displayName': 'GOES15: SEM/XRS 1.0-8.0', 'i...</td>
+      <td>[{'activityID': '2015-08-21T10:24:00-CME-001'}]</td>
+      <td>2015-08-21 09:48:00</td>
+      <td>S17E26</td>
+    </tr>
+    <tr>
+      <th>109</th>
+      <td>12403.0</td>
+      <td>2015-08-22T06:39Z</td>
+      <td>M1.2</td>
+      <td>2015-08-22T06:59Z</td>
+      <td>2015-08-22T06:39:00-FLR-001</td>
+      <td>[{'displayName': 'GOES15: SEM/XRS 1.0-8.0', 'i...</td>
+      <td>[{'activityID': '2015-08-22T07:24:00-CME-001'}]</td>
+      <td>2015-08-22 06:49:00</td>
+      <td>S15E13</td>
+    </tr>
+    <tr>
+      <th>110</th>
+      <td>12415.0</td>
+      <td>2015-09-20T17:32Z</td>
+      <td>M2.1</td>
+      <td>2015-09-20T18:29Z</td>
+      <td>2015-09-20T17:32:00-FLR-001</td>
+      <td>[{'displayName': 'GOES15: SEM/XRS 1.0-8.0', 'i...</td>
+      <td>[{'activityID': '2015-09-20T18:12:00-CME-001'}]</td>
+      <td>2015-09-20 18:03:00</td>
+      <td>S22W50</td>
+    </tr>
+    <tr>
+      <th>111</th>
+      <td>12423.0</td>
+      <td>2015-09-28T03:45Z</td>
+      <td>M3.6</td>
+      <td>2015-09-28T03:59Z</td>
+      <td>2015-09-28T03:45:00-FLR-001</td>
+      <td>[{'displayName': 'GOES15: SEM/XRS 1.0-8.0', 'i...</td>
+      <td>[{'activityID': '2015-09-28T05:12:00-CME-001'}]</td>
+      <td>2015-09-28 03:55:00</td>
+      <td>S08W71</td>
+    </tr>
+    <tr>
+      <th>112</th>
+      <td>12445.0</td>
+      <td>2015-11-04T03:20Z</td>
+      <td>M1.9</td>
+      <td>2015-11-04T03:29Z</td>
+      <td>2015-11-04T03:20:00-FLR-001</td>
+      <td>[{'displayName': 'GOES15: SEM/XRS 1.0-8.0', 'i...</td>
+      <td>[{'activityID': '2015-11-04T03:48:00-CME-001'}]</td>
+      <td>2015-11-04 03:26:00</td>
+      <td>N14W65</td>
+    </tr>
+    <tr>
+      <th>113</th>
+      <td>12443.0</td>
+      <td>2015-11-04T13:30Z</td>
+      <td>M3.7</td>
+      <td>2015-11-04T14:13Z</td>
+      <td>2015-11-04T13:30:00-FLR-001</td>
+      <td>[{'displayName': 'GOES15: SEM/XRS 1.0-8.0', 'i...</td>
+      <td>[{'activityID': '2015-11-04T14:24:00-CME-001'}]</td>
+      <td>2015-11-04 13:52:00</td>
+      <td>N06W04</td>
+    </tr>
+    <tr>
+      <th>114</th>
+      <td>12472.0</td>
+      <td>2015-12-21T00:52Z</td>
+      <td>M2.8</td>
+      <td>2015-12-21T01:11Z</td>
+      <td>2015-12-21T00:52:00-FLR-001</td>
+      <td>[{'displayName': 'GOES15: SEM/XRS 1.0-8.0', 'i...</td>
+      <td>[{'activityID': '2015-12-21T01:24:00-CME-001'}]</td>
+      <td>2015-12-21 01:03:00</td>
+      <td>N01E81</td>
+    </tr>
+    <tr>
+      <th>115</th>
+      <td>12472.0</td>
+      <td>2015-12-21T10:09Z</td>
+      <td>M1.1</td>
+      <td>2015-12-21T10:32Z</td>
+      <td>2015-12-21T10:09:00-FLR-001</td>
+      <td>[{'displayName': 'GOES15: SEM/XRS 1.0-8.0', 'i...</td>
+      <td>[{'activityID': '2015-12-21T10:48:00-CME-001'}]</td>
+      <td>2015-12-21 10:19:00</td>
+      <td>N01E81</td>
+    </tr>
+    <tr>
+      <th>116</th>
+      <td>12473.0</td>
+      <td>2015-12-23T00:23Z</td>
+      <td>M4.7</td>
+      <td>2015-12-23T00:52Z</td>
+      <td>2015-12-23T00:23:00-FLR-001</td>
+      <td>[{'displayName': 'GOES15: SEM/XRS 1.0-8.0', 'i...</td>
+      <td>[{'activityID': '2015-12-23T01:09:00-CME-001'}]</td>
+      <td>2015-12-23 00:40:00</td>
+      <td>S21E65</td>
+    </tr>
+    <tr>
+      <th>117</th>
+      <td>12473.0</td>
+      <td>2015-12-28T11:20Z</td>
+      <td>M1.8</td>
+      <td>2015-12-28T14:09Z</td>
+      <td>2015-12-28T11:20:00-FLR-001</td>
+      <td>[{'displayName': 'GOES15: SEM/XRS 1.0-8.0', 'i...</td>
+      <td>[{'activityID': '2015-12-28T12:39:00-CME-001'}]</td>
+      <td>2015-12-28 12:45:00</td>
+      <td>S22W12</td>
+    </tr>
+    <tr>
+      <th>118</th>
+      <td>12473.0</td>
+      <td>2016-01-01T23:00Z</td>
+      <td>M2.3</td>
+      <td>None</td>
+      <td>2016-01-01T23:00:00-FLR-001</td>
+      <td>[{'displayName': 'GOES15: SEM/XRS 1.0-8.0', 'i...</td>
+      <td>[{'activityID': '2016-01-01T23:12:00-CME-001'}...</td>
+      <td>2016-01-02 00:11:00</td>
+      <td>S21W73</td>
+    </tr>
+    <tr>
+      <th>119</th>
+      <td>12529.0</td>
+      <td>2016-04-18T00:14Z</td>
+      <td>M6.7</td>
+      <td>2016-04-18T00:39Z</td>
+      <td>2016-04-18T00:14:00-FLR-001</td>
+      <td>[{'displayName': 'GOES15: SEM/XRS 1.0-8.0', 'i...</td>
+      <td>[{'activityID': '2016-04-18T00:36:00-CME-001'}]</td>
+      <td>2016-04-18 00:29:00</td>
+      <td>N10W51</td>
+    </tr>
+    <tr>
+      <th>120</th>
+      <td>12567.0</td>
+      <td>2016-07-23T05:00Z</td>
+      <td>M7.6</td>
+      <td>2016-07-23T05:24Z</td>
+      <td>2016-07-23T05:00:00-FLR-001</td>
+      <td>[{'displayName': 'GOES15: SEM/XRS 1.0-8.0', 'i...</td>
+      <td>[{'activityID': '2016-07-23T05:24:00-CME-001'}]</td>
+      <td>2016-07-23 05:16:00</td>
+      <td>N05W73</td>
+    </tr>
+    <tr>
+      <th>121</th>
+      <td>12567.0</td>
+      <td>2016-07-23T05:27Z</td>
+      <td>M5.5</td>
+      <td>2016-07-23T05:33Z</td>
+      <td>2016-07-23T05:27:00-FLR-001</td>
+      <td>[{'displayName': 'GOES15: SEM/XRS 1.0-8.0', 'i...</td>
+      <td>[{'activityID': '2016-07-23T05:24:00-CME-001'}]</td>
+      <td>2016-07-23 05:31:00</td>
+      <td>N05W75</td>
+    </tr>
+    <tr>
+      <th>122</th>
+      <td>12644.0</td>
+      <td>2017-04-01T21:35Z</td>
+      <td>M4.4</td>
+      <td>2017-04-01T22:05Z</td>
+      <td>2017-04-01T21:35:00-FLR-001</td>
+      <td>[{'displayName': 'GOES15: SEM/XRS 1.0-8.0', 'i...</td>
+      <td>[{'activityID': '2017-04-01T22:12:00-CME-001'}]</td>
+      <td>2017-04-01 21:48:00</td>
+      <td>S13W54</td>
+    </tr>
+    <tr>
+      <th>123</th>
+      <td>12644.0</td>
+      <td>2017-04-02T07:48Z</td>
+      <td>M5.3</td>
+      <td>2017-04-02T08:13Z</td>
+      <td>2017-04-02T07:48:00-FLR-001</td>
+      <td>[{'displayName': 'GOES15: SEM/XRS 1.0-8.0', 'i...</td>
+      <td>[{'activityID': '2017-04-02T09:09:00-CME-001'}]</td>
+      <td>2017-04-02 08:02:00</td>
+      <td>N12W56</td>
+    </tr>
+    <tr>
+      <th>124</th>
+      <td>12644.0</td>
+      <td>2017-04-02T18:18Z</td>
+      <td>M2.1</td>
+      <td>2017-04-02T19:28Z</td>
+      <td>2017-04-02T18:18:00-FLR-001</td>
+      <td>[{'displayName': 'GOES15: SEM/XRS 1.0-8.0', 'i...</td>
+      <td>[{'activityID': '2017-04-02T20:09:00-CME-001'}]</td>
+      <td>2017-04-02 18:38:00</td>
+      <td>N12W66</td>
+    </tr>
+    <tr>
+      <th>125</th>
+      <td>12644.0</td>
+      <td>2017-04-03T00:54Z</td>
+      <td>M1.2</td>
+      <td>2017-04-03T01:12Z</td>
+      <td>2017-04-03T00:54:00-FLR-001</td>
+      <td>[{'displayName': 'GOES15: SEM/XRS 1.0-8.0', 'i...</td>
+      <td>[{'activityID': '2017-04-03T01:48:00-CME-001'}]</td>
+      <td>2017-04-03 01:05:00</td>
+      <td>N12W66</td>
+    </tr>
+    <tr>
+      <th>126</th>
+      <td>12644.0</td>
+      <td>2017-04-03T14:21Z</td>
+      <td>M5.8</td>
+      <td>2017-04-03T14:34Z</td>
+      <td>2017-04-03T14:21:00-FLR-001</td>
+      <td>[{'displayName': 'GOES15: SEM/XRS 1.0-8.0', 'i...</td>
+      <td>[{'activityID': '2017-04-03T15:36:00-CME-001'}]</td>
+      <td>2017-04-03 14:29:00</td>
+      <td>N16W78</td>
+    </tr>
+    <tr>
+      <th>127</th>
+      <td>12665.0</td>
+      <td>2017-07-14T01:07Z</td>
+      <td>M2.4</td>
+      <td>2017-07-14T03:24Z</td>
+      <td>2017-07-14T01:07:00-FLR-001</td>
+      <td>[{'displayName': 'GOES15: SEM/XRS 1.0-8.0', 'i...</td>
+      <td>[{'activityID': '2017-07-14T01:36:00-CME-001'}...</td>
+      <td>2017-07-14 02:09:00</td>
+      <td>S09W33</td>
+    </tr>
+    <tr>
+      <th>128</th>
+      <td>12673.0</td>
+      <td>2017-09-04T15:11Z</td>
+      <td>M1.5</td>
+      <td>2017-09-04T15:33Z</td>
+      <td>2017-09-04T15:11:00-FLR-001</td>
+      <td>[{'displayName': 'GOES15: SEM/XRS 1.0-8.0', 'i...</td>
+      <td>[{'activityID': '2017-09-04T19:39:00-CME-001'}]</td>
+      <td>2017-09-04 15:30:00</td>
+      <td>S10W08</td>
+    </tr>
+    <tr>
+      <th>129</th>
+      <td>12673.0</td>
+      <td>2017-09-04T18:05Z</td>
+      <td>M1.0</td>
+      <td>2019-09-04T18:31Z</td>
+      <td>2017-09-04T18:05:00-FLR-001</td>
+      <td>[{'displayName': 'GOES15: SEM/XRS 1.0-8.0', 'i...</td>
+      <td>[{'activityID': '2017-09-04T19:39:00-CME-001'}]</td>
+      <td>2017-09-04 18:22:00</td>
+      <td>S10W12</td>
+    </tr>
+    <tr>
+      <th>130</th>
+      <td>12673.0</td>
+      <td>2017-09-04T20:15Z</td>
+      <td>M5.5</td>
+      <td>2017-09-04T20:37Z</td>
+      <td>2017-09-04T20:15:00-FLR-001</td>
+      <td>[{'displayName': 'GOES15: SEM/XRS 1.0-8.0', 'i...</td>
+      <td>[{'activityID': '2017-09-04T20:36:00-CME-001'}...</td>
+      <td>2017-09-04 20:33:00</td>
+      <td>S10W14</td>
+    </tr>
+    <tr>
+      <th>131</th>
+      <td>12673.0</td>
+      <td>2017-09-06T11:53Z</td>
+      <td>X9.3</td>
+      <td>2017-09-06T12:10Z</td>
+      <td>2017-09-06T11:53:00-FLR-001</td>
+      <td>[{'displayName': 'GOES15: SEM/XRS 1.0-8.0', 'i...</td>
+      <td>[{'activityID': '2017-09-06T12:24:00-CME-001'}...</td>
+      <td>2017-09-06 12:02:00</td>
+      <td>S07W33</td>
+    </tr>
+    <tr>
+      <th>132</th>
+      <td>12673.0</td>
+      <td>2017-09-07T10:11Z</td>
+      <td>M7.3</td>
+      <td>2017-09-07T10:18Z</td>
+      <td>2017-09-07T10:11:00-FLR-001</td>
+      <td>[{'displayName': 'GOES15: SEM/XRS 1.0-8.0', 'i...</td>
+      <td>[{'activityID': '2017-09-07T10:48:00-CME-001'}]</td>
+      <td>2017-09-07 10:15:00</td>
+      <td>S08W47</td>
+    </tr>
+    <tr>
+      <th>133</th>
+      <td>12673.0</td>
+      <td>2017-09-07T14:20Z</td>
+      <td>X1.3</td>
+      <td>2017-09-07T14:55Z</td>
+      <td>2017-09-07T14:20:00-FLR-001</td>
+      <td>[{'displayName': 'GOES15: SEM/XRS 1.0-8.0', 'i...</td>
+      <td>[{'activityID': '2017-09-07T15:12:00-CME-001'}]</td>
+      <td>2017-09-07 14:36:00</td>
+      <td>S09W53</td>
+    </tr>
+    <tr>
+      <th>134</th>
+      <td>12673.0</td>
+      <td>2017-09-07T23:51Z</td>
+      <td>M3.9</td>
+      <td>2017-09-08T00:14Z</td>
+      <td>2017-09-07T23:51:00-FLR-001</td>
+      <td>[{'displayName': 'GOES15: SEM/XRS 1.0-8.0', 'i...</td>
+      <td>[{'activityID': '2017-09-07T23:36:00-CME-001'}]</td>
+      <td>2017-09-07 23:59:00</td>
+      <td>S15W50</td>
+    </tr>
+    <tr>
+      <th>135</th>
+      <td>12673.0</td>
+      <td>2017-09-08T03:39Z</td>
+      <td>M1.2</td>
+      <td>2017-09-08T03:46Z</td>
+      <td>2017-09-08T03:39:00-FLR-001</td>
+      <td>[{'displayName': 'GOES15: SEM/XRS 1.0-8.0', 'i...</td>
+      <td>[{'activityID': '2017-09-08T04:17:00-CME-001'}]</td>
+      <td>2017-09-08 03:43:00</td>
+      <td>S07W55</td>
+    </tr>
+    <tr>
+      <th>136</th>
+      <td>12673.0</td>
+      <td>2017-09-08T07:40Z</td>
+      <td>M8.1</td>
+      <td>2017-09-08T07:58Z</td>
+      <td>2017-09-08T07:40:00-FLR-001</td>
+      <td>[{'displayName': 'GOES15: SEM/XRS 1.0-8.0', 'i...</td>
+      <td>[{'activityID': '2017-09-08T07:24:00-CME-001'}]</td>
+      <td>2017-09-08 07:49:00</td>
+      <td>S10W58</td>
+    </tr>
+    <tr>
+      <th>137</th>
+      <td>12673.0</td>
+      <td>2017-09-10T15:35Z</td>
+      <td>X8.2</td>
+      <td>2017-09-10T16:31Z</td>
+      <td>2017-09-10T15:35:00-FLR-001</td>
+      <td>[{'displayName': 'GOES15: SEM/XRS 1.0-8.0', 'i...</td>
+      <td>[{'activityID': '2017-09-10T16:09:00-CME-001'}...</td>
+      <td>2017-09-10 16:06:00</td>
+      <td>S08W88</td>
+    </tr>
+    <tr>
+      <th>138</th>
+      <td>12685.0</td>
+      <td>2017-10-20T23:10Z</td>
+      <td>M1.1</td>
+      <td>2017-10-21T23:37Z</td>
+      <td>2017-10-20T23:10:00-FLR-001</td>
+      <td>[{'displayName': 'GOES15: SEM/XRS 1.0-8.0', 'i...</td>
+      <td>[{'activityID': '2017-10-21T00:12:00-CME-001'}]</td>
+      <td>2017-10-20 23:28:00</td>
+      <td>S10E90</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
 
 
 Now let's query the JSOC database to see if there are active region parameters at the time of the flare. First read the following file to map NOAA active region numbers to HARPNUMs (a HARP, or an HMI Active Region Patch, is the preferred numbering system for the HMI active regions as they appear in the magnetic field data before NOAA observes them in white light):
@@ -442,15 +2157,15 @@ def get_the_jsoc_data(event_count, t_rec):
 
     for i in range(event_count):
 
-#         print("=====", i, "=====")
+        print("=====", i, "=====")
         # next match NOAA_ARS to HARPNUM
         idx = answer[answer['NOAA_ARS'].str.contains(
             str(int(listofactiveregions[i])))]
 
         # if there's no HARPNUM, quit
         if (idx.empty == True):
-#             print('skip: there are no matching HARPNUMs for',
-#                   str(int(listofactiveregions[i])))
+            print('skip: there are no matching HARPNUMs for',
+                  str(int(listofactiveregions[i])))
             continue
 
         # construct jsoc_info queries and query jsoc database; we are querying for 25 keywords
@@ -460,7 +2175,7 @@ def get_the_jsoc_data(event_count, t_rec):
 
         # if there's no response at this time, quit
         if response.status_code != 200:
-#             print('skip: cannot successfully get an http response')
+            print('skip: cannot successfully get an http response')
             continue
 
         # read the JSON output
@@ -468,8 +2183,8 @@ def get_the_jsoc_data(event_count, t_rec):
 
         # if there are no data at this time, quit
         if data['count'] == 0:
-#             print('skip: there are no data for HARPNUM',
-#                   idx.HARPNUM.values[0], 'at time', t_rec[i])
+            print('skip: there are no data for HARPNUM',
+                  idx.HARPNUM.values[0], 'at time', t_rec[i])
             continue
 
         # check to see if the active region is too close to the limb
@@ -483,8 +2198,8 @@ def get_the_jsoc_data(event_count, t_rec):
 
         # if there's no response at this time, quit
         if response.status_code != 200:
-#             print('skip: failed to find CEA JSOC data for HARPNUM',
-#                   idx.HARPNUM.values[0], 'at time', t_rec[i])
+            print('skip: failed to find CEA JSOC data for HARPNUM',
+                  idx.HARPNUM.values[0], 'at time', t_rec[i])
             continue
 
         # read the JSON output
@@ -492,24 +2207,24 @@ def get_the_jsoc_data(event_count, t_rec):
 
         # if there are no data at this time, quit
         if latitude_information['count'] == 0:
-#             print('skip: there are no data for HARPNUM',
-#                   idx.HARPNUM.values[0], 'at time', t_rec[i])
+            print('skip: there are no data for HARPNUM',
+                  idx.HARPNUM.values[0], 'at time', t_rec[i])
             continue
 
         CRVAL1 = float(latitude_information['keywords'][0]['values'][0])
         CRLN_OBS = float(latitude_information['keywords'][1]['values'][0])
         if (np.absolute(CRVAL1 - CRLN_OBS) > 70.0):
-#             print('skip: latitude is out of range for HARPNUM',
-#                   idx.HARPNUM.values[0], 'at time', t_rec[i])
+            print('skip: latitude is out of range for HARPNUM',
+                  idx.HARPNUM.values[0], 'at time', t_rec[i])
             continue
 
         if ('MISSING' in str(data['keywords'])):
-#             print('skip: there are some missing keywords for HARPNUM',
-#                   idx.HARPNUM.values[0], 'at time', t_rec[i])
+            print('skip: there are some missing keywords for HARPNUM',
+                  idx.HARPNUM.values[0], 'at time', t_rec[i])
             continue
 
-#         print('accept NOAA Active Region number', str(int(
-#             listofactiveregions[i])), 'and HARPNUM', idx.HARPNUM.values[0], 'at time', t_rec[i])
+        print('accept NOAA Active Region number', str(int(
+            listofactiveregions[i])), 'and HARPNUM', idx.HARPNUM.values[0], 'at time', t_rec[i])
 
         individual_flare_data = []
         for j in range(18):
@@ -537,7 +2252,7 @@ listofgoesclasses = list(events_list['classType'].values.flatten())
 ```
 
 
-Finally, we call the function. If you do run this in a Jupyter notebook on Binder or locally, it might be useful to un-comment the print statements in the function `get_the_jsoc_data`. This takes a while to run, especially for the negative class.
+And call the function:
 
 
 
@@ -546,6 +2261,289 @@ Finally, we call the function. If you do run this in a Jupyter notebook on Binde
 positive_result = get_the_jsoc_data(events_list.shape[0], t_rec)
 ```
 
+
+{:.output .output_stream}
+```
+===== 0 =====
+accept NOAA Active Region number 11158 and HARPNUM 377 at time 2011.02.14_01:56_TAI
+===== 1 =====
+skip: there are no data for HARPNUM 392 at time 2011.02.23_07:35_TAI
+===== 2 =====
+accept NOAA Active Region number 11166 and HARPNUM 401 at time 2011.03.06_14:30_TAI
+===== 3 =====
+accept NOAA Active Region number 11164 and HARPNUM 393 at time 2011.03.06_20:12_TAI
+===== 4 =====
+skip: there are no data for HARPNUM 415 at time 2011.03.07_03:58_TAI
+===== 5 =====
+accept NOAA Active Region number 11226 and HARPNUM 637 at time 2011.06.06_06:41_TAI
+===== 6 =====
+accept NOAA Active Region number 11261 and HARPNUM 750 at time 2011.08.02_13:48_TAI
+===== 7 =====
+accept NOAA Active Region number 11261 and HARPNUM 750 at time 2011.08.03_03:57_TAI
+===== 8 =====
+accept NOAA Active Region number 11283 and HARPNUM 833 at time 2011.09.06_22:38_TAI
+===== 9 =====
+skip: there are no data for HARPNUM 892 at time 2011.09.21_11:01_TAI
+===== 10 =====
+accept NOAA Active Region number 11402 and HARPNUM 1321 at time 2012.01.22_03:59_TAI
+===== 11 =====
+skip: latitude is out of range for HARPNUM 1321 at time 2012.01.26_18:37_TAI
+===== 12 =====
+accept NOAA Active Region number 11429 and HARPNUM 1449 at time 2012.03.04_04:09_TAI
+===== 13 =====
+accept NOAA Active Region number 11429 and HARPNUM 1449 at time 2012.03.06_00:24_TAI
+===== 14 =====
+accept NOAA Active Region number 11430 and HARPNUM 1449 at time 2012.03.06_01:14_TAI
+===== 15 =====
+accept NOAA Active Region number 11429 and HARPNUM 1449 at time 2012.03.08_03:53_TAI
+===== 16 =====
+accept NOAA Active Region number 11429 and HARPNUM 1449 at time 2012.03.09_17:44_TAI
+===== 17 =====
+accept NOAA Active Region number 11429 and HARPNUM 1449 at time 2012.03.12_17:41_TAI
+===== 18 =====
+accept NOAA Active Region number 11476 and HARPNUM 1638 at time 2012.05.16_01:47_TAI
+===== 19 =====
+accept NOAA Active Region number 11504 and HARPNUM 1750 at time 2012.06.12_13:17_TAI
+===== 20 =====
+skip: there are no data for HARPNUM 1750 at time 2012.06.13_14:35_TAI
+===== 21 =====
+accept NOAA Active Region number 11515 and HARPNUM 1807 at time 2012.07.05_23:08_TAI
+===== 22 =====
+accept NOAA Active Region number 11520 and HARPNUM 1834 at time 2012.07.11_16:49_TAI
+===== 23 =====
+accept NOAA Active Region number 11520 and HARPNUM 1834 at time 2012.07.16_17:15_TAI
+===== 24 =====
+skip: there are no data for HARPNUM 1834 at time 2012.07.18_05:58_TAI
+===== 25 =====
+accept NOAA Active Region number 11532 and HARPNUM 1879 at time 2012.07.27_20:56_TAI
+===== 26 =====
+skip: there are no data for HARPNUM 2186 at time 2012.11.07_02:23_TAI
+===== 27 =====
+accept NOAA Active Region number 11618 and HARPNUM 2220 at time 2012.11.20_15:30_TAI
+===== 28 =====
+skip: there are no data for HARPNUM 2546 at time 2013.03.14_06:58_TAI
+===== 29 =====
+accept NOAA Active Region number 11719 and HARPNUM 2635 at time 2013.04.10_07:16_TAI
+===== 30 =====
+skip: there are no data for HARPNUM 2748 at time 2013.05.12_02:17_TAI
+===== 31 =====
+skip: there are no data for HARPNUM 2748 at time 2013.05.12_16:05_TAI
+===== 32 =====
+skip: there are no data for HARPNUM 2748 at time 2013.05.13_01:11_TAI
+===== 33 =====
+skip: latitude is out of range for HARPNUM 2748 at time 2013.05.14_01:48_TAI
+===== 34 =====
+accept NOAA Active Region number 11745 and HARPNUM 2739 at time 2013.05.21_13:32_TAI
+===== 35 =====
+accept NOAA Active Region number 11875 and HARPNUM 3291 at time 2013.10.21_21:20_TAI
+===== 36 =====
+accept NOAA Active Region number 11877 and HARPNUM 3295 at time 2013.10.23_00:30_TAI
+===== 37 =====
+skip: latitude is out of range for HARPNUM 3311 at time 2013.10.24_08:01_TAI
+===== 38 =====
+skip: there are no data for HARPNUM 3311 at time 2013.10.24_15:03_TAI
+===== 39 =====
+skip: there are no data for HARPNUM 3321 at time 2013.10.25_19:27_TAI
+===== 40 =====
+accept NOAA Active Region number 11875 and HARPNUM 3291 at time 2013.10.27_02:03_TAI
+===== 41 =====
+accept NOAA Active Region number 11875 and HARPNUM 3291 at time 2013.10.27_04:41_TAI
+===== 42 =====
+skip: latitude is out of range for HARPNUM 3291 at time 2013.10.28_21:54_TAI
+===== 43 =====
+accept NOAA Active Region number 11890 and HARPNUM 3341 at time 2013.11.07_04:26_TAI
+===== 44 =====
+accept NOAA Active Region number 11890 and HARPNUM 3341 at time 2013.11.09_05:14_TAI
+===== 45 =====
+accept NOAA Active Region number 11893 and HARPNUM 3364 at time 2013.11.18_10:26_TAI
+===== 46 =====
+accept NOAA Active Region number 11943 and HARPNUM 3563 at time 2014.01.03_19:46_TAI
+===== 47 =====
+skip: latitude is out of range for HARPNUM 3535 at time 2014.01.03_22:52_TAI
+===== 48 =====
+accept NOAA Active Region number 11944 and HARPNUM 3563 at time 2014.01.06_18:32_TAI
+===== 49 =====
+skip: latitude is out of range for HARPNUM 3587 at time 2014.01.07_03:47_TAI
+===== 50 =====
+skip: latitude is out of range for HARPNUM 3686 at time 2014.01.29_08:11_TAI
+===== 51 =====
+skip: latitude is out of range for HARPNUM 3686 at time 2014.01.29_16:11_TAI
+===== 52 =====
+accept NOAA Active Region number 11974 and HARPNUM 3721 at time 2014.02.10_03:31_TAI
+===== 53 =====
+skip: latitude is out of range for HARPNUM 3793 at time 2014.02.24_00:49_TAI
+===== 54 =====
+accept NOAA Active Region number 12017 and HARPNUM 3894 at time 2014.03.28_17:48_TAI
+===== 55 =====
+accept NOAA Active Region number 12027 and HARPNUM 3941 at time 2014.04.01_14:05_TAI
+===== 56 =====
+accept NOAA Active Region number 12036 and HARPNUM 3999 at time 2014.04.17_13:03_TAI
+===== 57 =====
+accept NOAA Active Region number 12035 and HARPNUM 4000 at time 2014.04.24_00:27_TAI
+===== 58 =====
+accept NOAA Active Region number 12051 and HARPNUM 4071 at time 2014.05.05_09:03_TAI
+===== 59 =====
+skip: latitude is out of range for HARPNUM 4071 at time 2014.05.05_22:09_TAI
+===== 60 =====
+skip: latitude is out of range for HARPNUM 4097 at time 2014.05.06_16:29_TAI
+===== 61 =====
+skip: there are no data for HARPNUM 4225 at time 2014.06.09_11:42_TAI
+===== 62 =====
+skip: there are no data for HARPNUM 4225 at time 2014.06.09_12:52_TAI
+===== 63 =====
+accept NOAA Active Region number 12085 and HARPNUM 4197 at time 2014.06.11_22:16_TAI
+===== 64 =====
+accept NOAA Active Region number 12106 and HARPNUM 4294 at time 2014.06.30_11:23_TAI
+===== 65 =====
+skip: latitude is out of range for HARPNUM 4344 at time 2014.07.07_16:20_TAI
+===== 66 =====
+skip: there are no data for HARPNUM 4396 at time 2014.07.31_18:13_TAI
+===== 67 =====
+skip: there are no matching HARPNUMs for 12149
+===== 68 =====
+skip: there are no matching HARPNUMs for 12146
+===== 69 =====
+skip: there are no matching HARPNUMs for 12146
+===== 70 =====
+skip: there are no matching HARPNUMs for 12158
+===== 71 =====
+skip: there are no matching HARPNUMs for 12157
+===== 72 =====
+skip: there are no matching HARPNUMs for 12172
+===== 73 =====
+skip: there are no matching HARPNUMs for 12173
+===== 74 =====
+skip: there are no matching HARPNUMs for 12173
+===== 75 =====
+skip: there are no data for HARPNUM 4698 at time 2014.10.15_13:03_TAI
+===== 76 =====
+accept NOAA Active Region number 12192 and HARPNUM 4698 at time 2014.10.23_07:48_TAI
+===== 77 =====
+skip: there are no data for HARPNUM 4781 at time 2014.11.02_11:53_TAI
+===== 78 =====
+skip: there are no data for HARPNUM 4781 at time 2014.11.02_22:40_TAI
+===== 79 =====
+skip: there are no data for HARPNUM 4781 at time 2014.11.03_08:38_TAI
+===== 80 =====
+skip: there are no data for HARPNUM 4781 at time 2014.11.03_09:04_TAI
+===== 81 =====
+skip: latitude is out of range for HARPNUM 4781 at time 2014.11.04_09:47_TAI
+===== 82 =====
+skip: latitude is out of range for HARPNUM 4781 at time 2014.11.04_19:44_TAI
+===== 83 =====
+skip: latitude is out of range for HARPNUM 4781 at time 2014.11.05_03:46_TAI
+===== 84 =====
+accept NOAA Active Region number 12205 and HARPNUM 4781 at time 2014.11.06_04:25_TAI
+===== 85 =====
+accept NOAA Active Region number 12205 and HARPNUM 4781 at time 2014.11.06_17:26_TAI
+===== 86 =====
+accept NOAA Active Region number 12209 and HARPNUM 4817 at time 2014.11.14_20:46_TAI
+===== 87 =====
+accept NOAA Active Region number 12241 and HARPNUM 4941 at time 2014.12.16_01:50_TAI
+===== 88 =====
+accept NOAA Active Region number 12242 and HARPNUM 4920 at time 2014.12.16_04:51_TAI
+===== 89 =====
+skip: there are no data for HARPNUM 4941 at time 2014.12.17_21:58_TAI
+===== 90 =====
+accept NOAA Active Region number 12242 and HARPNUM 4920 at time 2014.12.19_00:28_TAI
+===== 91 =====
+accept NOAA Active Region number 12257 and HARPNUM 5026 at time 2015.01.12_04:24_TAI
+===== 92 =====
+accept NOAA Active Region number 12280 and HARPNUM 5144 at time 2015.02.08_23:35_TAI
+===== 93 =====
+skip: there are no data for HARPNUM 5298 at time 2015.03.05_04:57_TAI
+===== 94 =====
+skip: there are no data for HARPNUM 5298 at time 2015.03.05_08:15_TAI
+===== 95 =====
+skip: latitude is out of range for HARPNUM 5298 at time 2015.03.06_22:22_TAI
+===== 96 =====
+accept NOAA Active Region number 12297 and HARPNUM 5298 at time 2015.03.08_23:53_TAI
+===== 97 =====
+accept NOAA Active Region number 12297 and HARPNUM 5298 at time 2015.03.09_03:24_TAI
+===== 98 =====
+accept NOAA Active Region number 12297 and HARPNUM 5298 at time 2015.03.10_16:22_TAI
+===== 99 =====
+accept NOAA Active Region number 12297 and HARPNUM 5298 at time 2015.03.16_23:34_TAI
+===== 100 =====
+skip: latitude is out of range for HARPNUM 5447 at time 2015.04.11_09:50_TAI
+===== 101 =====
+skip: there are no data for HARPNUM 5446 at time 2015.04.22_10:07_TAI
+===== 102 =====
+skip: latitude is out of range for HARPNUM 5541 at time 2015.05.04_22:11_TAI
+===== 103 =====
+accept NOAA Active Region number 12371 and HARPNUM 5692 at time 2015.06.17_17:36_TAI
+===== 104 =====
+accept NOAA Active Region number 12371 and HARPNUM 5692 at time 2015.06.20_01:42_TAI
+===== 105 =====
+accept NOAA Active Region number 12371 and HARPNUM 5692 at time 2015.06.20_02:36_TAI
+===== 106 =====
+accept NOAA Active Region number 12371 and HARPNUM 5692 at time 2015.06.21_18:23_TAI
+===== 107 =====
+accept NOAA Active Region number 12371 and HARPNUM 5692 at time 2015.06.24_08:16_TAI
+===== 108 =====
+accept NOAA Active Region number 12403 and HARPNUM 5885 at time 2015.08.20_09:48_TAI
+===== 109 =====
+accept NOAA Active Region number 12403 and HARPNUM 5885 at time 2015.08.21_06:49_TAI
+===== 110 =====
+skip: there are no data for HARPNUM 5956 at time 2015.09.19_18:03_TAI
+===== 111 =====
+accept NOAA Active Region number 12423 and HARPNUM 5982 at time 2015.09.27_03:55_TAI
+===== 112 =====
+accept NOAA Active Region number 12445 and HARPNUM 6052 at time 2015.11.03_03:26_TAI
+===== 113 =====
+accept NOAA Active Region number 12443 and HARPNUM 6063 at time 2015.11.03_13:52_TAI
+===== 114 =====
+skip: there are no data for HARPNUM 6205 at time 2015.12.20_01:03_TAI
+===== 115 =====
+skip: there are no data for HARPNUM 6205 at time 2015.12.20_10:19_TAI
+===== 116 =====
+skip: latitude is out of range for HARPNUM 6206 at time 2015.12.22_00:40_TAI
+===== 117 =====
+skip: there are no data for HARPNUM 6206 at time 2015.12.27_12:45_TAI
+===== 118 =====
+accept NOAA Active Region number 12473 and HARPNUM 6206 at time 2016.01.01_00:11_TAI
+===== 119 =====
+accept NOAA Active Region number 12529 and HARPNUM 6483 at time 2016.04.17_00:29_TAI
+===== 120 =====
+accept NOAA Active Region number 12567 and HARPNUM 6670 at time 2016.07.22_05:16_TAI
+===== 121 =====
+accept NOAA Active Region number 12567 and HARPNUM 6670 at time 2016.07.22_05:31_TAI
+===== 122 =====
+accept NOAA Active Region number 12644 and HARPNUM 6972 at time 2017.03.31_21:48_TAI
+===== 123 =====
+accept NOAA Active Region number 12644 and HARPNUM 6972 at time 2017.04.01_08:02_TAI
+===== 124 =====
+accept NOAA Active Region number 12644 and HARPNUM 6972 at time 2017.04.01_18:38_TAI
+===== 125 =====
+accept NOAA Active Region number 12644 and HARPNUM 6972 at time 2017.04.02_01:05_TAI
+===== 126 =====
+accept NOAA Active Region number 12644 and HARPNUM 6972 at time 2017.04.02_14:29_TAI
+===== 127 =====
+accept NOAA Active Region number 12665 and HARPNUM 7075 at time 2017.07.13_02:09_TAI
+===== 128 =====
+accept NOAA Active Region number 12673 and HARPNUM 7115 at time 2017.09.03_15:30_TAI
+===== 129 =====
+accept NOAA Active Region number 12673 and HARPNUM 7115 at time 2017.09.03_18:22_TAI
+===== 130 =====
+accept NOAA Active Region number 12673 and HARPNUM 7115 at time 2017.09.03_20:33_TAI
+===== 131 =====
+accept NOAA Active Region number 12673 and HARPNUM 7115 at time 2017.09.05_12:02_TAI
+===== 132 =====
+accept NOAA Active Region number 12673 and HARPNUM 7115 at time 2017.09.06_10:15_TAI
+===== 133 =====
+accept NOAA Active Region number 12673 and HARPNUM 7115 at time 2017.09.06_14:36_TAI
+===== 134 =====
+accept NOAA Active Region number 12673 and HARPNUM 7115 at time 2017.09.06_23:59_TAI
+===== 135 =====
+accept NOAA Active Region number 12673 and HARPNUM 7115 at time 2017.09.07_03:43_TAI
+===== 136 =====
+skip: there are no data for HARPNUM 7115 at time 2017.09.07_07:49_TAI
+===== 137 =====
+skip: latitude is out of range for HARPNUM 7115 at time 2017.09.09_16:06_TAI
+===== 138 =====
+skip: there are no data for HARPNUM 7169 at time 2017.10.19_23:28_TAI
+
+```
 
 Here is the number of events associated with the positive class:
 
@@ -561,7 +2559,7 @@ print("There are", len(CME_data), "CME events in the positive class.")
 
 {:.output .output_stream}
 ```
-There are 79 CME events in the positive class.
+There are 81 CME events in the positive class.
 
 ```
 
@@ -636,26 +2634,1314 @@ negative_result = get_the_jsoc_data(counter_negative, t_rec)
 ```
 
 
+{:.output .output_stream}
+```
+===== 0 =====
+accept NOAA Active Region number 11069 and HARPNUM 8 at time 2010.05.04_17:19_TAI
+===== 1 =====
+skip: there are no data for HARPNUM 54 at time 2010.06.11_00:57_TAI
+===== 2 =====
+accept NOAA Active Region number 11079 and HARPNUM 49 at time 2010.06.12_05:39_TAI
+===== 3 =====
+accept NOAA Active Region number 11093 and HARPNUM 115 at time 2010.08.06_18:24_TAI
+===== 4 =====
+accept NOAA Active Region number 11112 and HARPNUM 211 at time 2010.10.15_19:12_TAI
+===== 5 =====
+skip: latitude is out of range for HARPNUM 245 at time 2010.11.03_23:58_TAI
+===== 6 =====
+skip: latitude is out of range for HARPNUM 245 at time 2010.11.03_23:58_TAI
+===== 7 =====
+skip: latitude is out of range for HARPNUM 245 at time 2010.11.04_13:29_TAI
+===== 8 =====
+skip: latitude is out of range for HARPNUM 245 at time 2010.11.05_15:36_TAI
+===== 9 =====
+accept NOAA Active Region number 11149 and HARPNUM 345 at time 2011.01.27_01:03_TAI
+===== 10 =====
+accept NOAA Active Region number 11153 and HARPNUM 362 at time 2011.02.08_01:31_TAI
+===== 11 =====
+accept NOAA Active Region number 11158 and HARPNUM 377 at time 2011.02.12_17:38_TAI
+===== 12 =====
+accept NOAA Active Region number 11158 and HARPNUM 377 at time 2011.02.13_17:26_TAI
+===== 13 =====
+skip: there are no data for HARPNUM 1 at time 2011.02.15_01:39_TAI
+===== 14 =====
+accept NOAA Active Region number 11161 and HARPNUM 384 at time 2011.02.15_07:44_TAI
+===== 15 =====
+accept NOAA Active Region number 11158 and HARPNUM 377 at time 2011.02.15_14:25_TAI
+===== 16 =====
+accept NOAA Active Region number 11158 and HARPNUM 377 at time 2011.02.17_10:11_TAI
+===== 17 =====
+accept NOAA Active Region number 11162 and HARPNUM 384 at time 2011.02.17_10:26_TAI
+===== 18 =====
+accept NOAA Active Region number 11158 and HARPNUM 377 at time 2011.02.17_13:03_TAI
+===== 19 =====
+accept NOAA Active Region number 11162 and HARPNUM 384 at time 2011.02.17_14:08_TAI
+===== 20 =====
+accept NOAA Active Region number 11162 and HARPNUM 384 at time 2011.02.17_21:04_TAI
+===== 21 =====
+accept NOAA Active Region number 11164 and HARPNUM 393 at time 2011.02.27_12:52_TAI
+===== 22 =====
+accept NOAA Active Region number 11164 and HARPNUM 393 at time 2011.03.06_05:13_TAI
+===== 23 =====
+accept NOAA Active Region number 11165 and HARPNUM 394 at time 2011.03.06_07:54_TAI
+===== 24 =====
+accept NOAA Active Region number 11164 and HARPNUM 393 at time 2011.03.06_08:07_TAI
+===== 25 =====
+accept NOAA Active Region number 11164 and HARPNUM 393 at time 2011.03.06_09:20_TAI
+===== 26 =====
+accept NOAA Active Region number 11165 and HARPNUM 394 at time 2011.03.06_21:50_TAI
+===== 27 =====
+accept NOAA Active Region number 11165 and HARPNUM 394 at time 2011.03.07_02:29_TAI
+===== 28 =====
+skip: latitude is out of range for HARPNUM 394 at time 2011.03.07_10:44_TAI
+===== 29 =====
+skip: latitude is out of range for HARPNUM 394 at time 2011.03.07_18:28_TAI
+===== 30 =====
+skip: latitude is out of range for HARPNUM 394 at time 2011.03.07_20:16_TAI
+===== 31 =====
+accept NOAA Active Region number 11166 and HARPNUM 401 at time 2011.03.08_11:07_TAI
+===== 32 =====
+accept NOAA Active Region number 11166 and HARPNUM 401 at time 2011.03.08_14:02_TAI
+===== 33 =====
+accept NOAA Active Region number 11166 and HARPNUM 401 at time 2011.03.08_23:23_TAI
+===== 34 =====
+skip: there are no data for HARPNUM 1 at time 2011.03.09_22:41_TAI
+===== 35 =====
+accept NOAA Active Region number 11166 and HARPNUM 401 at time 2011.03.11_04:43_TAI
+===== 36 =====
+accept NOAA Active Region number 11169 and HARPNUM 407 at time 2011.03.13_19:52_TAI
+===== 37 =====
+accept NOAA Active Region number 11169 and HARPNUM 407 at time 2011.03.14_00:22_TAI
+===== 38 =====
+skip: latitude is out of range for HARPNUM 437 at time 2011.03.22_02:17_TAI
+===== 39 =====
+skip: latitude is out of range for HARPNUM 437 at time 2011.03.23_12:07_TAI
+===== 40 =====
+accept NOAA Active Region number 11176 and HARPNUM 437 at time 2011.03.24_23:22_TAI
+===== 41 =====
+accept NOAA Active Region number 11190 and HARPNUM 495 at time 2011.04.14_17:12_TAI
+===== 42 =====
+accept NOAA Active Region number 11195 and HARPNUM 514 at time 2011.04.21_04:57_TAI
+===== 43 =====
+accept NOAA Active Region number 11195 and HARPNUM 514 at time 2011.04.21_15:53_TAI
+===== 44 =====
+skip: latitude is out of range for HARPNUM 637 at time 2011.05.27_21:50_TAI
+===== 45 =====
+skip: latitude is out of range for HARPNUM 637 at time 2011.05.28_10:33_TAI
+===== 46 =====
+skip: latitude is out of range for HARPNUM 667 at time 2011.06.13_21:47_TAI
+===== 47 =====
+accept NOAA Active Region number 11260 and HARPNUM 746 at time 2011.07.26_16:07_TAI
+===== 48 =====
+accept NOAA Active Region number 11261 and HARPNUM 750 at time 2011.07.29_02:09_TAI
+===== 49 =====
+accept NOAA Active Region number 11261 and HARPNUM 750 at time 2011.08.01_06:19_TAI
+===== 50 =====
+accept NOAA Active Region number 11261 and HARPNUM 750 at time 2011.08.02_03:37_TAI
+===== 51 =====
+accept NOAA Active Region number 11263 and HARPNUM 753 at time 2011.08.02_04:32_TAI
+===== 52 =====
+skip: there are no data for HARPNUM 753 at time 2011.08.07_18:10_TAI
+===== 53 =====
+accept NOAA Active Region number 11263 and HARPNUM 753 at time 2011.08.08_03:54_TAI
+===== 54 =====
+accept NOAA Active Region number 11263 and HARPNUM 753 at time 2011.08.08_08:05_TAI
+===== 55 =====
+accept NOAA Active Region number 11286 and HARPNUM 814 at time 2011.09.03_11:45_TAI
+===== 56 =====
+accept NOAA Active Region number 11286 and HARPNUM 814 at time 2011.09.04_04:28_TAI
+===== 57 =====
+accept NOAA Active Region number 11286 and HARPNUM 814 at time 2011.09.04_07:58_TAI
+===== 58 =====
+accept NOAA Active Region number 11283 and HARPNUM 833 at time 2011.09.05_01:50_TAI
+===== 59 =====
+accept NOAA Active Region number 11283 and HARPNUM 833 at time 2011.09.05_22:20_TAI
+===== 60 =====
+accept NOAA Active Region number 1283 and HARPNUM 833 at time 2011.09.05_22:20_TAI
+===== 61 =====
+accept NOAA Active Region number 11283 and HARPNUM 833 at time 2011.09.07_15:46_TAI
+===== 62 =====
+skip: there are no data for HARPNUM 833 at time 2011.09.08_06:11_TAI
+===== 63 =====
+accept NOAA Active Region number 11283 and HARPNUM 833 at time 2011.09.08_12:49_TAI
+===== 64 =====
+accept NOAA Active Region number 11283 and HARPNUM 833 at time 2011.09.09_07:40_TAI
+===== 65 =====
+skip: there are no data for HARPNUM 878 at time 2011.09.20_12:23_TAI
+===== 66 =====
+skip: there are no data for HARPNUM 892 at time 2011.09.21_10:00_TAI
+===== 67 =====
+accept NOAA Active Region number 11295 and HARPNUM 856 at time 2011.09.22_01:59_TAI
+===== 68 =====
+accept NOAA Active Region number 11295 and HARPNUM 856 at time 2011.09.22_22:15_TAI
+===== 69 =====
+skip: latitude is out of range for HARPNUM 892 at time 2011.09.22_23:56_TAI
+===== 70 =====
+skip: there are no data for HARPNUM 892 at time 2011.09.23_09:40_TAI
+===== 71 =====
+accept NOAA Active Region number 11302 and HARPNUM 892 at time 2011.09.23_13:20_TAI
+===== 72 =====
+accept NOAA Active Region number 11295 and HARPNUM 856 at time 2011.09.23_16:59_TAI
+===== 73 =====
+accept NOAA Active Region number 11302 and HARPNUM 892 at time 2011.09.23_17:25_TAI
+===== 74 =====
+skip: there are no data for HARPNUM 892 at time 2011.09.23_18:15_TAI
+===== 75 =====
+accept NOAA Active Region number 11302 and HARPNUM 892 at time 2011.09.23_19:21_TAI
+===== 76 =====
+accept NOAA Active Region number 11302 and HARPNUM 892 at time 2011.09.23_20:36_TAI
+===== 77 =====
+skip: there are no data for HARPNUM 899 at time 2011.09.23_21:27_TAI
+===== 78 =====
+skip: there are no data for HARPNUM 899 at time 2011.09.23_23:58_TAI
+===== 79 =====
+accept NOAA Active Region number 11302 and HARPNUM 892 at time 2011.09.24_02:33_TAI
+===== 80 =====
+accept NOAA Active Region number 11302 and HARPNUM 892 at time 2011.09.24_04:50_TAI
+===== 81 =====
+accept NOAA Active Region number 11302 and HARPNUM 892 at time 2011.09.24_08:49_TAI
+===== 82 =====
+skip: there are no data for HARPNUM 899 at time 2011.09.24_09:35_TAI
+===== 83 =====
+accept NOAA Active Region number 11302 and HARPNUM 892 at time 2011.09.24_15:33_TAI
+===== 84 =====
+accept NOAA Active Region number 11303 and HARPNUM 899 at time 2011.09.24_16:58_TAI
+===== 85 =====
+accept NOAA Active Region number 11302 and HARPNUM 892 at time 2011.09.25_05:08_TAI
+===== 86 =====
+accept NOAA Active Region number 11302 and HARPNUM 892 at time 2011.09.25_14:46_TAI
+===== 87 =====
+accept NOAA Active Region number 11302 and HARPNUM 892 at time 2011.09.27_13:28_TAI
+===== 88 =====
+accept NOAA Active Region number 11305 and HARPNUM 902 at time 2011.09.29_19:06_TAI
+===== 89 =====
+skip: there are no data for HARPNUM 902 at time 2011.09.30_09:59_TAI
+===== 90 =====
+accept NOAA Active Region number 11305 and HARPNUM 902 at time 2011.10.01_00:50_TAI
+===== 91 =====
+accept NOAA Active Region number 11302 and HARPNUM 892 at time 2011.10.01_17:23_TAI
+===== 92 =====
+skip: there are no data for HARPNUM 1 at time 2011.10.19_03:25_TAI
+===== 93 =====
+accept NOAA Active Region number 11319 and HARPNUM 940 at time 2011.10.20_13:00_TAI
+===== 94 =====
+accept NOAA Active Region number 11314 and HARPNUM 940 at time 2011.10.21_11:10_TAI
+===== 95 =====
+skip: there are no data for HARPNUM 1 at time 2011.10.30_15:08_TAI
+===== 96 =====
+skip: there are no data for HARPNUM 1 at time 2011.10.30_18:08_TAI
+===== 97 =====
+skip: latitude is out of range for HARPNUM 1028 at time 2011.11.01_22:01_TAI
+===== 98 =====
+skip: latitude is out of range for HARPNUM 1028 at time 2011.11.02_11:11_TAI
+===== 99 =====
+skip: latitude is out of range for HARPNUM 1028 at time 2011.11.02_20:27_TAI
+===== 100 =====
+skip: latitude is out of range for HARPNUM 1028 at time 2011.11.02_23:36_TAI
+===== 101 =====
+accept NOAA Active Region number 11339 and HARPNUM 1028 at time 2011.11.03_20:40_TAI
+===== 102 =====
+accept NOAA Active Region number 11339 and HARPNUM 1028 at time 2011.11.04_03:35_TAI
+===== 103 =====
+accept NOAA Active Region number 11339 and HARPNUM 1028 at time 2011.11.04_11:21_TAI
+===== 104 =====
+accept NOAA Active Region number 11339 and HARPNUM 1028 at time 2011.11.04_20:38_TAI
+===== 105 =====
+accept NOAA Active Region number 11339 and HARPNUM 1028 at time 2011.11.05_01:03_TAI
+===== 106 =====
+accept NOAA Active Region number 11339 and HARPNUM 1028 at time 2011.11.05_06:35_TAI
+===== 107 =====
+accept NOAA Active Region number 11342 and HARPNUM 1041 at time 2011.11.08_13:35_TAI
+===== 108 =====
+skip: latitude is out of range for HARPNUM 1028 at time 2011.11.14_09:12_TAI
+===== 109 =====
+accept NOAA Active Region number 11346 and HARPNUM 1066 at time 2011.11.14_12:43_TAI
+===== 110 =====
+skip: latitude is out of range for HARPNUM 1028 at time 2011.11.14_22:35_TAI
+===== 111 =====
+skip: there are no data for HARPNUM 1209 at time 2011.12.24_18:16_TAI
+===== 112 =====
+accept NOAA Active Region number 11387 and HARPNUM 1209 at time 2011.12.25_02:27_TAI
+===== 113 =====
+accept NOAA Active Region number 11387 and HARPNUM 1209 at time 2011.12.25_20:30_TAI
+===== 114 =====
+skip: latitude is out of range for HARPNUM 1256 at time 2011.12.28_13:50_TAI
+===== 115 =====
+skip: latitude is out of range for HARPNUM 1256 at time 2011.12.28_21:51_TAI
+===== 116 =====
+accept NOAA Active Region number 11389 and HARPNUM 1256 at time 2011.12.29_03:09_TAI
+===== 117 =====
+accept NOAA Active Region number 11389 and HARPNUM 1256 at time 2011.12.30_13:15_TAI
+===== 118 =====
+accept NOAA Active Region number 11389 and HARPNUM 1256 at time 2011.12.30_16:26_TAI
+===== 119 =====
+skip: there are no data for HARPNUM 1321 at time 2012.01.13_13:18_TAI
+===== 120 =====
+accept NOAA Active Region number 11401 and HARPNUM 1321 at time 2012.01.16_04:53_TAI
+===== 121 =====
+skip: there are no data for HARPNUM 1321 at time 2012.01.17_19:12_TAI
+===== 122 =====
+skip: there are no data for HARPNUM 1321 at time 2012.01.18_16:05_TAI
+===== 123 =====
+accept NOAA Active Region number 11410 and HARPNUM 1350 at time 2012.02.05_20:00_TAI
+===== 124 =====
+skip: there are no data for HARPNUM 1449 at time 2012.03.01_17:46_TAI
+===== 125 =====
+skip: latitude is out of range for HARPNUM 1449 at time 2012.03.03_10:52_TAI
+===== 126 =====
+accept NOAA Active Region number 11429 and HARPNUM 1449 at time 2012.03.04_19:16_TAI
+===== 127 =====
+accept NOAA Active Region number 11429 and HARPNUM 1449 at time 2012.03.04_19:30_TAI
+===== 128 =====
+accept NOAA Active Region number 11429 and HARPNUM 1449 at time 2012.03.04_22:34_TAI
+===== 129 =====
+accept NOAA Active Region number 11429 and HARPNUM 1449 at time 2012.03.05_00:28_TAI
+===== 130 =====
+accept NOAA Active Region number 11429 and HARPNUM 1449 at time 2012.03.05_01:44_TAI
+===== 131 =====
+accept NOAA Active Region number 11429 and HARPNUM 1449 at time 2012.03.05_04:05_TAI
+===== 132 =====
+accept NOAA Active Region number 11429 and HARPNUM 1449 at time 2012.03.05_07:55_TAI
+===== 133 =====
+accept NOAA Active Region number 11429 and HARPNUM 1449 at time 2012.03.05_12:41_TAI
+===== 134 =====
+skip: there are no data for HARPNUM 1 at time 2012.03.05_21:11_TAI
+===== 135 =====
+accept NOAA Active Region number 11429 and HARPNUM 1449 at time 2012.03.05_22:53_TAI
+===== 136 =====
+accept NOAA Active Region number 11432 and HARPNUM 1461 at time 2012.03.13_15:21_TAI
+===== 137 =====
+skip: there are no data for HARPNUM 1461 at time 2012.03.14_07:52_TAI
+===== 138 =====
+accept NOAA Active Region number 11434 and HARPNUM 1464 at time 2012.03.16_20:39_TAI
+===== 139 =====
+skip: there are no data for HARPNUM 1500 at time 2012.03.22_19:40_TAI
+===== 140 =====
+skip: there are no data for HARPNUM 1582 at time 2012.04.15_17:45_TAI
+===== 141 =====
+accept NOAA Active Region number 11466 and HARPNUM 1603 at time 2012.04.26_08:24_TAI
+===== 142 =====
+skip: latitude is out of range for HARPNUM 1638 at time 2012.05.04_13:23_TAI
+===== 143 =====
+skip: latitude is out of range for HARPNUM 1638 at time 2012.05.04_23:01_TAI
+===== 144 =====
+skip: there are no data for HARPNUM 1638 at time 2012.05.05_01:18_TAI
+===== 145 =====
+skip: there are no data for HARPNUM 1638 at time 2012.05.05_17:47_TAI
+===== 146 =====
+accept NOAA Active Region number 11471 and HARPNUM 1621 at time 2012.05.06_14:31_TAI
+===== 147 =====
+accept NOAA Active Region number 11476 and HARPNUM 1638 at time 2012.05.07_13:08_TAI
+===== 148 =====
+accept NOAA Active Region number 11476 and HARPNUM 1638 at time 2012.05.08_12:32_TAI
+===== 149 =====
+accept NOAA Active Region number 11476 and HARPNUM 1638 at time 2012.05.08_14:08_TAI
+===== 150 =====
+accept NOAA Active Region number 11476 and HARPNUM 1638 at time 2012.05.08_21:05_TAI
+===== 151 =====
+accept NOAA Active Region number 11476 and HARPNUM 1638 at time 2012.05.09_04:18_TAI
+===== 152 =====
+accept NOAA Active Region number 11476 and HARPNUM 1638 at time 2012.05.09_20:26_TAI
+===== 153 =====
+skip: there are no data for HARPNUM 1722 at time 2012.06.02_17:55_TAI
+===== 154 =====
+accept NOAA Active Region number 11494 and HARPNUM 1724 at time 2012.06.05_20:06_TAI
+===== 155 =====
+skip: latitude is out of range for HARPNUM 1750 at time 2012.06.08_11:32_TAI
+===== 156 =====
+skip: latitude is out of range for HARPNUM 1750 at time 2012.06.08_16:53_TAI
+===== 157 =====
+skip: latitude is out of range for HARPNUM 1750 at time 2012.06.09_06:45_TAI
+===== 158 =====
+skip: latitude is out of range for HARPNUM 1806 at time 2012.06.27_16:12_TAI
+===== 159 =====
+accept NOAA Active Region number 11513 and HARPNUM 1806 at time 2012.06.28_09:20_TAI
+===== 160 =====
+accept NOAA Active Region number 11513 and HARPNUM 1806 at time 2012.06.29_12:52_TAI
+===== 161 =====
+accept NOAA Active Region number 11513 and HARPNUM 1806 at time 2012.06.29_18:32_TAI
+===== 162 =====
+accept NOAA Active Region number 11513 and HARPNUM 1806 at time 2012.06.30_19:18_TAI
+===== 163 =====
+accept NOAA Active Region number 11513 and HARPNUM 1806 at time 2012.07.01_00:35_TAI
+===== 164 =====
+accept NOAA Active Region number 11515 and HARPNUM 1807 at time 2012.07.01_10:52_TAI
+===== 165 =====
+accept NOAA Active Region number 11515 and HARPNUM 1807 at time 2012.07.01_20:07_TAI
+===== 166 =====
+skip: there are no data for HARPNUM 1807 at time 2012.07.01_23:56_TAI
+===== 167 =====
+accept NOAA Active Region number 11515 and HARPNUM 1807 at time 2012.07.03_04:37_TAI
+===== 168 =====
+accept NOAA Active Region number 11515 and HARPNUM 1807 at time 2012.07.03_09:55_TAI
+===== 169 =====
+accept NOAA Active Region number 11515 and HARPNUM 1807 at time 2012.07.03_12:24_TAI
+===== 170 =====
+accept NOAA Active Region number 11515 and HARPNUM 1807 at time 2012.07.03_14:40_TAI
+===== 171 =====
+accept NOAA Active Region number 11513 and HARPNUM 1806 at time 2012.07.03_16:39_TAI
+===== 172 =====
+accept NOAA Active Region number 11515 and HARPNUM 1807 at time 2012.07.03_22:09_TAI
+===== 173 =====
+accept NOAA Active Region number 11515 and HARPNUM 1807 at time 2012.07.03_23:55_TAI
+===== 174 =====
+accept NOAA Active Region number 11515 and HARPNUM 1807 at time 2012.07.04_01:10_TAI
+===== 175 =====
+accept NOAA Active Region number 11515 and HARPNUM 1807 at time 2012.07.04_02:42_TAI
+===== 176 =====
+accept NOAA Active Region number 11515 and HARPNUM 1807 at time 2012.07.04_03:36_TAI
+===== 177 =====
+accept NOAA Active Region number 11515 and HARPNUM 1807 at time 2012.07.04_06:58_TAI
+===== 178 =====
+skip: latitude is out of range for HARPNUM 1834 at time 2012.07.04_07:45_TAI
+===== 179 =====
+accept NOAA Active Region number 11515 and HARPNUM 1807 at time 2012.07.04_10:48_TAI
+===== 180 =====
+accept NOAA Active Region number 11515 and HARPNUM 1807 at time 2012.07.04_11:44_TAI
+===== 181 =====
+accept NOAA Active Region number 11515 and HARPNUM 1807 at time 2012.07.04_13:18_TAI
+===== 182 =====
+accept NOAA Active Region number 11515 and HARPNUM 1807 at time 2012.07.04_20:14_TAI
+===== 183 =====
+accept NOAA Active Region number 11515 and HARPNUM 1807 at time 2012.07.04_21:45_TAI
+===== 184 =====
+accept NOAA Active Region number 11515 and HARPNUM 1807 at time 2012.07.05_01:40_TAI
+===== 185 =====
+accept NOAA Active Region number 11515 and HARPNUM 1807 at time 2012.07.05_02:51_TAI
+===== 186 =====
+accept NOAA Active Region number 11515 and HARPNUM 1807 at time 2012.07.05_08:23_TAI
+===== 187 =====
+accept NOAA Active Region number 11515 and HARPNUM 1807 at time 2012.07.05_10:29_TAI
+===== 188 =====
+accept NOAA Active Region number 11515 and HARPNUM 1807 at time 2012.07.05_13:30_TAI
+===== 189 =====
+accept NOAA Active Region number 11515 and HARPNUM 1807 at time 2012.07.05_18:55_TAI
+===== 190 =====
+accept NOAA Active Region number 11515 and HARPNUM 1807 at time 2012.07.06_03:15_TAI
+===== 191 =====
+skip: latitude is out of range for HARPNUM 1834 at time 2012.07.06_08:28_TAI
+===== 192 =====
+accept NOAA Active Region number 11515 and HARPNUM 1807 at time 2012.07.06_11:03_TAI
+===== 193 =====
+accept NOAA Active Region number 11515 and HARPNUM 1807 at time 2012.07.07_05:46_TAI
+===== 194 =====
+accept NOAA Active Region number 11515 and HARPNUM 1807 at time 2012.07.07_09:53_TAI
+===== 195 =====
+accept NOAA Active Region number 11515 and HARPNUM 1807 at time 2012.07.07_12:10_TAI
+===== 196 =====
+accept NOAA Active Region number 11515 and HARPNUM 1807 at time 2012.07.07_16:32_TAI
+===== 197 =====
+accept NOAA Active Region number 11520 and HARPNUM 1834 at time 2012.07.08_23:07_TAI
+===== 198 =====
+accept NOAA Active Region number 11520 and HARPNUM 1834 at time 2012.07.09_05:14_TAI
+===== 199 =====
+accept NOAA Active Region number 11520 and HARPNUM 1834 at time 2012.07.09_06:27_TAI
+===== 200 =====
+accept NOAA Active Region number 11521 and HARPNUM 1834 at time 2012.07.13_04:58_TAI
+===== 201 =====
+skip: there are no data for HARPNUM 1879 at time 2012.07.26_17:26_TAI
+===== 202 =====
+accept NOAA Active Region number 11532 and HARPNUM 1879 at time 2012.07.28_06:22_TAI
+===== 203 =====
+accept NOAA Active Region number 11536 and HARPNUM 1879 at time 2012.07.29_15:48_TAI
+===== 204 =====
+skip: there are no data for HARPNUM 1930 at time 2012.08.05_04:38_TAI
+===== 205 =====
+accept NOAA Active Region number 11540 and HARPNUM 1907 at time 2012.08.10_12:20_TAI
+===== 206 =====
+skip: there are no data for HARPNUM 1946 at time 2012.08.16_13:19_TAI
+===== 207 =====
+skip: there are no data for HARPNUM 1946 at time 2012.08.16_17:20_TAI
+===== 208 =====
+skip: there are no data for HARPNUM 1946 at time 2012.08.17_01:02_TAI
+===== 209 =====
+skip: there are no data for HARPNUM 1946 at time 2012.08.17_03:23_TAI
+===== 210 =====
+skip: there are no data for HARPNUM 1946 at time 2012.08.17_16:07_TAI
+===== 211 =====
+skip: latitude is out of range for HARPNUM 1946 at time 2012.08.17_22:54_TAI
+===== 212 =====
+skip: latitude is out of range for HARPNUM 1946 at time 2012.08.17_23:22_TAI
+===== 213 =====
+skip: there are no data for HARPNUM 1996 at time 2012.08.29_12:11_TAI
+===== 214 =====
+accept NOAA Active Region number 11560 and HARPNUM 1993 at time 2012.09.05_04:13_TAI
+===== 215 =====
+skip: there are no data for HARPNUM 1999 at time 2012.09.07_17:59_TAI
+===== 216 =====
+accept NOAA Active Region number 11564 and HARPNUM 1999 at time 2012.09.08_22:36_TAI
+===== 217 =====
+accept NOAA Active Region number 11583 and HARPNUM 2040 at time 2012.09.29_04:33_TAI
+===== 218 =====
+skip: there are no data for HARPNUM 1 at time 2012.10.07_11:17_TAI
+===== 219 =====
+skip: there are no data for HARPNUM 1 at time 2012.10.08_23:31_TAI
+===== 220 =====
+skip: there are no data for HARPNUM 1 at time 2012.10.09_05:04_TAI
+===== 221 =====
+skip: there are no data for HARPNUM 2137 at time 2012.10.19_18:14_TAI
+===== 222 =====
+skip: latitude is out of range for HARPNUM 2137 at time 2012.10.20_20:03_TAI
+===== 223 =====
+skip: latitude is out of range for HARPNUM 2137 at time 2012.10.21_18:51_TAI
+===== 224 =====
+skip: there are no data for HARPNUM 2137 at time 2012.10.22_03:17_TAI
+===== 225 =====
+skip: there are no data for HARPNUM 2193 at time 2012.11.10_02:33_TAI
+===== 226 =====
+accept NOAA Active Region number 11613 and HARPNUM 2191 at time 2012.11.11_23:28_TAI
+===== 227 =====
+accept NOAA Active Region number 11613 and HARPNUM 2191 at time 2012.11.12_02:04_TAI
+===== 228 =====
+accept NOAA Active Region number 11613 and HARPNUM 2191 at time 2012.11.12_05:50_TAI
+===== 229 =====
+accept NOAA Active Region number 11613 and HARPNUM 2191 at time 2012.11.12_20:54_TAI
+===== 230 =====
+accept NOAA Active Region number 11613 and HARPNUM 2191 at time 2012.11.13_04:04_TAI
+===== 231 =====
+skip: there are no data for HARPNUM 1 at time 2012.11.19_12:41_TAI
+===== 232 =====
+accept NOAA Active Region number 11618 and HARPNUM 2220 at time 2012.11.19_19:28_TAI
+===== 233 =====
+accept NOAA Active Region number 11618 and HARPNUM 2220 at time 2012.11.20_06:56_TAI
+===== 234 =====
+accept NOAA Active Region number 11618 and HARPNUM 2220 at time 2012.11.26_15:57_TAI
+===== 235 =====
+accept NOAA Active Region number 11620 and HARPNUM 2227 at time 2012.11.26_21:26_TAI
+===== 236 =====
+accept NOAA Active Region number 11620 and HARPNUM 2227 at time 2012.11.27_21:36_TAI
+===== 237 =====
+skip: there are no data for HARPNUM 2362 at time 2013.01.04_09:31_TAI
+===== 238 =====
+accept NOAA Active Region number 11654 and HARPNUM 2372 at time 2013.01.10_09:11_TAI
+===== 239 =====
+accept NOAA Active Region number 11654 and HARPNUM 2372 at time 2013.01.10_15:07_TAI
+===== 240 =====
+accept NOAA Active Region number 11652 and HARPNUM 2362 at time 2013.01.12_00:50_TAI
+===== 241 =====
+accept NOAA Active Region number 11652 and HARPNUM 2362 at time 2013.01.12_08:38_TAI
+===== 242 =====
+accept NOAA Active Region number 11675 and HARPNUM 2491 at time 2013.02.16_15:50_TAI
+===== 243 =====
+skip: there are no data for HARPNUM 2519 at time 2013.03.04_07:54_TAI
+===== 244 =====
+accept NOAA Active Region number 11692 and HARPNUM 2546 at time 2013.03.20_22:04_TAI
+===== 245 =====
+skip: there are no data for HARPNUM 2635 at time 2013.04.04_17:48_TAI
+===== 246 =====
+accept NOAA Active Region number 11718 and HARPNUM 2636 at time 2013.04.11_20:38_TAI
+===== 247 =====
+accept NOAA Active Region number 11726 and HARPNUM 2673 at time 2013.04.21_10:29_TAI
+===== 248 =====
+accept NOAA Active Region number 11731 and HARPNUM 2693 at time 2013.05.01_05:10_TAI
+===== 249 =====
+accept NOAA Active Region number 11731 and HARPNUM 2693 at time 2013.05.02_16:55_TAI
+===== 250 =====
+skip: there are no data for HARPNUM 2716 at time 2013.05.02_17:32_TAI
+===== 251 =====
+skip: there are no data for HARPNUM 2716 at time 2013.05.04_17:56_TAI
+===== 252 =====
+skip: there are no data for HARPNUM 2739 at time 2013.05.09_00:57_TAI
+===== 253 =====
+skip: there are no data for HARPNUM 2739 at time 2013.05.09_12:56_TAI
+===== 254 =====
+skip: there are no data for HARPNUM 2748 at time 2013.05.11_20:32_TAI
+===== 255 =====
+skip: there are no data for HARPNUM 2748 at time 2013.05.11_22:44_TAI
+===== 256 =====
+skip: there are no data for HARPNUM 2748 at time 2013.05.12_12:03_TAI
+===== 257 =====
+accept NOAA Active Region number 11748 and HARPNUM 2748 at time 2013.05.15_21:53_TAI
+===== 258 =====
+accept NOAA Active Region number 11748 and HARPNUM 2748 at time 2013.05.16_08:57_TAI
+===== 259 =====
+skip: there are no data for HARPNUM 2760 at time 2013.05.19_05:25_TAI
+===== 260 =====
+accept NOAA Active Region number 11760 and HARPNUM 2809 at time 2013.05.30_20:00_TAI
+===== 261 =====
+accept NOAA Active Region number 11762 and HARPNUM 2790 at time 2013.06.04_08:57_TAI
+===== 262 =====
+skip: latitude is out of range for HARPNUM 2790 at time 2013.06.06_22:49_TAI
+===== 263 =====
+skip: latitude is out of range for HARPNUM 2878 at time 2013.06.20_03:14_TAI
+===== 264 =====
+skip: latitude is out of range for HARPNUM 2887 at time 2013.06.22_20:56_TAI
+===== 265 =====
+skip: latitude is out of range for HARPNUM 2920 at time 2013.07.02_07:08_TAI
+===== 266 =====
+accept NOAA Active Region number 11817 and HARPNUM 3048 at time 2013.08.11_10:41_TAI
+===== 267 =====
+accept NOAA Active Region number 11818 and HARPNUM 3056 at time 2013.08.16_18:24_TAI
+===== 268 =====
+accept NOAA Active Region number 11818 and HARPNUM 3056 at time 2013.08.16_19:33_TAI
+===== 269 =====
+skip: latitude is out of range for HARPNUM 3263 at time 2013.10.08_01:48_TAI
+===== 270 =====
+skip: there are no data for HARPNUM 1 at time 2013.10.10_07:25_TAI
+===== 271 =====
+accept NOAA Active Region number 11865 and HARPNUM 3263 at time 2013.10.12_00:43_TAI
+===== 272 =====
+accept NOAA Active Region number 11865 and HARPNUM 3263 at time 2013.10.14_08:38_TAI
+===== 273 =====
+accept NOAA Active Region number 11865 and HARPNUM 3263 at time 2013.10.14_23:36_TAI
+===== 274 =====
+accept NOAA Active Region number 11861 and HARPNUM 3258 at time 2013.10.16_15:41_TAI
+===== 275 =====
+accept NOAA Active Region number 11875 and HARPNUM 3291 at time 2013.10.21_00:22_TAI
+===== 276 =====
+accept NOAA Active Region number 11875 and HARPNUM 3291 at time 2013.10.21_15:20_TAI
+===== 277 =====
+accept NOAA Active Region number 11875 and HARPNUM 3291 at time 2013.10.22_20:53_TAI
+===== 278 =====
+accept NOAA Active Region number 11875 and HARPNUM 3291 at time 2013.10.22_23:43_TAI
+===== 279 =====
+accept NOAA Active Region number 11875 and HARPNUM 3291 at time 2013.10.23_00:08_TAI
+===== 280 =====
+accept NOAA Active Region number 11875 and HARPNUM 3291 at time 2013.10.23_10:09_TAI
+===== 281 =====
+accept NOAA Active Region number 11875 and HARPNUM 3291 at time 2013.10.23_10:33_TAI
+===== 282 =====
+skip: latitude is out of range for HARPNUM 3311 at time 2013.10.24_03:02_TAI
+===== 283 =====
+skip: latitude is out of range for HARPNUM 3311 at time 2013.10.24_10:12_TAI
+===== 284 =====
+skip: there are no data for HARPNUM 3311 at time 2013.10.24_17:09_TAI
+===== 285 =====
+skip: there are no data for HARPNUM 3311 at time 2013.10.24_19:21_TAI
+===== 286 =====
+skip: latitude is out of range for HARPNUM 3311 at time 2013.10.24_20:58_TAI
+===== 287 =====
+skip: there are no data for HARPNUM 3311 at time 2013.10.25_06:06_TAI
+===== 288 =====
+skip: latitude is out of range for HARPNUM 3311 at time 2013.10.25_09:37_TAI
+===== 289 =====
+skip: latitude is out of range for HARPNUM 3311 at time 2013.10.25_11:17_TAI
+===== 290 =====
+accept NOAA Active Region number 11882 and HARPNUM 3311 at time 2013.10.25_19:53_TAI
+===== 291 =====
+accept NOAA Active Region number 11875 and HARPNUM 3291 at time 2013.10.26_12:48_TAI
+===== 292 =====
+accept NOAA Active Region number 11877 and HARPNUM 3295 at time 2013.10.27_11:53_TAI
+===== 293 =====
+accept NOAA Active Region number 11875 and HARPNUM 3291 at time 2013.10.27_14:05_TAI
+===== 294 =====
+accept NOAA Active Region number 11882 and HARPNUM 3311 at time 2013.10.27_15:01_TAI
+===== 295 =====
+accept NOAA Active Region number 11882 and HARPNUM 3311 at time 2013.10.27_15:15_TAI
+===== 296 =====
+accept NOAA Active Region number 11875 and HARPNUM 3291 at time 2013.10.27_20:57_TAI
+===== 297 =====
+skip: latitude is out of range for HARPNUM 3295 at time 2013.10.30_13:51_TAI
+===== 298 =====
+accept NOAA Active Region number 11884 and HARPNUM 3321 at time 2013.10.31_19:53_TAI
+===== 299 =====
+accept NOAA Active Region number 11884 and HARPNUM 3321 at time 2013.11.01_22:21_TAI
+===== 300 =====
+accept NOAA Active Region number 11884 and HARPNUM 3321 at time 2013.11.02_05:22_TAI
+===== 301 =====
+accept NOAA Active Region number 11890 and HARPNUM 3341 at time 2013.11.04_08:18_TAI
+===== 302 =====
+skip: there are no data for HARPNUM 3341 at time 2013.11.04_18:13_TAI
+===== 303 =====
+accept NOAA Active Region number 11890 and HARPNUM 3341 at time 2013.11.04_22:12_TAI
+===== 304 =====
+accept NOAA Active Region number 11890 and HARPNUM 3341 at time 2013.11.05_13:46_TAI
+===== 305 =====
+skip: there are no data for HARPNUM 1 at time 2013.11.06_00:02_TAI
+===== 306 =====
+accept NOAA Active Region number 11890 and HARPNUM 3341 at time 2013.11.06_03:40_TAI
+===== 307 =====
+accept NOAA Active Region number 11890 and HARPNUM 3341 at time 2013.11.06_14:25_TAI
+===== 308 =====
+accept NOAA Active Region number 11891 and HARPNUM 3344 at time 2013.11.07_09:28_TAI
+===== 309 =====
+skip: latitude is out of range for HARPNUM 3366 at time 2013.11.10_11:18_TAI
+===== 310 =====
+skip: there are no data for HARPNUM 3366 at time 2013.11.12_15:20_TAI
+===== 311 =====
+accept NOAA Active Region number 11899 and HARPNUM 3376 at time 2013.11.14_02:29_TAI
+===== 312 =====
+accept NOAA Active Region number 11900 and HARPNUM 3364 at time 2013.11.15_04:53_TAI
+===== 313 =====
+accept NOAA Active Region number 11900 and HARPNUM 3364 at time 2013.11.15_07:49_TAI
+===== 314 =====
+accept NOAA Active Region number 11900 and HARPNUM 3364 at time 2013.11.16_05:10_TAI
+===== 315 =====
+skip: latitude is out of range for HARPNUM 3364 at time 2013.11.20_11:11_TAI
+===== 316 =====
+accept NOAA Active Region number 11904 and HARPNUM 3376 at time 2013.11.22_02:32_TAI
+===== 317 =====
+accept NOAA Active Region number 11904 and HARPNUM 3376 at time 2013.11.22_12:57_TAI
+===== 318 =====
+accept NOAA Active Region number 11909 and HARPNUM 3437 at time 2013.12.06_07:29_TAI
+===== 319 =====
+skip: latitude is out of range for HARPNUM 3520 at time 2013.12.18_23:19_TAI
+===== 320 =====
+skip: latitude is out of range for HARPNUM 3520 at time 2013.12.19_11:57_TAI
+===== 321 =====
+accept NOAA Active Region number 11928 and HARPNUM 3497 at time 2013.12.21_08:11_TAI
+===== 322 =====
+accept NOAA Active Region number 11928 and HARPNUM 3497 at time 2013.12.21_08:37_TAI
+===== 323 =====
+accept NOAA Active Region number 11934 and HARPNUM 3520 at time 2013.12.21_14:38_TAI
+===== 324 =====
+accept NOAA Active Region number 11928 and HARPNUM 3497 at time 2013.12.21_15:12_TAI
+===== 325 =====
+accept NOAA Active Region number 11928 and HARPNUM 3497 at time 2013.12.21_22:08_TAI
+===== 326 =====
+accept NOAA Active Region number 11928 and HARPNUM 3497 at time 2013.12.22_00:03_TAI
+===== 327 =====
+accept NOAA Active Region number 11928 and HARPNUM 3497 at time 2013.12.22_09:06_TAI
+===== 328 =====
+accept NOAA Active Region number 11936 and HARPNUM 3535 at time 2013.12.28_07:56_TAI
+===== 329 =====
+accept NOAA Active Region number 11936 and HARPNUM 3535 at time 2013.12.30_21:58_TAI
+===== 330 =====
+accept NOAA Active Region number 11936 and HARPNUM 3535 at time 2013.12.31_18:52_TAI
+===== 331 =====
+skip: latitude is out of range for HARPNUM 3563 at time 2014.01.01_02:33_TAI
+===== 332 =====
+skip: latitude is out of range for HARPNUM 3563 at time 2014.01.01_22:18_TAI
+===== 333 =====
+skip: latitude is out of range for HARPNUM 3563 at time 2014.01.02_12:50_TAI
+===== 334 =====
+skip: latitude is out of range for HARPNUM 3563 at time 2014.01.02_21:14_TAI
+===== 335 =====
+accept NOAA Active Region number 11944 and HARPNUM 3563 at time 2014.01.03_10:25_TAI
+===== 336 =====
+accept NOAA Active Region number 11944 and HARPNUM 3563 at time 2014.01.03_10:25_TAI
+===== 337 =====
+accept NOAA Active Region number 11946 and HARPNUM 3580 at time 2014.01.06_03:53_TAI
+===== 338 =====
+accept NOAA Active Region number 11944 and HARPNUM 3563 at time 2014.01.06_10:13_TAI
+===== 339 =====
+accept NOAA Active Region number 11944 and HARPNUM 3563 at time 2014.01.12_21:51_TAI
+===== 340 =====
+skip: there are no data for HARPNUM 1 at time 2014.01.26_01:22_TAI
+===== 341 =====
+skip: there are no data for HARPNUM 1 at time 2014.01.26_02:11_TAI
+===== 342 =====
+skip: there are no data for HARPNUM 3686 at time 2014.01.26_22:10_TAI
+===== 343 =====
+skip: latitude is out of range for HARPNUM 3686 at time 2014.01.27_04:09_TAI
+===== 344 =====
+skip: latitude is out of range for HARPNUM 3686 at time 2014.01.27_07:31_TAI
+===== 345 =====
+skip: latitude is out of range for HARPNUM 3686 at time 2014.01.27_11:38_TAI
+===== 346 =====
+skip: latitude is out of range for HARPNUM 3686 at time 2014.01.27_12:46_TAI
+===== 347 =====
+skip: there are no data for HARPNUM 1 at time 2014.01.27_12:46_TAI
+===== 348 =====
+skip: latitude is out of range for HARPNUM 3686 at time 2014.01.27_19:40_TAI
+===== 349 =====
+skip: latitude is out of range for HARPNUM 3686 at time 2014.01.27_22:16_TAI
+===== 350 =====
+skip: latitude is out of range for HARPNUM 3686 at time 2014.01.29_06:39_TAI
+===== 351 =====
+skip: there are no data for HARPNUM 3688 at time 2014.01.30_15:42_TAI
+===== 352 =====
+accept NOAA Active Region number 11967 and HARPNUM 3686 at time 2014.01.31_01:25_TAI
+===== 353 =====
+accept NOAA Active Region number 11967 and HARPNUM 3686 at time 2014.01.31_07:23_TAI
+===== 354 =====
+accept NOAA Active Region number 11968 and HARPNUM 3688 at time 2014.02.01_06:34_TAI
+===== 355 =====
+accept NOAA Active Region number 11967 and HARPNUM 3686 at time 2014.02.01_08:20_TAI
+===== 356 =====
+accept NOAA Active Region number 11967 and HARPNUM 3686 at time 2014.02.01_09:31_TAI
+===== 357 =====
+accept NOAA Active Region number 11967 and HARPNUM 3686 at time 2014.02.01_14:06_TAI
+===== 358 =====
+skip: there are no data for HARPNUM 1 at time 2014.02.01_16:29_TAI
+===== 359 =====
+skip: there are no data for HARPNUM 3686 at time 2014.02.01_18:11_TAI
+===== 360 =====
+accept NOAA Active Region number 11967 and HARPNUM 3686 at time 2014.02.01_22:04_TAI
+===== 361 =====
+accept NOAA Active Region number 11968 and HARPNUM 3688 at time 2014.02.03_01:23_TAI
+===== 362 =====
+accept NOAA Active Region number 11967 and HARPNUM 3686 at time 2014.02.03_04:00_TAI
+===== 363 =====
+accept NOAA Active Region number 11967 and HARPNUM 3686 at time 2014.02.03_09:49_TAI
+===== 364 =====
+accept NOAA Active Region number 11967 and HARPNUM 3686 at time 2014.02.03_16:02_TAI
+===== 365 =====
+accept NOAA Active Region number 11967 and HARPNUM 3686 at time 2014.02.04_16:20_TAI
+===== 366 =====
+accept NOAA Active Region number 11967 and HARPNUM 3686 at time 2014.02.05_23:05_TAI
+===== 367 =====
+accept NOAA Active Region number 11967 and HARPNUM 3686 at time 2014.02.06_04:56_TAI
+===== 368 =====
+accept NOAA Active Region number 11968 and HARPNUM 3688 at time 2014.02.06_10:29_TAI
+===== 369 =====
+skip: there are no data for HARPNUM 1 at time 2014.02.08_16:17_TAI
+===== 370 =====
+accept NOAA Active Region number 11974 and HARPNUM 3721 at time 2014.02.10_16:51_TAI
+===== 371 =====
+accept NOAA Active Region number 11974 and HARPNUM 3721 at time 2014.02.11_04:25_TAI
+===== 372 =====
+accept NOAA Active Region number 11974 and HARPNUM 3721 at time 2014.02.11_06:58_TAI
+===== 373 =====
+accept NOAA Active Region number 11974 and HARPNUM 3721 at time 2014.02.11_15:51_TAI
+===== 374 =====
+skip: there are no data for HARPNUM 1 at time 2014.02.12_01:40_TAI
+===== 375 =====
+accept NOAA Active Region number 11974 and HARPNUM 3721 at time 2014.02.12_02:51_TAI
+===== 376 =====
+skip: there are no data for HARPNUM 3721 at time 2014.02.12_06:07_TAI
+===== 377 =====
+accept NOAA Active Region number 11974 and HARPNUM 3721 at time 2014.02.12_08:12_TAI
+===== 378 =====
+skip: there are no data for HARPNUM 1 at time 2014.02.12_15:57_TAI
+===== 379 =====
+accept NOAA Active Region number 11974 and HARPNUM 3721 at time 2014.02.13_02:57_TAI
+===== 380 =====
+skip: there are no data for HARPNUM 3721 at time 2014.02.13_12:40_TAI
+===== 381 =====
+accept NOAA Active Region number 11974 and HARPNUM 3721 at time 2014.02.13_13:28_TAI
+===== 382 =====
+accept NOAA Active Region number 11974 and HARPNUM 3721 at time 2014.02.13_16:39_TAI
+===== 383 =====
+accept NOAA Active Region number 11977 and HARPNUM 3740 at time 2014.02.15_09:26_TAI
+===== 384 =====
+accept NOAA Active Region number 11976 and HARPNUM 3730 at time 2014.02.19_07:56_TAI
+===== 385 =====
+skip: there are no data for HARPNUM 1 at time 2014.02.22_06:10_TAI
+===== 386 =====
+skip: there are no data for HARPNUM 3793 at time 2014.02.23_11:17_TAI
+===== 387 =====
+skip: there are no data for HARPNUM 3793 at time 2014.02.23_12:05_TAI
+===== 388 =====
+accept NOAA Active Region number 11982 and HARPNUM 3766 at time 2014.02.25_15:01_TAI
+===== 389 =====
+accept NOAA Active Region number 11991 and HARPNUM 3804 at time 2014.02.27_00:48_TAI
+===== 390 =====
+skip: latitude is out of range for HARPNUM 3766 at time 2014.02.28_13:33_TAI
+===== 391 =====
+accept NOAA Active Region number 11986 and HARPNUM 3779 at time 2014.03.01_23:19_TAI
+===== 392 =====
+accept NOAA Active Region number 11989 and HARPNUM 3784 at time 2014.03.02_15:58_TAI
+===== 393 =====
+accept NOAA Active Region number 11991 and HARPNUM 3804 at time 2014.03.04_02:10_TAI
+===== 394 =====
+skip: latitude is out of range for HARPNUM 3836 at time 2014.03.07_23:41_TAI
+===== 395 =====
+skip: latitude is out of range for HARPNUM 3836 at time 2014.03.08_13:58_TAI
+===== 396 =====
+accept NOAA Active Region number 12002 and HARPNUM 3836 at time 2014.03.08_20:28_TAI
+===== 397 =====
+accept NOAA Active Region number 12002 and HARPNUM 3836 at time 2014.03.09_00:26_TAI
+===== 398 =====
+accept NOAA Active Region number 12002 and HARPNUM 3836 at time 2014.03.09_04:08_TAI
+===== 399 =====
+accept NOAA Active Region number 12002 and HARPNUM 3836 at time 2014.03.09_15:28_TAI
+===== 400 =====
+accept NOAA Active Region number 11996 and HARPNUM 3813 at time 2014.03.09_23:00_TAI
+===== 401 =====
+accept NOAA Active Region number 11996 and HARPNUM 3813 at time 2014.03.10_03:50_TAI
+===== 402 =====
+skip: latitude is out of range for HARPNUM 3804 at time 2014.03.10_12:07_TAI
+===== 403 =====
+accept NOAA Active Region number 11996 and HARPNUM 3813 at time 2014.03.11_11:05_TAI
+===== 404 =====
+accept NOAA Active Region number 11996 and HARPNUM 3813 at time 2014.03.11_22:34_TAI
+===== 405 =====
+skip: latitude is out of range for HARPNUM 3813 at time 2014.03.12_19:19_TAI
+===== 406 =====
+accept NOAA Active Region number 12010 and HARPNUM 3856 at time 2014.03.19_03:56_TAI
+===== 407 =====
+skip: there are no data for HARPNUM 3877 at time 2014.03.21_07:02_TAI
+===== 408 =====
+accept NOAA Active Region number 12017 and HARPNUM 3894 at time 2014.03.27_19:18_TAI
+===== 409 =====
+accept NOAA Active Region number 12017 and HARPNUM 3894 at time 2014.03.27_23:51_TAI
+===== 410 =====
+accept NOAA Active Region number 12017 and HARPNUM 3894 at time 2014.03.29_11:55_TAI
+===== 411 =====
+accept NOAA Active Region number 12014 and HARPNUM 3879 at time 2014.03.30_08:07_TAI
+===== 412 =====
+accept NOAA Active Region number 12035 and HARPNUM 4000 at time 2014.04.15_19:59_TAI
+===== 413 =====
+accept NOAA Active Region number 12056 and HARPNUM 4097 at time 2014.05.07_10:07_TAI
+===== 414 =====
+accept NOAA Active Region number 12065 and HARPNUM 4138 at time 2014.05.23_18:35_TAI
+===== 415 =====
+accept NOAA Active Region number 12077 and HARPNUM 4186 at time 2014.06.02_04:09_TAI
+===== 416 =====
+accept NOAA Active Region number 12080 and HARPNUM 4197 at time 2014.06.05_19:31_TAI
+===== 417 =====
+accept NOAA Active Region number 12080 and HARPNUM 4197 at time 2014.06.10_05:34_TAI
+===== 418 =====
+skip: latitude is out of range for HARPNUM 4225 at time 2014.06.10_08:09_TAI
+===== 419 =====
+skip: latitude is out of range for HARPNUM 4225 at time 2014.06.10_09:06_TAI
+===== 420 =====
+skip: latitude is out of range for HARPNUM 4225 at time 2014.06.10_21:03_TAI
+===== 421 =====
+skip: latitude is out of range for HARPNUM 4225 at time 2014.06.11_04:21_TAI
+===== 422 =====
+accept NOAA Active Region number 12085 and HARPNUM 4197 at time 2014.06.11_09:37_TAI
+===== 423 =====
+skip: latitude is out of range for HARPNUM 4225 at time 2014.06.11_10:21_TAI
+===== 424 =====
+skip: there are no data for HARPNUM 4225 at time 2014.06.11_18:13_TAI
+===== 425 =====
+accept NOAA Active Region number 12089 and HARPNUM 4231 at time 2014.06.11_20:03_TAI
+===== 426 =====
+skip: latitude is out of range for HARPNUM 4225 at time 2014.06.11_21:13_TAI
+===== 427 =====
+skip: latitude is out of range for HARPNUM 4225 at time 2014.06.12_07:56_TAI
+===== 428 =====
+skip: there are no data for HARPNUM 1 at time 2014.06.13_19:29_TAI
+===== 429 =====
+accept NOAA Active Region number 12085 and HARPNUM 4197 at time 2014.06.14_11:39_TAI
+===== 430 =====
+accept NOAA Active Region number 12087 and HARPNUM 4225 at time 2014.06.15_00:01_TAI
+===== 431 =====
+accept NOAA Active Region number 12113 and HARPNUM 4344 at time 2014.07.08_00:26_TAI
+===== 432 =====
+accept NOAA Active Region number 12106 and HARPNUM 4294 at time 2014.07.09_22:34_TAI
+===== 433 =====
+accept NOAA Active Region number 12130 and HARPNUM 4396 at time 2014.07.30_11:14_TAI
+===== 434 =====
+skip: there are no data for HARPNUM 4396 at time 2014.07.31_14:48_TAI
+===== 435 =====
+skip: there are no matching HARPNUMs for 12149
+===== 436 =====
+skip: there are no matching HARPNUMs for 12151
+===== 437 =====
+skip: there are no matching HARPNUMs for 12155
+===== 438 =====
+skip: there are no matching HARPNUMs for 12157
+===== 439 =====
+skip: there are no matching HARPNUMs for 12158
+===== 440 =====
+skip: there are no matching HARPNUMs for 12166
+===== 441 =====
+skip: there are no matching HARPNUMs for 12166
+===== 442 =====
+skip: there are no matching HARPNUMs for 12169
+===== 443 =====
+skip: there are no data for HARPNUM 1 at time 2014.09.26_08:37_TAI
+===== 444 =====
+skip: there are no matching HARPNUMs for 12173
+===== 445 =====
+skip: there are no matching HARPNUMs for 12172
+===== 446 =====
+accept NOAA Active Region number 12182 and HARPNUM 4639 at time 2014.10.08_01:43_TAI
+===== 447 =====
+accept NOAA Active Region number 12182 and HARPNUM 4639 at time 2014.10.08_01:58_TAI
+===== 448 =====
+accept NOAA Active Region number 12182 and HARPNUM 4639 at time 2014.10.08_06:59_TAI
+===== 449 =====
+skip: there are no data for HARPNUM 1 at time 2014.10.13_18:37_TAI
+===== 450 =====
+skip: there are no data for HARPNUM 1 at time 2014.10.13_21:21_TAI
+===== 451 =====
+skip: latitude is out of range for HARPNUM 4698 at time 2014.10.17_07:58_TAI
+===== 452 =====
+skip: latitude is out of range for HARPNUM 4698 at time 2014.10.18_05:03_TAI
+===== 453 =====
+accept NOAA Active Region number 12192 and HARPNUM 4698 at time 2014.10.19_09:11_TAI
+===== 454 =====
+accept NOAA Active Region number 12192 and HARPNUM 4698 at time 2014.10.19_16:37_TAI
+===== 455 =====
+accept NOAA Active Region number 12192 and HARPNUM 4698 at time 2014.10.19_19:02_TAI
+===== 456 =====
+accept NOAA Active Region number 12192 and HARPNUM 4698 at time 2014.10.19_20:04_TAI
+===== 457 =====
+accept NOAA Active Region number 12192 and HARPNUM 4698 at time 2014.10.19_22:55_TAI
+===== 458 =====
+skip: there are no data for HARPNUM 1 at time 2014.10.20_13:38_TAI
+===== 459 =====
+accept NOAA Active Region number 12192 and HARPNUM 4698 at time 2014.10.21_01:59_TAI
+===== 460 =====
+accept NOAA Active Region number 12192 and HARPNUM 4698 at time 2014.10.21_05:17_TAI
+===== 461 =====
+accept NOAA Active Region number 12192 and HARPNUM 4698 at time 2014.10.21_14:28_TAI
+===== 462 =====
+skip: there are no data for HARPNUM 1 at time 2014.10.21_15:57_TAI
+===== 463 =====
+accept NOAA Active Region number 12192 and HARPNUM 4698 at time 2014.10.22_09:50_TAI
+===== 464 =====
+accept NOAA Active Region number 12192 and HARPNUM 4698 at time 2014.10.23_21:41_TAI
+===== 465 =====
+accept NOAA Active Region number 12192 and HARPNUM 4698 at time 2014.10.24_17:08_TAI
+===== 466 =====
+accept NOAA Active Region number 12192 and HARPNUM 4698 at time 2014.10.25_10:56_TAI
+===== 467 =====
+accept NOAA Active Region number 12192 and HARPNUM 4698 at time 2014.10.25_17:17_TAI
+===== 468 =====
+skip: there are no data for HARPNUM 4698 at time 2014.10.25_18:15_TAI
+===== 469 =====
+accept NOAA Active Region number 12192 and HARPNUM 4698 at time 2014.10.25_18:49_TAI
+===== 470 =====
+accept NOAA Active Region number 12192 and HARPNUM 4698 at time 2014.10.25_20:21_TAI
+===== 471 =====
+accept NOAA Active Region number 12192 and HARPNUM 4698 at time 2014.10.26_00:34_TAI
+===== 472 =====
+accept NOAA Active Region number 12192 and HARPNUM 4698 at time 2014.10.26_02:02_TAI
+===== 473 =====
+accept NOAA Active Region number 12192 and HARPNUM 4698 at time 2014.10.26_03:41_TAI
+===== 474 =====
+accept NOAA Active Region number 12192 and HARPNUM 4698 at time 2014.10.26_10:09_TAI
+===== 475 =====
+accept NOAA Active Region number 12192 and HARPNUM 4698 at time 2014.10.26_14:47_TAI
+===== 476 =====
+accept NOAA Active Region number 12192 and HARPNUM 4698 at time 2014.10.26_17:40_TAI
+===== 477 =====
+accept NOAA Active Region number 12192 and HARPNUM 4698 at time 2014.10.27_02:42_TAI
+===== 478 =====
+accept NOAA Active Region number 12192 and HARPNUM 4698 at time 2014.10.27_03:32_TAI
+===== 479 =====
+accept NOAA Active Region number 12192 and HARPNUM 4698 at time 2014.10.27_14:06_TAI
+===== 480 =====
+accept NOAA Active Region number 12192 and HARPNUM 4698 at time 2014.10.28_08:20_TAI
+===== 481 =====
+accept NOAA Active Region number 12192 and HARPNUM 4698 at time 2014.10.28_10:01_TAI
+===== 482 =====
+accept NOAA Active Region number 12192 and HARPNUM 4698 at time 2014.10.28_14:33_TAI
+===== 483 =====
+accept NOAA Active Region number 12192 and HARPNUM 4698 at time 2014.10.28_16:20_TAI
+===== 484 =====
+accept NOAA Active Region number 12192 and HARPNUM 4698 at time 2014.10.28_18:50_TAI
+===== 485 =====
+skip: latitude is out of range for HARPNUM 4698 at time 2014.10.28_21:22_TAI
+===== 486 =====
+skip: latitude is out of range for HARPNUM 4698 at time 2014.10.29_00:37_TAI
+===== 487 =====
+skip: latitude is out of range for HARPNUM 4698 at time 2014.10.29_01:35_TAI
+===== 488 =====
+skip: latitude is out of range for HARPNUM 4698 at time 2014.10.29_04:28_TAI
+===== 489 =====
+skip: latitude is out of range for HARPNUM 4781 at time 2014.11.05_01:39_TAI
+===== 490 =====
+accept NOAA Active Region number 12205 and HARPNUM 4781 at time 2014.11.05_22:16_TAI
+===== 491 =====
+accept NOAA Active Region number 12205 and HARPNUM 4781 at time 2014.11.06_02:49_TAI
+===== 492 =====
+accept NOAA Active Region number 12205 and HARPNUM 4781 at time 2014.11.06_10:22_TAI
+===== 493 =====
+accept NOAA Active Region number 12205 and HARPNUM 4781 at time 2014.11.08_15:32_TAI
+===== 494 =====
+accept NOAA Active Region number 12209 and HARPNUM 4817 at time 2014.11.14_12:03_TAI
+===== 495 =====
+accept NOAA Active Region number 12209 and HARPNUM 4817 at time 2014.11.15_17:48_TAI
+===== 496 =====
+accept NOAA Active Region number 12222 and HARPNUM 4874 at time 2014.11.30_06:41_TAI
+===== 497 =====
+accept NOAA Active Region number 12222 and HARPNUM 4874 at time 2014.12.03_08:10_TAI
+===== 498 =====
+accept NOAA Active Region number 12222 and HARPNUM 4874 at time 2014.12.03_18:25_TAI
+===== 499 =====
+accept NOAA Active Region number 12222 and HARPNUM 4874 at time 2014.12.03_19:41_TAI
+===== 500 =====
+accept NOAA Active Region number 12222 and HARPNUM 4874 at time 2014.12.04_12:25_TAI
+===== 501 =====
+skip: there are no data for HARPNUM 4941 at time 2014.12.12_05:20_TAI
+===== 502 =====
+accept NOAA Active Region number 12242 and HARPNUM 4920 at time 2014.12.13_19:33_TAI
+===== 503 =====
+accept NOAA Active Region number 12242 and HARPNUM 4920 at time 2014.12.16_01:10_TAI
+===== 504 =====
+accept NOAA Active Region number 12241 and HARPNUM 4941 at time 2014.12.16_19:01_TAI
+===== 505 =====
+accept NOAA Active Region number 12242 and HARPNUM 4920 at time 2014.12.18_09:44_TAI
+===== 506 =====
+accept NOAA Active Region number 12242 and HARPNUM 4920 at time 2014.12.20_07:32_TAI
+===== 507 =====
+accept NOAA Active Region number 12241 and HARPNUM 4941 at time 2014.12.20_12:17_TAI
+===== 508 =====
+accept NOAA Active Region number 12242 and HARPNUM 4920 at time 2014.12.21_01:49_TAI
+===== 509 =====
+accept NOAA Active Region number 12249 and HARPNUM 4955 at time 2014.12.26_02:16_TAI
+===== 510 =====
+accept NOAA Active Region number 12253 and HARPNUM 5011 at time 2015.01.02_09:47_TAI
+===== 511 =====
+accept NOAA Active Region number 12253 and HARPNUM 5011 at time 2015.01.03_15:36_TAI
+===== 512 =====
+accept NOAA Active Region number 12257 and HARPNUM 5026 at time 2015.01.12_04:58_TAI
+===== 513 =====
+skip: latitude is out of range for HARPNUM 5026 at time 2015.01.13_12:58_TAI
+===== 514 =====
+skip: there are no data for HARPNUM 5107 at time 2015.01.21_04:52_TAI
+===== 515 =====
+accept NOAA Active Region number 12268 and HARPNUM 5107 at time 2015.01.25_16:53_TAI
+===== 516 =====
+accept NOAA Active Region number 12268 and HARPNUM 5107 at time 2015.01.27_04:41_TAI
+===== 517 =====
+skip: latitude is out of range for HARPNUM 5127 at time 2015.01.27_21:37_TAI
+===== 518 =====
+accept NOAA Active Region number 12268 and HARPNUM 5107 at time 2015.01.28_11:42_TAI
+===== 519 =====
+accept NOAA Active Region number 12268 and HARPNUM 5107 at time 2015.01.29_00:44_TAI
+===== 520 =====
+accept NOAA Active Region number 12268 and HARPNUM 5107 at time 2015.01.29_05:36_TAI
+===== 521 =====
+accept NOAA Active Region number 12277 and HARPNUM 5127 at time 2015.01.29_12:16_TAI
+===== 522 =====
+accept NOAA Active Region number 12277 and HARPNUM 5127 at time 2015.02.03_02:15_TAI
+===== 523 =====
+skip: there are no data for HARPNUM 5233 at time 2015.03.01_06:39_TAI
+===== 524 =====
+skip: there are no data for HARPNUM 5233 at time 2015.03.01_09:48_TAI
+===== 525 =====
+skip: there are no data for HARPNUM 5233 at time 2015.03.01_09:48_TAI
+===== 526 =====
+skip: latitude is out of range for HARPNUM 5233 at time 2015.03.01_15:28_TAI
+===== 527 =====
+skip: latitude is out of range for HARPNUM 5233 at time 2015.03.01_19:31_TAI
+===== 528 =====
+skip: latitude is out of range for HARPNUM 5233 at time 2015.03.02_01:35_TAI
+===== 529 =====
+skip: there are no data for HARPNUM 5298 at time 2015.03.04_18:11_TAI
+===== 530 =====
+accept NOAA Active Region number 12297 and HARPNUM 5298 at time 2015.03.08_14:33_TAI
+===== 531 =====
+accept NOAA Active Region number 12297 and HARPNUM 5298 at time 2015.03.10_00:02_TAI
+===== 532 =====
+skip: there are no data for HARPNUM 5298 at time 2015.03.10_07:18_TAI
+===== 533 =====
+skip: there are no data for HARPNUM 5298 at time 2015.03.10_07:57_TAI
+===== 534 =====
+accept NOAA Active Region number 12297 and HARPNUM 5298 at time 2015.03.10_18:51_TAI
+===== 535 =====
+accept NOAA Active Region number 12297 and HARPNUM 5298 at time 2015.03.11_04:46_TAI
+===== 536 =====
+accept NOAA Active Region number 12297 and HARPNUM 5298 at time 2015.03.11_11:50_TAI
+===== 537 =====
+accept NOAA Active Region number 12297 and HARPNUM 5298 at time 2015.03.11_12:14_TAI
+===== 538 =====
+accept NOAA Active Region number 12297 and HARPNUM 5298 at time 2015.03.11_14:08_TAI
+===== 539 =====
+accept NOAA Active Region number 12297 and HARPNUM 5298 at time 2015.03.11_21:51_TAI
+===== 540 =====
+accept NOAA Active Region number 12297 and HARPNUM 5298 at time 2015.03.12_04:01_TAI
+===== 541 =====
+skip: there are no data for HARPNUM 5298 at time 2015.03.12_06:07_TAI
+===== 542 =====
+accept NOAA Active Region number 12297 and HARPNUM 5298 at time 2015.03.13_04:40_TAI
+===== 543 =====
+accept NOAA Active Region number 12297 and HARPNUM 5298 at time 2015.03.14_09:40_TAI
+===== 544 =====
+accept NOAA Active Region number 12297 and HARPNUM 5298 at time 2015.03.14_23:22_TAI
+===== 545 =====
+accept NOAA Active Region number 12297 and HARPNUM 5298 at time 2015.03.15_10:58_TAI
+===== 546 =====
+accept NOAA Active Region number 12320 and HARPNUM 5415 at time 2015.04.07_14:43_TAI
+===== 547 =====
+accept NOAA Active Region number 12322 and HARPNUM 5446 at time 2015.04.20_07:21_TAI
+===== 548 =====
+skip: there are no data for HARPNUM 1 at time 2015.04.20_10:40_TAI
+===== 549 =====
+accept NOAA Active Region number 12322 and HARPNUM 5446 at time 2015.04.20_11:57_TAI
+===== 550 =====
+skip: latitude is out of range for HARPNUM 5446 at time 2015.04.20_15:45_TAI
+===== 551 =====
+skip: latitude is out of range for HARPNUM 5446 at time 2015.04.20_17:00_TAI
+===== 552 =====
+skip: latitude is out of range for HARPNUM 5446 at time 2015.04.20_21:45_TAI
+===== 553 =====
+accept NOAA Active Region number 12325 and HARPNUM 5447 at time 2015.04.20_22:01_TAI
+===== 554 =====
+skip: latitude is out of range for HARPNUM 5446 at time 2015.04.21_08:44_TAI
+===== 555 =====
+skip: there are no data for HARPNUM 5541 at time 2015.05.04_09:47_TAI
+===== 556 =====
+skip: there are no data for HARPNUM 5541 at time 2015.05.04_13:53_TAI
+===== 557 =====
+accept NOAA Active Region number 12335 and HARPNUM 5526 at time 2015.05.04_14:25_TAI
+===== 558 =====
+accept NOAA Active Region number 12335 and HARPNUM 5526 at time 2015.05.04_17:24_TAI
+===== 559 =====
+skip: latitude is out of range for HARPNUM 5541 at time 2015.05.05_11:49_TAI
+===== 560 =====
+skip: there are no data for HARPNUM 5673 at time 2015.06.10_08:55_TAI
+===== 561 =====
+accept NOAA Active Region number 12360 and HARPNUM 5637 at time 2015.06.12_07:29_TAI
+===== 562 =====
+skip: latitude is out of range for HARPNUM 5637 at time 2015.06.13_00:59_TAI
+===== 563 =====
+skip: latitude is out of range for HARPNUM 5653 at time 2015.06.17_01:27_TAI
+===== 564 =====
+accept NOAA Active Region number 12371 and HARPNUM 5692 at time 2015.06.19_06:48_TAI
+===== 565 =====
+accept NOAA Active Region number 12371 and HARPNUM 5692 at time 2015.06.20_02:34_TAI
+===== 566 =====
+accept NOAA Active Region number 12367 and HARPNUM 5673 at time 2015.06.20_09:44_TAI
+===== 567 =====
+accept NOAA Active Region number 12367 and HARPNUM 5673 at time 2015.06.20_18:20_TAI
+===== 568 =====
+skip: latitude is out of range for HARPNUM 5738 at time 2015.07.02_12:51_TAI
+===== 569 =====
+accept NOAA Active Region number 12381 and HARPNUM 5745 at time 2015.07.05_08:44_TAI
+===== 570 =====
+accept NOAA Active Region number 12381 and HARPNUM 5745 at time 2015.07.05_20:40_TAI
+===== 571 =====
+accept NOAA Active Region number 12403 and HARPNUM 5885 at time 2015.08.20_02:18_TAI
+===== 572 =====
+accept NOAA Active Region number 12403 and HARPNUM 5885 at time 2015.08.20_20:34_TAI
+===== 573 =====
+accept NOAA Active Region number 12403 and HARPNUM 5885 at time 2015.08.21_13:23_TAI
+===== 574 =====
+accept NOAA Active Region number 12403 and HARPNUM 5885 at time 2015.08.21_21:24_TAI
+===== 575 =====
+accept NOAA Active Region number 12403 and HARPNUM 5885 at time 2015.08.23_07:33_TAI
+===== 576 =====
+accept NOAA Active Region number 12403 and HARPNUM 5885 at time 2015.08.23_17:46_TAI
+===== 577 =====
+accept NOAA Active Region number 12403 and HARPNUM 5885 at time 2015.08.26_05:44_TAI
+===== 578 =====
+accept NOAA Active Region number 12403 and HARPNUM 5885 at time 2015.08.27_13:16_TAI
+===== 579 =====
+accept NOAA Active Region number 12403 and HARPNUM 5885 at time 2015.08.27_19:03_TAI
+===== 580 =====
+skip: latitude is out of range for HARPNUM 5885 at time 2015.08.29_03:30_TAI
+===== 581 =====
+accept NOAA Active Region number 12415 and HARPNUM 5956 at time 2015.09.16_09:40_TAI
+===== 582 =====
+skip: there are no data for HARPNUM 5974 at time 2015.09.19_05:03_TAI
+===== 583 =====
+accept NOAA Active Region number 12422 and HARPNUM 5983 at time 2015.09.26_10:40_TAI
+===== 584 =====
+accept NOAA Active Region number 12422 and HARPNUM 5983 at time 2015.09.26_21:00_TAI
+===== 585 =====
+accept NOAA Active Region number 12422 and HARPNUM 5983 at time 2015.09.27_07:35_TAI
+===== 586 =====
+accept NOAA Active Region number 12422 and HARPNUM 5983 at time 2015.09.27_13:18_TAI
+===== 587 =====
+accept NOAA Active Region number 12422 and HARPNUM 5983 at time 2015.09.27_14:58_TAI
+===== 588 =====
+accept NOAA Active Region number 12423 and HARPNUM 5982 at time 2015.09.28_03:16_TAI
+===== 589 =====
+accept NOAA Active Region number 12422 and HARPNUM 5983 at time 2015.09.28_03:43_TAI
+===== 590 =====
+accept NOAA Active Region number 12422 and HARPNUM 5983 at time 2015.09.28_05:16_TAI
+===== 591 =====
+skip: latitude is out of range for HARPNUM 5982 at time 2015.09.28_05:37_TAI
+===== 592 =====
+skip: there are no data for HARPNUM 5983 at time 2015.09.28_05:56_TAI
+===== 593 =====
+accept NOAA Active Region number 12422 and HARPNUM 5983 at time 2015.09.28_06:43_TAI
+===== 594 =====
+skip: latitude is out of range for HARPNUM 5982 at time 2015.09.28_08:51_TAI
+===== 595 =====
+accept NOAA Active Region number 12422 and HARPNUM 5983 at time 2015.09.28_11:15_TAI
+===== 596 =====
+accept NOAA Active Region number 12422 and HARPNUM 5983 at time 2015.09.28_19:24_TAI
+===== 597 =====
+accept NOAA Active Region number 12422 and HARPNUM 5983 at time 2015.09.29_10:59_TAI
+===== 598 =====
+accept NOAA Active Region number 12422 and HARPNUM 5983 at time 2015.09.29_13:20_TAI
+===== 599 =====
+accept NOAA Active Region number 12422 and HARPNUM 5983 at time 2015.09.30_13:10_TAI
+===== 600 =====
+accept NOAA Active Region number 12422 and HARPNUM 5983 at time 2015.10.01_00:13_TAI
+===== 601 =====
+accept NOAA Active Region number 12422 and HARPNUM 5983 at time 2015.10.01_12:26_TAI
+===== 602 =====
+accept NOAA Active Region number 12422 and HARPNUM 5983 at time 2015.10.01_17:18_TAI
+===== 603 =====
+skip: latitude is out of range for HARPNUM 5983 at time 2015.10.03_02:41_TAI
+===== 604 =====
+skip: latitude is out of range for HARPNUM 6015 at time 2015.10.14_23:31_TAI
+===== 605 =====
+skip: there are no data for HARPNUM 6015 at time 2015.10.15_06:16_TAI
+===== 606 =====
+skip: latitude is out of range for HARPNUM 6026 at time 2015.10.16_20:23_TAI
+===== 607 =====
+skip: latitude is out of range for HARPNUM 6026 at time 2015.10.16_20:42_TAI
+===== 608 =====
+accept NOAA Active Region number 12443 and HARPNUM 6063 at time 2015.10.30_17:52_TAI
+===== 609 =====
+accept NOAA Active Region number 12445 and HARPNUM 6052 at time 2015.11.03_12:03_TAI
+===== 610 =====
+accept NOAA Active Region number 12449 and HARPNUM 6078 at time 2015.11.08_13:12_TAI
+===== 611 =====
+skip: there are no data for HARPNUM 6206 at time 2015.12.21_03:34_TAI
+===== 612 =====
+accept NOAA Active Region number 12473 and HARPNUM 6206 at time 2015.12.23_02:12_TAI
+===== 613 =====
+accept NOAA Active Region number 12497 and HARPNUM 6327 at time 2016.02.11_10:47_TAI
+===== 614 =====
+accept NOAA Active Region number 12497 and HARPNUM 6327 at time 2016.02.12_15:24_TAI
+===== 615 =====
+accept NOAA Active Region number 12497 and HARPNUM 6327 at time 2016.02.13_19:26_TAI
+===== 616 =====
+accept NOAA Active Region number 12497 and HARPNUM 6327 at time 2016.02.14_11:00_TAI
+===== 617 =====
+accept NOAA Active Region number 12567 and HARPNUM 6670 at time 2016.07.20_00:46_TAI
+===== 618 =====
+accept NOAA Active Region number 12567 and HARPNUM 6670 at time 2016.07.20_01:49_TAI
+===== 619 =====
+accept NOAA Active Region number 12567 and HARPNUM 6670 at time 2016.07.22_02:11_TAI
+===== 620 =====
+skip: latitude is out of range for HARPNUM 6670 at time 2016.07.23_06:20_TAI
+===== 621 =====
+skip: latitude is out of range for HARPNUM 6670 at time 2016.07.23_17:43_TAI
+===== 622 =====
+skip: there are no data for HARPNUM 1 at time 2016.08.06_14:44_TAI
+===== 623 =====
+accept NOAA Active Region number 12615 and HARPNUM 6870 at time 2016.11.28_17:23_TAI
+===== 624 =====
+accept NOAA Active Region number 12615 and HARPNUM 6870 at time 2016.11.28_23:38_TAI
+===== 625 =====
+accept NOAA Active Region number 12644 and HARPNUM 6972 at time 2017.04.01_13:00_TAI
+===== 626 =====
+accept NOAA Active Region number 12644 and HARPNUM 6972 at time 2017.04.01_20:33_TAI
+===== 627 =====
+skip: there are no data for HARPNUM 1 at time 2017.07.02_16:15_TAI
+===== 628 =====
+accept NOAA Active Region number 12665 and HARPNUM 7075 at time 2017.07.08_03:18_TAI
+===== 629 =====
+skip: there are no data for HARPNUM 7110 at time 2017.08.19_01:52_TAI
+===== 630 =====
+accept NOAA Active Region number 12673 and HARPNUM 7115 at time 2017.09.03_05:49_TAI
+===== 631 =====
+accept NOAA Active Region number 12673 and HARPNUM 7115 at time 2017.09.03_19:37_TAI
+===== 632 =====
+accept NOAA Active Region number 12673 and HARPNUM 7115 at time 2017.09.03_20:02_TAI
+===== 633 =====
+accept NOAA Active Region number 12673 and HARPNUM 7115 at time 2017.09.03_22:14_TAI
+===== 634 =====
+accept NOAA Active Region number 12673 and HARPNUM 7115 at time 2017.09.04_01:08_TAI
+===== 635 =====
+skip: there are some missing keywords for HARPNUM 7115 at time 2017.09.04_03:51_TAI
+===== 636 =====
+accept NOAA Active Region number 12673 and HARPNUM 7115 at time 2017.09.04_04:53_TAI
+===== 637 =====
+skip: there are no data for HARPNUM 7115 at time 2017.09.04_06:40_TAI
+===== 638 =====
+accept NOAA Active Region number 12673 and HARPNUM 7115 at time 2017.09.04_17:43_TAI
+===== 639 =====
+accept NOAA Active Region number 12673 and HARPNUM 7115 at time 2017.09.05_09:10_TAI
+===== 640 =====
+accept NOAA Active Region number 12673 and HARPNUM 7115 at time 2017.09.05_15:56_TAI
+===== 641 =====
+accept NOAA Active Region number 12673 and HARPNUM 7115 at time 2017.09.05_19:30_TAI
+===== 642 =====
+skip: there are no data for HARPNUM 1 at time 2017.09.05_23:39_TAI
+===== 643 =====
+accept NOAA Active Region number 12673 and HARPNUM 7115 at time 2017.09.06_05:02_TAI
+===== 644 =====
+accept NOAA Active Region number 12673 and HARPNUM 7115 at time 2017.09.06_09:54_TAI
+===== 645 =====
+accept NOAA Active Region number 12673 and HARPNUM 7115 at time 2017.09.07_02:24_TAI
+===== 646 =====
+accept NOAA Active Region number 12673 and HARPNUM 7115 at time 2017.09.07_15:47_TAI
+===== 647 =====
+accept NOAA Active Region number 12673 and HARPNUM 7115 at time 2017.09.07_23:45_TAI
+===== 648 =====
+accept NOAA Active Region number 12673 and HARPNUM 7115 at time 2017.09.08_04:28_TAI
+===== 649 =====
+accept NOAA Active Region number 12673 and HARPNUM 7115 at time 2017.09.08_11:04_TAI
+===== 650 =====
+skip: latitude is out of range for HARPNUM 7115 at time 2017.09.08_23:53_TAI
+
+```
+
 Here is the number of events associated with the negative class:
-
-
-
-{:.input_area}
-```python
-import datetime
-datetime.datetime.now()
-```
-
-
-
-
-
-{:.output .output_data_text}
-```
-datetime.datetime(2018, 12, 19, 11, 28, 51, 451523)
-```
-
-
 
 
 
@@ -715,7 +4001,7 @@ print("There are", CME_data.shape[0], "flares with associated CMEs.")
 {:.output .output_stream}
 ```
 There are 428 flares with no associated CMEs.
-There are 79 flares with associated CMEs.
+There are 81 flares with associated CMEs.
 
 ```
 
@@ -775,7 +4061,7 @@ mpld3.enable_notebook()
 
 </style>
 
-<div id="fig_el575944469720564196665357"></div>
+<div id="fig_el544265088525392629371401"></div>
 <script>
 function mpld3_load_lib(url, callback){
   var s = document.createElement('script');
@@ -790,7 +4076,7 @@ if(typeof(mpld3) !== "undefined" && mpld3._mpld3IsLoaded){
    // already loaded: just create the figure
    !function(mpld3){
        
-       mpld3.draw_figure("fig_el575944469720564196665357", {"id": "el57594446972056", "height": 360.0, "data": {"data19": [[-2.508837693936211, 0.0], [-1.957592036316305, 0.0], [-1.957592036316305, 0.01695395557921558], [-2.508837693936211, 0.01695395557921558]], "data01": [[-3.1095515766390895, 0.005390990477114494], [-2.771191471826109, 0.013738793502038186], [-2.4328313670131276, 0.03122534975240861], [-2.0944712622001465, 0.0632914013121969], [-1.7561111573871657, 0.11440915956072582], [-1.4177510525741848, 0.1844401911022138], [-1.0793909477612038, 0.2651728253530591], [-0.7410308429482231, 0.3400017501608905], [-0.4026707381352419, 0.388787213582911], [-0.06431063332226072, 0.3964801769259571], [0.27404947149072, 0.36058666990885224], [0.6124095763037007, 0.29246677840527396], [0.9507696811166819, 0.21155441781913845], [1.289129785929663, 0.13647287506982372], [1.6274898907426434, 0.07851439111625552], [1.9658499955556248, 0.04028384139656015]], "data10": [[-0.4026707381352419, 0.0], [-0.06431063332226072, 0.0], [-0.06431063332226072, 0.4863367745918822], [-0.4026707381352419, 0.4863367745918822]], "data06": [[-2.0944712622001465, 0.0], [-1.7561111573871657, 0.0], [-1.7561111573871657, 0.03741052112245253], [-2.0944712622001465, 0.03741052112245253]], "data02": [[-4.162574666795929, 6.128179797038824e-05], [-3.611329009176023, 0.0005304183777347027], [-3.060083351556117, 0.0033879406363853605], [-2.508837693936211, 0.015969200952008492], [-1.957592036316305, 0.0555470174496985], [-1.4063463786963992, 0.14258323650915405], [-0.8551007210764929, 0.2700886643713464], [-0.3038550634565871, 0.37754994449121004], [0.24739059416331877, 0.38946876118873064], [0.7986362517832246, 0.29648383016153124], [1.3498819094031305, 0.166555723262466], [1.9011275670230363, 0.0690475500954648], [2.452373224642943, 0.02112356190500282], [3.003618882262849, 0.004768877807444045], [3.5548645398827547, 0.0007945027457918887], [4.106110197502661, 9.767980301711682e-05]], "data13": [[0.9507696811166819, 0.0], [1.289129785929663, 0.0], [1.289129785929663, 0.1496420844898099], [0.9507696811166819, 0.1496420844898099]], "data29": [[0.764964157706093, 0.9389256806475351, 0.8690213392200149], [0.8079749103942651, 0.9389256806475351, 0.8690213392200149]], "data27": [[1.9011275670230363, 0.0], [2.452373224642943, 0.0], [2.452373224642943, 0.042384888948038886], [1.9011275670230363, 0.042384888948038886]], "data23": [[-0.3038550634565871, 0.0], [0.24739059416331877, 0.0], [0.24739059416331877, 0.6696812453790154], [-0.3038550634565871, 0.6696812453790154]], "data22": [[-0.8551007210764929, 0.0], [-0.3038550634565871, 0.0], [-0.3038550634565871, 0.3729870227427428], [-0.8551007210764929, 0.3729870227427428]], "data24": [[0.24739059416331877, 0.0], [0.7986362517832246, 0.0], [0.7986362517832246, 0.30940968932068436], [0.24739059416331877, 0.30940968932068436]], "data25": [[0.7986362517832246, 0.0], [1.3498819094031305, 0.0], [1.3498819094031305, 0.13563164463372465], [0.7986362517832246, 0.13563164463372465]], "data14": [[1.289129785929663, 0.0], [1.6274898907426434, 0.0], [1.6274898907426434, 0.03741052112245257], [1.289129785929663, 0.03741052112245257]], "data21": [[-1.4063463786963992, 0.0], [-0.8551007210764929, 0.0], [-0.8551007210764929, 0.11020071126490118], [-1.4063463786963992, 0.11020071126490118]], "data28": [[3.003618882262849, 0.0], [3.5548645398827547, 0.0], [3.5548645398827547, 0.021192444474019474], [3.003618882262849, 0.021192444474019474]], "data30": [[0.7606630824372759, 0.8248712288447388], [0.9849462365591398, 0.8248712288447388], [0.9892473118279571, 0.8248712288447388], [0.9892473118279571, 0.8337012509197941], [0.9892473118279571, 0.9690949227373071], [0.9892473118279571, 0.9779249448123624], [0.9849462365591398, 0.9779249448123624], [0.7606630824372759, 0.9779249448123624], [0.7563620071684587, 0.9779249448123624], [0.7563620071684587, 0.9690949227373071], [0.7563620071684587, 0.8337012509197941], [0.7563620071684587, 0.8248712288447388], [0.7606630824372759, 0.8248712288447388]], "data09": [[-0.7410308429482231, 0.0], [-0.4026707381352419, 0.0], [-0.4026707381352419, 0.33669469010207226], [-0.7410308429482231, 0.33669469010207226]], "data26": [[1.3498819094031305, 0.0], [1.9011275670230363, 0.0], [1.9011275670230363, 0.03814640005323505], [1.3498819094031305, 0.03814640005323505]], "data07": [[-1.7561111573871657, 0.0, -1.417751052574185], [-1.4177510525741848, 0.0, -1.079390947761204], [-1.4177510525741848, 0.11223156336735751, -1.079390947761204], [-1.7561111573871657, 0.11223156336735751, -1.417751052574185]], "data15": [[1.6274898907426434, 0.0], [1.9658499955556248, 0.0], [1.9658499955556248, 0.11223156336735736], [1.6274898907426434, 0.11223156336735736]], "data11": [[-0.06431063332226072, 0.0, 0.27404947149072], [0.27404947149072, 0.0, 0.6124095763037007], [0.27404947149072, 0.5237472957143353, 0.6124095763037007], [-0.06431063332226072, 0.5237472957143353, 0.27404947149072]], "data05": [[-2.4328313670131276, 0.0], [-2.0944712622001465, 0.0], [-2.0944712622001465, 0.07482104224490495], [-2.4328313670131276, 0.07482104224490495]], "data12": [[0.6124095763037007, 0.0], [0.9507696811166819, 0.0], [0.9507696811166819, 0.1870526056122624], [0.6124095763037007, 0.1870526056122624]], "data16": [[-4.162574666795929, 0.0, 2.452373224642943, 3.5548645398827547], [-3.611329009176023, 0.0, 3.003618882262849, 4.106110197502661], [-3.611329009176023, 0.012715466684411685, 3.003618882262849, 4.106110197502661], [-4.162574666795929, 0.012715466684411685, 2.452373224642943, 3.5548645398827547]], "data17": [[-3.611329009176023, 0.0], [-3.060083351556117, 0.0], [-3.060083351556117, 0.00847697778960779], [-3.611329009176023, 0.00847697778960779]], "data18": [[-3.060083351556117, 0.0], [-2.508837693936211, 0.0], [-2.508837693936211, 0.004238488894803892], [-3.060083351556117, 0.004238488894803892]], "data04": [[-2.771191471826109, 0.0], [-2.4328313670131276, 0.0], [-2.4328313670131276, 0.0], [-2.771191471826109, 0.0]], "data03": [[-3.10955157663909, 0.0], [-2.7711914718261093, 0.0], [-2.7711914718261093, 0.11223156336735758], [-3.10955157663909, 0.11223156336735758]], "data08": [[-1.0793909477612038, 0.0], [-0.7410308429482231, 0.0], [-0.7410308429482231, 0.14964208448981012], [-1.0793909477612038, 0.14964208448981012]], "data20": [[-1.957592036316305, 0.0], [-1.4063463786963992, 0.0], [-1.4063463786963992, 0.04662337784284285], [-1.957592036316305, 0.04662337784284285]]}, "axes": [{"axesbg": "#FFFFFF", "ylim": [0.0, 0.7031653076479661], "texts": [{"rotation": -0.0, "coordinates": "axes", "zorder": 3, "color": "#000000", "fontsize": 16.0, "h_anchor": "middle", "position": [0.5, -0.0772626931567329], "id": "el57594446979408", "text": "Normalized Mean current helicity (Bz contribution)", "alpha": 1, "v_baseline": "hanging"}, {"rotation": -90.0, "coordinates": "axes", "zorder": 3, "color": "#000000", "fontsize": 16.0, "h_anchor": "middle", "position": [-0.07683691756272401, 0.5], "id": "el57594446978288", "text": "Number (normalized)", "alpha": 1, "v_baseline": "auto"}, {"rotation": -0.0, "coordinates": "axes", "zorder": 1000003.0, "color": "#000000", "fontsize": 12.0, "h_anchor": "start", "position": [0.825179211469534, 0.9234731420161886], "id": "el57594447099424", "text": "positive class", "alpha": 1, "v_baseline": "auto"}, {"rotation": -0.0, "coordinates": "axes", "zorder": 1000003.0, "color": "#000000", "fontsize": 12.0, "h_anchor": "start", "position": [0.825179211469534, 0.8535688005886684], "id": "el57594446489400", "text": "negative class", "alpha": 1, "v_baseline": "auto"}], "images": [], "paths": [{"dasharray": "none", "coordinates": "data", "edgecolor": "none", "facecolor": "#008000", "zorder": 1, "id": "el57594447076480", "yindex": 1, "xindex": 0, "pathcodes": ["M", "L", "L", "L", "Z"], "data": "data03", "edgewidth": 1.0, "alpha": 0.5}, {"dasharray": "none", "coordinates": "data", "edgecolor": "none", "facecolor": "#008000", "zorder": 1, "id": "el57594447051056", "yindex": 1, "xindex": 0, "pathcodes": ["M", "L", "L", "L", "Z"], "data": "data04", "edgewidth": 1.0, "alpha": 0.5}, {"dasharray": "none", "coordinates": "data", "edgecolor": "none", "facecolor": "#008000", "zorder": 1, "id": "el57594447077712", "yindex": 1, "xindex": 0, "pathcodes": ["M", "L", "L", "L", "Z"], "data": "data05", "edgewidth": 1.0, "alpha": 0.5}, {"dasharray": "none", "coordinates": "data", "edgecolor": "none", "facecolor": "#008000", "zorder": 1, "id": "el57594447078776", "yindex": 1, "xindex": 0, "pathcodes": ["M", "L", "L", "L", "Z"], "data": "data06", "edgewidth": 1.0, "alpha": 0.5}, {"dasharray": "none", "coordinates": "data", "edgecolor": "none", "facecolor": "#008000", "zorder": 1, "id": "el57594447078552", "yindex": 1, "xindex": 0, "pathcodes": ["M", "L", "L", "L", "Z"], "data": "data07", "edgewidth": 1.0, "alpha": 0.5}, {"dasharray": "none", "coordinates": "data", "edgecolor": "none", "facecolor": "#008000", "zorder": 1, "id": "el57594447079672", "yindex": 1, "xindex": 2, "pathcodes": ["M", "L", "L", "L", "Z"], "data": "data07", "edgewidth": 1.0, "alpha": 0.5}, {"dasharray": "none", "coordinates": "data", "edgecolor": "none", "facecolor": "#008000", "zorder": 1, "id": "el57594447080856", "yindex": 1, "xindex": 0, "pathcodes": ["M", "L", "L", "L", "Z"], "data": "data08", "edgewidth": 1.0, "alpha": 0.5}, {"dasharray": "none", "coordinates": "data", "edgecolor": "none", "facecolor": "#008000", "zorder": 1, "id": "el57594447080744", "yindex": 1, "xindex": 0, "pathcodes": ["M", "L", "L", "L", "Z"], "data": "data09", "edgewidth": 1.0, "alpha": 0.5}, {"dasharray": "none", "coordinates": "data", "edgecolor": "none", "facecolor": "#008000", "zorder": 1, "id": "el57594447082928", "yindex": 1, "xindex": 0, "pathcodes": ["M", "L", "L", "L", "Z"], "data": "data10", "edgewidth": 1.0, "alpha": 0.5}, {"dasharray": "none", "coordinates": "data", "edgecolor": "none", "facecolor": "#008000", "zorder": 1, "id": "el57594447083712", "yindex": 1, "xindex": 0, "pathcodes": ["M", "L", "L", "L", "Z"], "data": "data11", "edgewidth": 1.0, "alpha": 0.5}, {"dasharray": "none", "coordinates": "data", "edgecolor": "none", "facecolor": "#008000", "zorder": 1, "id": "el57594447083320", "yindex": 1, "xindex": 2, "pathcodes": ["M", "L", "L", "L", "Z"], "data": "data11", "edgewidth": 1.0, "alpha": 0.5}, {"dasharray": "none", "coordinates": "data", "edgecolor": "none", "facecolor": "#008000", "zorder": 1, "id": "el57594447097744", "yindex": 1, "xindex": 0, "pathcodes": ["M", "L", "L", "L", "Z"], "data": "data12", "edgewidth": 1.0, "alpha": 0.5}, {"dasharray": "none", "coordinates": "data", "edgecolor": "none", "facecolor": "#008000", "zorder": 1, "id": "el57594447098528", "yindex": 1, "xindex": 0, "pathcodes": ["M", "L", "L", "L", "Z"], "data": "data13", "edgewidth": 1.0, "alpha": 0.5}, {"dasharray": "none", "coordinates": "data", "edgecolor": "none", "facecolor": "#008000", "zorder": 1, "id": "el57594447099704", "yindex": 1, "xindex": 0, "pathcodes": ["M", "L", "L", "L", "Z"], "data": "data14", "edgewidth": 1.0, "alpha": 0.5}, {"dasharray": "none", "coordinates": "data", "edgecolor": "none", "facecolor": "#008000", "zorder": 1, "id": "el57594447099368", "yindex": 1, "xindex": 0, "pathcodes": ["M", "L", "L", "L", "Z"], "data": "data15", "edgewidth": 1.0, "alpha": 0.5}, {"dasharray": "none", "coordinates": "data", "edgecolor": "none", "facecolor": "#FF0000", "zorder": 1, "id": "el57594446944336", "yindex": 1, "xindex": 0, "pathcodes": ["M", "L", "L", "L", "Z"], "data": "data16", "edgewidth": 1.0, "alpha": 0.5}, {"dasharray": "none", "coordinates": "data", "edgecolor": "none", "facecolor": "#FF0000", "zorder": 1, "id": "el57594446933288", "yindex": 1, "xindex": 0, "pathcodes": ["M", "L", "L", "L", "Z"], "data": "data17", "edgewidth": 1.0, "alpha": 0.5}, {"dasharray": "none", "coordinates": "data", "edgecolor": "none", "facecolor": "#FF0000", "zorder": 1, "id": "el57594447106272", "yindex": 1, "xindex": 0, "pathcodes": ["M", "L", "L", "L", "Z"], "data": "data18", "edgewidth": 1.0, "alpha": 0.5}, {"dasharray": "none", "coordinates": "data", "edgecolor": "none", "facecolor": "#FF0000", "zorder": 1, "id": "el57594447105936", "yindex": 1, "xindex": 0, "pathcodes": ["M", "L", "L", "L", "Z"], "data": "data19", "edgewidth": 1.0, "alpha": 0.5}, {"dasharray": "none", "coordinates": "data", "edgecolor": "none", "facecolor": "#FF0000", "zorder": 1, "id": "el57594447108064", "yindex": 1, "xindex": 0, "pathcodes": ["M", "L", "L", "L", "Z"], "data": "data20", "edgewidth": 1.0, "alpha": 0.5}, {"dasharray": "none", "coordinates": "data", "edgecolor": "none", "facecolor": "#FF0000", "zorder": 1, "id": "el57594447108232", "yindex": 1, "xindex": 0, "pathcodes": ["M", "L", "L", "L", "Z"], "data": "data21", "edgewidth": 1.0, "alpha": 0.5}, {"dasharray": "none", "coordinates": "data", "edgecolor": "none", "facecolor": "#FF0000", "zorder": 1, "id": "el57594447109864", "yindex": 1, "xindex": 0, "pathcodes": ["M", "L", "L", "L", "Z"], "data": "data22", "edgewidth": 1.0, "alpha": 0.5}, {"dasharray": "none", "coordinates": "data", "edgecolor": "none", "facecolor": "#FF0000", "zorder": 1, "id": "el57594447109528", "yindex": 1, "xindex": 0, "pathcodes": ["M", "L", "L", "L", "Z"], "data": "data23", "edgewidth": 1.0, "alpha": 0.5}, {"dasharray": "none", "coordinates": "data", "edgecolor": "none", "facecolor": "#FF0000", "zorder": 1, "id": "el57594447111656", "yindex": 1, "xindex": 0, "pathcodes": ["M", "L", "L", "L", "Z"], "data": "data24", "edgewidth": 1.0, "alpha": 0.5}, {"dasharray": "none", "coordinates": "data", "edgecolor": "none", "facecolor": "#FF0000", "zorder": 1, "id": "el57594447111824", "yindex": 1, "xindex": 0, "pathcodes": ["M", "L", "L", "L", "Z"], "data": "data25", "edgewidth": 1.0, "alpha": 0.5}, {"dasharray": "none", "coordinates": "data", "edgecolor": "none", "facecolor": "#FF0000", "zorder": 1, "id": "el57594447113000", "yindex": 1, "xindex": 0, "pathcodes": ["M", "L", "L", "L", "Z"], "data": "data26", "edgewidth": 1.0, "alpha": 0.5}, {"dasharray": "none", "coordinates": "data", "edgecolor": "none", "facecolor": "#FF0000", "zorder": 1, "id": "el57594447122208", "yindex": 1, "xindex": 0, "pathcodes": ["M", "L", "L", "L", "Z"], "data": "data27", "edgewidth": 1.0, "alpha": 0.5}, {"dasharray": "none", "coordinates": "data", "edgecolor": "none", "facecolor": "#FF0000", "zorder": 1, "id": "el57594447123384", "yindex": 1, "xindex": 2, "pathcodes": ["M", "L", "L", "L", "Z"], "data": "data16", "edgewidth": 1.0, "alpha": 0.5}, {"dasharray": "none", "coordinates": "data", "edgecolor": "none", "facecolor": "#FF0000", "zorder": 1, "id": "el57594447124168", "yindex": 1, "xindex": 0, "pathcodes": ["M", "L", "L", "L", "Z"], "data": "data28", "edgewidth": 1.0, "alpha": 0.5}, {"dasharray": "none", "coordinates": "data", "edgecolor": "none", "facecolor": "#FF0000", "zorder": 1, "id": "el57594447123776", "yindex": 1, "xindex": 3, "pathcodes": ["M", "L", "L", "L", "Z"], "data": "data16", "edgewidth": 1.0, "alpha": 0.5}, {"dasharray": "none", "coordinates": "axes", "edgecolor": "none", "facecolor": "none", "zorder": 1000000.0, "id": "el57594447078048", "yindex": 1, "xindex": 0, "pathcodes": ["M", "L", "S", "L", "S", "L", "S", "L", "S", "Z"], "data": "data30", "edgewidth": 0.0, "alpha": 0.0}], "lines": [{"xindex": 0, "dasharray": "5.550000000000001,2.4000000000000004", "id": "el57594446987040", "data": "data01", "linewidth": 1.5, "coordinates": "data", "zorder": 2, "color": "#007F00", "drawstyle": "default", "yindex": 1, "alpha": 1}, {"xindex": 0, "dasharray": "5.550000000000001,2.4000000000000004", "id": "el57594446936312", "data": "data02", "linewidth": 1.5, "coordinates": "data", "zorder": 2, "color": "#FF0000", "drawstyle": "default", "yindex": 1, "alpha": 1}, {"xindex": 0, "dasharray": "5.550000000000001,2.4000000000000004", "id": "el57594447111376", "data": "data29", "linewidth": 1.5, "coordinates": "axes", "zorder": 1000002.0, "color": "#007F00", "drawstyle": "default", "yindex": 1, "alpha": 1}, {"xindex": 0, "dasharray": "5.550000000000001,2.4000000000000004", "id": "el57594446488840", "data": "data29", "linewidth": 1.5, "coordinates": "axes", "zorder": 1000002.0, "color": "#FF0000", "drawstyle": "default", "yindex": 2, "alpha": 1}], "zoomable": true, "bbox": [0.125, 0.125, 0.775, 0.755], "collections": [], "xscale": "linear", "yscale": "linear", "markers": [], "axesbgalpha": null, "ydomain": [0.0, 0.7031653076479661], "id": "el57594446928568", "sharey": [], "xdomain": [-4.5760089100108585, 4.51954444071759], "sharex": [], "axes": [{"position": "bottom", "tickformat": null, "nticks": 7, "grid": {"gridOn": false}, "scale": "linear", "visible": true, "fontsize": 10.0, "tickvalues": null}, {"position": "left", "tickformat": null, "nticks": 9, "grid": {"gridOn": false}, "scale": "linear", "visible": true, "fontsize": 10.0, "tickvalues": null}], "xlim": [-4.5760089100108585, 4.51954444071759]}], "plugins": [{"type": "reset"}, {"button": true, "type": "zoom", "enabled": false}, {"button": true, "type": "boxzoom", "enabled": false}], "width": 720.0});
+       mpld3.draw_figure("fig_el544265088525392629371401", {"height": 360.0, "axes": [{"ylim": [0.0, 0.7484384407749112], "ydomain": [0.0, 0.7484384407749112], "collections": [], "bbox": [0.125, 0.125, 0.775, 0.755], "axesbg": "#FFFFFF", "paths": [{"xindex": 0, "yindex": 1, "alpha": 0.5, "dasharray": "none", "zorder": 1, "edgewidth": 1.0, "data": "data03", "pathcodes": ["M", "L", "L", "L", "Z"], "id": "el544265088059912", "edgecolor": "none", "coordinates": "data", "facecolor": "#008000"}, {"xindex": 0, "yindex": 1, "alpha": 0.5, "dasharray": "none", "zorder": 1, "edgewidth": 1.0, "data": "data04", "pathcodes": ["M", "L", "L", "L", "Z"], "id": "el544265088061816", "edgecolor": "none", "coordinates": "data", "facecolor": "#008000"}, {"xindex": 0, "yindex": 1, "alpha": 0.5, "dasharray": "none", "zorder": 1, "edgewidth": 1.0, "data": "data05", "pathcodes": ["M", "L", "L", "L", "Z"], "id": "el544265088073096", "edgecolor": "none", "coordinates": "data", "facecolor": "#008000"}, {"xindex": 2, "yindex": 1, "alpha": 0.5, "dasharray": "none", "zorder": 1, "edgewidth": 1.0, "data": "data04", "pathcodes": ["M", "L", "L", "L", "Z"], "id": "el544265088075504", "edgecolor": "none", "coordinates": "data", "facecolor": "#008000"}, {"xindex": 2, "yindex": 1, "alpha": 0.5, "dasharray": "none", "zorder": 1, "edgewidth": 1.0, "data": "data03", "pathcodes": ["M", "L", "L", "L", "Z"], "id": "el544265088086056", "edgecolor": "none", "coordinates": "data", "facecolor": "#008000"}, {"xindex": 0, "yindex": 1, "alpha": 0.5, "dasharray": "none", "zorder": 1, "edgewidth": 1.0, "data": "data06", "pathcodes": ["M", "L", "L", "L", "Z"], "id": "el544265088087960", "edgecolor": "none", "coordinates": "data", "facecolor": "#008000"}, {"xindex": 0, "yindex": 1, "alpha": 0.5, "dasharray": "none", "zorder": 1, "edgewidth": 1.0, "data": "data07", "pathcodes": ["M", "L", "L", "L", "Z"], "id": "el544265088098120", "edgecolor": "none", "coordinates": "data", "facecolor": "#008000"}, {"xindex": 0, "yindex": 1, "alpha": 0.5, "dasharray": "none", "zorder": 1, "edgewidth": 1.0, "data": "data08", "pathcodes": ["M", "L", "L", "L", "Z"], "id": "el544265088099576", "edgecolor": "none", "coordinates": "data", "facecolor": "#008000"}, {"xindex": 0, "yindex": 1, "alpha": 0.5, "dasharray": "none", "zorder": 1, "edgewidth": 1.0, "data": "data09", "pathcodes": ["M", "L", "L", "L", "Z"], "id": "el544265088115176", "edgecolor": "none", "coordinates": "data", "facecolor": "#008000"}, {"xindex": 2, "yindex": 1, "alpha": 0.5, "dasharray": "none", "zorder": 1, "edgewidth": 1.0, "data": "data09", "pathcodes": ["M", "L", "L", "L", "Z"], "id": "el544265088117312", "edgecolor": "none", "coordinates": "data", "facecolor": "#008000"}, {"xindex": 0, "yindex": 1, "alpha": 0.5, "dasharray": "none", "zorder": 1, "edgewidth": 1.0, "data": "data10", "pathcodes": ["M", "L", "L", "L", "Z"], "id": "el544265088119048", "edgecolor": "none", "coordinates": "data", "facecolor": "#008000"}, {"xindex": 0, "yindex": 1, "alpha": 0.5, "dasharray": "none", "zorder": 1, "edgewidth": 1.0, "data": "data11", "pathcodes": ["M", "L", "L", "L", "Z"], "id": "el544265088138464", "edgecolor": "none", "coordinates": "data", "facecolor": "#008000"}, {"xindex": 0, "yindex": 1, "alpha": 0.5, "dasharray": "none", "zorder": 1, "edgewidth": 1.0, "data": "data12", "pathcodes": ["M", "L", "L", "L", "Z"], "id": "el544265088140256", "edgecolor": "none", "coordinates": "data", "facecolor": "#008000"}, {"xindex": 0, "yindex": 1, "alpha": 0.5, "dasharray": "none", "zorder": 1, "edgewidth": 1.0, "data": "data13", "pathcodes": ["M", "L", "L", "L", "Z"], "id": "el544265088151480", "edgecolor": "none", "coordinates": "data", "facecolor": "#008000"}, {"xindex": 0, "yindex": 1, "alpha": 0.5, "dasharray": "none", "zorder": 1, "edgewidth": 1.0, "data": "data14", "pathcodes": ["M", "L", "L", "L", "Z"], "id": "el544265088152152", "edgecolor": "none", "coordinates": "data", "facecolor": "#008000"}, {"xindex": 0, "yindex": 1, "alpha": 0.5, "dasharray": "none", "zorder": 1, "edgewidth": 1.0, "data": "data15", "pathcodes": ["M", "L", "L", "L", "Z"], "id": "el544265088166856", "edgecolor": "none", "coordinates": "data", "facecolor": "#FF0000"}, {"xindex": 0, "yindex": 1, "alpha": 0.5, "dasharray": "none", "zorder": 1, "edgewidth": 1.0, "data": "data16", "pathcodes": ["M", "L", "L", "L", "Z"], "id": "el544265088169376", "edgecolor": "none", "coordinates": "data", "facecolor": "#FF0000"}, {"xindex": 2, "yindex": 1, "alpha": 0.5, "dasharray": "none", "zorder": 1, "edgewidth": 1.0, "data": "data16", "pathcodes": ["M", "L", "L", "L", "Z"], "id": "el544265088180096", "edgecolor": "none", "coordinates": "data", "facecolor": "#FF0000"}, {"xindex": 0, "yindex": 1, "alpha": 0.5, "dasharray": "none", "zorder": 1, "edgewidth": 1.0, "data": "data17", "pathcodes": ["M", "L", "L", "L", "Z"], "id": "el544265088181832", "edgecolor": "none", "coordinates": "data", "facecolor": "#FF0000"}, {"xindex": 0, "yindex": 1, "alpha": 0.5, "dasharray": "none", "zorder": 1, "edgewidth": 1.0, "data": "data18", "pathcodes": ["M", "L", "L", "L", "Z"], "id": "el544265088479384", "edgecolor": "none", "coordinates": "data", "facecolor": "#FF0000"}, {"xindex": 0, "yindex": 1, "alpha": 0.5, "dasharray": "none", "zorder": 1, "edgewidth": 1.0, "data": "data19", "pathcodes": ["M", "L", "L", "L", "Z"], "id": "el544265088993352", "edgecolor": "none", "coordinates": "data", "facecolor": "#FF0000"}, {"xindex": 0, "yindex": 1, "alpha": 0.5, "dasharray": "none", "zorder": 1, "edgewidth": 1.0, "data": "data20", "pathcodes": ["M", "L", "L", "L", "Z"], "id": "el544265088995816", "edgecolor": "none", "coordinates": "data", "facecolor": "#FF0000"}, {"xindex": 0, "yindex": 1, "alpha": 0.5, "dasharray": "none", "zorder": 1, "edgewidth": 1.0, "data": "data21", "pathcodes": ["M", "L", "L", "L", "Z"], "id": "el544265089015232", "edgecolor": "none", "coordinates": "data", "facecolor": "#FF0000"}, {"xindex": 0, "yindex": 1, "alpha": 0.5, "dasharray": "none", "zorder": 1, "edgewidth": 1.0, "data": "data22", "pathcodes": ["M", "L", "L", "L", "Z"], "id": "el544265089017360", "edgecolor": "none", "coordinates": "data", "facecolor": "#FF0000"}, {"xindex": 0, "yindex": 1, "alpha": 0.5, "dasharray": "none", "zorder": 1, "edgewidth": 1.0, "data": "data23", "pathcodes": ["M", "L", "L", "L", "Z"], "id": "el544265089028192", "edgecolor": "none", "coordinates": "data", "facecolor": "#FF0000"}, {"xindex": 0, "yindex": 1, "alpha": 0.5, "dasharray": "none", "zorder": 1, "edgewidth": 1.0, "data": "data24", "pathcodes": ["M", "L", "L", "L", "Z"], "id": "el544265089029984", "edgecolor": "none", "coordinates": "data", "facecolor": "#FF0000"}, {"xindex": 0, "yindex": 1, "alpha": 0.5, "dasharray": "none", "zorder": 1, "edgewidth": 1.0, "data": "data25", "pathcodes": ["M", "L", "L", "L", "Z"], "id": "el544265089036552", "edgecolor": "none", "coordinates": "data", "facecolor": "#FF0000"}, {"xindex": 0, "yindex": 1, "alpha": 0.5, "dasharray": "none", "zorder": 1, "edgewidth": 1.0, "data": "data26", "pathcodes": ["M", "L", "L", "L", "Z"], "id": "el544265089051144", "edgecolor": "none", "coordinates": "data", "facecolor": "#FF0000"}, {"xindex": 0, "yindex": 1, "alpha": 0.5, "dasharray": "none", "zorder": 1, "edgewidth": 1.0, "data": "data27", "pathcodes": ["M", "L", "L", "L", "Z"], "id": "el544265089053832", "edgecolor": "none", "coordinates": "data", "facecolor": "#FF0000"}, {"xindex": 0, "yindex": 1, "alpha": 0.5, "dasharray": "none", "zorder": 1, "edgewidth": 1.0, "data": "data28", "pathcodes": ["M", "L", "L", "L", "Z"], "id": "el544265089068536", "edgecolor": "none", "coordinates": "data", "facecolor": "#FF0000"}, {"xindex": 0, "yindex": 1, "alpha": 0.0, "dasharray": "none", "zorder": 1000000.0, "edgewidth": 0.0, "data": "data30", "pathcodes": ["M", "L", "S", "L", "S", "L", "S", "L", "S", "Z"], "id": "el544265088031912", "edgecolor": "none", "coordinates": "axes", "facecolor": "none"}], "xdomain": [-4.745285069681457, 4.665430278133732], "xlim": [-4.745285069681457, 4.665430278133732], "zoomable": true, "sharex": [], "markers": [], "lines": [{"xindex": 0, "yindex": 1, "color": "#007F00", "alpha": 1, "linewidth": 1.5, "id": "el544264743784432", "drawstyle": "default", "zorder": 2, "coordinates": "data", "data": "data01", "dasharray": "5.550000000000001,2.4000000000000004"}, {"xindex": 0, "yindex": 1, "color": "#FF0000", "alpha": 1, "linewidth": 1.5, "id": "el544265088523488", "drawstyle": "default", "zorder": 2, "coordinates": "data", "data": "data02", "dasharray": "5.550000000000001,2.4000000000000004"}, {"xindex": 0, "yindex": 1, "color": "#007F00", "alpha": 1, "linewidth": 1.5, "id": "el544265088152320", "drawstyle": "default", "zorder": 1000002.0, "coordinates": "axes", "data": "data29", "dasharray": "5.550000000000001,2.4000000000000004"}, {"xindex": 0, "yindex": 2, "color": "#FF0000", "alpha": 1, "linewidth": 1.5, "id": "el544265087962672", "drawstyle": "default", "zorder": 1000002.0, "coordinates": "axes", "data": "data29", "dasharray": "5.550000000000001,2.4000000000000004"}], "sharey": [], "axes": [{"visible": true, "tickvalues": null, "grid": {"gridOn": false}, "tickformat": null, "position": "bottom", "scale": "linear", "fontsize": 10.0, "nticks": 7}, {"visible": true, "tickvalues": null, "grid": {"gridOn": false}, "tickformat": null, "position": "left", "scale": "linear", "fontsize": 10.0, "nticks": 9}], "xscale": "linear", "axesbgalpha": null, "yscale": "linear", "images": [], "texts": [{"h_anchor": "middle", "alpha": 1, "text": "Normalized Mean current helicity (Bz contribution)", "position": [0.5, -0.0772626931567329], "zorder": 3, "v_baseline": "hanging", "rotation": -0.0, "color": "#000000", "id": "el544265088502952", "fontsize": 16.0, "coordinates": "axes"}, {"h_anchor": "middle", "alpha": 1, "text": "Number (normalized)", "position": [-0.07683691756272401, 0.5], "zorder": 3, "v_baseline": "auto", "rotation": -90.0, "color": "#000000", "id": "el544265088562872", "fontsize": 16.0, "coordinates": "axes"}, {"h_anchor": "start", "alpha": 1, "text": "positive class", "position": [0.825179211469534, 0.9234731420161886], "zorder": 1000003.0, "v_baseline": "auto", "rotation": -0.0, "color": "#000000", "id": "el544265088087680", "fontsize": 12.0, "coordinates": "axes"}, {"h_anchor": "start", "alpha": 1, "text": "negative class", "position": [0.825179211469534, 0.8535688005886684], "zorder": 1000003.0, "v_baseline": "auto", "rotation": -0.0, "color": "#000000", "id": "el544265089054056", "fontsize": 12.0, "coordinates": "axes"}], "id": "el544265088526176"}], "id": "el544265088525392", "plugins": [{"type": "reset"}, {"enabled": false, "button": true, "type": "zoom"}, {"enabled": false, "button": true, "type": "boxzoom"}], "width": 720.0, "data": {"data24": [[1.3859385660163168, 0.0], [1.956284950732388, 0.0], [1.956284950732388, 0.04915851827749835], [1.3859385660163168, 0.04915851827749835]], "data30": [[0.7606630824372759, 0.8248712288447388], [0.9849462365591398, 0.8248712288447388], [0.9892473118279571, 0.8248712288447388], [0.9892473118279571, 0.8337012509197941], [0.9892473118279571, 0.9690949227373071], [0.9892473118279571, 0.9779249448123624], [0.9849462365591398, 0.9779249448123624], [0.7606630824372759, 0.9779249448123624], [0.7563620071684587, 0.9779249448123624], [0.7563620071684587, 0.9690949227373071], [0.7563620071684587, 0.8337012509197941], [0.7563620071684587, 0.8248712288447388], [0.7606630824372759, 0.8248712288447388]], "data15": [[-4.317525281144402, 0.0], [-3.7471788964283297, 0.0], [-3.7471788964283297, 0.01228962956937457], [-4.317525281144402, 0.01228962956937457]], "data12": [[1.0013148080066223, 0.0], [1.3576629227151011, 0.0], [1.3576629227151011, 0.13857998404111585], [1.0013148080066223, 0.13857998404111585]], "data13": [[1.3576629227151011, 0.0], [1.714011037423579, 0.0], [1.714011037423579, 0.10393498803083716], [1.3576629227151011, 0.10393498803083716]], "data06": [[-1.4931219949527255, 0.0], [-1.1367738802442473, 0.0], [-1.1367738802442473, 0.10393498803083709], [-1.4931219949527255, 0.10393498803083709]], "data07": [[-1.1367738802442475, 0.0], [-0.7804257655357691, 0.0], [-0.7804257655357691, 0.13857998404111602], [-1.1367738802442475, 0.13857998404111602]], "data10": [[0.288618578589666, 0.0], [0.6449666932981444, 0.0], [0.6449666932981444, 0.519674940154185], [0.288618578589666, 0.519674940154185]], "data14": [[1.714011037423579, 0.0], [2.070359152132058, 0.0], [2.070359152132058, 0.03464499601027896], [1.714011037423579, 0.03464499601027896]], "data23": [[0.8155921813002447, 0.0], [1.3859385660163168, 0.0], [1.3859385660163168, 0.11879975250395416], [0.8155921813002447, 0.11879975250395416]], "data21": [[-0.32510058813189957, 0.0], [0.24524579658417256, 0.0], [0.24524579658417256, 0.7127985150237249], [-0.32510058813189957, 0.7127985150237249]], "data03": [[-3.2748625684951174, 0.0, -1.849470109661204], [-2.918514453786639, 0.0, -1.4931219949527257], [-2.918514453786639, 0.10393498803083702, -1.4931219949527257], [-3.2748625684951174, 0.10393498803083702, -1.849470109661204]], "data25": [[1.956284950732388, 0.0], [2.52663133544846, 0.0], [2.52663133544846, 0.02457925913874914], [1.956284950732388, 0.02457925913874914]], "data18": [[-2.036139742280115, 0.0], [-1.465793357564043, 0.0], [-1.465793357564043, 0.02867580232854066], [-2.036139742280115, 0.02867580232854066]], "data08": [[-0.7804257655357691, 0.0], [-0.42407765082729076, 0.0], [-0.42407765082729076, 0.34644996010279006], [-0.7804257655357691, 0.34644996010279006]], "data27": [[3.0969777201645323, 0.0], [3.6673241048806036, 0.0], [3.6673241048806036, 0.020482715948957644], [3.0969777201645323, 0.020482715948957644]], "data16": [[-3.7471788964283306, 0.0, -3.1768325117122584], [-3.176832511712259, 0.0, -2.6064861269961868], [-3.176832511712259, 0.008193086379583051, -2.6064861269961868], [-3.7471788964283306, 0.008193086379583051, -3.1768325117122584]], "data22": [[0.24524579658417256, 0.0], [0.8155921813002447, 0.0], [0.8155921813002447, 0.32362691199353033], [0.24524579658417256, 0.32362691199353033]], "data26": [[2.52663133544846, 0.0], [3.0969777201645323, 0.0], [3.0969777201645323, 0.008193086379583046], [2.52663133544846, 0.008193086379583046]], "data11": [[0.6449666932981444, 0.0], [1.0013148080066223, 0.0], [1.0013148080066223, 0.17322498005139525], [0.6449666932981444, 0.17322498005139525]], "data01": [[-3.2748625684951174, 0.003344355706489415], [-2.918514453786639, 0.009447607041866278], [-2.5621663390781606, 0.02350621684437878], [-2.2058182243696827, 0.051510434575023106], [-1.849470109661204, 0.09941667825944533], [-1.4931219949527257, 0.16899538362572186], [-1.1367738802442475, 0.25301250886957277], [-0.7804257655357691, 0.33362662610829635], [-0.42407765082729076, 0.3874636566141195], [-0.06772953611881238, 0.39632621579439237], [0.288618578589666, 0.35704765666218335], [0.6449666932981444, 0.28330297317970954], [1.0013148080066223, 0.19798287942499512], [1.3576629227151011, 0.12185846378680586], [1.714011037423579, 0.06605950577408094], [2.070359152132058, 0.03154034940756482]], "data29": [[0.764964157706093, 0.9389256806475351, 0.8690213392200149], [0.8079749103942651, 0.9389256806475351, 0.8690213392200149]], "data02": [[-4.317525281144403, 3.316457525801005e-05], [-3.7471788964283306, 0.0003340036119077932], [-3.176832511712259, 0.0024297078906683665], [-2.606486126996187, 0.012766831957028945], [-2.036139742280115, 0.0484549775968589], [-1.465793357564043, 0.13283723564779618], [-0.8954469728479713, 0.26304341771306944], [-0.32510058813189957, 0.3762367594504306], [0.24524579658417256, 0.38870595022551246], [0.8155921813002447, 0.29007301534429675], [1.3859385660163168, 0.15635783465398362], [1.956284950732388, 0.06087768686426391], [2.52663133544846, 0.017120751139747366], [3.0969777201645323, 0.00347787255851156], [3.6673241048806036, 0.0005103060184047315], [4.2376704895966775, 5.408463384606319e-05]], "data05": [[-2.5621663390781606, 0.0], [-2.2058182243696827, 0.0], [-2.2058182243696827, 0.06928999202055809], [-2.5621663390781606, 0.06928999202055809]], "data04": [[-2.9185144537866385, 0.0, -2.2058182243696827], [-2.56216633907816, 0.0, -1.849470109661204], [-2.56216633907816, 0.0, -1.849470109661204], [-2.9185144537866385, 0.0, -2.2058182243696827]], "data20": [[-0.8954469728479713, 0.0], [-0.32510058813189957, 0.0], [-0.32510058813189957, 0.2949511096649899], [-0.8954469728479713, 0.2949511096649899]], "data17": [[-2.606486126996187, 0.0], [-2.036139742280115, 0.0], [-2.036139742280115, 0.016386172759166092], [-2.606486126996187, 0.016386172759166092]], "data28": [[3.6673241048806036, 0.0], [4.2376704895966775, 0.0], [4.2376704895966775, 0.01228962956937453], [3.6673241048806036, 0.01228962956937453]], "data09": [[-0.42407765082729076, 0.0, -0.06772953611881238], [-0.06772953611881238, 0.0, 0.288618578589666], [-0.06772953611881238, 0.48502994414390604, 0.288618578589666], [-0.42407765082729076, 0.48502994414390604, -0.06772953611881238]], "data19": [[-1.465793357564043, 0.0], [-0.8954469728479713, 0.0], [-0.8954469728479713, 0.11470320931416272], [-1.465793357564043, 0.11470320931416272]]}});
    }(mpld3);
 }else if(typeof define === "function" && define.amd){
    // require.js is available: use it to load d3/mpld3
@@ -799,7 +4085,7 @@ if(typeof(mpld3) !== "undefined" && mpld3._mpld3IsLoaded){
       window.d3 = d3;
       mpld3_load_lib("https://mpld3.github.io/js/mpld3.v0.3.js", function(){
          
-         mpld3.draw_figure("fig_el575944469720564196665357", {"id": "el57594446972056", "height": 360.0, "data": {"data19": [[-2.508837693936211, 0.0], [-1.957592036316305, 0.0], [-1.957592036316305, 0.01695395557921558], [-2.508837693936211, 0.01695395557921558]], "data01": [[-3.1095515766390895, 0.005390990477114494], [-2.771191471826109, 0.013738793502038186], [-2.4328313670131276, 0.03122534975240861], [-2.0944712622001465, 0.0632914013121969], [-1.7561111573871657, 0.11440915956072582], [-1.4177510525741848, 0.1844401911022138], [-1.0793909477612038, 0.2651728253530591], [-0.7410308429482231, 0.3400017501608905], [-0.4026707381352419, 0.388787213582911], [-0.06431063332226072, 0.3964801769259571], [0.27404947149072, 0.36058666990885224], [0.6124095763037007, 0.29246677840527396], [0.9507696811166819, 0.21155441781913845], [1.289129785929663, 0.13647287506982372], [1.6274898907426434, 0.07851439111625552], [1.9658499955556248, 0.04028384139656015]], "data10": [[-0.4026707381352419, 0.0], [-0.06431063332226072, 0.0], [-0.06431063332226072, 0.4863367745918822], [-0.4026707381352419, 0.4863367745918822]], "data06": [[-2.0944712622001465, 0.0], [-1.7561111573871657, 0.0], [-1.7561111573871657, 0.03741052112245253], [-2.0944712622001465, 0.03741052112245253]], "data02": [[-4.162574666795929, 6.128179797038824e-05], [-3.611329009176023, 0.0005304183777347027], [-3.060083351556117, 0.0033879406363853605], [-2.508837693936211, 0.015969200952008492], [-1.957592036316305, 0.0555470174496985], [-1.4063463786963992, 0.14258323650915405], [-0.8551007210764929, 0.2700886643713464], [-0.3038550634565871, 0.37754994449121004], [0.24739059416331877, 0.38946876118873064], [0.7986362517832246, 0.29648383016153124], [1.3498819094031305, 0.166555723262466], [1.9011275670230363, 0.0690475500954648], [2.452373224642943, 0.02112356190500282], [3.003618882262849, 0.004768877807444045], [3.5548645398827547, 0.0007945027457918887], [4.106110197502661, 9.767980301711682e-05]], "data13": [[0.9507696811166819, 0.0], [1.289129785929663, 0.0], [1.289129785929663, 0.1496420844898099], [0.9507696811166819, 0.1496420844898099]], "data29": [[0.764964157706093, 0.9389256806475351, 0.8690213392200149], [0.8079749103942651, 0.9389256806475351, 0.8690213392200149]], "data27": [[1.9011275670230363, 0.0], [2.452373224642943, 0.0], [2.452373224642943, 0.042384888948038886], [1.9011275670230363, 0.042384888948038886]], "data23": [[-0.3038550634565871, 0.0], [0.24739059416331877, 0.0], [0.24739059416331877, 0.6696812453790154], [-0.3038550634565871, 0.6696812453790154]], "data22": [[-0.8551007210764929, 0.0], [-0.3038550634565871, 0.0], [-0.3038550634565871, 0.3729870227427428], [-0.8551007210764929, 0.3729870227427428]], "data24": [[0.24739059416331877, 0.0], [0.7986362517832246, 0.0], [0.7986362517832246, 0.30940968932068436], [0.24739059416331877, 0.30940968932068436]], "data25": [[0.7986362517832246, 0.0], [1.3498819094031305, 0.0], [1.3498819094031305, 0.13563164463372465], [0.7986362517832246, 0.13563164463372465]], "data14": [[1.289129785929663, 0.0], [1.6274898907426434, 0.0], [1.6274898907426434, 0.03741052112245257], [1.289129785929663, 0.03741052112245257]], "data21": [[-1.4063463786963992, 0.0], [-0.8551007210764929, 0.0], [-0.8551007210764929, 0.11020071126490118], [-1.4063463786963992, 0.11020071126490118]], "data28": [[3.003618882262849, 0.0], [3.5548645398827547, 0.0], [3.5548645398827547, 0.021192444474019474], [3.003618882262849, 0.021192444474019474]], "data30": [[0.7606630824372759, 0.8248712288447388], [0.9849462365591398, 0.8248712288447388], [0.9892473118279571, 0.8248712288447388], [0.9892473118279571, 0.8337012509197941], [0.9892473118279571, 0.9690949227373071], [0.9892473118279571, 0.9779249448123624], [0.9849462365591398, 0.9779249448123624], [0.7606630824372759, 0.9779249448123624], [0.7563620071684587, 0.9779249448123624], [0.7563620071684587, 0.9690949227373071], [0.7563620071684587, 0.8337012509197941], [0.7563620071684587, 0.8248712288447388], [0.7606630824372759, 0.8248712288447388]], "data09": [[-0.7410308429482231, 0.0], [-0.4026707381352419, 0.0], [-0.4026707381352419, 0.33669469010207226], [-0.7410308429482231, 0.33669469010207226]], "data26": [[1.3498819094031305, 0.0], [1.9011275670230363, 0.0], [1.9011275670230363, 0.03814640005323505], [1.3498819094031305, 0.03814640005323505]], "data07": [[-1.7561111573871657, 0.0, -1.417751052574185], [-1.4177510525741848, 0.0, -1.079390947761204], [-1.4177510525741848, 0.11223156336735751, -1.079390947761204], [-1.7561111573871657, 0.11223156336735751, -1.417751052574185]], "data15": [[1.6274898907426434, 0.0], [1.9658499955556248, 0.0], [1.9658499955556248, 0.11223156336735736], [1.6274898907426434, 0.11223156336735736]], "data11": [[-0.06431063332226072, 0.0, 0.27404947149072], [0.27404947149072, 0.0, 0.6124095763037007], [0.27404947149072, 0.5237472957143353, 0.6124095763037007], [-0.06431063332226072, 0.5237472957143353, 0.27404947149072]], "data05": [[-2.4328313670131276, 0.0], [-2.0944712622001465, 0.0], [-2.0944712622001465, 0.07482104224490495], [-2.4328313670131276, 0.07482104224490495]], "data12": [[0.6124095763037007, 0.0], [0.9507696811166819, 0.0], [0.9507696811166819, 0.1870526056122624], [0.6124095763037007, 0.1870526056122624]], "data16": [[-4.162574666795929, 0.0, 2.452373224642943, 3.5548645398827547], [-3.611329009176023, 0.0, 3.003618882262849, 4.106110197502661], [-3.611329009176023, 0.012715466684411685, 3.003618882262849, 4.106110197502661], [-4.162574666795929, 0.012715466684411685, 2.452373224642943, 3.5548645398827547]], "data17": [[-3.611329009176023, 0.0], [-3.060083351556117, 0.0], [-3.060083351556117, 0.00847697778960779], [-3.611329009176023, 0.00847697778960779]], "data18": [[-3.060083351556117, 0.0], [-2.508837693936211, 0.0], [-2.508837693936211, 0.004238488894803892], [-3.060083351556117, 0.004238488894803892]], "data04": [[-2.771191471826109, 0.0], [-2.4328313670131276, 0.0], [-2.4328313670131276, 0.0], [-2.771191471826109, 0.0]], "data03": [[-3.10955157663909, 0.0], [-2.7711914718261093, 0.0], [-2.7711914718261093, 0.11223156336735758], [-3.10955157663909, 0.11223156336735758]], "data08": [[-1.0793909477612038, 0.0], [-0.7410308429482231, 0.0], [-0.7410308429482231, 0.14964208448981012], [-1.0793909477612038, 0.14964208448981012]], "data20": [[-1.957592036316305, 0.0], [-1.4063463786963992, 0.0], [-1.4063463786963992, 0.04662337784284285], [-1.957592036316305, 0.04662337784284285]]}, "axes": [{"axesbg": "#FFFFFF", "ylim": [0.0, 0.7031653076479661], "texts": [{"rotation": -0.0, "coordinates": "axes", "zorder": 3, "color": "#000000", "fontsize": 16.0, "h_anchor": "middle", "position": [0.5, -0.0772626931567329], "id": "el57594446979408", "text": "Normalized Mean current helicity (Bz contribution)", "alpha": 1, "v_baseline": "hanging"}, {"rotation": -90.0, "coordinates": "axes", "zorder": 3, "color": "#000000", "fontsize": 16.0, "h_anchor": "middle", "position": [-0.07683691756272401, 0.5], "id": "el57594446978288", "text": "Number (normalized)", "alpha": 1, "v_baseline": "auto"}, {"rotation": -0.0, "coordinates": "axes", "zorder": 1000003.0, "color": "#000000", "fontsize": 12.0, "h_anchor": "start", "position": [0.825179211469534, 0.9234731420161886], "id": "el57594447099424", "text": "positive class", "alpha": 1, "v_baseline": "auto"}, {"rotation": -0.0, "coordinates": "axes", "zorder": 1000003.0, "color": "#000000", "fontsize": 12.0, "h_anchor": "start", "position": [0.825179211469534, 0.8535688005886684], "id": "el57594446489400", "text": "negative class", "alpha": 1, "v_baseline": "auto"}], "images": [], "paths": [{"dasharray": "none", "coordinates": "data", "edgecolor": "none", "facecolor": "#008000", "zorder": 1, "id": "el57594447076480", "yindex": 1, "xindex": 0, "pathcodes": ["M", "L", "L", "L", "Z"], "data": "data03", "edgewidth": 1.0, "alpha": 0.5}, {"dasharray": "none", "coordinates": "data", "edgecolor": "none", "facecolor": "#008000", "zorder": 1, "id": "el57594447051056", "yindex": 1, "xindex": 0, "pathcodes": ["M", "L", "L", "L", "Z"], "data": "data04", "edgewidth": 1.0, "alpha": 0.5}, {"dasharray": "none", "coordinates": "data", "edgecolor": "none", "facecolor": "#008000", "zorder": 1, "id": "el57594447077712", "yindex": 1, "xindex": 0, "pathcodes": ["M", "L", "L", "L", "Z"], "data": "data05", "edgewidth": 1.0, "alpha": 0.5}, {"dasharray": "none", "coordinates": "data", "edgecolor": "none", "facecolor": "#008000", "zorder": 1, "id": "el57594447078776", "yindex": 1, "xindex": 0, "pathcodes": ["M", "L", "L", "L", "Z"], "data": "data06", "edgewidth": 1.0, "alpha": 0.5}, {"dasharray": "none", "coordinates": "data", "edgecolor": "none", "facecolor": "#008000", "zorder": 1, "id": "el57594447078552", "yindex": 1, "xindex": 0, "pathcodes": ["M", "L", "L", "L", "Z"], "data": "data07", "edgewidth": 1.0, "alpha": 0.5}, {"dasharray": "none", "coordinates": "data", "edgecolor": "none", "facecolor": "#008000", "zorder": 1, "id": "el57594447079672", "yindex": 1, "xindex": 2, "pathcodes": ["M", "L", "L", "L", "Z"], "data": "data07", "edgewidth": 1.0, "alpha": 0.5}, {"dasharray": "none", "coordinates": "data", "edgecolor": "none", "facecolor": "#008000", "zorder": 1, "id": "el57594447080856", "yindex": 1, "xindex": 0, "pathcodes": ["M", "L", "L", "L", "Z"], "data": "data08", "edgewidth": 1.0, "alpha": 0.5}, {"dasharray": "none", "coordinates": "data", "edgecolor": "none", "facecolor": "#008000", "zorder": 1, "id": "el57594447080744", "yindex": 1, "xindex": 0, "pathcodes": ["M", "L", "L", "L", "Z"], "data": "data09", "edgewidth": 1.0, "alpha": 0.5}, {"dasharray": "none", "coordinates": "data", "edgecolor": "none", "facecolor": "#008000", "zorder": 1, "id": "el57594447082928", "yindex": 1, "xindex": 0, "pathcodes": ["M", "L", "L", "L", "Z"], "data": "data10", "edgewidth": 1.0, "alpha": 0.5}, {"dasharray": "none", "coordinates": "data", "edgecolor": "none", "facecolor": "#008000", "zorder": 1, "id": "el57594447083712", "yindex": 1, "xindex": 0, "pathcodes": ["M", "L", "L", "L", "Z"], "data": "data11", "edgewidth": 1.0, "alpha": 0.5}, {"dasharray": "none", "coordinates": "data", "edgecolor": "none", "facecolor": "#008000", "zorder": 1, "id": "el57594447083320", "yindex": 1, "xindex": 2, "pathcodes": ["M", "L", "L", "L", "Z"], "data": "data11", "edgewidth": 1.0, "alpha": 0.5}, {"dasharray": "none", "coordinates": "data", "edgecolor": "none", "facecolor": "#008000", "zorder": 1, "id": "el57594447097744", "yindex": 1, "xindex": 0, "pathcodes": ["M", "L", "L", "L", "Z"], "data": "data12", "edgewidth": 1.0, "alpha": 0.5}, {"dasharray": "none", "coordinates": "data", "edgecolor": "none", "facecolor": "#008000", "zorder": 1, "id": "el57594447098528", "yindex": 1, "xindex": 0, "pathcodes": ["M", "L", "L", "L", "Z"], "data": "data13", "edgewidth": 1.0, "alpha": 0.5}, {"dasharray": "none", "coordinates": "data", "edgecolor": "none", "facecolor": "#008000", "zorder": 1, "id": "el57594447099704", "yindex": 1, "xindex": 0, "pathcodes": ["M", "L", "L", "L", "Z"], "data": "data14", "edgewidth": 1.0, "alpha": 0.5}, {"dasharray": "none", "coordinates": "data", "edgecolor": "none", "facecolor": "#008000", "zorder": 1, "id": "el57594447099368", "yindex": 1, "xindex": 0, "pathcodes": ["M", "L", "L", "L", "Z"], "data": "data15", "edgewidth": 1.0, "alpha": 0.5}, {"dasharray": "none", "coordinates": "data", "edgecolor": "none", "facecolor": "#FF0000", "zorder": 1, "id": "el57594446944336", "yindex": 1, "xindex": 0, "pathcodes": ["M", "L", "L", "L", "Z"], "data": "data16", "edgewidth": 1.0, "alpha": 0.5}, {"dasharray": "none", "coordinates": "data", "edgecolor": "none", "facecolor": "#FF0000", "zorder": 1, "id": "el57594446933288", "yindex": 1, "xindex": 0, "pathcodes": ["M", "L", "L", "L", "Z"], "data": "data17", "edgewidth": 1.0, "alpha": 0.5}, {"dasharray": "none", "coordinates": "data", "edgecolor": "none", "facecolor": "#FF0000", "zorder": 1, "id": "el57594447106272", "yindex": 1, "xindex": 0, "pathcodes": ["M", "L", "L", "L", "Z"], "data": "data18", "edgewidth": 1.0, "alpha": 0.5}, {"dasharray": "none", "coordinates": "data", "edgecolor": "none", "facecolor": "#FF0000", "zorder": 1, "id": "el57594447105936", "yindex": 1, "xindex": 0, "pathcodes": ["M", "L", "L", "L", "Z"], "data": "data19", "edgewidth": 1.0, "alpha": 0.5}, {"dasharray": "none", "coordinates": "data", "edgecolor": "none", "facecolor": "#FF0000", "zorder": 1, "id": "el57594447108064", "yindex": 1, "xindex": 0, "pathcodes": ["M", "L", "L", "L", "Z"], "data": "data20", "edgewidth": 1.0, "alpha": 0.5}, {"dasharray": "none", "coordinates": "data", "edgecolor": "none", "facecolor": "#FF0000", "zorder": 1, "id": "el57594447108232", "yindex": 1, "xindex": 0, "pathcodes": ["M", "L", "L", "L", "Z"], "data": "data21", "edgewidth": 1.0, "alpha": 0.5}, {"dasharray": "none", "coordinates": "data", "edgecolor": "none", "facecolor": "#FF0000", "zorder": 1, "id": "el57594447109864", "yindex": 1, "xindex": 0, "pathcodes": ["M", "L", "L", "L", "Z"], "data": "data22", "edgewidth": 1.0, "alpha": 0.5}, {"dasharray": "none", "coordinates": "data", "edgecolor": "none", "facecolor": "#FF0000", "zorder": 1, "id": "el57594447109528", "yindex": 1, "xindex": 0, "pathcodes": ["M", "L", "L", "L", "Z"], "data": "data23", "edgewidth": 1.0, "alpha": 0.5}, {"dasharray": "none", "coordinates": "data", "edgecolor": "none", "facecolor": "#FF0000", "zorder": 1, "id": "el57594447111656", "yindex": 1, "xindex": 0, "pathcodes": ["M", "L", "L", "L", "Z"], "data": "data24", "edgewidth": 1.0, "alpha": 0.5}, {"dasharray": "none", "coordinates": "data", "edgecolor": "none", "facecolor": "#FF0000", "zorder": 1, "id": "el57594447111824", "yindex": 1, "xindex": 0, "pathcodes": ["M", "L", "L", "L", "Z"], "data": "data25", "edgewidth": 1.0, "alpha": 0.5}, {"dasharray": "none", "coordinates": "data", "edgecolor": "none", "facecolor": "#FF0000", "zorder": 1, "id": "el57594447113000", "yindex": 1, "xindex": 0, "pathcodes": ["M", "L", "L", "L", "Z"], "data": "data26", "edgewidth": 1.0, "alpha": 0.5}, {"dasharray": "none", "coordinates": "data", "edgecolor": "none", "facecolor": "#FF0000", "zorder": 1, "id": "el57594447122208", "yindex": 1, "xindex": 0, "pathcodes": ["M", "L", "L", "L", "Z"], "data": "data27", "edgewidth": 1.0, "alpha": 0.5}, {"dasharray": "none", "coordinates": "data", "edgecolor": "none", "facecolor": "#FF0000", "zorder": 1, "id": "el57594447123384", "yindex": 1, "xindex": 2, "pathcodes": ["M", "L", "L", "L", "Z"], "data": "data16", "edgewidth": 1.0, "alpha": 0.5}, {"dasharray": "none", "coordinates": "data", "edgecolor": "none", "facecolor": "#FF0000", "zorder": 1, "id": "el57594447124168", "yindex": 1, "xindex": 0, "pathcodes": ["M", "L", "L", "L", "Z"], "data": "data28", "edgewidth": 1.0, "alpha": 0.5}, {"dasharray": "none", "coordinates": "data", "edgecolor": "none", "facecolor": "#FF0000", "zorder": 1, "id": "el57594447123776", "yindex": 1, "xindex": 3, "pathcodes": ["M", "L", "L", "L", "Z"], "data": "data16", "edgewidth": 1.0, "alpha": 0.5}, {"dasharray": "none", "coordinates": "axes", "edgecolor": "none", "facecolor": "none", "zorder": 1000000.0, "id": "el57594447078048", "yindex": 1, "xindex": 0, "pathcodes": ["M", "L", "S", "L", "S", "L", "S", "L", "S", "Z"], "data": "data30", "edgewidth": 0.0, "alpha": 0.0}], "lines": [{"xindex": 0, "dasharray": "5.550000000000001,2.4000000000000004", "id": "el57594446987040", "data": "data01", "linewidth": 1.5, "coordinates": "data", "zorder": 2, "color": "#007F00", "drawstyle": "default", "yindex": 1, "alpha": 1}, {"xindex": 0, "dasharray": "5.550000000000001,2.4000000000000004", "id": "el57594446936312", "data": "data02", "linewidth": 1.5, "coordinates": "data", "zorder": 2, "color": "#FF0000", "drawstyle": "default", "yindex": 1, "alpha": 1}, {"xindex": 0, "dasharray": "5.550000000000001,2.4000000000000004", "id": "el57594447111376", "data": "data29", "linewidth": 1.5, "coordinates": "axes", "zorder": 1000002.0, "color": "#007F00", "drawstyle": "default", "yindex": 1, "alpha": 1}, {"xindex": 0, "dasharray": "5.550000000000001,2.4000000000000004", "id": "el57594446488840", "data": "data29", "linewidth": 1.5, "coordinates": "axes", "zorder": 1000002.0, "color": "#FF0000", "drawstyle": "default", "yindex": 2, "alpha": 1}], "zoomable": true, "bbox": [0.125, 0.125, 0.775, 0.755], "collections": [], "xscale": "linear", "yscale": "linear", "markers": [], "axesbgalpha": null, "ydomain": [0.0, 0.7031653076479661], "id": "el57594446928568", "sharey": [], "xdomain": [-4.5760089100108585, 4.51954444071759], "sharex": [], "axes": [{"position": "bottom", "tickformat": null, "nticks": 7, "grid": {"gridOn": false}, "scale": "linear", "visible": true, "fontsize": 10.0, "tickvalues": null}, {"position": "left", "tickformat": null, "nticks": 9, "grid": {"gridOn": false}, "scale": "linear", "visible": true, "fontsize": 10.0, "tickvalues": null}], "xlim": [-4.5760089100108585, 4.51954444071759]}], "plugins": [{"type": "reset"}, {"button": true, "type": "zoom", "enabled": false}, {"button": true, "type": "boxzoom", "enabled": false}], "width": 720.0});
+         mpld3.draw_figure("fig_el544265088525392629371401", {"height": 360.0, "axes": [{"ylim": [0.0, 0.7484384407749112], "ydomain": [0.0, 0.7484384407749112], "collections": [], "bbox": [0.125, 0.125, 0.775, 0.755], "axesbg": "#FFFFFF", "paths": [{"xindex": 0, "yindex": 1, "alpha": 0.5, "dasharray": "none", "zorder": 1, "edgewidth": 1.0, "data": "data03", "pathcodes": ["M", "L", "L", "L", "Z"], "id": "el544265088059912", "edgecolor": "none", "coordinates": "data", "facecolor": "#008000"}, {"xindex": 0, "yindex": 1, "alpha": 0.5, "dasharray": "none", "zorder": 1, "edgewidth": 1.0, "data": "data04", "pathcodes": ["M", "L", "L", "L", "Z"], "id": "el544265088061816", "edgecolor": "none", "coordinates": "data", "facecolor": "#008000"}, {"xindex": 0, "yindex": 1, "alpha": 0.5, "dasharray": "none", "zorder": 1, "edgewidth": 1.0, "data": "data05", "pathcodes": ["M", "L", "L", "L", "Z"], "id": "el544265088073096", "edgecolor": "none", "coordinates": "data", "facecolor": "#008000"}, {"xindex": 2, "yindex": 1, "alpha": 0.5, "dasharray": "none", "zorder": 1, "edgewidth": 1.0, "data": "data04", "pathcodes": ["M", "L", "L", "L", "Z"], "id": "el544265088075504", "edgecolor": "none", "coordinates": "data", "facecolor": "#008000"}, {"xindex": 2, "yindex": 1, "alpha": 0.5, "dasharray": "none", "zorder": 1, "edgewidth": 1.0, "data": "data03", "pathcodes": ["M", "L", "L", "L", "Z"], "id": "el544265088086056", "edgecolor": "none", "coordinates": "data", "facecolor": "#008000"}, {"xindex": 0, "yindex": 1, "alpha": 0.5, "dasharray": "none", "zorder": 1, "edgewidth": 1.0, "data": "data06", "pathcodes": ["M", "L", "L", "L", "Z"], "id": "el544265088087960", "edgecolor": "none", "coordinates": "data", "facecolor": "#008000"}, {"xindex": 0, "yindex": 1, "alpha": 0.5, "dasharray": "none", "zorder": 1, "edgewidth": 1.0, "data": "data07", "pathcodes": ["M", "L", "L", "L", "Z"], "id": "el544265088098120", "edgecolor": "none", "coordinates": "data", "facecolor": "#008000"}, {"xindex": 0, "yindex": 1, "alpha": 0.5, "dasharray": "none", "zorder": 1, "edgewidth": 1.0, "data": "data08", "pathcodes": ["M", "L", "L", "L", "Z"], "id": "el544265088099576", "edgecolor": "none", "coordinates": "data", "facecolor": "#008000"}, {"xindex": 0, "yindex": 1, "alpha": 0.5, "dasharray": "none", "zorder": 1, "edgewidth": 1.0, "data": "data09", "pathcodes": ["M", "L", "L", "L", "Z"], "id": "el544265088115176", "edgecolor": "none", "coordinates": "data", "facecolor": "#008000"}, {"xindex": 2, "yindex": 1, "alpha": 0.5, "dasharray": "none", "zorder": 1, "edgewidth": 1.0, "data": "data09", "pathcodes": ["M", "L", "L", "L", "Z"], "id": "el544265088117312", "edgecolor": "none", "coordinates": "data", "facecolor": "#008000"}, {"xindex": 0, "yindex": 1, "alpha": 0.5, "dasharray": "none", "zorder": 1, "edgewidth": 1.0, "data": "data10", "pathcodes": ["M", "L", "L", "L", "Z"], "id": "el544265088119048", "edgecolor": "none", "coordinates": "data", "facecolor": "#008000"}, {"xindex": 0, "yindex": 1, "alpha": 0.5, "dasharray": "none", "zorder": 1, "edgewidth": 1.0, "data": "data11", "pathcodes": ["M", "L", "L", "L", "Z"], "id": "el544265088138464", "edgecolor": "none", "coordinates": "data", "facecolor": "#008000"}, {"xindex": 0, "yindex": 1, "alpha": 0.5, "dasharray": "none", "zorder": 1, "edgewidth": 1.0, "data": "data12", "pathcodes": ["M", "L", "L", "L", "Z"], "id": "el544265088140256", "edgecolor": "none", "coordinates": "data", "facecolor": "#008000"}, {"xindex": 0, "yindex": 1, "alpha": 0.5, "dasharray": "none", "zorder": 1, "edgewidth": 1.0, "data": "data13", "pathcodes": ["M", "L", "L", "L", "Z"], "id": "el544265088151480", "edgecolor": "none", "coordinates": "data", "facecolor": "#008000"}, {"xindex": 0, "yindex": 1, "alpha": 0.5, "dasharray": "none", "zorder": 1, "edgewidth": 1.0, "data": "data14", "pathcodes": ["M", "L", "L", "L", "Z"], "id": "el544265088152152", "edgecolor": "none", "coordinates": "data", "facecolor": "#008000"}, {"xindex": 0, "yindex": 1, "alpha": 0.5, "dasharray": "none", "zorder": 1, "edgewidth": 1.0, "data": "data15", "pathcodes": ["M", "L", "L", "L", "Z"], "id": "el544265088166856", "edgecolor": "none", "coordinates": "data", "facecolor": "#FF0000"}, {"xindex": 0, "yindex": 1, "alpha": 0.5, "dasharray": "none", "zorder": 1, "edgewidth": 1.0, "data": "data16", "pathcodes": ["M", "L", "L", "L", "Z"], "id": "el544265088169376", "edgecolor": "none", "coordinates": "data", "facecolor": "#FF0000"}, {"xindex": 2, "yindex": 1, "alpha": 0.5, "dasharray": "none", "zorder": 1, "edgewidth": 1.0, "data": "data16", "pathcodes": ["M", "L", "L", "L", "Z"], "id": "el544265088180096", "edgecolor": "none", "coordinates": "data", "facecolor": "#FF0000"}, {"xindex": 0, "yindex": 1, "alpha": 0.5, "dasharray": "none", "zorder": 1, "edgewidth": 1.0, "data": "data17", "pathcodes": ["M", "L", "L", "L", "Z"], "id": "el544265088181832", "edgecolor": "none", "coordinates": "data", "facecolor": "#FF0000"}, {"xindex": 0, "yindex": 1, "alpha": 0.5, "dasharray": "none", "zorder": 1, "edgewidth": 1.0, "data": "data18", "pathcodes": ["M", "L", "L", "L", "Z"], "id": "el544265088479384", "edgecolor": "none", "coordinates": "data", "facecolor": "#FF0000"}, {"xindex": 0, "yindex": 1, "alpha": 0.5, "dasharray": "none", "zorder": 1, "edgewidth": 1.0, "data": "data19", "pathcodes": ["M", "L", "L", "L", "Z"], "id": "el544265088993352", "edgecolor": "none", "coordinates": "data", "facecolor": "#FF0000"}, {"xindex": 0, "yindex": 1, "alpha": 0.5, "dasharray": "none", "zorder": 1, "edgewidth": 1.0, "data": "data20", "pathcodes": ["M", "L", "L", "L", "Z"], "id": "el544265088995816", "edgecolor": "none", "coordinates": "data", "facecolor": "#FF0000"}, {"xindex": 0, "yindex": 1, "alpha": 0.5, "dasharray": "none", "zorder": 1, "edgewidth": 1.0, "data": "data21", "pathcodes": ["M", "L", "L", "L", "Z"], "id": "el544265089015232", "edgecolor": "none", "coordinates": "data", "facecolor": "#FF0000"}, {"xindex": 0, "yindex": 1, "alpha": 0.5, "dasharray": "none", "zorder": 1, "edgewidth": 1.0, "data": "data22", "pathcodes": ["M", "L", "L", "L", "Z"], "id": "el544265089017360", "edgecolor": "none", "coordinates": "data", "facecolor": "#FF0000"}, {"xindex": 0, "yindex": 1, "alpha": 0.5, "dasharray": "none", "zorder": 1, "edgewidth": 1.0, "data": "data23", "pathcodes": ["M", "L", "L", "L", "Z"], "id": "el544265089028192", "edgecolor": "none", "coordinates": "data", "facecolor": "#FF0000"}, {"xindex": 0, "yindex": 1, "alpha": 0.5, "dasharray": "none", "zorder": 1, "edgewidth": 1.0, "data": "data24", "pathcodes": ["M", "L", "L", "L", "Z"], "id": "el544265089029984", "edgecolor": "none", "coordinates": "data", "facecolor": "#FF0000"}, {"xindex": 0, "yindex": 1, "alpha": 0.5, "dasharray": "none", "zorder": 1, "edgewidth": 1.0, "data": "data25", "pathcodes": ["M", "L", "L", "L", "Z"], "id": "el544265089036552", "edgecolor": "none", "coordinates": "data", "facecolor": "#FF0000"}, {"xindex": 0, "yindex": 1, "alpha": 0.5, "dasharray": "none", "zorder": 1, "edgewidth": 1.0, "data": "data26", "pathcodes": ["M", "L", "L", "L", "Z"], "id": "el544265089051144", "edgecolor": "none", "coordinates": "data", "facecolor": "#FF0000"}, {"xindex": 0, "yindex": 1, "alpha": 0.5, "dasharray": "none", "zorder": 1, "edgewidth": 1.0, "data": "data27", "pathcodes": ["M", "L", "L", "L", "Z"], "id": "el544265089053832", "edgecolor": "none", "coordinates": "data", "facecolor": "#FF0000"}, {"xindex": 0, "yindex": 1, "alpha": 0.5, "dasharray": "none", "zorder": 1, "edgewidth": 1.0, "data": "data28", "pathcodes": ["M", "L", "L", "L", "Z"], "id": "el544265089068536", "edgecolor": "none", "coordinates": "data", "facecolor": "#FF0000"}, {"xindex": 0, "yindex": 1, "alpha": 0.0, "dasharray": "none", "zorder": 1000000.0, "edgewidth": 0.0, "data": "data30", "pathcodes": ["M", "L", "S", "L", "S", "L", "S", "L", "S", "Z"], "id": "el544265088031912", "edgecolor": "none", "coordinates": "axes", "facecolor": "none"}], "xdomain": [-4.745285069681457, 4.665430278133732], "xlim": [-4.745285069681457, 4.665430278133732], "zoomable": true, "sharex": [], "markers": [], "lines": [{"xindex": 0, "yindex": 1, "color": "#007F00", "alpha": 1, "linewidth": 1.5, "id": "el544264743784432", "drawstyle": "default", "zorder": 2, "coordinates": "data", "data": "data01", "dasharray": "5.550000000000001,2.4000000000000004"}, {"xindex": 0, "yindex": 1, "color": "#FF0000", "alpha": 1, "linewidth": 1.5, "id": "el544265088523488", "drawstyle": "default", "zorder": 2, "coordinates": "data", "data": "data02", "dasharray": "5.550000000000001,2.4000000000000004"}, {"xindex": 0, "yindex": 1, "color": "#007F00", "alpha": 1, "linewidth": 1.5, "id": "el544265088152320", "drawstyle": "default", "zorder": 1000002.0, "coordinates": "axes", "data": "data29", "dasharray": "5.550000000000001,2.4000000000000004"}, {"xindex": 0, "yindex": 2, "color": "#FF0000", "alpha": 1, "linewidth": 1.5, "id": "el544265087962672", "drawstyle": "default", "zorder": 1000002.0, "coordinates": "axes", "data": "data29", "dasharray": "5.550000000000001,2.4000000000000004"}], "sharey": [], "axes": [{"visible": true, "tickvalues": null, "grid": {"gridOn": false}, "tickformat": null, "position": "bottom", "scale": "linear", "fontsize": 10.0, "nticks": 7}, {"visible": true, "tickvalues": null, "grid": {"gridOn": false}, "tickformat": null, "position": "left", "scale": "linear", "fontsize": 10.0, "nticks": 9}], "xscale": "linear", "axesbgalpha": null, "yscale": "linear", "images": [], "texts": [{"h_anchor": "middle", "alpha": 1, "text": "Normalized Mean current helicity (Bz contribution)", "position": [0.5, -0.0772626931567329], "zorder": 3, "v_baseline": "hanging", "rotation": -0.0, "color": "#000000", "id": "el544265088502952", "fontsize": 16.0, "coordinates": "axes"}, {"h_anchor": "middle", "alpha": 1, "text": "Number (normalized)", "position": [-0.07683691756272401, 0.5], "zorder": 3, "v_baseline": "auto", "rotation": -90.0, "color": "#000000", "id": "el544265088562872", "fontsize": 16.0, "coordinates": "axes"}, {"h_anchor": "start", "alpha": 1, "text": "positive class", "position": [0.825179211469534, 0.9234731420161886], "zorder": 1000003.0, "v_baseline": "auto", "rotation": -0.0, "color": "#000000", "id": "el544265088087680", "fontsize": 12.0, "coordinates": "axes"}, {"h_anchor": "start", "alpha": 1, "text": "negative class", "position": [0.825179211469534, 0.8535688005886684], "zorder": 1000003.0, "v_baseline": "auto", "rotation": -0.0, "color": "#000000", "id": "el544265089054056", "fontsize": 12.0, "coordinates": "axes"}], "id": "el544265088526176"}], "id": "el544265088525392", "plugins": [{"type": "reset"}, {"enabled": false, "button": true, "type": "zoom"}, {"enabled": false, "button": true, "type": "boxzoom"}], "width": 720.0, "data": {"data24": [[1.3859385660163168, 0.0], [1.956284950732388, 0.0], [1.956284950732388, 0.04915851827749835], [1.3859385660163168, 0.04915851827749835]], "data30": [[0.7606630824372759, 0.8248712288447388], [0.9849462365591398, 0.8248712288447388], [0.9892473118279571, 0.8248712288447388], [0.9892473118279571, 0.8337012509197941], [0.9892473118279571, 0.9690949227373071], [0.9892473118279571, 0.9779249448123624], [0.9849462365591398, 0.9779249448123624], [0.7606630824372759, 0.9779249448123624], [0.7563620071684587, 0.9779249448123624], [0.7563620071684587, 0.9690949227373071], [0.7563620071684587, 0.8337012509197941], [0.7563620071684587, 0.8248712288447388], [0.7606630824372759, 0.8248712288447388]], "data15": [[-4.317525281144402, 0.0], [-3.7471788964283297, 0.0], [-3.7471788964283297, 0.01228962956937457], [-4.317525281144402, 0.01228962956937457]], "data12": [[1.0013148080066223, 0.0], [1.3576629227151011, 0.0], [1.3576629227151011, 0.13857998404111585], [1.0013148080066223, 0.13857998404111585]], "data13": [[1.3576629227151011, 0.0], [1.714011037423579, 0.0], [1.714011037423579, 0.10393498803083716], [1.3576629227151011, 0.10393498803083716]], "data06": [[-1.4931219949527255, 0.0], [-1.1367738802442473, 0.0], [-1.1367738802442473, 0.10393498803083709], [-1.4931219949527255, 0.10393498803083709]], "data07": [[-1.1367738802442475, 0.0], [-0.7804257655357691, 0.0], [-0.7804257655357691, 0.13857998404111602], [-1.1367738802442475, 0.13857998404111602]], "data10": [[0.288618578589666, 0.0], [0.6449666932981444, 0.0], [0.6449666932981444, 0.519674940154185], [0.288618578589666, 0.519674940154185]], "data14": [[1.714011037423579, 0.0], [2.070359152132058, 0.0], [2.070359152132058, 0.03464499601027896], [1.714011037423579, 0.03464499601027896]], "data23": [[0.8155921813002447, 0.0], [1.3859385660163168, 0.0], [1.3859385660163168, 0.11879975250395416], [0.8155921813002447, 0.11879975250395416]], "data21": [[-0.32510058813189957, 0.0], [0.24524579658417256, 0.0], [0.24524579658417256, 0.7127985150237249], [-0.32510058813189957, 0.7127985150237249]], "data03": [[-3.2748625684951174, 0.0, -1.849470109661204], [-2.918514453786639, 0.0, -1.4931219949527257], [-2.918514453786639, 0.10393498803083702, -1.4931219949527257], [-3.2748625684951174, 0.10393498803083702, -1.849470109661204]], "data25": [[1.956284950732388, 0.0], [2.52663133544846, 0.0], [2.52663133544846, 0.02457925913874914], [1.956284950732388, 0.02457925913874914]], "data18": [[-2.036139742280115, 0.0], [-1.465793357564043, 0.0], [-1.465793357564043, 0.02867580232854066], [-2.036139742280115, 0.02867580232854066]], "data08": [[-0.7804257655357691, 0.0], [-0.42407765082729076, 0.0], [-0.42407765082729076, 0.34644996010279006], [-0.7804257655357691, 0.34644996010279006]], "data27": [[3.0969777201645323, 0.0], [3.6673241048806036, 0.0], [3.6673241048806036, 0.020482715948957644], [3.0969777201645323, 0.020482715948957644]], "data16": [[-3.7471788964283306, 0.0, -3.1768325117122584], [-3.176832511712259, 0.0, -2.6064861269961868], [-3.176832511712259, 0.008193086379583051, -2.6064861269961868], [-3.7471788964283306, 0.008193086379583051, -3.1768325117122584]], "data22": [[0.24524579658417256, 0.0], [0.8155921813002447, 0.0], [0.8155921813002447, 0.32362691199353033], [0.24524579658417256, 0.32362691199353033]], "data26": [[2.52663133544846, 0.0], [3.0969777201645323, 0.0], [3.0969777201645323, 0.008193086379583046], [2.52663133544846, 0.008193086379583046]], "data11": [[0.6449666932981444, 0.0], [1.0013148080066223, 0.0], [1.0013148080066223, 0.17322498005139525], [0.6449666932981444, 0.17322498005139525]], "data01": [[-3.2748625684951174, 0.003344355706489415], [-2.918514453786639, 0.009447607041866278], [-2.5621663390781606, 0.02350621684437878], [-2.2058182243696827, 0.051510434575023106], [-1.849470109661204, 0.09941667825944533], [-1.4931219949527257, 0.16899538362572186], [-1.1367738802442475, 0.25301250886957277], [-0.7804257655357691, 0.33362662610829635], [-0.42407765082729076, 0.3874636566141195], [-0.06772953611881238, 0.39632621579439237], [0.288618578589666, 0.35704765666218335], [0.6449666932981444, 0.28330297317970954], [1.0013148080066223, 0.19798287942499512], [1.3576629227151011, 0.12185846378680586], [1.714011037423579, 0.06605950577408094], [2.070359152132058, 0.03154034940756482]], "data29": [[0.764964157706093, 0.9389256806475351, 0.8690213392200149], [0.8079749103942651, 0.9389256806475351, 0.8690213392200149]], "data02": [[-4.317525281144403, 3.316457525801005e-05], [-3.7471788964283306, 0.0003340036119077932], [-3.176832511712259, 0.0024297078906683665], [-2.606486126996187, 0.012766831957028945], [-2.036139742280115, 0.0484549775968589], [-1.465793357564043, 0.13283723564779618], [-0.8954469728479713, 0.26304341771306944], [-0.32510058813189957, 0.3762367594504306], [0.24524579658417256, 0.38870595022551246], [0.8155921813002447, 0.29007301534429675], [1.3859385660163168, 0.15635783465398362], [1.956284950732388, 0.06087768686426391], [2.52663133544846, 0.017120751139747366], [3.0969777201645323, 0.00347787255851156], [3.6673241048806036, 0.0005103060184047315], [4.2376704895966775, 5.408463384606319e-05]], "data05": [[-2.5621663390781606, 0.0], [-2.2058182243696827, 0.0], [-2.2058182243696827, 0.06928999202055809], [-2.5621663390781606, 0.06928999202055809]], "data04": [[-2.9185144537866385, 0.0, -2.2058182243696827], [-2.56216633907816, 0.0, -1.849470109661204], [-2.56216633907816, 0.0, -1.849470109661204], [-2.9185144537866385, 0.0, -2.2058182243696827]], "data20": [[-0.8954469728479713, 0.0], [-0.32510058813189957, 0.0], [-0.32510058813189957, 0.2949511096649899], [-0.8954469728479713, 0.2949511096649899]], "data17": [[-2.606486126996187, 0.0], [-2.036139742280115, 0.0], [-2.036139742280115, 0.016386172759166092], [-2.606486126996187, 0.016386172759166092]], "data28": [[3.6673241048806036, 0.0], [4.2376704895966775, 0.0], [4.2376704895966775, 0.01228962956937453], [3.6673241048806036, 0.01228962956937453]], "data09": [[-0.42407765082729076, 0.0, -0.06772953611881238], [-0.06772953611881238, 0.0, 0.288618578589666], [-0.06772953611881238, 0.48502994414390604, 0.288618578589666], [-0.42407765082729076, 0.48502994414390604, -0.06772953611881238]], "data19": [[-1.465793357564043, 0.0], [-0.8954469728479713, 0.0], [-0.8954469728479713, 0.11470320931416272], [-1.465793357564043, 0.11470320931416272]]}});
       });
     });
 }else{
@@ -807,7 +4093,7 @@ if(typeof(mpld3) !== "undefined" && mpld3._mpld3IsLoaded){
     mpld3_load_lib("https://mpld3.github.io/js/d3.v3.min.js", function(){
          mpld3_load_lib("https://mpld3.github.io/js/mpld3.v0.3.js", function(){
                  
-                 mpld3.draw_figure("fig_el575944469720564196665357", {"id": "el57594446972056", "height": 360.0, "data": {"data19": [[-2.508837693936211, 0.0], [-1.957592036316305, 0.0], [-1.957592036316305, 0.01695395557921558], [-2.508837693936211, 0.01695395557921558]], "data01": [[-3.1095515766390895, 0.005390990477114494], [-2.771191471826109, 0.013738793502038186], [-2.4328313670131276, 0.03122534975240861], [-2.0944712622001465, 0.0632914013121969], [-1.7561111573871657, 0.11440915956072582], [-1.4177510525741848, 0.1844401911022138], [-1.0793909477612038, 0.2651728253530591], [-0.7410308429482231, 0.3400017501608905], [-0.4026707381352419, 0.388787213582911], [-0.06431063332226072, 0.3964801769259571], [0.27404947149072, 0.36058666990885224], [0.6124095763037007, 0.29246677840527396], [0.9507696811166819, 0.21155441781913845], [1.289129785929663, 0.13647287506982372], [1.6274898907426434, 0.07851439111625552], [1.9658499955556248, 0.04028384139656015]], "data10": [[-0.4026707381352419, 0.0], [-0.06431063332226072, 0.0], [-0.06431063332226072, 0.4863367745918822], [-0.4026707381352419, 0.4863367745918822]], "data06": [[-2.0944712622001465, 0.0], [-1.7561111573871657, 0.0], [-1.7561111573871657, 0.03741052112245253], [-2.0944712622001465, 0.03741052112245253]], "data02": [[-4.162574666795929, 6.128179797038824e-05], [-3.611329009176023, 0.0005304183777347027], [-3.060083351556117, 0.0033879406363853605], [-2.508837693936211, 0.015969200952008492], [-1.957592036316305, 0.0555470174496985], [-1.4063463786963992, 0.14258323650915405], [-0.8551007210764929, 0.2700886643713464], [-0.3038550634565871, 0.37754994449121004], [0.24739059416331877, 0.38946876118873064], [0.7986362517832246, 0.29648383016153124], [1.3498819094031305, 0.166555723262466], [1.9011275670230363, 0.0690475500954648], [2.452373224642943, 0.02112356190500282], [3.003618882262849, 0.004768877807444045], [3.5548645398827547, 0.0007945027457918887], [4.106110197502661, 9.767980301711682e-05]], "data13": [[0.9507696811166819, 0.0], [1.289129785929663, 0.0], [1.289129785929663, 0.1496420844898099], [0.9507696811166819, 0.1496420844898099]], "data29": [[0.764964157706093, 0.9389256806475351, 0.8690213392200149], [0.8079749103942651, 0.9389256806475351, 0.8690213392200149]], "data27": [[1.9011275670230363, 0.0], [2.452373224642943, 0.0], [2.452373224642943, 0.042384888948038886], [1.9011275670230363, 0.042384888948038886]], "data23": [[-0.3038550634565871, 0.0], [0.24739059416331877, 0.0], [0.24739059416331877, 0.6696812453790154], [-0.3038550634565871, 0.6696812453790154]], "data22": [[-0.8551007210764929, 0.0], [-0.3038550634565871, 0.0], [-0.3038550634565871, 0.3729870227427428], [-0.8551007210764929, 0.3729870227427428]], "data24": [[0.24739059416331877, 0.0], [0.7986362517832246, 0.0], [0.7986362517832246, 0.30940968932068436], [0.24739059416331877, 0.30940968932068436]], "data25": [[0.7986362517832246, 0.0], [1.3498819094031305, 0.0], [1.3498819094031305, 0.13563164463372465], [0.7986362517832246, 0.13563164463372465]], "data14": [[1.289129785929663, 0.0], [1.6274898907426434, 0.0], [1.6274898907426434, 0.03741052112245257], [1.289129785929663, 0.03741052112245257]], "data21": [[-1.4063463786963992, 0.0], [-0.8551007210764929, 0.0], [-0.8551007210764929, 0.11020071126490118], [-1.4063463786963992, 0.11020071126490118]], "data28": [[3.003618882262849, 0.0], [3.5548645398827547, 0.0], [3.5548645398827547, 0.021192444474019474], [3.003618882262849, 0.021192444474019474]], "data30": [[0.7606630824372759, 0.8248712288447388], [0.9849462365591398, 0.8248712288447388], [0.9892473118279571, 0.8248712288447388], [0.9892473118279571, 0.8337012509197941], [0.9892473118279571, 0.9690949227373071], [0.9892473118279571, 0.9779249448123624], [0.9849462365591398, 0.9779249448123624], [0.7606630824372759, 0.9779249448123624], [0.7563620071684587, 0.9779249448123624], [0.7563620071684587, 0.9690949227373071], [0.7563620071684587, 0.8337012509197941], [0.7563620071684587, 0.8248712288447388], [0.7606630824372759, 0.8248712288447388]], "data09": [[-0.7410308429482231, 0.0], [-0.4026707381352419, 0.0], [-0.4026707381352419, 0.33669469010207226], [-0.7410308429482231, 0.33669469010207226]], "data26": [[1.3498819094031305, 0.0], [1.9011275670230363, 0.0], [1.9011275670230363, 0.03814640005323505], [1.3498819094031305, 0.03814640005323505]], "data07": [[-1.7561111573871657, 0.0, -1.417751052574185], [-1.4177510525741848, 0.0, -1.079390947761204], [-1.4177510525741848, 0.11223156336735751, -1.079390947761204], [-1.7561111573871657, 0.11223156336735751, -1.417751052574185]], "data15": [[1.6274898907426434, 0.0], [1.9658499955556248, 0.0], [1.9658499955556248, 0.11223156336735736], [1.6274898907426434, 0.11223156336735736]], "data11": [[-0.06431063332226072, 0.0, 0.27404947149072], [0.27404947149072, 0.0, 0.6124095763037007], [0.27404947149072, 0.5237472957143353, 0.6124095763037007], [-0.06431063332226072, 0.5237472957143353, 0.27404947149072]], "data05": [[-2.4328313670131276, 0.0], [-2.0944712622001465, 0.0], [-2.0944712622001465, 0.07482104224490495], [-2.4328313670131276, 0.07482104224490495]], "data12": [[0.6124095763037007, 0.0], [0.9507696811166819, 0.0], [0.9507696811166819, 0.1870526056122624], [0.6124095763037007, 0.1870526056122624]], "data16": [[-4.162574666795929, 0.0, 2.452373224642943, 3.5548645398827547], [-3.611329009176023, 0.0, 3.003618882262849, 4.106110197502661], [-3.611329009176023, 0.012715466684411685, 3.003618882262849, 4.106110197502661], [-4.162574666795929, 0.012715466684411685, 2.452373224642943, 3.5548645398827547]], "data17": [[-3.611329009176023, 0.0], [-3.060083351556117, 0.0], [-3.060083351556117, 0.00847697778960779], [-3.611329009176023, 0.00847697778960779]], "data18": [[-3.060083351556117, 0.0], [-2.508837693936211, 0.0], [-2.508837693936211, 0.004238488894803892], [-3.060083351556117, 0.004238488894803892]], "data04": [[-2.771191471826109, 0.0], [-2.4328313670131276, 0.0], [-2.4328313670131276, 0.0], [-2.771191471826109, 0.0]], "data03": [[-3.10955157663909, 0.0], [-2.7711914718261093, 0.0], [-2.7711914718261093, 0.11223156336735758], [-3.10955157663909, 0.11223156336735758]], "data08": [[-1.0793909477612038, 0.0], [-0.7410308429482231, 0.0], [-0.7410308429482231, 0.14964208448981012], [-1.0793909477612038, 0.14964208448981012]], "data20": [[-1.957592036316305, 0.0], [-1.4063463786963992, 0.0], [-1.4063463786963992, 0.04662337784284285], [-1.957592036316305, 0.04662337784284285]]}, "axes": [{"axesbg": "#FFFFFF", "ylim": [0.0, 0.7031653076479661], "texts": [{"rotation": -0.0, "coordinates": "axes", "zorder": 3, "color": "#000000", "fontsize": 16.0, "h_anchor": "middle", "position": [0.5, -0.0772626931567329], "id": "el57594446979408", "text": "Normalized Mean current helicity (Bz contribution)", "alpha": 1, "v_baseline": "hanging"}, {"rotation": -90.0, "coordinates": "axes", "zorder": 3, "color": "#000000", "fontsize": 16.0, "h_anchor": "middle", "position": [-0.07683691756272401, 0.5], "id": "el57594446978288", "text": "Number (normalized)", "alpha": 1, "v_baseline": "auto"}, {"rotation": -0.0, "coordinates": "axes", "zorder": 1000003.0, "color": "#000000", "fontsize": 12.0, "h_anchor": "start", "position": [0.825179211469534, 0.9234731420161886], "id": "el57594447099424", "text": "positive class", "alpha": 1, "v_baseline": "auto"}, {"rotation": -0.0, "coordinates": "axes", "zorder": 1000003.0, "color": "#000000", "fontsize": 12.0, "h_anchor": "start", "position": [0.825179211469534, 0.8535688005886684], "id": "el57594446489400", "text": "negative class", "alpha": 1, "v_baseline": "auto"}], "images": [], "paths": [{"dasharray": "none", "coordinates": "data", "edgecolor": "none", "facecolor": "#008000", "zorder": 1, "id": "el57594447076480", "yindex": 1, "xindex": 0, "pathcodes": ["M", "L", "L", "L", "Z"], "data": "data03", "edgewidth": 1.0, "alpha": 0.5}, {"dasharray": "none", "coordinates": "data", "edgecolor": "none", "facecolor": "#008000", "zorder": 1, "id": "el57594447051056", "yindex": 1, "xindex": 0, "pathcodes": ["M", "L", "L", "L", "Z"], "data": "data04", "edgewidth": 1.0, "alpha": 0.5}, {"dasharray": "none", "coordinates": "data", "edgecolor": "none", "facecolor": "#008000", "zorder": 1, "id": "el57594447077712", "yindex": 1, "xindex": 0, "pathcodes": ["M", "L", "L", "L", "Z"], "data": "data05", "edgewidth": 1.0, "alpha": 0.5}, {"dasharray": "none", "coordinates": "data", "edgecolor": "none", "facecolor": "#008000", "zorder": 1, "id": "el57594447078776", "yindex": 1, "xindex": 0, "pathcodes": ["M", "L", "L", "L", "Z"], "data": "data06", "edgewidth": 1.0, "alpha": 0.5}, {"dasharray": "none", "coordinates": "data", "edgecolor": "none", "facecolor": "#008000", "zorder": 1, "id": "el57594447078552", "yindex": 1, "xindex": 0, "pathcodes": ["M", "L", "L", "L", "Z"], "data": "data07", "edgewidth": 1.0, "alpha": 0.5}, {"dasharray": "none", "coordinates": "data", "edgecolor": "none", "facecolor": "#008000", "zorder": 1, "id": "el57594447079672", "yindex": 1, "xindex": 2, "pathcodes": ["M", "L", "L", "L", "Z"], "data": "data07", "edgewidth": 1.0, "alpha": 0.5}, {"dasharray": "none", "coordinates": "data", "edgecolor": "none", "facecolor": "#008000", "zorder": 1, "id": "el57594447080856", "yindex": 1, "xindex": 0, "pathcodes": ["M", "L", "L", "L", "Z"], "data": "data08", "edgewidth": 1.0, "alpha": 0.5}, {"dasharray": "none", "coordinates": "data", "edgecolor": "none", "facecolor": "#008000", "zorder": 1, "id": "el57594447080744", "yindex": 1, "xindex": 0, "pathcodes": ["M", "L", "L", "L", "Z"], "data": "data09", "edgewidth": 1.0, "alpha": 0.5}, {"dasharray": "none", "coordinates": "data", "edgecolor": "none", "facecolor": "#008000", "zorder": 1, "id": "el57594447082928", "yindex": 1, "xindex": 0, "pathcodes": ["M", "L", "L", "L", "Z"], "data": "data10", "edgewidth": 1.0, "alpha": 0.5}, {"dasharray": "none", "coordinates": "data", "edgecolor": "none", "facecolor": "#008000", "zorder": 1, "id": "el57594447083712", "yindex": 1, "xindex": 0, "pathcodes": ["M", "L", "L", "L", "Z"], "data": "data11", "edgewidth": 1.0, "alpha": 0.5}, {"dasharray": "none", "coordinates": "data", "edgecolor": "none", "facecolor": "#008000", "zorder": 1, "id": "el57594447083320", "yindex": 1, "xindex": 2, "pathcodes": ["M", "L", "L", "L", "Z"], "data": "data11", "edgewidth": 1.0, "alpha": 0.5}, {"dasharray": "none", "coordinates": "data", "edgecolor": "none", "facecolor": "#008000", "zorder": 1, "id": "el57594447097744", "yindex": 1, "xindex": 0, "pathcodes": ["M", "L", "L", "L", "Z"], "data": "data12", "edgewidth": 1.0, "alpha": 0.5}, {"dasharray": "none", "coordinates": "data", "edgecolor": "none", "facecolor": "#008000", "zorder": 1, "id": "el57594447098528", "yindex": 1, "xindex": 0, "pathcodes": ["M", "L", "L", "L", "Z"], "data": "data13", "edgewidth": 1.0, "alpha": 0.5}, {"dasharray": "none", "coordinates": "data", "edgecolor": "none", "facecolor": "#008000", "zorder": 1, "id": "el57594447099704", "yindex": 1, "xindex": 0, "pathcodes": ["M", "L", "L", "L", "Z"], "data": "data14", "edgewidth": 1.0, "alpha": 0.5}, {"dasharray": "none", "coordinates": "data", "edgecolor": "none", "facecolor": "#008000", "zorder": 1, "id": "el57594447099368", "yindex": 1, "xindex": 0, "pathcodes": ["M", "L", "L", "L", "Z"], "data": "data15", "edgewidth": 1.0, "alpha": 0.5}, {"dasharray": "none", "coordinates": "data", "edgecolor": "none", "facecolor": "#FF0000", "zorder": 1, "id": "el57594446944336", "yindex": 1, "xindex": 0, "pathcodes": ["M", "L", "L", "L", "Z"], "data": "data16", "edgewidth": 1.0, "alpha": 0.5}, {"dasharray": "none", "coordinates": "data", "edgecolor": "none", "facecolor": "#FF0000", "zorder": 1, "id": "el57594446933288", "yindex": 1, "xindex": 0, "pathcodes": ["M", "L", "L", "L", "Z"], "data": "data17", "edgewidth": 1.0, "alpha": 0.5}, {"dasharray": "none", "coordinates": "data", "edgecolor": "none", "facecolor": "#FF0000", "zorder": 1, "id": "el57594447106272", "yindex": 1, "xindex": 0, "pathcodes": ["M", "L", "L", "L", "Z"], "data": "data18", "edgewidth": 1.0, "alpha": 0.5}, {"dasharray": "none", "coordinates": "data", "edgecolor": "none", "facecolor": "#FF0000", "zorder": 1, "id": "el57594447105936", "yindex": 1, "xindex": 0, "pathcodes": ["M", "L", "L", "L", "Z"], "data": "data19", "edgewidth": 1.0, "alpha": 0.5}, {"dasharray": "none", "coordinates": "data", "edgecolor": "none", "facecolor": "#FF0000", "zorder": 1, "id": "el57594447108064", "yindex": 1, "xindex": 0, "pathcodes": ["M", "L", "L", "L", "Z"], "data": "data20", "edgewidth": 1.0, "alpha": 0.5}, {"dasharray": "none", "coordinates": "data", "edgecolor": "none", "facecolor": "#FF0000", "zorder": 1, "id": "el57594447108232", "yindex": 1, "xindex": 0, "pathcodes": ["M", "L", "L", "L", "Z"], "data": "data21", "edgewidth": 1.0, "alpha": 0.5}, {"dasharray": "none", "coordinates": "data", "edgecolor": "none", "facecolor": "#FF0000", "zorder": 1, "id": "el57594447109864", "yindex": 1, "xindex": 0, "pathcodes": ["M", "L", "L", "L", "Z"], "data": "data22", "edgewidth": 1.0, "alpha": 0.5}, {"dasharray": "none", "coordinates": "data", "edgecolor": "none", "facecolor": "#FF0000", "zorder": 1, "id": "el57594447109528", "yindex": 1, "xindex": 0, "pathcodes": ["M", "L", "L", "L", "Z"], "data": "data23", "edgewidth": 1.0, "alpha": 0.5}, {"dasharray": "none", "coordinates": "data", "edgecolor": "none", "facecolor": "#FF0000", "zorder": 1, "id": "el57594447111656", "yindex": 1, "xindex": 0, "pathcodes": ["M", "L", "L", "L", "Z"], "data": "data24", "edgewidth": 1.0, "alpha": 0.5}, {"dasharray": "none", "coordinates": "data", "edgecolor": "none", "facecolor": "#FF0000", "zorder": 1, "id": "el57594447111824", "yindex": 1, "xindex": 0, "pathcodes": ["M", "L", "L", "L", "Z"], "data": "data25", "edgewidth": 1.0, "alpha": 0.5}, {"dasharray": "none", "coordinates": "data", "edgecolor": "none", "facecolor": "#FF0000", "zorder": 1, "id": "el57594447113000", "yindex": 1, "xindex": 0, "pathcodes": ["M", "L", "L", "L", "Z"], "data": "data26", "edgewidth": 1.0, "alpha": 0.5}, {"dasharray": "none", "coordinates": "data", "edgecolor": "none", "facecolor": "#FF0000", "zorder": 1, "id": "el57594447122208", "yindex": 1, "xindex": 0, "pathcodes": ["M", "L", "L", "L", "Z"], "data": "data27", "edgewidth": 1.0, "alpha": 0.5}, {"dasharray": "none", "coordinates": "data", "edgecolor": "none", "facecolor": "#FF0000", "zorder": 1, "id": "el57594447123384", "yindex": 1, "xindex": 2, "pathcodes": ["M", "L", "L", "L", "Z"], "data": "data16", "edgewidth": 1.0, "alpha": 0.5}, {"dasharray": "none", "coordinates": "data", "edgecolor": "none", "facecolor": "#FF0000", "zorder": 1, "id": "el57594447124168", "yindex": 1, "xindex": 0, "pathcodes": ["M", "L", "L", "L", "Z"], "data": "data28", "edgewidth": 1.0, "alpha": 0.5}, {"dasharray": "none", "coordinates": "data", "edgecolor": "none", "facecolor": "#FF0000", "zorder": 1, "id": "el57594447123776", "yindex": 1, "xindex": 3, "pathcodes": ["M", "L", "L", "L", "Z"], "data": "data16", "edgewidth": 1.0, "alpha": 0.5}, {"dasharray": "none", "coordinates": "axes", "edgecolor": "none", "facecolor": "none", "zorder": 1000000.0, "id": "el57594447078048", "yindex": 1, "xindex": 0, "pathcodes": ["M", "L", "S", "L", "S", "L", "S", "L", "S", "Z"], "data": "data30", "edgewidth": 0.0, "alpha": 0.0}], "lines": [{"xindex": 0, "dasharray": "5.550000000000001,2.4000000000000004", "id": "el57594446987040", "data": "data01", "linewidth": 1.5, "coordinates": "data", "zorder": 2, "color": "#007F00", "drawstyle": "default", "yindex": 1, "alpha": 1}, {"xindex": 0, "dasharray": "5.550000000000001,2.4000000000000004", "id": "el57594446936312", "data": "data02", "linewidth": 1.5, "coordinates": "data", "zorder": 2, "color": "#FF0000", "drawstyle": "default", "yindex": 1, "alpha": 1}, {"xindex": 0, "dasharray": "5.550000000000001,2.4000000000000004", "id": "el57594447111376", "data": "data29", "linewidth": 1.5, "coordinates": "axes", "zorder": 1000002.0, "color": "#007F00", "drawstyle": "default", "yindex": 1, "alpha": 1}, {"xindex": 0, "dasharray": "5.550000000000001,2.4000000000000004", "id": "el57594446488840", "data": "data29", "linewidth": 1.5, "coordinates": "axes", "zorder": 1000002.0, "color": "#FF0000", "drawstyle": "default", "yindex": 2, "alpha": 1}], "zoomable": true, "bbox": [0.125, 0.125, 0.775, 0.755], "collections": [], "xscale": "linear", "yscale": "linear", "markers": [], "axesbgalpha": null, "ydomain": [0.0, 0.7031653076479661], "id": "el57594446928568", "sharey": [], "xdomain": [-4.5760089100108585, 4.51954444071759], "sharex": [], "axes": [{"position": "bottom", "tickformat": null, "nticks": 7, "grid": {"gridOn": false}, "scale": "linear", "visible": true, "fontsize": 10.0, "tickvalues": null}, {"position": "left", "tickformat": null, "nticks": 9, "grid": {"gridOn": false}, "scale": "linear", "visible": true, "fontsize": 10.0, "tickvalues": null}], "xlim": [-4.5760089100108585, 4.51954444071759]}], "plugins": [{"type": "reset"}, {"button": true, "type": "zoom", "enabled": false}, {"button": true, "type": "boxzoom", "enabled": false}], "width": 720.0});
+                 mpld3.draw_figure("fig_el544265088525392629371401", {"height": 360.0, "axes": [{"ylim": [0.0, 0.7484384407749112], "ydomain": [0.0, 0.7484384407749112], "collections": [], "bbox": [0.125, 0.125, 0.775, 0.755], "axesbg": "#FFFFFF", "paths": [{"xindex": 0, "yindex": 1, "alpha": 0.5, "dasharray": "none", "zorder": 1, "edgewidth": 1.0, "data": "data03", "pathcodes": ["M", "L", "L", "L", "Z"], "id": "el544265088059912", "edgecolor": "none", "coordinates": "data", "facecolor": "#008000"}, {"xindex": 0, "yindex": 1, "alpha": 0.5, "dasharray": "none", "zorder": 1, "edgewidth": 1.0, "data": "data04", "pathcodes": ["M", "L", "L", "L", "Z"], "id": "el544265088061816", "edgecolor": "none", "coordinates": "data", "facecolor": "#008000"}, {"xindex": 0, "yindex": 1, "alpha": 0.5, "dasharray": "none", "zorder": 1, "edgewidth": 1.0, "data": "data05", "pathcodes": ["M", "L", "L", "L", "Z"], "id": "el544265088073096", "edgecolor": "none", "coordinates": "data", "facecolor": "#008000"}, {"xindex": 2, "yindex": 1, "alpha": 0.5, "dasharray": "none", "zorder": 1, "edgewidth": 1.0, "data": "data04", "pathcodes": ["M", "L", "L", "L", "Z"], "id": "el544265088075504", "edgecolor": "none", "coordinates": "data", "facecolor": "#008000"}, {"xindex": 2, "yindex": 1, "alpha": 0.5, "dasharray": "none", "zorder": 1, "edgewidth": 1.0, "data": "data03", "pathcodes": ["M", "L", "L", "L", "Z"], "id": "el544265088086056", "edgecolor": "none", "coordinates": "data", "facecolor": "#008000"}, {"xindex": 0, "yindex": 1, "alpha": 0.5, "dasharray": "none", "zorder": 1, "edgewidth": 1.0, "data": "data06", "pathcodes": ["M", "L", "L", "L", "Z"], "id": "el544265088087960", "edgecolor": "none", "coordinates": "data", "facecolor": "#008000"}, {"xindex": 0, "yindex": 1, "alpha": 0.5, "dasharray": "none", "zorder": 1, "edgewidth": 1.0, "data": "data07", "pathcodes": ["M", "L", "L", "L", "Z"], "id": "el544265088098120", "edgecolor": "none", "coordinates": "data", "facecolor": "#008000"}, {"xindex": 0, "yindex": 1, "alpha": 0.5, "dasharray": "none", "zorder": 1, "edgewidth": 1.0, "data": "data08", "pathcodes": ["M", "L", "L", "L", "Z"], "id": "el544265088099576", "edgecolor": "none", "coordinates": "data", "facecolor": "#008000"}, {"xindex": 0, "yindex": 1, "alpha": 0.5, "dasharray": "none", "zorder": 1, "edgewidth": 1.0, "data": "data09", "pathcodes": ["M", "L", "L", "L", "Z"], "id": "el544265088115176", "edgecolor": "none", "coordinates": "data", "facecolor": "#008000"}, {"xindex": 2, "yindex": 1, "alpha": 0.5, "dasharray": "none", "zorder": 1, "edgewidth": 1.0, "data": "data09", "pathcodes": ["M", "L", "L", "L", "Z"], "id": "el544265088117312", "edgecolor": "none", "coordinates": "data", "facecolor": "#008000"}, {"xindex": 0, "yindex": 1, "alpha": 0.5, "dasharray": "none", "zorder": 1, "edgewidth": 1.0, "data": "data10", "pathcodes": ["M", "L", "L", "L", "Z"], "id": "el544265088119048", "edgecolor": "none", "coordinates": "data", "facecolor": "#008000"}, {"xindex": 0, "yindex": 1, "alpha": 0.5, "dasharray": "none", "zorder": 1, "edgewidth": 1.0, "data": "data11", "pathcodes": ["M", "L", "L", "L", "Z"], "id": "el544265088138464", "edgecolor": "none", "coordinates": "data", "facecolor": "#008000"}, {"xindex": 0, "yindex": 1, "alpha": 0.5, "dasharray": "none", "zorder": 1, "edgewidth": 1.0, "data": "data12", "pathcodes": ["M", "L", "L", "L", "Z"], "id": "el544265088140256", "edgecolor": "none", "coordinates": "data", "facecolor": "#008000"}, {"xindex": 0, "yindex": 1, "alpha": 0.5, "dasharray": "none", "zorder": 1, "edgewidth": 1.0, "data": "data13", "pathcodes": ["M", "L", "L", "L", "Z"], "id": "el544265088151480", "edgecolor": "none", "coordinates": "data", "facecolor": "#008000"}, {"xindex": 0, "yindex": 1, "alpha": 0.5, "dasharray": "none", "zorder": 1, "edgewidth": 1.0, "data": "data14", "pathcodes": ["M", "L", "L", "L", "Z"], "id": "el544265088152152", "edgecolor": "none", "coordinates": "data", "facecolor": "#008000"}, {"xindex": 0, "yindex": 1, "alpha": 0.5, "dasharray": "none", "zorder": 1, "edgewidth": 1.0, "data": "data15", "pathcodes": ["M", "L", "L", "L", "Z"], "id": "el544265088166856", "edgecolor": "none", "coordinates": "data", "facecolor": "#FF0000"}, {"xindex": 0, "yindex": 1, "alpha": 0.5, "dasharray": "none", "zorder": 1, "edgewidth": 1.0, "data": "data16", "pathcodes": ["M", "L", "L", "L", "Z"], "id": "el544265088169376", "edgecolor": "none", "coordinates": "data", "facecolor": "#FF0000"}, {"xindex": 2, "yindex": 1, "alpha": 0.5, "dasharray": "none", "zorder": 1, "edgewidth": 1.0, "data": "data16", "pathcodes": ["M", "L", "L", "L", "Z"], "id": "el544265088180096", "edgecolor": "none", "coordinates": "data", "facecolor": "#FF0000"}, {"xindex": 0, "yindex": 1, "alpha": 0.5, "dasharray": "none", "zorder": 1, "edgewidth": 1.0, "data": "data17", "pathcodes": ["M", "L", "L", "L", "Z"], "id": "el544265088181832", "edgecolor": "none", "coordinates": "data", "facecolor": "#FF0000"}, {"xindex": 0, "yindex": 1, "alpha": 0.5, "dasharray": "none", "zorder": 1, "edgewidth": 1.0, "data": "data18", "pathcodes": ["M", "L", "L", "L", "Z"], "id": "el544265088479384", "edgecolor": "none", "coordinates": "data", "facecolor": "#FF0000"}, {"xindex": 0, "yindex": 1, "alpha": 0.5, "dasharray": "none", "zorder": 1, "edgewidth": 1.0, "data": "data19", "pathcodes": ["M", "L", "L", "L", "Z"], "id": "el544265088993352", "edgecolor": "none", "coordinates": "data", "facecolor": "#FF0000"}, {"xindex": 0, "yindex": 1, "alpha": 0.5, "dasharray": "none", "zorder": 1, "edgewidth": 1.0, "data": "data20", "pathcodes": ["M", "L", "L", "L", "Z"], "id": "el544265088995816", "edgecolor": "none", "coordinates": "data", "facecolor": "#FF0000"}, {"xindex": 0, "yindex": 1, "alpha": 0.5, "dasharray": "none", "zorder": 1, "edgewidth": 1.0, "data": "data21", "pathcodes": ["M", "L", "L", "L", "Z"], "id": "el544265089015232", "edgecolor": "none", "coordinates": "data", "facecolor": "#FF0000"}, {"xindex": 0, "yindex": 1, "alpha": 0.5, "dasharray": "none", "zorder": 1, "edgewidth": 1.0, "data": "data22", "pathcodes": ["M", "L", "L", "L", "Z"], "id": "el544265089017360", "edgecolor": "none", "coordinates": "data", "facecolor": "#FF0000"}, {"xindex": 0, "yindex": 1, "alpha": 0.5, "dasharray": "none", "zorder": 1, "edgewidth": 1.0, "data": "data23", "pathcodes": ["M", "L", "L", "L", "Z"], "id": "el544265089028192", "edgecolor": "none", "coordinates": "data", "facecolor": "#FF0000"}, {"xindex": 0, "yindex": 1, "alpha": 0.5, "dasharray": "none", "zorder": 1, "edgewidth": 1.0, "data": "data24", "pathcodes": ["M", "L", "L", "L", "Z"], "id": "el544265089029984", "edgecolor": "none", "coordinates": "data", "facecolor": "#FF0000"}, {"xindex": 0, "yindex": 1, "alpha": 0.5, "dasharray": "none", "zorder": 1, "edgewidth": 1.0, "data": "data25", "pathcodes": ["M", "L", "L", "L", "Z"], "id": "el544265089036552", "edgecolor": "none", "coordinates": "data", "facecolor": "#FF0000"}, {"xindex": 0, "yindex": 1, "alpha": 0.5, "dasharray": "none", "zorder": 1, "edgewidth": 1.0, "data": "data26", "pathcodes": ["M", "L", "L", "L", "Z"], "id": "el544265089051144", "edgecolor": "none", "coordinates": "data", "facecolor": "#FF0000"}, {"xindex": 0, "yindex": 1, "alpha": 0.5, "dasharray": "none", "zorder": 1, "edgewidth": 1.0, "data": "data27", "pathcodes": ["M", "L", "L", "L", "Z"], "id": "el544265089053832", "edgecolor": "none", "coordinates": "data", "facecolor": "#FF0000"}, {"xindex": 0, "yindex": 1, "alpha": 0.5, "dasharray": "none", "zorder": 1, "edgewidth": 1.0, "data": "data28", "pathcodes": ["M", "L", "L", "L", "Z"], "id": "el544265089068536", "edgecolor": "none", "coordinates": "data", "facecolor": "#FF0000"}, {"xindex": 0, "yindex": 1, "alpha": 0.0, "dasharray": "none", "zorder": 1000000.0, "edgewidth": 0.0, "data": "data30", "pathcodes": ["M", "L", "S", "L", "S", "L", "S", "L", "S", "Z"], "id": "el544265088031912", "edgecolor": "none", "coordinates": "axes", "facecolor": "none"}], "xdomain": [-4.745285069681457, 4.665430278133732], "xlim": [-4.745285069681457, 4.665430278133732], "zoomable": true, "sharex": [], "markers": [], "lines": [{"xindex": 0, "yindex": 1, "color": "#007F00", "alpha": 1, "linewidth": 1.5, "id": "el544264743784432", "drawstyle": "default", "zorder": 2, "coordinates": "data", "data": "data01", "dasharray": "5.550000000000001,2.4000000000000004"}, {"xindex": 0, "yindex": 1, "color": "#FF0000", "alpha": 1, "linewidth": 1.5, "id": "el544265088523488", "drawstyle": "default", "zorder": 2, "coordinates": "data", "data": "data02", "dasharray": "5.550000000000001,2.4000000000000004"}, {"xindex": 0, "yindex": 1, "color": "#007F00", "alpha": 1, "linewidth": 1.5, "id": "el544265088152320", "drawstyle": "default", "zorder": 1000002.0, "coordinates": "axes", "data": "data29", "dasharray": "5.550000000000001,2.4000000000000004"}, {"xindex": 0, "yindex": 2, "color": "#FF0000", "alpha": 1, "linewidth": 1.5, "id": "el544265087962672", "drawstyle": "default", "zorder": 1000002.0, "coordinates": "axes", "data": "data29", "dasharray": "5.550000000000001,2.4000000000000004"}], "sharey": [], "axes": [{"visible": true, "tickvalues": null, "grid": {"gridOn": false}, "tickformat": null, "position": "bottom", "scale": "linear", "fontsize": 10.0, "nticks": 7}, {"visible": true, "tickvalues": null, "grid": {"gridOn": false}, "tickformat": null, "position": "left", "scale": "linear", "fontsize": 10.0, "nticks": 9}], "xscale": "linear", "axesbgalpha": null, "yscale": "linear", "images": [], "texts": [{"h_anchor": "middle", "alpha": 1, "text": "Normalized Mean current helicity (Bz contribution)", "position": [0.5, -0.0772626931567329], "zorder": 3, "v_baseline": "hanging", "rotation": -0.0, "color": "#000000", "id": "el544265088502952", "fontsize": 16.0, "coordinates": "axes"}, {"h_anchor": "middle", "alpha": 1, "text": "Number (normalized)", "position": [-0.07683691756272401, 0.5], "zorder": 3, "v_baseline": "auto", "rotation": -90.0, "color": "#000000", "id": "el544265088562872", "fontsize": 16.0, "coordinates": "axes"}, {"h_anchor": "start", "alpha": 1, "text": "positive class", "position": [0.825179211469534, 0.9234731420161886], "zorder": 1000003.0, "v_baseline": "auto", "rotation": -0.0, "color": "#000000", "id": "el544265088087680", "fontsize": 12.0, "coordinates": "axes"}, {"h_anchor": "start", "alpha": 1, "text": "negative class", "position": [0.825179211469534, 0.8535688005886684], "zorder": 1000003.0, "v_baseline": "auto", "rotation": -0.0, "color": "#000000", "id": "el544265089054056", "fontsize": 12.0, "coordinates": "axes"}], "id": "el544265088526176"}], "id": "el544265088525392", "plugins": [{"type": "reset"}, {"enabled": false, "button": true, "type": "zoom"}, {"enabled": false, "button": true, "type": "boxzoom"}], "width": 720.0, "data": {"data24": [[1.3859385660163168, 0.0], [1.956284950732388, 0.0], [1.956284950732388, 0.04915851827749835], [1.3859385660163168, 0.04915851827749835]], "data30": [[0.7606630824372759, 0.8248712288447388], [0.9849462365591398, 0.8248712288447388], [0.9892473118279571, 0.8248712288447388], [0.9892473118279571, 0.8337012509197941], [0.9892473118279571, 0.9690949227373071], [0.9892473118279571, 0.9779249448123624], [0.9849462365591398, 0.9779249448123624], [0.7606630824372759, 0.9779249448123624], [0.7563620071684587, 0.9779249448123624], [0.7563620071684587, 0.9690949227373071], [0.7563620071684587, 0.8337012509197941], [0.7563620071684587, 0.8248712288447388], [0.7606630824372759, 0.8248712288447388]], "data15": [[-4.317525281144402, 0.0], [-3.7471788964283297, 0.0], [-3.7471788964283297, 0.01228962956937457], [-4.317525281144402, 0.01228962956937457]], "data12": [[1.0013148080066223, 0.0], [1.3576629227151011, 0.0], [1.3576629227151011, 0.13857998404111585], [1.0013148080066223, 0.13857998404111585]], "data13": [[1.3576629227151011, 0.0], [1.714011037423579, 0.0], [1.714011037423579, 0.10393498803083716], [1.3576629227151011, 0.10393498803083716]], "data06": [[-1.4931219949527255, 0.0], [-1.1367738802442473, 0.0], [-1.1367738802442473, 0.10393498803083709], [-1.4931219949527255, 0.10393498803083709]], "data07": [[-1.1367738802442475, 0.0], [-0.7804257655357691, 0.0], [-0.7804257655357691, 0.13857998404111602], [-1.1367738802442475, 0.13857998404111602]], "data10": [[0.288618578589666, 0.0], [0.6449666932981444, 0.0], [0.6449666932981444, 0.519674940154185], [0.288618578589666, 0.519674940154185]], "data14": [[1.714011037423579, 0.0], [2.070359152132058, 0.0], [2.070359152132058, 0.03464499601027896], [1.714011037423579, 0.03464499601027896]], "data23": [[0.8155921813002447, 0.0], [1.3859385660163168, 0.0], [1.3859385660163168, 0.11879975250395416], [0.8155921813002447, 0.11879975250395416]], "data21": [[-0.32510058813189957, 0.0], [0.24524579658417256, 0.0], [0.24524579658417256, 0.7127985150237249], [-0.32510058813189957, 0.7127985150237249]], "data03": [[-3.2748625684951174, 0.0, -1.849470109661204], [-2.918514453786639, 0.0, -1.4931219949527257], [-2.918514453786639, 0.10393498803083702, -1.4931219949527257], [-3.2748625684951174, 0.10393498803083702, -1.849470109661204]], "data25": [[1.956284950732388, 0.0], [2.52663133544846, 0.0], [2.52663133544846, 0.02457925913874914], [1.956284950732388, 0.02457925913874914]], "data18": [[-2.036139742280115, 0.0], [-1.465793357564043, 0.0], [-1.465793357564043, 0.02867580232854066], [-2.036139742280115, 0.02867580232854066]], "data08": [[-0.7804257655357691, 0.0], [-0.42407765082729076, 0.0], [-0.42407765082729076, 0.34644996010279006], [-0.7804257655357691, 0.34644996010279006]], "data27": [[3.0969777201645323, 0.0], [3.6673241048806036, 0.0], [3.6673241048806036, 0.020482715948957644], [3.0969777201645323, 0.020482715948957644]], "data16": [[-3.7471788964283306, 0.0, -3.1768325117122584], [-3.176832511712259, 0.0, -2.6064861269961868], [-3.176832511712259, 0.008193086379583051, -2.6064861269961868], [-3.7471788964283306, 0.008193086379583051, -3.1768325117122584]], "data22": [[0.24524579658417256, 0.0], [0.8155921813002447, 0.0], [0.8155921813002447, 0.32362691199353033], [0.24524579658417256, 0.32362691199353033]], "data26": [[2.52663133544846, 0.0], [3.0969777201645323, 0.0], [3.0969777201645323, 0.008193086379583046], [2.52663133544846, 0.008193086379583046]], "data11": [[0.6449666932981444, 0.0], [1.0013148080066223, 0.0], [1.0013148080066223, 0.17322498005139525], [0.6449666932981444, 0.17322498005139525]], "data01": [[-3.2748625684951174, 0.003344355706489415], [-2.918514453786639, 0.009447607041866278], [-2.5621663390781606, 0.02350621684437878], [-2.2058182243696827, 0.051510434575023106], [-1.849470109661204, 0.09941667825944533], [-1.4931219949527257, 0.16899538362572186], [-1.1367738802442475, 0.25301250886957277], [-0.7804257655357691, 0.33362662610829635], [-0.42407765082729076, 0.3874636566141195], [-0.06772953611881238, 0.39632621579439237], [0.288618578589666, 0.35704765666218335], [0.6449666932981444, 0.28330297317970954], [1.0013148080066223, 0.19798287942499512], [1.3576629227151011, 0.12185846378680586], [1.714011037423579, 0.06605950577408094], [2.070359152132058, 0.03154034940756482]], "data29": [[0.764964157706093, 0.9389256806475351, 0.8690213392200149], [0.8079749103942651, 0.9389256806475351, 0.8690213392200149]], "data02": [[-4.317525281144403, 3.316457525801005e-05], [-3.7471788964283306, 0.0003340036119077932], [-3.176832511712259, 0.0024297078906683665], [-2.606486126996187, 0.012766831957028945], [-2.036139742280115, 0.0484549775968589], [-1.465793357564043, 0.13283723564779618], [-0.8954469728479713, 0.26304341771306944], [-0.32510058813189957, 0.3762367594504306], [0.24524579658417256, 0.38870595022551246], [0.8155921813002447, 0.29007301534429675], [1.3859385660163168, 0.15635783465398362], [1.956284950732388, 0.06087768686426391], [2.52663133544846, 0.017120751139747366], [3.0969777201645323, 0.00347787255851156], [3.6673241048806036, 0.0005103060184047315], [4.2376704895966775, 5.408463384606319e-05]], "data05": [[-2.5621663390781606, 0.0], [-2.2058182243696827, 0.0], [-2.2058182243696827, 0.06928999202055809], [-2.5621663390781606, 0.06928999202055809]], "data04": [[-2.9185144537866385, 0.0, -2.2058182243696827], [-2.56216633907816, 0.0, -1.849470109661204], [-2.56216633907816, 0.0, -1.849470109661204], [-2.9185144537866385, 0.0, -2.2058182243696827]], "data20": [[-0.8954469728479713, 0.0], [-0.32510058813189957, 0.0], [-0.32510058813189957, 0.2949511096649899], [-0.8954469728479713, 0.2949511096649899]], "data17": [[-2.606486126996187, 0.0], [-2.036139742280115, 0.0], [-2.036139742280115, 0.016386172759166092], [-2.606486126996187, 0.016386172759166092]], "data28": [[3.6673241048806036, 0.0], [4.2376704895966775, 0.0], [4.2376704895966775, 0.01228962956937453], [3.6673241048806036, 0.01228962956937453]], "data09": [[-0.42407765082729076, 0.0, -0.06772953611881238], [-0.06772953611881238, 0.0, 0.288618578589666], [-0.06772953611881238, 0.48502994414390604, 0.288618578589666], [-0.42407765082729076, 0.48502994414390604, -0.06772953611881238]], "data19": [[-1.465793357564043, 0.0], [-0.8954469728479713, 0.0], [-0.8954469728479713, 0.11470320931416272], [-1.465793357564043, 0.11470320931416272]]}});
             })
          });
 }
@@ -840,11 +4126,11 @@ print(scores)
 
 {:.output .output_stream}
 ```
-[2.58434622e-01 1.80613220e+00 2.75720486e+00 2.68994023e+00
- 8.06933033e-02 1.84214703e-03 1.39527704e+00 1.88377723e+00
- 2.05723060e-01 4.43482174e-02 4.48382765e-01 6.65904291e-02
- 1.00183089e-01 3.07320442e-04 9.57459834e-02 7.10721027e-04
- 1.34756272e+00 2.57715104e-02]
+[4.32536870e-01 1.68538054e+00 2.70495075e+00 1.16160151e+00
+ 1.15637421e-03 3.24927543e-04 1.07878608e+00 2.03421817e+00
+ 1.31052699e-01 3.34619359e-06 3.11145646e-01 9.73866819e-01
+ 2.73871775e-01 1.54683252e-03 2.88462320e-01 8.27067614e-03
+ 1.55590641e+00 5.95444471e-02]
 
 ```
 
@@ -879,7 +4165,7 @@ plt.show()
 
 </style>
 
-<div id="fig_el575944471216485092053656"></div>
+<div id="fig_el5442650883774881633130320"></div>
 <script>
 function mpld3_load_lib(url, callback){
   var s = document.createElement('script');
@@ -894,7 +4180,7 @@ if(typeof(mpld3) !== "undefined" && mpld3._mpld3IsLoaded){
    // already loaded: just create the figure
    !function(mpld3){
        
-       mpld3.draw_figure("fig_el575944471216485092053656", {"id": "el57594447121648", "height": 360.0, "data": {"data01": [[0.0, -0.4], [0.00011146086638799887, -0.4], [0.00011146086638799887, 0.4], [0.0, 0.4]], "data10": [[0.0, 8.6], [0.07461290348336368, 8.6], [0.07461290348336368, 9.4], [0.0, 9.4]], "data06": [[0.0, 4.6], [0.024151425969970088, 4.6], [0.024151425969970088, 5.3999999999999995], [0.0, 5.3999999999999995]], "data09": [[0.0, 7.6], [0.03633501812689036, 7.6], [0.03633501812689036, 8.4], [0.0, 8.4]], "data13": [[0.0, 11.6], [0.4887423262949825, 11.6], [0.4887423262949825, 12.4], [0.0, 12.4]], "data15": [[0.0, 13.6], [0.6550591240782014, 13.6], [0.6550591240782014, 14.4], [0.0, 14.4]], "data02": [[0.0, 0.6], [0.00025776866912101247, 0.6], [0.00025776866912101247, 1.4], [0.0, 1.4]], "data11": [[0.0, 9.6], [0.09373065669699841, 9.6], [0.09373065669699841, 10.4], [0.0, 10.4]], "data05": [[0.0, 3.6], [0.016084483962745, 3.6], [0.016084483962745, 4.4], [0.0, 4.4]], "data12": [[0.0, 10.6], [0.16262221610986397, 10.6], [0.16262221610986397, 11.4], [0.0, 11.4]], "data18": [[0.0, 16.6], [1.0, 16.6], [1.0, 17.400000000000002], [0.0, 17.400000000000002]], "data17": [[0.0, 15.6], [0.9756040525204737, 15.6], [0.9756040525204737, 16.4], [0.0, 16.4]], "data14": [[0.0, 12.6], [0.5060476505889623, 12.6], [0.5060476505889623, 13.4], [0.0, 13.4]], "data04": [[0.0, 2.6], [0.009346969728943952, 2.6], [0.009346969728943952, 3.4000000000000004], [0.0, 3.4000000000000004]], "data03": [[0.0, 1.6], [0.000668121205061839, 1.6], [0.000668121205061839, 2.4000000000000004], [0.0, 2.4000000000000004]], "data08": [[0.0, 6.6], [0.03472574154476299, 6.6], [0.03472574154476299, 7.3999999999999995], [0.0, 7.3999999999999995]], "data07": [[0.0, 5.6], [0.02926634305086181, 5.6], [0.02926634305086181, 6.3999999999999995], [0.0, 6.3999999999999995]], "data16": [[0.0, 14.6], [0.6832198995910952, 14.6], [0.6832198995910952, 15.4], [0.0, 15.4]]}, "axes": [{"axesbg": "#FFFFFF", "ylim": [-1.0, 19.0], "texts": [{"rotation": -0.0, "coordinates": "axes", "zorder": 3, "color": "#000000", "fontsize": 15.0, "h_anchor": "middle", "position": [0.5, -0.0772626931567329], "id": "el57594446575136", "text": "Normalized Fisher Score", "alpha": 1, "v_baseline": "hanging"}, {"rotation": -0.0, "coordinates": "axes", "zorder": 3, "color": "#000000", "fontsize": 15.0, "h_anchor": "middle", "position": [0.5, 1.0220750551876379], "id": "el57594446600664", "text": "Normalized Univariate Fisher Score Per Feature", "alpha": 1, "v_baseline": "auto"}], "images": [], "paths": [{"dasharray": "none", "coordinates": "data", "edgecolor": "none", "facecolor": "#1F77B4", "zorder": 1, "id": "el57594446648304", "yindex": 1, "xindex": 0, "pathcodes": ["M", "L", "L", "L", "Z"], "data": "data01", "edgewidth": 1.0, "alpha": 1}, {"dasharray": "none", "coordinates": "data", "edgecolor": "none", "facecolor": "#1F77B4", "zorder": 1, "id": "el57594446647072", "yindex": 1, "xindex": 0, "pathcodes": ["M", "L", "L", "L", "Z"], "data": "data02", "edgewidth": 1.0, "alpha": 1}, {"dasharray": "none", "coordinates": "data", "edgecolor": "none", "facecolor": "#1F77B4", "zorder": 1, "id": "el57594446648416", "yindex": 1, "xindex": 0, "pathcodes": ["M", "L", "L", "L", "Z"], "data": "data03", "edgewidth": 1.0, "alpha": 1}, {"dasharray": "none", "coordinates": "data", "edgecolor": "none", "facecolor": "#1F77B4", "zorder": 1, "id": "el57594446649368", "yindex": 1, "xindex": 0, "pathcodes": ["M", "L", "L", "L", "Z"], "data": "data04", "edgewidth": 1.0, "alpha": 1}, {"dasharray": "none", "coordinates": "data", "edgecolor": "none", "facecolor": "#1F77B4", "zorder": 1, "id": "el57594446655768", "yindex": 1, "xindex": 0, "pathcodes": ["M", "L", "L", "L", "Z"], "data": "data05", "edgewidth": 1.0, "alpha": 1}, {"dasharray": "none", "coordinates": "data", "edgecolor": "none", "facecolor": "#1F77B4", "zorder": 1, "id": "el57594446656048", "yindex": 1, "xindex": 0, "pathcodes": ["M", "L", "L", "L", "Z"], "data": "data06", "edgewidth": 1.0, "alpha": 1}, {"dasharray": "none", "coordinates": "data", "edgecolor": "none", "facecolor": "#1F77B4", "zorder": 1, "id": "el57594446657840", "yindex": 1, "xindex": 0, "pathcodes": ["M", "L", "L", "L", "Z"], "data": "data07", "edgewidth": 1.0, "alpha": 1}, {"dasharray": "none", "coordinates": "data", "edgecolor": "none", "facecolor": "#1F77B4", "zorder": 1, "id": "el57594446657168", "yindex": 1, "xindex": 0, "pathcodes": ["M", "L", "L", "L", "Z"], "data": "data08", "edgewidth": 1.0, "alpha": 1}, {"dasharray": "none", "coordinates": "data", "edgecolor": "none", "facecolor": "#1F77B4", "zorder": 1, "id": "el57594446566160", "yindex": 1, "xindex": 0, "pathcodes": ["M", "L", "L", "L", "Z"], "data": "data09", "edgewidth": 1.0, "alpha": 1}, {"dasharray": "none", "coordinates": "data", "edgecolor": "none", "facecolor": "#1F77B4", "zorder": 1, "id": "el57594446565208", "yindex": 1, "xindex": 0, "pathcodes": ["M", "L", "L", "L", "Z"], "data": "data10", "edgewidth": 1.0, "alpha": 1}, {"dasharray": "none", "coordinates": "data", "edgecolor": "none", "facecolor": "#1F77B4", "zorder": 1, "id": "el57594446566552", "yindex": 1, "xindex": 0, "pathcodes": ["M", "L", "L", "L", "Z"], "data": "data11", "edgewidth": 1.0, "alpha": 1}, {"dasharray": "none", "coordinates": "data", "edgecolor": "none", "facecolor": "#1F77B4", "zorder": 1, "id": "el57594446566944", "yindex": 1, "xindex": 0, "pathcodes": ["M", "L", "L", "L", "Z"], "data": "data12", "edgewidth": 1.0, "alpha": 1}, {"dasharray": "none", "coordinates": "data", "edgecolor": "none", "facecolor": "#1F77B4", "zorder": 1, "id": "el57594446451920", "yindex": 1, "xindex": 0, "pathcodes": ["M", "L", "L", "L", "Z"], "data": "data13", "edgewidth": 1.0, "alpha": 1}, {"dasharray": "none", "coordinates": "data", "edgecolor": "none", "facecolor": "#1F77B4", "zorder": 1, "id": "el57594446663680", "yindex": 1, "xindex": 0, "pathcodes": ["M", "L", "L", "L", "Z"], "data": "data14", "edgewidth": 1.0, "alpha": 1}, {"dasharray": "none", "coordinates": "data", "edgecolor": "none", "facecolor": "#1F77B4", "zorder": 1, "id": "el57594446664744", "yindex": 1, "xindex": 0, "pathcodes": ["M", "L", "L", "L", "Z"], "data": "data15", "edgewidth": 1.0, "alpha": 1}, {"dasharray": "none", "coordinates": "data", "edgecolor": "none", "facecolor": "#1F77B4", "zorder": 1, "id": "el57594446665584", "yindex": 1, "xindex": 0, "pathcodes": ["M", "L", "L", "L", "Z"], "data": "data16", "edgewidth": 1.0, "alpha": 1}, {"dasharray": "none", "coordinates": "data", "edgecolor": "none", "facecolor": "#1F77B4", "zorder": 1, "id": "el57594446666536", "yindex": 1, "xindex": 0, "pathcodes": ["M", "L", "L", "L", "Z"], "data": "data17", "edgewidth": 1.0, "alpha": 1}, {"dasharray": "none", "coordinates": "data", "edgecolor": "none", "facecolor": "#1F77B4", "zorder": 1, "id": "el57594446687920", "yindex": 1, "xindex": 0, "pathcodes": ["M", "L", "L", "L", "Z"], "data": "data18", "edgewidth": 1.0, "alpha": 1}], "lines": [], "zoomable": true, "bbox": [0.5, 0.125, 0.5, 0.755], "collections": [], "xscale": "linear", "yscale": "linear", "markers": [], "axesbgalpha": null, "ydomain": [-1.0, 19.0], "id": "el57594446516280", "sharey": [], "xdomain": [0.0, 1.05], "sharex": [], "axes": [{"position": "bottom", "tickformat": null, "nticks": 7, "grid": {"gridOn": false}, "scale": "linear", "visible": true, "fontsize": 10.0, "tickvalues": null}, {"position": "left", "tickformat": ["Total photospheric magnetic free energy density", "Area of strong field pixels in the active region", "Total unsigned current helicity", "Absolute value of the net current helicity", "Mean gradient of vertical field", "Total unsigned vertical current", "Fraction of Area with Shear > 45 deg", "Mean shear angle", "Sum of the modulus of the net current per polarity", "Mean angle of field from radial", "Total unsigned flux", "Mean vertical current density", "Sum of flux near polarity inversion line", "Mean gradient of horizontal field", "Mean gradient of total field", "Mean characteristic twist parameter, alpha", "Mean photospheric magnetic free energy", "Mean current helicity (Bz contribution)"], "nticks": 18, "grid": {"gridOn": false}, "scale": "linear", "visible": true, "fontsize": 12.0, "tickvalues": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17]}], "xlim": [0.0, 1.05]}], "plugins": [{"type": "reset"}, {"button": true, "type": "zoom", "enabled": false}, {"button": true, "type": "boxzoom", "enabled": false}], "width": 648.0});
+       mpld3.draw_figure("fig_el5442650883774881633130320", {"height": 360.0, "axes": [{"ylim": [-1.0, 19.0], "ydomain": [-1.0, 19.0], "collections": [], "bbox": [0.5, 0.125, 0.5, 0.755], "axesbg": "#FFFFFF", "paths": [{"xindex": 0, "yindex": 1, "alpha": 1, "dasharray": "none", "zorder": 1, "edgewidth": 1.0, "data": "data01", "pathcodes": ["M", "L", "L", "L", "Z"], "id": "el544265089352728", "edgecolor": "none", "coordinates": "data", "facecolor": "#1F77B4"}, {"xindex": 0, "yindex": 1, "alpha": 1, "dasharray": "none", "zorder": 1, "edgewidth": 1.0, "data": "data02", "pathcodes": ["M", "L", "L", "L", "Z"], "id": "el544265089375456", "edgecolor": "none", "coordinates": "data", "facecolor": "#1F77B4"}, {"xindex": 0, "yindex": 1, "alpha": 1, "dasharray": "none", "zorder": 1, "edgewidth": 1.0, "data": "data03", "pathcodes": ["M", "L", "L", "L", "Z"], "id": "el544265089378200", "edgecolor": "none", "coordinates": "data", "facecolor": "#1F77B4"}, {"xindex": 0, "yindex": 1, "alpha": 1, "dasharray": "none", "zorder": 1, "edgewidth": 1.0, "data": "data04", "pathcodes": ["M", "L", "L", "L", "Z"], "id": "el544265089384432", "edgecolor": "none", "coordinates": "data", "facecolor": "#1F77B4"}, {"xindex": 0, "yindex": 1, "alpha": 1, "dasharray": "none", "zorder": 1, "edgewidth": 1.0, "data": "data05", "pathcodes": ["M", "L", "L", "L", "Z"], "id": "el544265089395376", "edgecolor": "none", "coordinates": "data", "facecolor": "#1F77B4"}, {"xindex": 0, "yindex": 1, "alpha": 1, "dasharray": "none", "zorder": 1, "edgewidth": 1.0, "data": "data06", "pathcodes": ["M", "L", "L", "L", "Z"], "id": "el544265089397392", "edgecolor": "none", "coordinates": "data", "facecolor": "#1F77B4"}, {"xindex": 0, "yindex": 1, "alpha": 1, "dasharray": "none", "zorder": 1, "edgewidth": 1.0, "data": "data07", "pathcodes": ["M", "L", "L", "L", "Z"], "id": "el544265089412432", "edgecolor": "none", "coordinates": "data", "facecolor": "#1F77B4"}, {"xindex": 0, "yindex": 1, "alpha": 1, "dasharray": "none", "zorder": 1, "edgewidth": 1.0, "data": "data08", "pathcodes": ["M", "L", "L", "L", "Z"], "id": "el544265089415120", "edgecolor": "none", "coordinates": "data", "facecolor": "#1F77B4"}, {"xindex": 0, "yindex": 1, "alpha": 1, "dasharray": "none", "zorder": 1, "edgewidth": 1.0, "data": "data09", "pathcodes": ["M", "L", "L", "L", "Z"], "id": "el544265089433248", "edgecolor": "none", "coordinates": "data", "facecolor": "#1F77B4"}, {"xindex": 0, "yindex": 1, "alpha": 1, "dasharray": "none", "zorder": 1, "edgewidth": 1.0, "data": "data10", "pathcodes": ["M", "L", "L", "L", "Z"], "id": "el544265089435600", "edgecolor": "none", "coordinates": "data", "facecolor": "#1F77B4"}, {"xindex": 0, "yindex": 1, "alpha": 1, "dasharray": "none", "zorder": 1, "edgewidth": 1.0, "data": "data11", "pathcodes": ["M", "L", "L", "L", "Z"], "id": "el544265089442112", "edgecolor": "none", "coordinates": "data", "facecolor": "#1F77B4"}, {"xindex": 0, "yindex": 1, "alpha": 1, "dasharray": "none", "zorder": 1, "edgewidth": 1.0, "data": "data12", "pathcodes": ["M", "L", "L", "L", "Z"], "id": "el544265089448960", "edgecolor": "none", "coordinates": "data", "facecolor": "#1F77B4"}, {"xindex": 0, "yindex": 1, "alpha": 1, "dasharray": "none", "zorder": 1, "edgewidth": 1.0, "data": "data13", "pathcodes": ["M", "L", "L", "L", "Z"], "id": "el544265089450976", "edgecolor": "none", "coordinates": "data", "facecolor": "#1F77B4"}, {"xindex": 0, "yindex": 1, "alpha": 1, "dasharray": "none", "zorder": 1, "edgewidth": 1.0, "data": "data14", "pathcodes": ["M", "L", "L", "L", "Z"], "id": "el544265089462088", "edgecolor": "none", "coordinates": "data", "facecolor": "#1F77B4"}, {"xindex": 0, "yindex": 1, "alpha": 1, "dasharray": "none", "zorder": 1, "edgewidth": 1.0, "data": "data15", "pathcodes": ["M", "L", "L", "L", "Z"], "id": "el544265089463544", "edgecolor": "none", "coordinates": "data", "facecolor": "#1F77B4"}, {"xindex": 0, "yindex": 1, "alpha": 1, "dasharray": "none", "zorder": 1, "edgewidth": 1.0, "data": "data16", "pathcodes": ["M", "L", "L", "L", "Z"], "id": "el544265089475104", "edgecolor": "none", "coordinates": "data", "facecolor": "#1F77B4"}, {"xindex": 0, "yindex": 1, "alpha": 1, "dasharray": "none", "zorder": 1, "edgewidth": 1.0, "data": "data17", "pathcodes": ["M", "L", "L", "L", "Z"], "id": "el544265089486272", "edgecolor": "none", "coordinates": "data", "facecolor": "#1F77B4"}, {"xindex": 0, "yindex": 1, "alpha": 1, "dasharray": "none", "zorder": 1, "edgewidth": 1.0, "data": "data18", "pathcodes": ["M", "L", "L", "L", "Z"], "id": "el544265089488064", "edgecolor": "none", "coordinates": "data", "facecolor": "#1F77B4"}], "xdomain": [0.0, 1.05], "xlim": [0.0, 1.05], "zoomable": true, "sharex": [], "markers": [], "lines": [], "sharey": [], "axes": [{"visible": true, "tickvalues": null, "grid": {"gridOn": false}, "tickformat": null, "position": "bottom", "scale": "linear", "fontsize": 10.0, "nticks": 7}, {"visible": true, "tickvalues": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17], "grid": {"gridOn": false}, "tickformat": ["Mean gradient of vertical field", "Total unsigned current helicity", "Fraction of Area with Shear > 45 deg", "Total photospheric magnetic free energy density", "Area of strong field pixels in the active region", "Absolute value of the net current helicity", "Mean angle of field from radial", "Sum of the modulus of the net current per polarity", "Mean shear angle", "Mean vertical current density", "Total unsigned flux", "Total unsigned vertical current", "Mean gradient of horizontal field", "Mean photospheric magnetic free energy", "Sum of flux near polarity inversion line", "Mean gradient of total field", "Mean characteristic twist parameter, alpha", "Mean current helicity (Bz contribution)"], "position": "left", "scale": "linear", "fontsize": 12.0, "nticks": 18}], "xscale": "linear", "axesbgalpha": null, "yscale": "linear", "images": [], "texts": [{"h_anchor": "middle", "alpha": 1, "text": "Normalized Fisher Score", "position": [0.5, -0.0772626931567329], "zorder": 3, "v_baseline": "hanging", "rotation": -0.0, "color": "#000000", "id": "el544265089091656", "fontsize": 15.0, "coordinates": "axes"}, {"h_anchor": "middle", "alpha": 1, "text": "Normalized Univariate Fisher Score Per Feature", "position": [0.5, 1.0220750551876379], "zorder": 3, "v_baseline": "auto", "rotation": -0.0, "color": "#000000", "id": "el544265089285288", "fontsize": 15.0, "coordinates": "axes"}], "id": "el544265088465248"}], "id": "el544265088377488", "plugins": [{"type": "reset"}, {"enabled": false, "button": true, "type": "zoom"}, {"enabled": false, "button": true, "type": "boxzoom"}], "width": 648.0, "data": {"data15": [[0.0, 13.6], [0.5752069270029146, 13.6], [0.5752069270029146, 14.4], [0.0, 14.4]], "data14": [[0.0, 12.6], [0.4294353656078287, 12.6], [0.4294353656078287, 13.4], [0.0, 13.4]], "data18": [[0.0, 16.6], [1.0, 16.6], [1.0, 17.400000000000002], [0.0, 17.400000000000002]], "data17": [[0.0, 15.6], [0.752035198939701, 15.6], [0.752035198939701, 16.4], [0.0, 16.4]], "data06": [[0.0, 4.6], [0.02201313542975913, 4.6], [0.02201313542975913, 5.3999999999999995], [0.0, 5.3999999999999995]], "data01": [[0.0, -0.4], [1.2370626675312336e-06, -0.4], [1.2370626675312336e-06, 0.4], [0.0, 0.4]], "data07": [[0.0, 5.6], [0.04844919972605169, 5.6], [0.04844919972605169, 6.3999999999999995], [0.0, 6.3999999999999995]], "data02": [[0.0, 0.6], [0.00012012327525954625, 0.6], [0.00012012327525954625, 1.4], [0.0, 1.4]], "data10": [[0.0, 8.6], [0.11502821111145142, 8.6], [0.11502821111145142, 9.4], [0.0, 9.4]], "data04": [[0.0, 2.6], [0.0005718523782045065, 2.6], [0.0005718523782045065, 3.4000000000000004], [0.0, 3.4000000000000004]], "data12": [[0.0, 10.6], [0.3600312572876549, 10.6], [0.3600312572876549, 11.4], [0.0, 11.4]], "data13": [[0.0, 11.6], [0.3988191207966229, 11.6], [0.3988191207966229, 12.4], [0.0, 12.4]], "data09": [[0.0, 7.6], [0.10664235567464948, 7.6], [0.10664235567464948, 8.4], [0.0, 8.4]], "data03": [[0.0, 1.6], [0.00042750286951982004, 1.6], [0.00042750286951982004, 2.4000000000000004], [0.0, 2.4000000000000004]], "data05": [[0.0, 3.6], [0.003057606923489955, 3.6], [0.003057606923489955, 4.4], [0.0, 4.4]], "data11": [[0.0, 9.6], [0.15990563596537036, 9.6], [0.15990563596537036, 10.4], [0.0, 10.4]], "data08": [[0.0, 6.6], [0.10124834073966846, 6.6], [0.10124834073966846, 7.3999999999999995], [0.0, 7.3999999999999995]], "data16": [[0.0, 14.6], [0.6230725431677075, 14.6], [0.6230725431677075, 15.4], [0.0, 15.4]]}});
    }(mpld3);
 }else if(typeof define === "function" && define.amd){
    // require.js is available: use it to load d3/mpld3
@@ -903,7 +4189,7 @@ if(typeof(mpld3) !== "undefined" && mpld3._mpld3IsLoaded){
       window.d3 = d3;
       mpld3_load_lib("https://mpld3.github.io/js/mpld3.v0.3.js", function(){
          
-         mpld3.draw_figure("fig_el575944471216485092053656", {"id": "el57594447121648", "height": 360.0, "data": {"data01": [[0.0, -0.4], [0.00011146086638799887, -0.4], [0.00011146086638799887, 0.4], [0.0, 0.4]], "data10": [[0.0, 8.6], [0.07461290348336368, 8.6], [0.07461290348336368, 9.4], [0.0, 9.4]], "data06": [[0.0, 4.6], [0.024151425969970088, 4.6], [0.024151425969970088, 5.3999999999999995], [0.0, 5.3999999999999995]], "data09": [[0.0, 7.6], [0.03633501812689036, 7.6], [0.03633501812689036, 8.4], [0.0, 8.4]], "data13": [[0.0, 11.6], [0.4887423262949825, 11.6], [0.4887423262949825, 12.4], [0.0, 12.4]], "data15": [[0.0, 13.6], [0.6550591240782014, 13.6], [0.6550591240782014, 14.4], [0.0, 14.4]], "data02": [[0.0, 0.6], [0.00025776866912101247, 0.6], [0.00025776866912101247, 1.4], [0.0, 1.4]], "data11": [[0.0, 9.6], [0.09373065669699841, 9.6], [0.09373065669699841, 10.4], [0.0, 10.4]], "data05": [[0.0, 3.6], [0.016084483962745, 3.6], [0.016084483962745, 4.4], [0.0, 4.4]], "data12": [[0.0, 10.6], [0.16262221610986397, 10.6], [0.16262221610986397, 11.4], [0.0, 11.4]], "data18": [[0.0, 16.6], [1.0, 16.6], [1.0, 17.400000000000002], [0.0, 17.400000000000002]], "data17": [[0.0, 15.6], [0.9756040525204737, 15.6], [0.9756040525204737, 16.4], [0.0, 16.4]], "data14": [[0.0, 12.6], [0.5060476505889623, 12.6], [0.5060476505889623, 13.4], [0.0, 13.4]], "data04": [[0.0, 2.6], [0.009346969728943952, 2.6], [0.009346969728943952, 3.4000000000000004], [0.0, 3.4000000000000004]], "data03": [[0.0, 1.6], [0.000668121205061839, 1.6], [0.000668121205061839, 2.4000000000000004], [0.0, 2.4000000000000004]], "data08": [[0.0, 6.6], [0.03472574154476299, 6.6], [0.03472574154476299, 7.3999999999999995], [0.0, 7.3999999999999995]], "data07": [[0.0, 5.6], [0.02926634305086181, 5.6], [0.02926634305086181, 6.3999999999999995], [0.0, 6.3999999999999995]], "data16": [[0.0, 14.6], [0.6832198995910952, 14.6], [0.6832198995910952, 15.4], [0.0, 15.4]]}, "axes": [{"axesbg": "#FFFFFF", "ylim": [-1.0, 19.0], "texts": [{"rotation": -0.0, "coordinates": "axes", "zorder": 3, "color": "#000000", "fontsize": 15.0, "h_anchor": "middle", "position": [0.5, -0.0772626931567329], "id": "el57594446575136", "text": "Normalized Fisher Score", "alpha": 1, "v_baseline": "hanging"}, {"rotation": -0.0, "coordinates": "axes", "zorder": 3, "color": "#000000", "fontsize": 15.0, "h_anchor": "middle", "position": [0.5, 1.0220750551876379], "id": "el57594446600664", "text": "Normalized Univariate Fisher Score Per Feature", "alpha": 1, "v_baseline": "auto"}], "images": [], "paths": [{"dasharray": "none", "coordinates": "data", "edgecolor": "none", "facecolor": "#1F77B4", "zorder": 1, "id": "el57594446648304", "yindex": 1, "xindex": 0, "pathcodes": ["M", "L", "L", "L", "Z"], "data": "data01", "edgewidth": 1.0, "alpha": 1}, {"dasharray": "none", "coordinates": "data", "edgecolor": "none", "facecolor": "#1F77B4", "zorder": 1, "id": "el57594446647072", "yindex": 1, "xindex": 0, "pathcodes": ["M", "L", "L", "L", "Z"], "data": "data02", "edgewidth": 1.0, "alpha": 1}, {"dasharray": "none", "coordinates": "data", "edgecolor": "none", "facecolor": "#1F77B4", "zorder": 1, "id": "el57594446648416", "yindex": 1, "xindex": 0, "pathcodes": ["M", "L", "L", "L", "Z"], "data": "data03", "edgewidth": 1.0, "alpha": 1}, {"dasharray": "none", "coordinates": "data", "edgecolor": "none", "facecolor": "#1F77B4", "zorder": 1, "id": "el57594446649368", "yindex": 1, "xindex": 0, "pathcodes": ["M", "L", "L", "L", "Z"], "data": "data04", "edgewidth": 1.0, "alpha": 1}, {"dasharray": "none", "coordinates": "data", "edgecolor": "none", "facecolor": "#1F77B4", "zorder": 1, "id": "el57594446655768", "yindex": 1, "xindex": 0, "pathcodes": ["M", "L", "L", "L", "Z"], "data": "data05", "edgewidth": 1.0, "alpha": 1}, {"dasharray": "none", "coordinates": "data", "edgecolor": "none", "facecolor": "#1F77B4", "zorder": 1, "id": "el57594446656048", "yindex": 1, "xindex": 0, "pathcodes": ["M", "L", "L", "L", "Z"], "data": "data06", "edgewidth": 1.0, "alpha": 1}, {"dasharray": "none", "coordinates": "data", "edgecolor": "none", "facecolor": "#1F77B4", "zorder": 1, "id": "el57594446657840", "yindex": 1, "xindex": 0, "pathcodes": ["M", "L", "L", "L", "Z"], "data": "data07", "edgewidth": 1.0, "alpha": 1}, {"dasharray": "none", "coordinates": "data", "edgecolor": "none", "facecolor": "#1F77B4", "zorder": 1, "id": "el57594446657168", "yindex": 1, "xindex": 0, "pathcodes": ["M", "L", "L", "L", "Z"], "data": "data08", "edgewidth": 1.0, "alpha": 1}, {"dasharray": "none", "coordinates": "data", "edgecolor": "none", "facecolor": "#1F77B4", "zorder": 1, "id": "el57594446566160", "yindex": 1, "xindex": 0, "pathcodes": ["M", "L", "L", "L", "Z"], "data": "data09", "edgewidth": 1.0, "alpha": 1}, {"dasharray": "none", "coordinates": "data", "edgecolor": "none", "facecolor": "#1F77B4", "zorder": 1, "id": "el57594446565208", "yindex": 1, "xindex": 0, "pathcodes": ["M", "L", "L", "L", "Z"], "data": "data10", "edgewidth": 1.0, "alpha": 1}, {"dasharray": "none", "coordinates": "data", "edgecolor": "none", "facecolor": "#1F77B4", "zorder": 1, "id": "el57594446566552", "yindex": 1, "xindex": 0, "pathcodes": ["M", "L", "L", "L", "Z"], "data": "data11", "edgewidth": 1.0, "alpha": 1}, {"dasharray": "none", "coordinates": "data", "edgecolor": "none", "facecolor": "#1F77B4", "zorder": 1, "id": "el57594446566944", "yindex": 1, "xindex": 0, "pathcodes": ["M", "L", "L", "L", "Z"], "data": "data12", "edgewidth": 1.0, "alpha": 1}, {"dasharray": "none", "coordinates": "data", "edgecolor": "none", "facecolor": "#1F77B4", "zorder": 1, "id": "el57594446451920", "yindex": 1, "xindex": 0, "pathcodes": ["M", "L", "L", "L", "Z"], "data": "data13", "edgewidth": 1.0, "alpha": 1}, {"dasharray": "none", "coordinates": "data", "edgecolor": "none", "facecolor": "#1F77B4", "zorder": 1, "id": "el57594446663680", "yindex": 1, "xindex": 0, "pathcodes": ["M", "L", "L", "L", "Z"], "data": "data14", "edgewidth": 1.0, "alpha": 1}, {"dasharray": "none", "coordinates": "data", "edgecolor": "none", "facecolor": "#1F77B4", "zorder": 1, "id": "el57594446664744", "yindex": 1, "xindex": 0, "pathcodes": ["M", "L", "L", "L", "Z"], "data": "data15", "edgewidth": 1.0, "alpha": 1}, {"dasharray": "none", "coordinates": "data", "edgecolor": "none", "facecolor": "#1F77B4", "zorder": 1, "id": "el57594446665584", "yindex": 1, "xindex": 0, "pathcodes": ["M", "L", "L", "L", "Z"], "data": "data16", "edgewidth": 1.0, "alpha": 1}, {"dasharray": "none", "coordinates": "data", "edgecolor": "none", "facecolor": "#1F77B4", "zorder": 1, "id": "el57594446666536", "yindex": 1, "xindex": 0, "pathcodes": ["M", "L", "L", "L", "Z"], "data": "data17", "edgewidth": 1.0, "alpha": 1}, {"dasharray": "none", "coordinates": "data", "edgecolor": "none", "facecolor": "#1F77B4", "zorder": 1, "id": "el57594446687920", "yindex": 1, "xindex": 0, "pathcodes": ["M", "L", "L", "L", "Z"], "data": "data18", "edgewidth": 1.0, "alpha": 1}], "lines": [], "zoomable": true, "bbox": [0.5, 0.125, 0.5, 0.755], "collections": [], "xscale": "linear", "yscale": "linear", "markers": [], "axesbgalpha": null, "ydomain": [-1.0, 19.0], "id": "el57594446516280", "sharey": [], "xdomain": [0.0, 1.05], "sharex": [], "axes": [{"position": "bottom", "tickformat": null, "nticks": 7, "grid": {"gridOn": false}, "scale": "linear", "visible": true, "fontsize": 10.0, "tickvalues": null}, {"position": "left", "tickformat": ["Total photospheric magnetic free energy density", "Area of strong field pixels in the active region", "Total unsigned current helicity", "Absolute value of the net current helicity", "Mean gradient of vertical field", "Total unsigned vertical current", "Fraction of Area with Shear > 45 deg", "Mean shear angle", "Sum of the modulus of the net current per polarity", "Mean angle of field from radial", "Total unsigned flux", "Mean vertical current density", "Sum of flux near polarity inversion line", "Mean gradient of horizontal field", "Mean gradient of total field", "Mean characteristic twist parameter, alpha", "Mean photospheric magnetic free energy", "Mean current helicity (Bz contribution)"], "nticks": 18, "grid": {"gridOn": false}, "scale": "linear", "visible": true, "fontsize": 12.0, "tickvalues": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17]}], "xlim": [0.0, 1.05]}], "plugins": [{"type": "reset"}, {"button": true, "type": "zoom", "enabled": false}, {"button": true, "type": "boxzoom", "enabled": false}], "width": 648.0});
+         mpld3.draw_figure("fig_el5442650883774881633130320", {"height": 360.0, "axes": [{"ylim": [-1.0, 19.0], "ydomain": [-1.0, 19.0], "collections": [], "bbox": [0.5, 0.125, 0.5, 0.755], "axesbg": "#FFFFFF", "paths": [{"xindex": 0, "yindex": 1, "alpha": 1, "dasharray": "none", "zorder": 1, "edgewidth": 1.0, "data": "data01", "pathcodes": ["M", "L", "L", "L", "Z"], "id": "el544265089352728", "edgecolor": "none", "coordinates": "data", "facecolor": "#1F77B4"}, {"xindex": 0, "yindex": 1, "alpha": 1, "dasharray": "none", "zorder": 1, "edgewidth": 1.0, "data": "data02", "pathcodes": ["M", "L", "L", "L", "Z"], "id": "el544265089375456", "edgecolor": "none", "coordinates": "data", "facecolor": "#1F77B4"}, {"xindex": 0, "yindex": 1, "alpha": 1, "dasharray": "none", "zorder": 1, "edgewidth": 1.0, "data": "data03", "pathcodes": ["M", "L", "L", "L", "Z"], "id": "el544265089378200", "edgecolor": "none", "coordinates": "data", "facecolor": "#1F77B4"}, {"xindex": 0, "yindex": 1, "alpha": 1, "dasharray": "none", "zorder": 1, "edgewidth": 1.0, "data": "data04", "pathcodes": ["M", "L", "L", "L", "Z"], "id": "el544265089384432", "edgecolor": "none", "coordinates": "data", "facecolor": "#1F77B4"}, {"xindex": 0, "yindex": 1, "alpha": 1, "dasharray": "none", "zorder": 1, "edgewidth": 1.0, "data": "data05", "pathcodes": ["M", "L", "L", "L", "Z"], "id": "el544265089395376", "edgecolor": "none", "coordinates": "data", "facecolor": "#1F77B4"}, {"xindex": 0, "yindex": 1, "alpha": 1, "dasharray": "none", "zorder": 1, "edgewidth": 1.0, "data": "data06", "pathcodes": ["M", "L", "L", "L", "Z"], "id": "el544265089397392", "edgecolor": "none", "coordinates": "data", "facecolor": "#1F77B4"}, {"xindex": 0, "yindex": 1, "alpha": 1, "dasharray": "none", "zorder": 1, "edgewidth": 1.0, "data": "data07", "pathcodes": ["M", "L", "L", "L", "Z"], "id": "el544265089412432", "edgecolor": "none", "coordinates": "data", "facecolor": "#1F77B4"}, {"xindex": 0, "yindex": 1, "alpha": 1, "dasharray": "none", "zorder": 1, "edgewidth": 1.0, "data": "data08", "pathcodes": ["M", "L", "L", "L", "Z"], "id": "el544265089415120", "edgecolor": "none", "coordinates": "data", "facecolor": "#1F77B4"}, {"xindex": 0, "yindex": 1, "alpha": 1, "dasharray": "none", "zorder": 1, "edgewidth": 1.0, "data": "data09", "pathcodes": ["M", "L", "L", "L", "Z"], "id": "el544265089433248", "edgecolor": "none", "coordinates": "data", "facecolor": "#1F77B4"}, {"xindex": 0, "yindex": 1, "alpha": 1, "dasharray": "none", "zorder": 1, "edgewidth": 1.0, "data": "data10", "pathcodes": ["M", "L", "L", "L", "Z"], "id": "el544265089435600", "edgecolor": "none", "coordinates": "data", "facecolor": "#1F77B4"}, {"xindex": 0, "yindex": 1, "alpha": 1, "dasharray": "none", "zorder": 1, "edgewidth": 1.0, "data": "data11", "pathcodes": ["M", "L", "L", "L", "Z"], "id": "el544265089442112", "edgecolor": "none", "coordinates": "data", "facecolor": "#1F77B4"}, {"xindex": 0, "yindex": 1, "alpha": 1, "dasharray": "none", "zorder": 1, "edgewidth": 1.0, "data": "data12", "pathcodes": ["M", "L", "L", "L", "Z"], "id": "el544265089448960", "edgecolor": "none", "coordinates": "data", "facecolor": "#1F77B4"}, {"xindex": 0, "yindex": 1, "alpha": 1, "dasharray": "none", "zorder": 1, "edgewidth": 1.0, "data": "data13", "pathcodes": ["M", "L", "L", "L", "Z"], "id": "el544265089450976", "edgecolor": "none", "coordinates": "data", "facecolor": "#1F77B4"}, {"xindex": 0, "yindex": 1, "alpha": 1, "dasharray": "none", "zorder": 1, "edgewidth": 1.0, "data": "data14", "pathcodes": ["M", "L", "L", "L", "Z"], "id": "el544265089462088", "edgecolor": "none", "coordinates": "data", "facecolor": "#1F77B4"}, {"xindex": 0, "yindex": 1, "alpha": 1, "dasharray": "none", "zorder": 1, "edgewidth": 1.0, "data": "data15", "pathcodes": ["M", "L", "L", "L", "Z"], "id": "el544265089463544", "edgecolor": "none", "coordinates": "data", "facecolor": "#1F77B4"}, {"xindex": 0, "yindex": 1, "alpha": 1, "dasharray": "none", "zorder": 1, "edgewidth": 1.0, "data": "data16", "pathcodes": ["M", "L", "L", "L", "Z"], "id": "el544265089475104", "edgecolor": "none", "coordinates": "data", "facecolor": "#1F77B4"}, {"xindex": 0, "yindex": 1, "alpha": 1, "dasharray": "none", "zorder": 1, "edgewidth": 1.0, "data": "data17", "pathcodes": ["M", "L", "L", "L", "Z"], "id": "el544265089486272", "edgecolor": "none", "coordinates": "data", "facecolor": "#1F77B4"}, {"xindex": 0, "yindex": 1, "alpha": 1, "dasharray": "none", "zorder": 1, "edgewidth": 1.0, "data": "data18", "pathcodes": ["M", "L", "L", "L", "Z"], "id": "el544265089488064", "edgecolor": "none", "coordinates": "data", "facecolor": "#1F77B4"}], "xdomain": [0.0, 1.05], "xlim": [0.0, 1.05], "zoomable": true, "sharex": [], "markers": [], "lines": [], "sharey": [], "axes": [{"visible": true, "tickvalues": null, "grid": {"gridOn": false}, "tickformat": null, "position": "bottom", "scale": "linear", "fontsize": 10.0, "nticks": 7}, {"visible": true, "tickvalues": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17], "grid": {"gridOn": false}, "tickformat": ["Mean gradient of vertical field", "Total unsigned current helicity", "Fraction of Area with Shear > 45 deg", "Total photospheric magnetic free energy density", "Area of strong field pixels in the active region", "Absolute value of the net current helicity", "Mean angle of field from radial", "Sum of the modulus of the net current per polarity", "Mean shear angle", "Mean vertical current density", "Total unsigned flux", "Total unsigned vertical current", "Mean gradient of horizontal field", "Mean photospheric magnetic free energy", "Sum of flux near polarity inversion line", "Mean gradient of total field", "Mean characteristic twist parameter, alpha", "Mean current helicity (Bz contribution)"], "position": "left", "scale": "linear", "fontsize": 12.0, "nticks": 18}], "xscale": "linear", "axesbgalpha": null, "yscale": "linear", "images": [], "texts": [{"h_anchor": "middle", "alpha": 1, "text": "Normalized Fisher Score", "position": [0.5, -0.0772626931567329], "zorder": 3, "v_baseline": "hanging", "rotation": -0.0, "color": "#000000", "id": "el544265089091656", "fontsize": 15.0, "coordinates": "axes"}, {"h_anchor": "middle", "alpha": 1, "text": "Normalized Univariate Fisher Score Per Feature", "position": [0.5, 1.0220750551876379], "zorder": 3, "v_baseline": "auto", "rotation": -0.0, "color": "#000000", "id": "el544265089285288", "fontsize": 15.0, "coordinates": "axes"}], "id": "el544265088465248"}], "id": "el544265088377488", "plugins": [{"type": "reset"}, {"enabled": false, "button": true, "type": "zoom"}, {"enabled": false, "button": true, "type": "boxzoom"}], "width": 648.0, "data": {"data15": [[0.0, 13.6], [0.5752069270029146, 13.6], [0.5752069270029146, 14.4], [0.0, 14.4]], "data14": [[0.0, 12.6], [0.4294353656078287, 12.6], [0.4294353656078287, 13.4], [0.0, 13.4]], "data18": [[0.0, 16.6], [1.0, 16.6], [1.0, 17.400000000000002], [0.0, 17.400000000000002]], "data17": [[0.0, 15.6], [0.752035198939701, 15.6], [0.752035198939701, 16.4], [0.0, 16.4]], "data06": [[0.0, 4.6], [0.02201313542975913, 4.6], [0.02201313542975913, 5.3999999999999995], [0.0, 5.3999999999999995]], "data01": [[0.0, -0.4], [1.2370626675312336e-06, -0.4], [1.2370626675312336e-06, 0.4], [0.0, 0.4]], "data07": [[0.0, 5.6], [0.04844919972605169, 5.6], [0.04844919972605169, 6.3999999999999995], [0.0, 6.3999999999999995]], "data02": [[0.0, 0.6], [0.00012012327525954625, 0.6], [0.00012012327525954625, 1.4], [0.0, 1.4]], "data10": [[0.0, 8.6], [0.11502821111145142, 8.6], [0.11502821111145142, 9.4], [0.0, 9.4]], "data04": [[0.0, 2.6], [0.0005718523782045065, 2.6], [0.0005718523782045065, 3.4000000000000004], [0.0, 3.4000000000000004]], "data12": [[0.0, 10.6], [0.3600312572876549, 10.6], [0.3600312572876549, 11.4], [0.0, 11.4]], "data13": [[0.0, 11.6], [0.3988191207966229, 11.6], [0.3988191207966229, 12.4], [0.0, 12.4]], "data09": [[0.0, 7.6], [0.10664235567464948, 7.6], [0.10664235567464948, 8.4], [0.0, 8.4]], "data03": [[0.0, 1.6], [0.00042750286951982004, 1.6], [0.00042750286951982004, 2.4000000000000004], [0.0, 2.4000000000000004]], "data05": [[0.0, 3.6], [0.003057606923489955, 3.6], [0.003057606923489955, 4.4], [0.0, 4.4]], "data11": [[0.0, 9.6], [0.15990563596537036, 9.6], [0.15990563596537036, 10.4], [0.0, 10.4]], "data08": [[0.0, 6.6], [0.10124834073966846, 6.6], [0.10124834073966846, 7.3999999999999995], [0.0, 7.3999999999999995]], "data16": [[0.0, 14.6], [0.6230725431677075, 14.6], [0.6230725431677075, 15.4], [0.0, 15.4]]}});
       });
     });
 }else{
@@ -911,7 +4197,7 @@ if(typeof(mpld3) !== "undefined" && mpld3._mpld3IsLoaded){
     mpld3_load_lib("https://mpld3.github.io/js/d3.v3.min.js", function(){
          mpld3_load_lib("https://mpld3.github.io/js/mpld3.v0.3.js", function(){
                  
-                 mpld3.draw_figure("fig_el575944471216485092053656", {"id": "el57594447121648", "height": 360.0, "data": {"data01": [[0.0, -0.4], [0.00011146086638799887, -0.4], [0.00011146086638799887, 0.4], [0.0, 0.4]], "data10": [[0.0, 8.6], [0.07461290348336368, 8.6], [0.07461290348336368, 9.4], [0.0, 9.4]], "data06": [[0.0, 4.6], [0.024151425969970088, 4.6], [0.024151425969970088, 5.3999999999999995], [0.0, 5.3999999999999995]], "data09": [[0.0, 7.6], [0.03633501812689036, 7.6], [0.03633501812689036, 8.4], [0.0, 8.4]], "data13": [[0.0, 11.6], [0.4887423262949825, 11.6], [0.4887423262949825, 12.4], [0.0, 12.4]], "data15": [[0.0, 13.6], [0.6550591240782014, 13.6], [0.6550591240782014, 14.4], [0.0, 14.4]], "data02": [[0.0, 0.6], [0.00025776866912101247, 0.6], [0.00025776866912101247, 1.4], [0.0, 1.4]], "data11": [[0.0, 9.6], [0.09373065669699841, 9.6], [0.09373065669699841, 10.4], [0.0, 10.4]], "data05": [[0.0, 3.6], [0.016084483962745, 3.6], [0.016084483962745, 4.4], [0.0, 4.4]], "data12": [[0.0, 10.6], [0.16262221610986397, 10.6], [0.16262221610986397, 11.4], [0.0, 11.4]], "data18": [[0.0, 16.6], [1.0, 16.6], [1.0, 17.400000000000002], [0.0, 17.400000000000002]], "data17": [[0.0, 15.6], [0.9756040525204737, 15.6], [0.9756040525204737, 16.4], [0.0, 16.4]], "data14": [[0.0, 12.6], [0.5060476505889623, 12.6], [0.5060476505889623, 13.4], [0.0, 13.4]], "data04": [[0.0, 2.6], [0.009346969728943952, 2.6], [0.009346969728943952, 3.4000000000000004], [0.0, 3.4000000000000004]], "data03": [[0.0, 1.6], [0.000668121205061839, 1.6], [0.000668121205061839, 2.4000000000000004], [0.0, 2.4000000000000004]], "data08": [[0.0, 6.6], [0.03472574154476299, 6.6], [0.03472574154476299, 7.3999999999999995], [0.0, 7.3999999999999995]], "data07": [[0.0, 5.6], [0.02926634305086181, 5.6], [0.02926634305086181, 6.3999999999999995], [0.0, 6.3999999999999995]], "data16": [[0.0, 14.6], [0.6832198995910952, 14.6], [0.6832198995910952, 15.4], [0.0, 15.4]]}, "axes": [{"axesbg": "#FFFFFF", "ylim": [-1.0, 19.0], "texts": [{"rotation": -0.0, "coordinates": "axes", "zorder": 3, "color": "#000000", "fontsize": 15.0, "h_anchor": "middle", "position": [0.5, -0.0772626931567329], "id": "el57594446575136", "text": "Normalized Fisher Score", "alpha": 1, "v_baseline": "hanging"}, {"rotation": -0.0, "coordinates": "axes", "zorder": 3, "color": "#000000", "fontsize": 15.0, "h_anchor": "middle", "position": [0.5, 1.0220750551876379], "id": "el57594446600664", "text": "Normalized Univariate Fisher Score Per Feature", "alpha": 1, "v_baseline": "auto"}], "images": [], "paths": [{"dasharray": "none", "coordinates": "data", "edgecolor": "none", "facecolor": "#1F77B4", "zorder": 1, "id": "el57594446648304", "yindex": 1, "xindex": 0, "pathcodes": ["M", "L", "L", "L", "Z"], "data": "data01", "edgewidth": 1.0, "alpha": 1}, {"dasharray": "none", "coordinates": "data", "edgecolor": "none", "facecolor": "#1F77B4", "zorder": 1, "id": "el57594446647072", "yindex": 1, "xindex": 0, "pathcodes": ["M", "L", "L", "L", "Z"], "data": "data02", "edgewidth": 1.0, "alpha": 1}, {"dasharray": "none", "coordinates": "data", "edgecolor": "none", "facecolor": "#1F77B4", "zorder": 1, "id": "el57594446648416", "yindex": 1, "xindex": 0, "pathcodes": ["M", "L", "L", "L", "Z"], "data": "data03", "edgewidth": 1.0, "alpha": 1}, {"dasharray": "none", "coordinates": "data", "edgecolor": "none", "facecolor": "#1F77B4", "zorder": 1, "id": "el57594446649368", "yindex": 1, "xindex": 0, "pathcodes": ["M", "L", "L", "L", "Z"], "data": "data04", "edgewidth": 1.0, "alpha": 1}, {"dasharray": "none", "coordinates": "data", "edgecolor": "none", "facecolor": "#1F77B4", "zorder": 1, "id": "el57594446655768", "yindex": 1, "xindex": 0, "pathcodes": ["M", "L", "L", "L", "Z"], "data": "data05", "edgewidth": 1.0, "alpha": 1}, {"dasharray": "none", "coordinates": "data", "edgecolor": "none", "facecolor": "#1F77B4", "zorder": 1, "id": "el57594446656048", "yindex": 1, "xindex": 0, "pathcodes": ["M", "L", "L", "L", "Z"], "data": "data06", "edgewidth": 1.0, "alpha": 1}, {"dasharray": "none", "coordinates": "data", "edgecolor": "none", "facecolor": "#1F77B4", "zorder": 1, "id": "el57594446657840", "yindex": 1, "xindex": 0, "pathcodes": ["M", "L", "L", "L", "Z"], "data": "data07", "edgewidth": 1.0, "alpha": 1}, {"dasharray": "none", "coordinates": "data", "edgecolor": "none", "facecolor": "#1F77B4", "zorder": 1, "id": "el57594446657168", "yindex": 1, "xindex": 0, "pathcodes": ["M", "L", "L", "L", "Z"], "data": "data08", "edgewidth": 1.0, "alpha": 1}, {"dasharray": "none", "coordinates": "data", "edgecolor": "none", "facecolor": "#1F77B4", "zorder": 1, "id": "el57594446566160", "yindex": 1, "xindex": 0, "pathcodes": ["M", "L", "L", "L", "Z"], "data": "data09", "edgewidth": 1.0, "alpha": 1}, {"dasharray": "none", "coordinates": "data", "edgecolor": "none", "facecolor": "#1F77B4", "zorder": 1, "id": "el57594446565208", "yindex": 1, "xindex": 0, "pathcodes": ["M", "L", "L", "L", "Z"], "data": "data10", "edgewidth": 1.0, "alpha": 1}, {"dasharray": "none", "coordinates": "data", "edgecolor": "none", "facecolor": "#1F77B4", "zorder": 1, "id": "el57594446566552", "yindex": 1, "xindex": 0, "pathcodes": ["M", "L", "L", "L", "Z"], "data": "data11", "edgewidth": 1.0, "alpha": 1}, {"dasharray": "none", "coordinates": "data", "edgecolor": "none", "facecolor": "#1F77B4", "zorder": 1, "id": "el57594446566944", "yindex": 1, "xindex": 0, "pathcodes": ["M", "L", "L", "L", "Z"], "data": "data12", "edgewidth": 1.0, "alpha": 1}, {"dasharray": "none", "coordinates": "data", "edgecolor": "none", "facecolor": "#1F77B4", "zorder": 1, "id": "el57594446451920", "yindex": 1, "xindex": 0, "pathcodes": ["M", "L", "L", "L", "Z"], "data": "data13", "edgewidth": 1.0, "alpha": 1}, {"dasharray": "none", "coordinates": "data", "edgecolor": "none", "facecolor": "#1F77B4", "zorder": 1, "id": "el57594446663680", "yindex": 1, "xindex": 0, "pathcodes": ["M", "L", "L", "L", "Z"], "data": "data14", "edgewidth": 1.0, "alpha": 1}, {"dasharray": "none", "coordinates": "data", "edgecolor": "none", "facecolor": "#1F77B4", "zorder": 1, "id": "el57594446664744", "yindex": 1, "xindex": 0, "pathcodes": ["M", "L", "L", "L", "Z"], "data": "data15", "edgewidth": 1.0, "alpha": 1}, {"dasharray": "none", "coordinates": "data", "edgecolor": "none", "facecolor": "#1F77B4", "zorder": 1, "id": "el57594446665584", "yindex": 1, "xindex": 0, "pathcodes": ["M", "L", "L", "L", "Z"], "data": "data16", "edgewidth": 1.0, "alpha": 1}, {"dasharray": "none", "coordinates": "data", "edgecolor": "none", "facecolor": "#1F77B4", "zorder": 1, "id": "el57594446666536", "yindex": 1, "xindex": 0, "pathcodes": ["M", "L", "L", "L", "Z"], "data": "data17", "edgewidth": 1.0, "alpha": 1}, {"dasharray": "none", "coordinates": "data", "edgecolor": "none", "facecolor": "#1F77B4", "zorder": 1, "id": "el57594446687920", "yindex": 1, "xindex": 0, "pathcodes": ["M", "L", "L", "L", "Z"], "data": "data18", "edgewidth": 1.0, "alpha": 1}], "lines": [], "zoomable": true, "bbox": [0.5, 0.125, 0.5, 0.755], "collections": [], "xscale": "linear", "yscale": "linear", "markers": [], "axesbgalpha": null, "ydomain": [-1.0, 19.0], "id": "el57594446516280", "sharey": [], "xdomain": [0.0, 1.05], "sharex": [], "axes": [{"position": "bottom", "tickformat": null, "nticks": 7, "grid": {"gridOn": false}, "scale": "linear", "visible": true, "fontsize": 10.0, "tickvalues": null}, {"position": "left", "tickformat": ["Total photospheric magnetic free energy density", "Area of strong field pixels in the active region", "Total unsigned current helicity", "Absolute value of the net current helicity", "Mean gradient of vertical field", "Total unsigned vertical current", "Fraction of Area with Shear > 45 deg", "Mean shear angle", "Sum of the modulus of the net current per polarity", "Mean angle of field from radial", "Total unsigned flux", "Mean vertical current density", "Sum of flux near polarity inversion line", "Mean gradient of horizontal field", "Mean gradient of total field", "Mean characteristic twist parameter, alpha", "Mean photospheric magnetic free energy", "Mean current helicity (Bz contribution)"], "nticks": 18, "grid": {"gridOn": false}, "scale": "linear", "visible": true, "fontsize": 12.0, "tickvalues": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17]}], "xlim": [0.0, 1.05]}], "plugins": [{"type": "reset"}, {"button": true, "type": "zoom", "enabled": false}, {"button": true, "type": "boxzoom", "enabled": false}], "width": 648.0});
+                 mpld3.draw_figure("fig_el5442650883774881633130320", {"height": 360.0, "axes": [{"ylim": [-1.0, 19.0], "ydomain": [-1.0, 19.0], "collections": [], "bbox": [0.5, 0.125, 0.5, 0.755], "axesbg": "#FFFFFF", "paths": [{"xindex": 0, "yindex": 1, "alpha": 1, "dasharray": "none", "zorder": 1, "edgewidth": 1.0, "data": "data01", "pathcodes": ["M", "L", "L", "L", "Z"], "id": "el544265089352728", "edgecolor": "none", "coordinates": "data", "facecolor": "#1F77B4"}, {"xindex": 0, "yindex": 1, "alpha": 1, "dasharray": "none", "zorder": 1, "edgewidth": 1.0, "data": "data02", "pathcodes": ["M", "L", "L", "L", "Z"], "id": "el544265089375456", "edgecolor": "none", "coordinates": "data", "facecolor": "#1F77B4"}, {"xindex": 0, "yindex": 1, "alpha": 1, "dasharray": "none", "zorder": 1, "edgewidth": 1.0, "data": "data03", "pathcodes": ["M", "L", "L", "L", "Z"], "id": "el544265089378200", "edgecolor": "none", "coordinates": "data", "facecolor": "#1F77B4"}, {"xindex": 0, "yindex": 1, "alpha": 1, "dasharray": "none", "zorder": 1, "edgewidth": 1.0, "data": "data04", "pathcodes": ["M", "L", "L", "L", "Z"], "id": "el544265089384432", "edgecolor": "none", "coordinates": "data", "facecolor": "#1F77B4"}, {"xindex": 0, "yindex": 1, "alpha": 1, "dasharray": "none", "zorder": 1, "edgewidth": 1.0, "data": "data05", "pathcodes": ["M", "L", "L", "L", "Z"], "id": "el544265089395376", "edgecolor": "none", "coordinates": "data", "facecolor": "#1F77B4"}, {"xindex": 0, "yindex": 1, "alpha": 1, "dasharray": "none", "zorder": 1, "edgewidth": 1.0, "data": "data06", "pathcodes": ["M", "L", "L", "L", "Z"], "id": "el544265089397392", "edgecolor": "none", "coordinates": "data", "facecolor": "#1F77B4"}, {"xindex": 0, "yindex": 1, "alpha": 1, "dasharray": "none", "zorder": 1, "edgewidth": 1.0, "data": "data07", "pathcodes": ["M", "L", "L", "L", "Z"], "id": "el544265089412432", "edgecolor": "none", "coordinates": "data", "facecolor": "#1F77B4"}, {"xindex": 0, "yindex": 1, "alpha": 1, "dasharray": "none", "zorder": 1, "edgewidth": 1.0, "data": "data08", "pathcodes": ["M", "L", "L", "L", "Z"], "id": "el544265089415120", "edgecolor": "none", "coordinates": "data", "facecolor": "#1F77B4"}, {"xindex": 0, "yindex": 1, "alpha": 1, "dasharray": "none", "zorder": 1, "edgewidth": 1.0, "data": "data09", "pathcodes": ["M", "L", "L", "L", "Z"], "id": "el544265089433248", "edgecolor": "none", "coordinates": "data", "facecolor": "#1F77B4"}, {"xindex": 0, "yindex": 1, "alpha": 1, "dasharray": "none", "zorder": 1, "edgewidth": 1.0, "data": "data10", "pathcodes": ["M", "L", "L", "L", "Z"], "id": "el544265089435600", "edgecolor": "none", "coordinates": "data", "facecolor": "#1F77B4"}, {"xindex": 0, "yindex": 1, "alpha": 1, "dasharray": "none", "zorder": 1, "edgewidth": 1.0, "data": "data11", "pathcodes": ["M", "L", "L", "L", "Z"], "id": "el544265089442112", "edgecolor": "none", "coordinates": "data", "facecolor": "#1F77B4"}, {"xindex": 0, "yindex": 1, "alpha": 1, "dasharray": "none", "zorder": 1, "edgewidth": 1.0, "data": "data12", "pathcodes": ["M", "L", "L", "L", "Z"], "id": "el544265089448960", "edgecolor": "none", "coordinates": "data", "facecolor": "#1F77B4"}, {"xindex": 0, "yindex": 1, "alpha": 1, "dasharray": "none", "zorder": 1, "edgewidth": 1.0, "data": "data13", "pathcodes": ["M", "L", "L", "L", "Z"], "id": "el544265089450976", "edgecolor": "none", "coordinates": "data", "facecolor": "#1F77B4"}, {"xindex": 0, "yindex": 1, "alpha": 1, "dasharray": "none", "zorder": 1, "edgewidth": 1.0, "data": "data14", "pathcodes": ["M", "L", "L", "L", "Z"], "id": "el544265089462088", "edgecolor": "none", "coordinates": "data", "facecolor": "#1F77B4"}, {"xindex": 0, "yindex": 1, "alpha": 1, "dasharray": "none", "zorder": 1, "edgewidth": 1.0, "data": "data15", "pathcodes": ["M", "L", "L", "L", "Z"], "id": "el544265089463544", "edgecolor": "none", "coordinates": "data", "facecolor": "#1F77B4"}, {"xindex": 0, "yindex": 1, "alpha": 1, "dasharray": "none", "zorder": 1, "edgewidth": 1.0, "data": "data16", "pathcodes": ["M", "L", "L", "L", "Z"], "id": "el544265089475104", "edgecolor": "none", "coordinates": "data", "facecolor": "#1F77B4"}, {"xindex": 0, "yindex": 1, "alpha": 1, "dasharray": "none", "zorder": 1, "edgewidth": 1.0, "data": "data17", "pathcodes": ["M", "L", "L", "L", "Z"], "id": "el544265089486272", "edgecolor": "none", "coordinates": "data", "facecolor": "#1F77B4"}, {"xindex": 0, "yindex": 1, "alpha": 1, "dasharray": "none", "zorder": 1, "edgewidth": 1.0, "data": "data18", "pathcodes": ["M", "L", "L", "L", "Z"], "id": "el544265089488064", "edgecolor": "none", "coordinates": "data", "facecolor": "#1F77B4"}], "xdomain": [0.0, 1.05], "xlim": [0.0, 1.05], "zoomable": true, "sharex": [], "markers": [], "lines": [], "sharey": [], "axes": [{"visible": true, "tickvalues": null, "grid": {"gridOn": false}, "tickformat": null, "position": "bottom", "scale": "linear", "fontsize": 10.0, "nticks": 7}, {"visible": true, "tickvalues": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17], "grid": {"gridOn": false}, "tickformat": ["Mean gradient of vertical field", "Total unsigned current helicity", "Fraction of Area with Shear > 45 deg", "Total photospheric magnetic free energy density", "Area of strong field pixels in the active region", "Absolute value of the net current helicity", "Mean angle of field from radial", "Sum of the modulus of the net current per polarity", "Mean shear angle", "Mean vertical current density", "Total unsigned flux", "Total unsigned vertical current", "Mean gradient of horizontal field", "Mean photospheric magnetic free energy", "Sum of flux near polarity inversion line", "Mean gradient of total field", "Mean characteristic twist parameter, alpha", "Mean current helicity (Bz contribution)"], "position": "left", "scale": "linear", "fontsize": 12.0, "nticks": 18}], "xscale": "linear", "axesbgalpha": null, "yscale": "linear", "images": [], "texts": [{"h_anchor": "middle", "alpha": 1, "text": "Normalized Fisher Score", "position": [0.5, -0.0772626931567329], "zorder": 3, "v_baseline": "hanging", "rotation": -0.0, "color": "#000000", "id": "el544265089091656", "fontsize": 15.0, "coordinates": "axes"}, {"h_anchor": "middle", "alpha": 1, "text": "Normalized Univariate Fisher Score Per Feature", "position": [0.5, 1.0220750551876379], "zorder": 3, "v_baseline": "auto", "rotation": -0.0, "color": "#000000", "id": "el544265089285288", "fontsize": 15.0, "coordinates": "axes"}], "id": "el544265088465248"}], "id": "el544265088377488", "plugins": [{"type": "reset"}, {"enabled": false, "button": true, "type": "zoom"}, {"enabled": false, "button": true, "type": "boxzoom"}], "width": 648.0, "data": {"data15": [[0.0, 13.6], [0.5752069270029146, 13.6], [0.5752069270029146, 14.4], [0.0, 14.4]], "data14": [[0.0, 12.6], [0.4294353656078287, 12.6], [0.4294353656078287, 13.4], [0.0, 13.4]], "data18": [[0.0, 16.6], [1.0, 16.6], [1.0, 17.400000000000002], [0.0, 17.400000000000002]], "data17": [[0.0, 15.6], [0.752035198939701, 15.6], [0.752035198939701, 16.4], [0.0, 16.4]], "data06": [[0.0, 4.6], [0.02201313542975913, 4.6], [0.02201313542975913, 5.3999999999999995], [0.0, 5.3999999999999995]], "data01": [[0.0, -0.4], [1.2370626675312336e-06, -0.4], [1.2370626675312336e-06, 0.4], [0.0, 0.4]], "data07": [[0.0, 5.6], [0.04844919972605169, 5.6], [0.04844919972605169, 6.3999999999999995], [0.0, 6.3999999999999995]], "data02": [[0.0, 0.6], [0.00012012327525954625, 0.6], [0.00012012327525954625, 1.4], [0.0, 1.4]], "data10": [[0.0, 8.6], [0.11502821111145142, 8.6], [0.11502821111145142, 9.4], [0.0, 9.4]], "data04": [[0.0, 2.6], [0.0005718523782045065, 2.6], [0.0005718523782045065, 3.4000000000000004], [0.0, 3.4000000000000004]], "data12": [[0.0, 10.6], [0.3600312572876549, 10.6], [0.3600312572876549, 11.4], [0.0, 11.4]], "data13": [[0.0, 11.6], [0.3988191207966229, 11.6], [0.3988191207966229, 12.4], [0.0, 12.4]], "data09": [[0.0, 7.6], [0.10664235567464948, 7.6], [0.10664235567464948, 8.4], [0.0, 8.4]], "data03": [[0.0, 1.6], [0.00042750286951982004, 1.6], [0.00042750286951982004, 2.4000000000000004], [0.0, 2.4000000000000004]], "data05": [[0.0, 3.6], [0.003057606923489955, 3.6], [0.003057606923489955, 4.4], [0.0, 4.4]], "data11": [[0.0, 9.6], [0.15990563596537036, 9.6], [0.15990563596537036, 10.4], [0.0, 10.4]], "data08": [[0.0, 6.6], [0.10124834073966846, 6.6], [0.10124834073966846, 7.3999999999999995], [0.0, 7.3999999999999995]], "data16": [[0.0, 14.6], [0.6230725431677075, 14.6], [0.6230725431677075, 15.4], [0.0, 15.4]]}});
             })
          });
 }
@@ -1036,7 +4322,6 @@ Now we can plot the mean TSS per k, using the standard deviation as the error in
 
 {:.input_area}
 ```python
-mpld3.disable_notebook()
 fig, ax = plt.subplots(figsize=(10, 8))      # define the size of the figure
 orangered = (1.0, 0.27, 0, 1.0)              # create an orange-red color
 cornblue = (0.39, 0.58, 0.93, 1.0)           # create a cornflower-blue color
@@ -1047,7 +4332,6 @@ marker_style_red = dict(linestyle='', markersize=8,
 marker_style_blue = dict(linestyle='', markersize=8,
                          fillstyle='full', color=cornblue, markeredgecolor=cornblue)
 text_style = dict(fontsize=16, fontdict={'family': 'monospace'})
-
 
 # ascribe the data to the axes
 k = np.arange(50)+2
@@ -1071,13 +4355,56 @@ ax.set_ylabel('TSS', labelpad=20, **text_style)
 plt.title(r'TSS per k using stratified k-fold cross-validation', **text_style)
 fig = plt.gcf()
 fig.set_size_inches(10, 5)
+mpld3.enable_notebook()
 ```
 
 
 
-{:.output .output_png}
-![png](../../images/02/1/notebook_69_0.png)
+<div markdown="0" class="output output_html">
 
+
+<style>
+
+</style>
+
+<div id="fig_el5442650887518003386049291"></div>
+<script>
+function mpld3_load_lib(url, callback){
+  var s = document.createElement('script');
+  s.src = url;
+  s.async = true;
+  s.onreadystatechange = s.onload = callback;
+  s.onerror = function(){console.warn("failed to load library " + url);};
+  document.getElementsByTagName("head")[0].appendChild(s);
+}
+
+if(typeof(mpld3) !== "undefined" && mpld3._mpld3IsLoaded){
+   // already loaded: just create the figure
+   !function(mpld3){
+       
+       mpld3.draw_figure("fig_el5442650887518003386049291", {"height": 360.0, "axes": [{"ylim": [0.0, 1.1], "ydomain": [0.0, 1.1], "collections": [{"xindex": 0, "yindex": 1, "offsetcoordinates": "display", "zorder": 2, "paths": [[[[2.0, 0.41976293594711644], [2.0, 0.43785046728971966]], ["M", "L"]]], "alphas": [null], "edgewidths": [1.5], "pathcoordinates": "data", "pathtransforms": [], "edgecolors": ["#FF4400"], "offsets": "data51", "facecolors": [], "id": "el544265089550688"}, {"xindex": 0, "yindex": 0, "offsetcoordinates": "display", "zorder": 2, "paths": [[[[3.0, 0.657351847800716], [3.0, 0.6766150025980594]], ["M", "L"]]], "alphas": [null], "edgewidths": [1.5], "pathcoordinates": "data", "pathtransforms": [], "edgecolors": ["#FF4400"], "offsets": "data51", "facecolors": [], "id": "el544265089561008"}, {"xindex": 0, "yindex": 0, "offsetcoordinates": "display", "zorder": 2, "paths": [[[[4.0, 0.6055088636789747], [4.0, 0.7726397789556492]], ["M", "L"]]], "alphas": [null], "edgewidths": [1.5], "pathcoordinates": "data", "pathtransforms": [], "edgecolors": ["#FF4400"], "offsets": "data51", "facecolors": [], "id": "el544265089596136"}, {"xindex": 0, "yindex": 0, "offsetcoordinates": "display", "zorder": 2, "paths": [[[[5.0, 0.5355001784826011], [5.0, 0.7426735561275221]], ["M", "L"]]], "alphas": [null], "edgewidths": [1.5], "pathcoordinates": "data", "pathtransforms": [], "edgecolors": ["#FF4400"], "offsets": "data51", "facecolors": [], "id": "el544265089605504"}, {"xindex": 0, "yindex": 0, "offsetcoordinates": "display", "zorder": 2, "paths": [[[[6.0, 0.602439548545725], [6.0, 0.8923296363643052]], ["M", "L"]]], "alphas": [null], "edgewidths": [1.5], "pathcoordinates": "data", "pathtransforms": [], "edgecolors": ["#FF4400"], "offsets": "data51", "facecolors": [], "id": "el544265089619752"}, {"xindex": 0, "yindex": 0, "offsetcoordinates": "display", "zorder": 2, "paths": [[[[7.0, 0.5755028818370691], [7.0, 0.828021673987857]], ["M", "L"]]], "alphas": [null], "edgewidths": [1.5], "pathcoordinates": "data", "pathtransforms": [], "edgecolors": ["#FF4400"], "offsets": "data51", "facecolors": [], "id": "el544265089638328"}, {"xindex": 0, "yindex": 0, "offsetcoordinates": "display", "zorder": 2, "paths": [[[[8.0, 0.6248759804534676], [8.0, 0.8133855658269469]], ["M", "L"]]], "alphas": [null], "edgewidths": [1.5], "pathcoordinates": "data", "pathtransforms": [], "edgecolors": ["#FF4400"], "offsets": "data51", "facecolors": [], "id": "el544265089656784"}, {"xindex": 0, "yindex": 0, "offsetcoordinates": "display", "zorder": 2, "paths": [[[[9.0, 0.5327327213787822], [9.0, 0.8307752901788745]], ["M", "L"]]], "alphas": [null], "edgewidths": [1.5], "pathcoordinates": "data", "pathtransforms": [], "edgecolors": ["#FF4400"], "offsets": "data51", "facecolors": [], "id": "el544265089674576"}, {"xindex": 0, "yindex": 0, "offsetcoordinates": "display", "zorder": 2, "paths": [[[[10.0, 0.6018537736187834], [10.0, 0.8674430148640515]], ["M", "L"]]], "alphas": [null], "edgewidths": [1.5], "pathcoordinates": "data", "pathtransforms": [], "edgecolors": ["#FF4400"], "offsets": "data51", "facecolors": [], "id": "el544265089693144"}, {"xindex": 0, "yindex": 0, "offsetcoordinates": "display", "zorder": 2, "paths": [[[[11.0, 0.5640164836161005], [11.0, 0.8417882379780949]], ["M", "L"]]], "alphas": [null], "edgewidths": [1.5], "pathcoordinates": "data", "pathtransforms": [], "edgecolors": ["#FF4400"], "offsets": "data51", "facecolors": [], "id": "el544265089342128"}, {"xindex": 0, "yindex": 0, "offsetcoordinates": "display", "zorder": 2, "paths": [[[[12.0, 0.5688060442864766], [12.0, 0.8139981885177561]], ["M", "L"]]], "alphas": [null], "edgewidths": [1.5], "pathcoordinates": "data", "pathtransforms": [], "edgecolors": ["#FF4400"], "offsets": "data51", "facecolors": [], "id": "el544265089713400"}, {"xindex": 0, "yindex": 0, "offsetcoordinates": "display", "zorder": 2, "paths": [[[[13.0, 0.5570277530115902], [13.0, 0.891711008227171]], ["M", "L"]]], "alphas": [null], "edgewidths": [1.5], "pathcoordinates": "data", "pathtransforms": [], "edgecolors": ["#FF4400"], "offsets": "data51", "facecolors": [], "id": "el544265089726416"}, {"xindex": 0, "yindex": 0, "offsetcoordinates": "display", "zorder": 2, "paths": [[[[14.0, 0.6037220765653896], [14.0, 0.9079522705928286]], ["M", "L"]]], "alphas": [null], "edgewidths": [1.5], "pathcoordinates": "data", "pathtransforms": [], "edgecolors": ["#FF4400"], "offsets": "data51", "facecolors": [], "id": "el544265089749536"}, {"xindex": 0, "yindex": 0, "offsetcoordinates": "display", "zorder": 2, "paths": [[[[15.0, 0.6025871193761885], [15.0, 0.8690603902023557]], ["M", "L"]]], "alphas": [null], "edgewidths": [1.5], "pathcoordinates": "data", "pathtransforms": [], "edgecolors": ["#FF4400"], "offsets": "data51", "facecolors": [], "id": "el544265089766816"}, {"xindex": 0, "yindex": 0, "offsetcoordinates": "display", "zorder": 2, "paths": [[[[16.0, 0.5618799749822365], [16.0, 0.8776143270120655]], ["M", "L"]]], "alphas": [null], "edgewidths": [1.5], "pathcoordinates": "data", "pathtransforms": [], "edgecolors": ["#FF4400"], "offsets": "data51", "facecolors": [], "id": "el544265090300984"}, {"xindex": 0, "yindex": 0, "offsetcoordinates": "display", "zorder": 2, "paths": [[[[17.0, 0.5647483647964187], [17.0, 0.8763376080542602]], ["M", "L"]]], "alphas": [null], "edgewidths": [1.5], "pathcoordinates": "data", "pathtransforms": [], "edgecolors": ["#FF4400"], "offsets": "data51", "facecolors": [], "id": "el544265090323984"}, {"xindex": 0, "yindex": 0, "offsetcoordinates": "display", "zorder": 2, "paths": [[[[18.0, 0.5297858549694562], [18.0, 0.9601497327922185]], ["M", "L"]]], "alphas": [null], "edgewidths": [1.5], "pathcoordinates": "data", "pathtransforms": [], "edgecolors": ["#FF4400"], "offsets": "data51", "facecolors": [], "id": "el544265090341944"}, {"xindex": 0, "yindex": 0, "offsetcoordinates": "display", "zorder": 2, "paths": [[[[19.0, 0.6044514430436652], [19.0, 0.9069902045535887]], ["M", "L"]]], "alphas": [null], "edgewidths": [1.5], "pathcoordinates": "data", "pathtransforms": [], "edgecolors": ["#FF4400"], "offsets": "data51", "facecolors": [], "id": "el544265090348448"}, {"xindex": 0, "yindex": 0, "offsetcoordinates": "display", "zorder": 2, "paths": [[[[20.0, 0.5467717396255675], [20.0, 0.9844187365649087]], ["M", "L"]]], "alphas": [null], "edgewidths": [1.5], "pathcoordinates": "data", "pathtransforms": [], "edgecolors": ["#FF4400"], "offsets": "data51", "facecolors": [], "id": "el544265090370504"}, {"xindex": 0, "yindex": 0, "offsetcoordinates": "display", "zorder": 2, "paths": [[[[21.0, 0.5316111777521653], [21.0, 0.9668015206605329]], ["M", "L"]]], "alphas": [null], "edgewidths": [1.5], "pathcoordinates": "data", "pathtransforms": [], "edgecolors": ["#FF4400"], "offsets": "data51", "facecolors": [], "id": "el544265090380824"}, {"xindex": 0, "yindex": 0, "offsetcoordinates": "display", "zorder": 2, "paths": [[[[22.0, 0.45969602061227915], [22.0, 0.9437330065009586]], ["M", "L"]]], "alphas": [null], "edgewidths": [1.5], "pathcoordinates": "data", "pathtransforms": [], "edgecolors": ["#FF4400"], "offsets": "data51", "facecolors": [], "id": "el544265090411296"}, {"xindex": 0, "yindex": 0, "offsetcoordinates": "display", "zorder": 2, "paths": [[[[23.0, 0.5078355672635193], [23.0, 1.0193701281343956]], ["M", "L"]]], "alphas": [null], "edgewidths": [1.5], "pathcoordinates": "data", "pathtransforms": [], "edgecolors": ["#FF4400"], "offsets": "data51", "facecolors": [], "id": "el544265090425656"}, {"xindex": 0, "yindex": 0, "offsetcoordinates": "display", "zorder": 2, "paths": [[[[24.0, 0.5906830771298823], [24.0, 0.927018447924584]], ["M", "L"]]], "alphas": [null], "edgewidths": [1.5], "pathcoordinates": "data", "pathtransforms": [], "edgecolors": ["#FF4400"], "offsets": "data51", "facecolors": [], "id": "el544265090439688"}, {"xindex": 0, "yindex": 0, "offsetcoordinates": "display", "zorder": 2, "paths": [[[[25.0, 0.49913904456047686], [25.0, 0.97471716458985]], ["M", "L"]]], "alphas": [null], "edgewidths": [1.5], "pathcoordinates": "data", "pathtransforms": [], "edgecolors": ["#FF4400"], "offsets": "data51", "facecolors": [], "id": "el544265090450008"}, {"xindex": 0, "yindex": 0, "offsetcoordinates": "display", "zorder": 2, "paths": [[[[26.0, 0.5339456251703518], [26.0, 1.0003681003198446]], ["M", "L"]]], "alphas": [null], "edgewidths": [1.5], "pathcoordinates": "data", "pathtransforms": [], "edgecolors": ["#FF4400"], "offsets": "data51", "facecolors": [], "id": "el544265090476328"}, {"xindex": 0, "yindex": 0, "offsetcoordinates": "display", "zorder": 2, "paths": [[[[27.0, 0.5075668661955219], [27.0, 1.0128035041748484]], ["M", "L"]]], "alphas": [null], "edgewidths": [1.5], "pathcoordinates": "data", "pathtransforms": [], "edgecolors": ["#FF4400"], "offsets": "data51", "facecolors": [], "id": "el544265090495344"}, {"xindex": 0, "yindex": 0, "offsetcoordinates": "display", "zorder": 2, "paths": [[[[28.0, 0.5611555704431681], [28.0, 0.9873563343187366]], ["M", "L"]]], "alphas": [null], "edgewidths": [1.5], "pathcoordinates": "data", "pathtransforms": [], "edgecolors": ["#FF4400"], "offsets": "data51", "facecolors": [], "id": "el544265090526544"}, {"xindex": 0, "yindex": 0, "offsetcoordinates": "display", "zorder": 2, "paths": [[[[29.0, 0.5554352651541445], [29.0, 0.9762560320543938]], ["M", "L"]]], "alphas": [null], "edgewidths": [1.5], "pathcoordinates": "data", "pathtransforms": [], "edgecolors": ["#FF4400"], "offsets": "data51", "facecolors": [], "id": "el544265088796456"}, {"xindex": 0, "yindex": 0, "offsetcoordinates": "display", "zorder": 2, "paths": [[[[30.0, 0.4970528561174785], [30.0, 1.0010423819777594]], ["M", "L"]]], "alphas": [null], "edgewidths": [1.5], "pathcoordinates": "data", "pathtransforms": [], "edgecolors": ["#FF4400"], "offsets": "data51", "facecolors": [], "id": "el544265090546800"}, {"xindex": 0, "yindex": 0, "offsetcoordinates": "display", "zorder": 2, "paths": [[[[31.0, 0.5051796248861131], [31.0, 1.0068137580750116]], ["M", "L"]]], "alphas": [null], "edgewidths": [1.5], "pathcoordinates": "data", "pathtransforms": [], "edgecolors": ["#FF4400"], "offsets": "data51", "facecolors": [], "id": "el544265089909840"}, {"xindex": 0, "yindex": 0, "offsetcoordinates": "display", "zorder": 2, "paths": [[[[32.0, 0.5562620425957578], [32.0, 0.9796811808474657]], ["M", "L"]]], "alphas": [null], "edgewidths": [1.5], "pathcoordinates": "data", "pathtransforms": [], "edgecolors": ["#FF4400"], "offsets": "data51", "facecolors": [], "id": "el544265089927064"}, {"xindex": 0, "yindex": 0, "offsetcoordinates": "display", "zorder": 2, "paths": [[[[33.0, 0.47655195536583395], [33.0, 1.0354915566776781]], ["M", "L"]]], "alphas": [null], "edgewidths": [1.5], "pathcoordinates": "data", "pathtransforms": [], "edgecolors": ["#FF4400"], "offsets": "data51", "facecolors": [], "id": "el544265089946480"}, {"xindex": 0, "yindex": 0, "offsetcoordinates": "display", "zorder": 2, "paths": [[[[34.0, 0.5080072426551658], [34.0, 1.0353562565906864]], ["M", "L"]]], "alphas": [null], "edgewidths": [1.5], "pathcoordinates": "data", "pathtransforms": [], "edgecolors": ["#FF4400"], "offsets": "data51", "facecolors": [], "id": "el544265089955568"}, {"xindex": 0, "yindex": 0, "offsetcoordinates": "display", "zorder": 2, "paths": [[[[35.0, 0.4724243276226902], [35.0, 1.0341690789707163]], ["M", "L"]]], "alphas": [null], "edgewidths": [1.5], "pathcoordinates": "data", "pathtransforms": [], "edgecolors": ["#FF4400"], "offsets": "data51", "facecolors": [], "id": "el544265089974760"}, {"xindex": 0, "yindex": 0, "offsetcoordinates": "display", "zorder": 2, "paths": [[[[36.0, 0.5337642990318341], [36.0, 1.0260000107324756]], ["M", "L"]]], "alphas": [null], "edgewidths": [1.5], "pathcoordinates": "data", "pathtransforms": [], "edgecolors": ["#FF4400"], "offsets": "data51", "facecolors": [], "id": "el544265089988504"}, {"xindex": 0, "yindex": 0, "offsetcoordinates": "display", "zorder": 2, "paths": [[[[37.0, 0.43304576664682226], [37.0, 1.0735062399051847]], ["M", "L"]]], "alphas": [null], "edgewidths": [1.5], "pathcoordinates": "data", "pathtransforms": [], "edgecolors": ["#FF4400"], "offsets": "data51", "facecolors": [], "id": "el544265090011568"}, {"xindex": 0, "yindex": 0, "offsetcoordinates": "display", "zorder": 2, "paths": [[[[38.0, 0.4942435277070292], [38.0, 0.9658840639995101]], ["M", "L"]]], "alphas": [null], "edgewidths": [1.5], "pathcoordinates": "data", "pathtransforms": [], "edgecolors": ["#FF4400"], "offsets": "data51", "facecolors": [], "id": "el544265090033448"}, {"xindex": 0, "yindex": 0, "offsetcoordinates": "display", "zorder": 2, "paths": [[[[39.0, 0.5013105043856534], [39.0, 1.0216110185358696]], ["M", "L"]]], "alphas": [null], "edgewidths": [1.5], "pathcoordinates": "data", "pathtransforms": [], "edgecolors": ["#FF4400"], "offsets": "data51", "facecolors": [], "id": "el544265090051968"}, {"xindex": 0, "yindex": 0, "offsetcoordinates": "display", "zorder": 2, "paths": [[[[40.0, 0.46270782288881807], [40.0, 1.0522921771111817]], ["M", "L"]]], "alphas": [null], "edgewidths": [1.5], "pathcoordinates": "data", "pathtransforms": [], "edgecolors": ["#FF4400"], "offsets": "data51", "facecolors": [], "id": "el544265090066272"}, {"xindex": 0, "yindex": 0, "offsetcoordinates": "display", "zorder": 2, "paths": [[[[41.0, 0.5067746021189365], [41.0, 1.0138462404531254]], ["M", "L"]]], "alphas": [null], "edgewidths": [1.5], "pathcoordinates": "data", "pathtransforms": [], "edgecolors": ["#FF4400"], "offsets": "data51", "facecolors": [], "id": "el544265090088832"}, {"xindex": 0, "yindex": 0, "offsetcoordinates": "display", "zorder": 2, "paths": [[[[42.0, 0.4053637435757018], [42.0, 1.0907401525281943]], ["M", "L"]]], "alphas": [null], "edgewidths": [1.5], "pathcoordinates": "data", "pathtransforms": [], "edgecolors": ["#FF4400"], "offsets": "data51", "facecolors": [], "id": "el544265090103024"}, {"xindex": 0, "yindex": 0, "offsetcoordinates": "display", "zorder": 2, "paths": [[[[43.0, 0.4474094536324521], [43.0, 1.0549161277628967]], ["M", "L"]]], "alphas": [null], "edgewidths": [1.5], "pathcoordinates": "data", "pathtransforms": [], "edgecolors": ["#FF4400"], "offsets": "data51", "facecolors": [], "id": "el544265090121152"}, {"xindex": 0, "yindex": 0, "offsetcoordinates": "display", "zorder": 2, "paths": [[[[44.0, 0.433428162457701], [44.0, 1.104450625421087]], ["M", "L"]]], "alphas": [null], "edgewidths": [1.5], "pathcoordinates": "data", "pathtransforms": [], "edgecolors": ["#FF4400"], "offsets": "data51", "facecolors": [], "id": "el544265090131248"}, {"xindex": 0, "yindex": 0, "offsetcoordinates": "display", "zorder": 2, "paths": [[[[45.0, 0.4562616841323628], [45.0, 1.0904049825343038]], ["M", "L"]]], "alphas": [null], "edgewidths": [1.5], "pathcoordinates": "data", "pathtransforms": [], "edgecolors": ["#FF4400"], "offsets": "data51", "facecolors": [], "id": "el544265090157792"}, {"xindex": 0, "yindex": 0, "offsetcoordinates": "display", "zorder": 2, "paths": [[[[46.0, 0.4674886317372425], [46.0, 1.056665957634738]], ["M", "L"]]], "alphas": [null], "edgewidths": [1.5], "pathcoordinates": "data", "pathtransforms": [], "edgecolors": ["#FF4400"], "offsets": "data51", "facecolors": [], "id": "el544265090958640"}, {"xindex": 0, "yindex": 0, "offsetcoordinates": "display", "zorder": 2, "paths": [[[[47.0, 0.39629231770663453], [47.0, 1.0736840416314268]], ["M", "L"]]], "alphas": [null], "edgewidths": [1.5], "pathcoordinates": "data", "pathtransforms": [], "edgecolors": ["#FF4400"], "offsets": "data51", "facecolors": [], "id": "el544265090976488"}, {"xindex": 0, "yindex": 0, "offsetcoordinates": "display", "zorder": 2, "paths": [[[[48.0, 0.34166154733084575], [48.0, 1.0900514156321173]], ["M", "L"]]], "alphas": [null], "edgewidths": [1.5], "pathcoordinates": "data", "pathtransforms": [], "edgecolors": ["#FF4400"], "offsets": "data51", "facecolors": [], "id": "el544265090990680"}, {"xindex": 0, "yindex": 0, "offsetcoordinates": "display", "zorder": 2, "paths": [[[[49.0, 0.46273865212543736], [49.0, 1.0588032979879414]], ["M", "L"]]], "alphas": [null], "edgewidths": [1.5], "pathcoordinates": "data", "pathtransforms": [], "edgecolors": ["#FF4400"], "offsets": "data51", "facecolors": [], "id": "el544265091012336"}, {"xindex": 0, "yindex": 0, "offsetcoordinates": "display", "zorder": 2, "paths": [[[[50.0, 0.3777856148550158], [50.0, 1.0866588295894288]], ["M", "L"]]], "alphas": [null], "edgewidths": [1.5], "pathcoordinates": "data", "pathtransforms": [], "edgecolors": ["#FF4400"], "offsets": "data51", "facecolors": [], "id": "el544265091047184"}, {"xindex": 0, "yindex": 0, "offsetcoordinates": "display", "zorder": 2, "paths": [[[[51.0, 0.4246217024684788], [51.0, 1.0857268814095167]], ["M", "L"]]], "alphas": [null], "edgewidths": [1.5], "pathcoordinates": "data", "pathtransforms": [], "edgecolors": ["#FF4400"], "offsets": "data51", "facecolors": [], "id": "el544265091061376"}], "bbox": [0.125, 0.125, 0.775, 0.755], "axesbg": "#FFFFFF", "paths": [], "xdomain": [0.0, 52.0], "xlim": [0.0, 52.0], "zoomable": true, "sharex": [], "markers": [{"xindex": 0, "yindex": 1, "alpha": 1, "facecolor": "#FF4400", "edgewidth": 1.0, "id": "el544265089552032pts", "markerpath": [[[0.0, 4.0], [1.0608124, 4.0], [2.078319483139414, 3.5785347663529667], [2.8284271247461903, 2.8284271247461903], [3.5785347663529667, 2.078319483139414], [4.0, 1.0608124], [4.0, 0.0], [4.0, -1.0608124], [3.5785347663529667, -2.078319483139414], [2.8284271247461903, -2.8284271247461903], [2.078319483139414, -3.5785347663529667], [1.0608124, -4.0], [0.0, -4.0], [-1.0608124, -4.0], [-2.078319483139414, -3.5785347663529667], [-2.8284271247461903, -2.8284271247461903], [-3.5785347663529667, -2.078319483139414], [-4.0, -1.0608124], [-4.0, 0.0], [-4.0, 1.0608124], [-3.5785347663529667, 2.078319483139414], [-2.8284271247461903, 2.8284271247461903], [-2.078319483139414, 3.5785347663529667], [-1.0608124, 4.0], [0.0, 4.0]], ["M", "C", "C", "C", "C", "C", "C", "C", "C", "Z"]], "zorder": 2, "edgecolor": "#FF4400", "coordinates": "data", "data": "data01"}, {"xindex": 0, "yindex": 1, "alpha": 1, "facecolor": "#FF4400", "edgewidth": 1.0, "id": "el544265089562128pts", "markerpath": [[[0.0, 4.0], [1.0608124, 4.0], [2.078319483139414, 3.5785347663529667], [2.8284271247461903, 2.8284271247461903], [3.5785347663529667, 2.078319483139414], [4.0, 1.0608124], [4.0, 0.0], [4.0, -1.0608124], [3.5785347663529667, -2.078319483139414], [2.8284271247461903, -2.8284271247461903], [2.078319483139414, -3.5785347663529667], [1.0608124, -4.0], [0.0, -4.0], [-1.0608124, -4.0], [-2.078319483139414, -3.5785347663529667], [-2.8284271247461903, -2.8284271247461903], [-3.5785347663529667, -2.078319483139414], [-4.0, -1.0608124], [-4.0, 0.0], [-4.0, 1.0608124], [-3.5785347663529667, 2.078319483139414], [-2.8284271247461903, 2.8284271247461903], [-2.078319483139414, 3.5785347663529667], [-1.0608124, 4.0], [0.0, 4.0]], ["M", "C", "C", "C", "C", "C", "C", "C", "C", "Z"]], "zorder": 2, "edgecolor": "#FF4400", "coordinates": "data", "data": "data02"}, {"xindex": 0, "yindex": 1, "alpha": 1, "facecolor": "#FF4400", "edgewidth": 1.0, "id": "el544265089596808pts", "markerpath": [[[0.0, 4.0], [1.0608124, 4.0], [2.078319483139414, 3.5785347663529667], [2.8284271247461903, 2.8284271247461903], [3.5785347663529667, 2.078319483139414], [4.0, 1.0608124], [4.0, 0.0], [4.0, -1.0608124], [3.5785347663529667, -2.078319483139414], [2.8284271247461903, -2.8284271247461903], [2.078319483139414, -3.5785347663529667], [1.0608124, -4.0], [0.0, -4.0], [-1.0608124, -4.0], [-2.078319483139414, -3.5785347663529667], [-2.8284271247461903, -2.8284271247461903], [-3.5785347663529667, -2.078319483139414], [-4.0, -1.0608124], [-4.0, 0.0], [-4.0, 1.0608124], [-3.5785347663529667, 2.078319483139414], [-2.8284271247461903, 2.8284271247461903], [-2.078319483139414, 3.5785347663529667], [-1.0608124, 4.0], [0.0, 4.0]], ["M", "C", "C", "C", "C", "C", "C", "C", "C", "Z"]], "zorder": 2, "edgecolor": "#FF4400", "coordinates": "data", "data": "data03"}, {"xindex": 0, "yindex": 1, "alpha": 1, "facecolor": "#FF4400", "edgewidth": 1.0, "id": "el544265089606904pts", "markerpath": [[[0.0, 4.0], [1.0608124, 4.0], [2.078319483139414, 3.5785347663529667], [2.8284271247461903, 2.8284271247461903], [3.5785347663529667, 2.078319483139414], [4.0, 1.0608124], [4.0, 0.0], [4.0, -1.0608124], [3.5785347663529667, -2.078319483139414], [2.8284271247461903, -2.8284271247461903], [2.078319483139414, -3.5785347663529667], [1.0608124, -4.0], [0.0, -4.0], [-1.0608124, -4.0], [-2.078319483139414, -3.5785347663529667], [-2.8284271247461903, -2.8284271247461903], [-3.5785347663529667, -2.078319483139414], [-4.0, -1.0608124], [-4.0, 0.0], [-4.0, 1.0608124], [-3.5785347663529667, 2.078319483139414], [-2.8284271247461903, 2.8284271247461903], [-2.078319483139414, 3.5785347663529667], [-1.0608124, 4.0], [0.0, 4.0]], ["M", "C", "C", "C", "C", "C", "C", "C", "C", "Z"]], "zorder": 2, "edgecolor": "#FF4400", "coordinates": "data", "data": "data04"}, {"xindex": 0, "yindex": 1, "alpha": 1, "facecolor": "#FF4400", "edgewidth": 1.0, "id": "el544265089625424pts", "markerpath": [[[0.0, 4.0], [1.0608124, 4.0], [2.078319483139414, 3.5785347663529667], [2.8284271247461903, 2.8284271247461903], [3.5785347663529667, 2.078319483139414], [4.0, 1.0608124], [4.0, 0.0], [4.0, -1.0608124], [3.5785347663529667, -2.078319483139414], [2.8284271247461903, -2.8284271247461903], [2.078319483139414, -3.5785347663529667], [1.0608124, -4.0], [0.0, -4.0], [-1.0608124, -4.0], [-2.078319483139414, -3.5785347663529667], [-2.8284271247461903, -2.8284271247461903], [-3.5785347663529667, -2.078319483139414], [-4.0, -1.0608124], [-4.0, 0.0], [-4.0, 1.0608124], [-3.5785347663529667, 2.078319483139414], [-2.8284271247461903, 2.8284271247461903], [-2.078319483139414, 3.5785347663529667], [-1.0608124, 4.0], [0.0, 4.0]], ["M", "C", "C", "C", "C", "C", "C", "C", "C", "Z"]], "zorder": 2, "edgecolor": "#FF4400", "coordinates": "data", "data": "data05"}, {"xindex": 0, "yindex": 1, "alpha": 1, "facecolor": "#FF4400", "edgewidth": 1.0, "id": "el544265089639840pts", "markerpath": [[[0.0, 4.0], [1.0608124, 4.0], [2.078319483139414, 3.5785347663529667], [2.8284271247461903, 2.8284271247461903], [3.5785347663529667, 2.078319483139414], [4.0, 1.0608124], [4.0, 0.0], [4.0, -1.0608124], [3.5785347663529667, -2.078319483139414], [2.8284271247461903, -2.8284271247461903], [2.078319483139414, -3.5785347663529667], [1.0608124, -4.0], [0.0, -4.0], [-1.0608124, -4.0], [-2.078319483139414, -3.5785347663529667], [-2.8284271247461903, -2.8284271247461903], [-3.5785347663529667, -2.078319483139414], [-4.0, -1.0608124], [-4.0, 0.0], [-4.0, 1.0608124], [-3.5785347663529667, 2.078319483139414], [-2.8284271247461903, 2.8284271247461903], [-2.078319483139414, 3.5785347663529667], [-1.0608124, 4.0], [0.0, 4.0]], ["M", "C", "C", "C", "C", "C", "C", "C", "C", "Z"]], "zorder": 2, "edgecolor": "#FF4400", "coordinates": "data", "data": "data06"}, {"xindex": 0, "yindex": 1, "alpha": 1, "facecolor": "#FF4400", "edgewidth": 1.0, "id": "el544265089662120pts", "markerpath": [[[0.0, 4.0], [1.0608124, 4.0], [2.078319483139414, 3.5785347663529667], [2.8284271247461903, 2.8284271247461903], [3.5785347663529667, 2.078319483139414], [4.0, 1.0608124], [4.0, 0.0], [4.0, -1.0608124], [3.5785347663529667, -2.078319483139414], [2.8284271247461903, -2.8284271247461903], [2.078319483139414, -3.5785347663529667], [1.0608124, -4.0], [0.0, -4.0], [-1.0608124, -4.0], [-2.078319483139414, -3.5785347663529667], [-2.8284271247461903, -2.8284271247461903], [-3.5785347663529667, -2.078319483139414], [-4.0, -1.0608124], [-4.0, 0.0], [-4.0, 1.0608124], [-3.5785347663529667, 2.078319483139414], [-2.8284271247461903, 2.8284271247461903], [-2.078319483139414, 3.5785347663529667], [-1.0608124, 4.0], [0.0, 4.0]], ["M", "C", "C", "C", "C", "C", "C", "C", "C", "Z"]], "zorder": 2, "edgecolor": "#FF4400", "coordinates": "data", "data": "data07"}, {"xindex": 0, "yindex": 1, "alpha": 1, "facecolor": "#FF4400", "edgewidth": 1.0, "id": "el544265089676312pts", "markerpath": [[[0.0, 4.0], [1.0608124, 4.0], [2.078319483139414, 3.5785347663529667], [2.8284271247461903, 2.8284271247461903], [3.5785347663529667, 2.078319483139414], [4.0, 1.0608124], [4.0, 0.0], [4.0, -1.0608124], [3.5785347663529667, -2.078319483139414], [2.8284271247461903, -2.8284271247461903], [2.078319483139414, -3.5785347663529667], [1.0608124, -4.0], [0.0, -4.0], [-1.0608124, -4.0], [-2.078319483139414, -3.5785347663529667], [-2.8284271247461903, -2.8284271247461903], [-3.5785347663529667, -2.078319483139414], [-4.0, -1.0608124], [-4.0, 0.0], [-4.0, 1.0608124], [-3.5785347663529667, 2.078319483139414], [-2.8284271247461903, 2.8284271247461903], [-2.078319483139414, 3.5785347663529667], [-1.0608124, 4.0], [0.0, 4.0]], ["M", "C", "C", "C", "C", "C", "C", "C", "C", "Z"]], "zorder": 2, "edgecolor": "#FF4400", "coordinates": "data", "data": "data08"}, {"xindex": 0, "yindex": 1, "alpha": 1, "facecolor": "#FF4400", "edgewidth": 1.0, "id": "el544265089698928pts", "markerpath": [[[0.0, 4.0], [1.0608124, 4.0], [2.078319483139414, 3.5785347663529667], [2.8284271247461903, 2.8284271247461903], [3.5785347663529667, 2.078319483139414], [4.0, 1.0608124], [4.0, 0.0], [4.0, -1.0608124], [3.5785347663529667, -2.078319483139414], [2.8284271247461903, -2.8284271247461903], [2.078319483139414, -3.5785347663529667], [1.0608124, -4.0], [0.0, -4.0], [-1.0608124, -4.0], [-2.078319483139414, -3.5785347663529667], [-2.8284271247461903, -2.8284271247461903], [-3.5785347663529667, -2.078319483139414], [-4.0, -1.0608124], [-4.0, 0.0], [-4.0, 1.0608124], [-3.5785347663529667, 2.078319483139414], [-2.8284271247461903, 2.8284271247461903], [-2.078319483139414, 3.5785347663529667], [-1.0608124, 4.0], [0.0, 4.0]], ["M", "C", "C", "C", "C", "C", "C", "C", "C", "Z"]], "zorder": 2, "edgecolor": "#FF4400", "coordinates": "data", "data": "data09"}, {"xindex": 0, "yindex": 1, "alpha": 1, "facecolor": "#FF4400", "edgewidth": 1.0, "id": "el544265088497336pts", "markerpath": [[[0.0, 4.0], [1.0608124, 4.0], [2.078319483139414, 3.5785347663529667], [2.8284271247461903, 2.8284271247461903], [3.5785347663529667, 2.078319483139414], [4.0, 1.0608124], [4.0, 0.0], [4.0, -1.0608124], [3.5785347663529667, -2.078319483139414], [2.8284271247461903, -2.8284271247461903], [2.078319483139414, -3.5785347663529667], [1.0608124, -4.0], [0.0, -4.0], [-1.0608124, -4.0], [-2.078319483139414, -3.5785347663529667], [-2.8284271247461903, -2.8284271247461903], [-3.5785347663529667, -2.078319483139414], [-4.0, -1.0608124], [-4.0, 0.0], [-4.0, 1.0608124], [-3.5785347663529667, 2.078319483139414], [-2.8284271247461903, 2.8284271247461903], [-2.078319483139414, 3.5785347663529667], [-1.0608124, 4.0], [0.0, 4.0]], ["M", "C", "C", "C", "C", "C", "C", "C", "C", "Z"]], "zorder": 2, "edgecolor": "#FF4400", "coordinates": "data", "data": "data10"}, {"xindex": 0, "yindex": 1, "alpha": 1, "facecolor": "#FF4400", "edgewidth": 1.0, "id": "el544265089713960pts", "markerpath": [[[0.0, 4.0], [1.0608124, 4.0], [2.078319483139414, 3.5785347663529667], [2.8284271247461903, 2.8284271247461903], [3.5785347663529667, 2.078319483139414], [4.0, 1.0608124], [4.0, 0.0], [4.0, -1.0608124], [3.5785347663529667, -2.078319483139414], [2.8284271247461903, -2.8284271247461903], [2.078319483139414, -3.5785347663529667], [1.0608124, -4.0], [0.0, -4.0], [-1.0608124, -4.0], [-2.078319483139414, -3.5785347663529667], [-2.8284271247461903, -2.8284271247461903], [-3.5785347663529667, -2.078319483139414], [-4.0, -1.0608124], [-4.0, 0.0], [-4.0, 1.0608124], [-3.5785347663529667, 2.078319483139414], [-2.8284271247461903, 2.8284271247461903], [-2.078319483139414, 3.5785347663529667], [-1.0608124, 4.0], [0.0, 4.0]], ["M", "C", "C", "C", "C", "C", "C", "C", "C", "Z"]], "zorder": 2, "edgecolor": "#FF4400", "coordinates": "data", "data": "data11"}, {"xindex": 0, "yindex": 1, "alpha": 1, "facecolor": "#FF4400", "edgewidth": 1.0, "id": "el544265089737304pts", "markerpath": [[[0.0, 4.0], [1.0608124, 4.0], [2.078319483139414, 3.5785347663529667], [2.8284271247461903, 2.8284271247461903], [3.5785347663529667, 2.078319483139414], [4.0, 1.0608124], [4.0, 0.0], [4.0, -1.0608124], [3.5785347663529667, -2.078319483139414], [2.8284271247461903, -2.8284271247461903], [2.078319483139414, -3.5785347663529667], [1.0608124, -4.0], [0.0, -4.0], [-1.0608124, -4.0], [-2.078319483139414, -3.5785347663529667], [-2.8284271247461903, -2.8284271247461903], [-3.5785347663529667, -2.078319483139414], [-4.0, -1.0608124], [-4.0, 0.0], [-4.0, 1.0608124], [-3.5785347663529667, 2.078319483139414], [-2.8284271247461903, 2.8284271247461903], [-2.078319483139414, 3.5785347663529667], [-1.0608124, 4.0], [0.0, 4.0]], ["M", "C", "C", "C", "C", "C", "C", "C", "C", "Z"]], "zorder": 2, "edgecolor": "#FF4400", "coordinates": "data", "data": "data12"}, {"xindex": 0, "yindex": 1, "alpha": 1, "facecolor": "#FF4400", "edgewidth": 1.0, "id": "el544265089750432pts", "markerpath": [[[0.0, 4.0], [1.0608124, 4.0], [2.078319483139414, 3.5785347663529667], [2.8284271247461903, 2.8284271247461903], [3.5785347663529667, 2.078319483139414], [4.0, 1.0608124], [4.0, 0.0], [4.0, -1.0608124], [3.5785347663529667, -2.078319483139414], [2.8284271247461903, -2.8284271247461903], [2.078319483139414, -3.5785347663529667], [1.0608124, -4.0], [0.0, -4.0], [-1.0608124, -4.0], [-2.078319483139414, -3.5785347663529667], [-2.8284271247461903, -2.8284271247461903], [-3.5785347663529667, -2.078319483139414], [-4.0, -1.0608124], [-4.0, 0.0], [-4.0, 1.0608124], [-3.5785347663529667, 2.078319483139414], [-2.8284271247461903, 2.8284271247461903], [-2.078319483139414, 3.5785347663529667], [-1.0608124, 4.0], [0.0, 4.0]], ["M", "C", "C", "C", "C", "C", "C", "C", "C", "Z"]], "zorder": 2, "edgecolor": "#FF4400", "coordinates": "data", "data": "data13"}, {"xindex": 0, "yindex": 1, "alpha": 1, "facecolor": "#FF4400", "edgewidth": 1.0, "id": "el544265089777984pts", "markerpath": [[[0.0, 4.0], [1.0608124, 4.0], [2.078319483139414, 3.5785347663529667], [2.8284271247461903, 2.8284271247461903], [3.5785347663529667, 2.078319483139414], [4.0, 1.0608124], [4.0, 0.0], [4.0, -1.0608124], [3.5785347663529667, -2.078319483139414], [2.8284271247461903, -2.8284271247461903], [2.078319483139414, -3.5785347663529667], [1.0608124, -4.0], [0.0, -4.0], [-1.0608124, -4.0], [-2.078319483139414, -3.5785347663529667], [-2.8284271247461903, -2.8284271247461903], [-3.5785347663529667, -2.078319483139414], [-4.0, -1.0608124], [-4.0, 0.0], [-4.0, 1.0608124], [-3.5785347663529667, 2.078319483139414], [-2.8284271247461903, 2.8284271247461903], [-2.078319483139414, 3.5785347663529667], [-1.0608124, 4.0], [0.0, 4.0]], ["M", "C", "C", "C", "C", "C", "C", "C", "C", "Z"]], "zorder": 2, "edgecolor": "#FF4400", "coordinates": "data", "data": "data14"}, {"xindex": 0, "yindex": 1, "alpha": 1, "facecolor": "#FF4400", "edgewidth": 1.0, "id": "el544265090303728pts", "markerpath": [[[0.0, 4.0], [1.0608124, 4.0], [2.078319483139414, 3.5785347663529667], [2.8284271247461903, 2.8284271247461903], [3.5785347663529667, 2.078319483139414], [4.0, 1.0608124], [4.0, 0.0], [4.0, -1.0608124], [3.5785347663529667, -2.078319483139414], [2.8284271247461903, -2.8284271247461903], [2.078319483139414, -3.5785347663529667], [1.0608124, -4.0], [0.0, -4.0], [-1.0608124, -4.0], [-2.078319483139414, -3.5785347663529667], [-2.8284271247461903, -2.8284271247461903], [-3.5785347663529667, -2.078319483139414], [-4.0, -1.0608124], [-4.0, 0.0], [-4.0, 1.0608124], [-3.5785347663529667, 2.078319483139414], [-2.8284271247461903, 2.8284271247461903], [-2.078319483139414, 3.5785347663529667], [-1.0608124, 4.0], [0.0, 4.0]], ["M", "C", "C", "C", "C", "C", "C", "C", "C", "Z"]], "zorder": 2, "edgecolor": "#FF4400", "coordinates": "data", "data": "data15"}, {"xindex": 0, "yindex": 1, "alpha": 1, "facecolor": "#FF4400", "edgewidth": 1.0, "id": "el544265088195808pts", "markerpath": [[[0.0, 4.0], [1.0608124, 4.0], [2.078319483139414, 3.5785347663529667], [2.8284271247461903, 2.8284271247461903], [3.5785347663529667, 2.078319483139414], [4.0, 1.0608124], [4.0, 0.0], [4.0, -1.0608124], [3.5785347663529667, -2.078319483139414], [2.8284271247461903, -2.8284271247461903], [2.078319483139414, -3.5785347663529667], [1.0608124, -4.0], [0.0, -4.0], [-1.0608124, -4.0], [-2.078319483139414, -3.5785347663529667], [-2.8284271247461903, -2.8284271247461903], [-3.5785347663529667, -2.078319483139414], [-4.0, -1.0608124], [-4.0, 0.0], [-4.0, 1.0608124], [-3.5785347663529667, 2.078319483139414], [-2.8284271247461903, 2.8284271247461903], [-2.078319483139414, 3.5785347663529667], [-1.0608124, 4.0], [0.0, 4.0]], ["M", "C", "C", "C", "C", "C", "C", "C", "C", "Z"]], "zorder": 2, "edgecolor": "#FF4400", "coordinates": "data", "data": "data16"}, {"xindex": 0, "yindex": 1, "alpha": 1, "facecolor": "#FF4400", "edgewidth": 1.0, "id": "el544265090343792pts", "markerpath": [[[0.0, 4.0], [1.0608124, 4.0], [2.078319483139414, 3.5785347663529667], [2.8284271247461903, 2.8284271247461903], [3.5785347663529667, 2.078319483139414], [4.0, 1.0608124], [4.0, 0.0], [4.0, -1.0608124], [3.5785347663529667, -2.078319483139414], [2.8284271247461903, -2.8284271247461903], [2.078319483139414, -3.5785347663529667], [1.0608124, -4.0], [0.0, -4.0], [-1.0608124, -4.0], [-2.078319483139414, -3.5785347663529667], [-2.8284271247461903, -2.8284271247461903], [-3.5785347663529667, -2.078319483139414], [-4.0, -1.0608124], [-4.0, 0.0], [-4.0, 1.0608124], [-3.5785347663529667, 2.078319483139414], [-2.8284271247461903, 2.8284271247461903], [-2.078319483139414, 3.5785347663529667], [-1.0608124, 4.0], [0.0, 4.0]], ["M", "C", "C", "C", "C", "C", "C", "C", "C", "Z"]], "zorder": 2, "edgecolor": "#FF4400", "coordinates": "data", "data": "data17"}, {"xindex": 0, "yindex": 1, "alpha": 1, "facecolor": "#FF4400", "edgewidth": 1.0, "id": "el544265090361472pts", "markerpath": [[[0.0, 4.0], [1.0608124, 4.0], [2.078319483139414, 3.5785347663529667], [2.8284271247461903, 2.8284271247461903], [3.5785347663529667, 2.078319483139414], [4.0, 1.0608124], [4.0, 0.0], [4.0, -1.0608124], [3.5785347663529667, -2.078319483139414], [2.8284271247461903, -2.8284271247461903], [2.078319483139414, -3.5785347663529667], [1.0608124, -4.0], [0.0, -4.0], [-1.0608124, -4.0], [-2.078319483139414, -3.5785347663529667], [-2.8284271247461903, -2.8284271247461903], [-3.5785347663529667, -2.078319483139414], [-4.0, -1.0608124], [-4.0, 0.0], [-4.0, 1.0608124], [-3.5785347663529667, 2.078319483139414], [-2.8284271247461903, 2.8284271247461903], [-2.078319483139414, 3.5785347663529667], [-1.0608124, 4.0], [0.0, 4.0]], ["M", "C", "C", "C", "C", "C", "C", "C", "C", "Z"]], "zorder": 2, "edgecolor": "#FF4400", "coordinates": "data", "data": "data18"}, {"xindex": 0, "yindex": 1, "alpha": 1, "facecolor": "#FF4400", "edgewidth": 1.0, "id": "el544265090372240pts", "markerpath": [[[0.0, 4.0], [1.0608124, 4.0], [2.078319483139414, 3.5785347663529667], [2.8284271247461903, 2.8284271247461903], [3.5785347663529667, 2.078319483139414], [4.0, 1.0608124], [4.0, 0.0], [4.0, -1.0608124], [3.5785347663529667, -2.078319483139414], [2.8284271247461903, -2.8284271247461903], [2.078319483139414, -3.5785347663529667], [1.0608124, -4.0], [0.0, -4.0], [-1.0608124, -4.0], [-2.078319483139414, -3.5785347663529667], [-2.8284271247461903, -2.8284271247461903], [-3.5785347663529667, -2.078319483139414], [-4.0, -1.0608124], [-4.0, 0.0], [-4.0, 1.0608124], [-3.5785347663529667, 2.078319483139414], [-2.8284271247461903, 2.8284271247461903], [-2.078319483139414, 3.5785347663529667], [-1.0608124, 4.0], [0.0, 4.0]], ["M", "C", "C", "C", "C", "C", "C", "C", "C", "Z"]], "zorder": 2, "edgecolor": "#FF4400", "coordinates": "data", "data": "data19"}, {"xindex": 0, "yindex": 1, "alpha": 1, "facecolor": "#FF4400", "edgewidth": 1.0, "id": "el544265090390480pts", "markerpath": [[[0.0, 4.0], [1.0608124, 4.0], [2.078319483139414, 3.5785347663529667], [2.8284271247461903, 2.8284271247461903], [3.5785347663529667, 2.078319483139414], [4.0, 1.0608124], [4.0, 0.0], [4.0, -1.0608124], [3.5785347663529667, -2.078319483139414], [2.8284271247461903, -2.8284271247461903], [2.078319483139414, -3.5785347663529667], [1.0608124, -4.0], [0.0, -4.0], [-1.0608124, -4.0], [-2.078319483139414, -3.5785347663529667], [-2.8284271247461903, -2.8284271247461903], [-3.5785347663529667, -2.078319483139414], [-4.0, -1.0608124], [-4.0, 0.0], [-4.0, 1.0608124], [-3.5785347663529667, 2.078319483139414], [-2.8284271247461903, 2.8284271247461903], [-2.078319483139414, 3.5785347663529667], [-1.0608124, 4.0], [0.0, 4.0]], ["M", "C", "C", "C", "C", "C", "C", "C", "C", "Z"]], "zorder": 2, "edgecolor": "#FF4400", "coordinates": "data", "data": "data20"}, {"xindex": 0, "yindex": 1, "alpha": 1, "facecolor": "#FF4400", "edgewidth": 1.0, "id": "el544265090412976pts", "markerpath": [[[0.0, 4.0], [1.0608124, 4.0], [2.078319483139414, 3.5785347663529667], [2.8284271247461903, 2.8284271247461903], [3.5785347663529667, 2.078319483139414], [4.0, 1.0608124], [4.0, 0.0], [4.0, -1.0608124], [3.5785347663529667, -2.078319483139414], [2.8284271247461903, -2.8284271247461903], [2.078319483139414, -3.5785347663529667], [1.0608124, -4.0], [0.0, -4.0], [-1.0608124, -4.0], [-2.078319483139414, -3.5785347663529667], [-2.8284271247461903, -2.8284271247461903], [-3.5785347663529667, -2.078319483139414], [-4.0, -1.0608124], [-4.0, 0.0], [-4.0, 1.0608124], [-3.5785347663529667, 2.078319483139414], [-2.8284271247461903, 2.8284271247461903], [-2.078319483139414, 3.5785347663529667], [-1.0608124, 4.0], [0.0, 4.0]], ["M", "C", "C", "C", "C", "C", "C", "C", "C", "Z"]], "zorder": 2, "edgecolor": "#FF4400", "coordinates": "data", "data": "data21"}, {"xindex": 0, "yindex": 1, "alpha": 1, "facecolor": "#FF4400", "edgewidth": 1.0, "id": "el544265090431328pts", "markerpath": [[[0.0, 4.0], [1.0608124, 4.0], [2.078319483139414, 3.5785347663529667], [2.8284271247461903, 2.8284271247461903], [3.5785347663529667, 2.078319483139414], [4.0, 1.0608124], [4.0, 0.0], [4.0, -1.0608124], [3.5785347663529667, -2.078319483139414], [2.8284271247461903, -2.8284271247461903], [2.078319483139414, -3.5785347663529667], [1.0608124, -4.0], [0.0, -4.0], [-1.0608124, -4.0], [-2.078319483139414, -3.5785347663529667], [-2.8284271247461903, -2.8284271247461903], [-3.5785347663529667, -2.078319483139414], [-4.0, -1.0608124], [-4.0, 0.0], [-4.0, 1.0608124], [-3.5785347663529667, 2.078319483139414], [-2.8284271247461903, 2.8284271247461903], [-2.078319483139414, 3.5785347663529667], [-1.0608124, 4.0], [0.0, 4.0]], ["M", "C", "C", "C", "C", "C", "C", "C", "C", "Z"]], "zorder": 2, "edgecolor": "#FF4400", "coordinates": "data", "data": "data22"}, {"xindex": 0, "yindex": 1, "alpha": 1, "facecolor": "#FF4400", "edgewidth": 1.0, "id": "el544265090441088pts", "markerpath": [[[0.0, 4.0], [1.0608124, 4.0], [2.078319483139414, 3.5785347663529667], [2.8284271247461903, 2.8284271247461903], [3.5785347663529667, 2.078319483139414], [4.0, 1.0608124], [4.0, 0.0], [4.0, -1.0608124], [3.5785347663529667, -2.078319483139414], [2.8284271247461903, -2.8284271247461903], [2.078319483139414, -3.5785347663529667], [1.0608124, -4.0], [0.0, -4.0], [-1.0608124, -4.0], [-2.078319483139414, -3.5785347663529667], [-2.8284271247461903, -2.8284271247461903], [-3.5785347663529667, -2.078319483139414], [-4.0, -1.0608124], [-4.0, 0.0], [-4.0, 1.0608124], [-3.5785347663529667, 2.078319483139414], [-2.8284271247461903, 2.8284271247461903], [-2.078319483139414, 3.5785347663529667], [-1.0608124, 4.0], [0.0, 4.0]], ["M", "C", "C", "C", "C", "C", "C", "C", "C", "Z"]], "zorder": 2, "edgecolor": "#FF4400", "coordinates": "data", "data": "data23"}, {"xindex": 0, "yindex": 1, "alpha": 1, "facecolor": "#FF4400", "edgewidth": 1.0, "id": "el544265090459720pts", "markerpath": [[[0.0, 4.0], [1.0608124, 4.0], [2.078319483139414, 3.5785347663529667], [2.8284271247461903, 2.8284271247461903], [3.5785347663529667, 2.078319483139414], [4.0, 1.0608124], [4.0, 0.0], [4.0, -1.0608124], [3.5785347663529667, -2.078319483139414], [2.8284271247461903, -2.8284271247461903], [2.078319483139414, -3.5785347663529667], [1.0608124, -4.0], [0.0, -4.0], [-1.0608124, -4.0], [-2.078319483139414, -3.5785347663529667], [-2.8284271247461903, -2.8284271247461903], [-3.5785347663529667, -2.078319483139414], [-4.0, -1.0608124], [-4.0, 0.0], [-4.0, 1.0608124], [-3.5785347663529667, 2.078319483139414], [-2.8284271247461903, 2.8284271247461903], [-2.078319483139414, 3.5785347663529667], [-1.0608124, 4.0], [0.0, 4.0]], ["M", "C", "C", "C", "C", "C", "C", "C", "C", "Z"]], "zorder": 2, "edgecolor": "#FF4400", "coordinates": "data", "data": "data24"}, {"xindex": 0, "yindex": 1, "alpha": 1, "facecolor": "#FF4400", "edgewidth": 1.0, "id": "el544265090478120pts", "markerpath": [[[0.0, 4.0], [1.0608124, 4.0], [2.078319483139414, 3.5785347663529667], [2.8284271247461903, 2.8284271247461903], [3.5785347663529667, 2.078319483139414], [4.0, 1.0608124], [4.0, 0.0], [4.0, -1.0608124], [3.5785347663529667, -2.078319483139414], [2.8284271247461903, -2.8284271247461903], [2.078319483139414, -3.5785347663529667], [1.0608124, -4.0], [0.0, -4.0], [-1.0608124, -4.0], [-2.078319483139414, -3.5785347663529667], [-2.8284271247461903, -2.8284271247461903], [-3.5785347663529667, -2.078319483139414], [-4.0, -1.0608124], [-4.0, 0.0], [-4.0, 1.0608124], [-3.5785347663529667, 2.078319483139414], [-2.8284271247461903, 2.8284271247461903], [-2.078319483139414, 3.5785347663529667], [-1.0608124, 4.0], [0.0, 4.0]], ["M", "C", "C", "C", "C", "C", "C", "C", "C", "Z"]], "zorder": 2, "edgecolor": "#FF4400", "coordinates": "data", "data": "data25"}, {"xindex": 0, "yindex": 1, "alpha": 1, "facecolor": "#FF4400", "edgewidth": 1.0, "id": "el544265090505000pts", "markerpath": [[[0.0, 4.0], [1.0608124, 4.0], [2.078319483139414, 3.5785347663529667], [2.8284271247461903, 2.8284271247461903], [3.5785347663529667, 2.078319483139414], [4.0, 1.0608124], [4.0, 0.0], [4.0, -1.0608124], [3.5785347663529667, -2.078319483139414], [2.8284271247461903, -2.8284271247461903], [2.078319483139414, -3.5785347663529667], [1.0608124, -4.0], [0.0, -4.0], [-1.0608124, -4.0], [-2.078319483139414, -3.5785347663529667], [-2.8284271247461903, -2.8284271247461903], [-3.5785347663529667, -2.078319483139414], [-4.0, -1.0608124], [-4.0, 0.0], [-4.0, 1.0608124], [-3.5785347663529667, 2.078319483139414], [-2.8284271247461903, 2.8284271247461903], [-2.078319483139414, 3.5785347663529667], [-1.0608124, 4.0], [0.0, 4.0]], ["M", "C", "C", "C", "C", "C", "C", "C", "C", "Z"]], "zorder": 2, "edgecolor": "#FF4400", "coordinates": "data", "data": "data26"}, {"xindex": 0, "yindex": 1, "alpha": 1, "facecolor": "#FF4400", "edgewidth": 1.0, "id": "el544265090526712pts", "markerpath": [[[0.0, 4.0], [1.0608124, 4.0], [2.078319483139414, 3.5785347663529667], [2.8284271247461903, 2.8284271247461903], [3.5785347663529667, 2.078319483139414], [4.0, 1.0608124], [4.0, 0.0], [4.0, -1.0608124], [3.5785347663529667, -2.078319483139414], [2.8284271247461903, -2.8284271247461903], [2.078319483139414, -3.5785347663529667], [1.0608124, -4.0], [0.0, -4.0], [-1.0608124, -4.0], [-2.078319483139414, -3.5785347663529667], [-2.8284271247461903, -2.8284271247461903], [-3.5785347663529667, -2.078319483139414], [-4.0, -1.0608124], [-4.0, 0.0], [-4.0, 1.0608124], [-3.5785347663529667, 2.078319483139414], [-2.8284271247461903, 2.8284271247461903], [-2.078319483139414, 3.5785347663529667], [-1.0608124, 4.0], [0.0, 4.0]], ["M", "C", "C", "C", "C", "C", "C", "C", "C", "Z"]], "zorder": 2, "edgecolor": "#FF4400", "coordinates": "data", "data": "data27"}, {"xindex": 0, "yindex": 1, "alpha": 1, "facecolor": "#FF4400", "edgewidth": 1.0, "id": "el544265088796008pts", "markerpath": [[[0.0, 4.0], [1.0608124, 4.0], [2.078319483139414, 3.5785347663529667], [2.8284271247461903, 2.8284271247461903], [3.5785347663529667, 2.078319483139414], [4.0, 1.0608124], [4.0, 0.0], [4.0, -1.0608124], [3.5785347663529667, -2.078319483139414], [2.8284271247461903, -2.8284271247461903], [2.078319483139414, -3.5785347663529667], [1.0608124, -4.0], [0.0, -4.0], [-1.0608124, -4.0], [-2.078319483139414, -3.5785347663529667], [-2.8284271247461903, -2.8284271247461903], [-3.5785347663529667, -2.078319483139414], [-4.0, -1.0608124], [-4.0, 0.0], [-4.0, 1.0608124], [-3.5785347663529667, 2.078319483139414], [-2.8284271247461903, 2.8284271247461903], [-2.078319483139414, 3.5785347663529667], [-1.0608124, 4.0], [0.0, 4.0]], ["M", "C", "C", "C", "C", "C", "C", "C", "C", "Z"]], "zorder": 2, "edgecolor": "#FF4400", "coordinates": "data", "data": "data28"}, {"xindex": 0, "yindex": 1, "alpha": 1, "facecolor": "#FF4400", "edgewidth": 1.0, "id": "el544265090547024pts", "markerpath": [[[0.0, 4.0], [1.0608124, 4.0], [2.078319483139414, 3.5785347663529667], [2.8284271247461903, 2.8284271247461903], [3.5785347663529667, 2.078319483139414], [4.0, 1.0608124], [4.0, 0.0], [4.0, -1.0608124], [3.5785347663529667, -2.078319483139414], [2.8284271247461903, -2.8284271247461903], [2.078319483139414, -3.5785347663529667], [1.0608124, -4.0], [0.0, -4.0], [-1.0608124, -4.0], [-2.078319483139414, -3.5785347663529667], [-2.8284271247461903, -2.8284271247461903], [-3.5785347663529667, -2.078319483139414], [-4.0, -1.0608124], [-4.0, 0.0], [-4.0, 1.0608124], [-3.5785347663529667, 2.078319483139414], [-2.8284271247461903, 2.8284271247461903], [-2.078319483139414, 3.5785347663529667], [-1.0608124, 4.0], [0.0, 4.0]], ["M", "C", "C", "C", "C", "C", "C", "C", "C", "Z"]], "zorder": 2, "edgecolor": "#FF4400", "coordinates": "data", "data": "data29"}, {"xindex": 0, "yindex": 1, "alpha": 1, "facecolor": "#FF4400", "edgewidth": 1.0, "id": "el544265089910120pts", "markerpath": [[[0.0, 4.0], [1.0608124, 4.0], [2.078319483139414, 3.5785347663529667], [2.8284271247461903, 2.8284271247461903], [3.5785347663529667, 2.078319483139414], [4.0, 1.0608124], [4.0, 0.0], [4.0, -1.0608124], [3.5785347663529667, -2.078319483139414], [2.8284271247461903, -2.8284271247461903], [2.078319483139414, -3.5785347663529667], [1.0608124, -4.0], [0.0, -4.0], [-1.0608124, -4.0], [-2.078319483139414, -3.5785347663529667], [-2.8284271247461903, -2.8284271247461903], [-3.5785347663529667, -2.078319483139414], [-4.0, -1.0608124], [-4.0, 0.0], [-4.0, 1.0608124], [-3.5785347663529667, 2.078319483139414], [-2.8284271247461903, 2.8284271247461903], [-2.078319483139414, 3.5785347663529667], [-1.0608124, 4.0], [0.0, 4.0]], ["M", "C", "C", "C", "C", "C", "C", "C", "C", "Z"]], "zorder": 2, "edgecolor": "#FF4400", "coordinates": "data", "data": "data30"}, {"xindex": 0, "yindex": 1, "alpha": 1, "facecolor": "#FF4400", "edgewidth": 1.0, "id": "el544265089932344pts", "markerpath": [[[0.0, 4.0], [1.0608124, 4.0], [2.078319483139414, 3.5785347663529667], [2.8284271247461903, 2.8284271247461903], [3.5785347663529667, 2.078319483139414], [4.0, 1.0608124], [4.0, 0.0], [4.0, -1.0608124], [3.5785347663529667, -2.078319483139414], [2.8284271247461903, -2.8284271247461903], [2.078319483139414, -3.5785347663529667], [1.0608124, -4.0], [0.0, -4.0], [-1.0608124, -4.0], [-2.078319483139414, -3.5785347663529667], [-2.8284271247461903, -2.8284271247461903], [-3.5785347663529667, -2.078319483139414], [-4.0, -1.0608124], [-4.0, 0.0], [-4.0, 1.0608124], [-3.5785347663529667, 2.078319483139414], [-2.8284271247461903, 2.8284271247461903], [-2.078319483139414, 3.5785347663529667], [-1.0608124, 4.0], [0.0, 4.0]], ["M", "C", "C", "C", "C", "C", "C", "C", "C", "Z"]], "zorder": 2, "edgecolor": "#FF4400", "coordinates": "data", "data": "data31"}, {"xindex": 0, "yindex": 1, "alpha": 1, "facecolor": "#FF4400", "edgewidth": 1.0, "id": "el544265089946592pts", "markerpath": [[[0.0, 4.0], [1.0608124, 4.0], [2.078319483139414, 3.5785347663529667], [2.8284271247461903, 2.8284271247461903], [3.5785347663529667, 2.078319483139414], [4.0, 1.0608124], [4.0, 0.0], [4.0, -1.0608124], [3.5785347663529667, -2.078319483139414], [2.8284271247461903, -2.8284271247461903], [2.078319483139414, -3.5785347663529667], [1.0608124, -4.0], [0.0, -4.0], [-1.0608124, -4.0], [-2.078319483139414, -3.5785347663529667], [-2.8284271247461903, -2.8284271247461903], [-3.5785347663529667, -2.078319483139414], [-4.0, -1.0608124], [-4.0, 0.0], [-4.0, 1.0608124], [-3.5785347663529667, 2.078319483139414], [-2.8284271247461903, 2.8284271247461903], [-2.078319483139414, 3.5785347663529667], [-1.0608124, 4.0], [0.0, 4.0]], ["M", "C", "C", "C", "C", "C", "C", "C", "C", "Z"]], "zorder": 2, "edgecolor": "#FF4400", "coordinates": "data", "data": "data32"}, {"xindex": 0, "yindex": 1, "alpha": 1, "facecolor": "#FF4400", "edgewidth": 1.0, "id": "el544265089968984pts", "markerpath": [[[0.0, 4.0], [1.0608124, 4.0], [2.078319483139414, 3.5785347663529667], [2.8284271247461903, 2.8284271247461903], [3.5785347663529667, 2.078319483139414], [4.0, 1.0608124], [4.0, 0.0], [4.0, -1.0608124], [3.5785347663529667, -2.078319483139414], [2.8284271247461903, -2.8284271247461903], [2.078319483139414, -3.5785347663529667], [1.0608124, -4.0], [0.0, -4.0], [-1.0608124, -4.0], [-2.078319483139414, -3.5785347663529667], [-2.8284271247461903, -2.8284271247461903], [-3.5785347663529667, -2.078319483139414], [-4.0, -1.0608124], [-4.0, 0.0], [-4.0, 1.0608124], [-3.5785347663529667, 2.078319483139414], [-2.8284271247461903, 2.8284271247461903], [-2.078319483139414, 3.5785347663529667], [-1.0608124, 4.0], [0.0, 4.0]], ["M", "C", "C", "C", "C", "C", "C", "C", "C", "Z"]], "zorder": 2, "edgecolor": "#FF4400", "coordinates": "data", "data": "data33"}, {"xindex": 0, "yindex": 1, "alpha": 1, "facecolor": "#FF4400", "edgewidth": 1.0, "id": "el544265089974928pts", "markerpath": [[[0.0, 4.0], [1.0608124, 4.0], [2.078319483139414, 3.5785347663529667], [2.8284271247461903, 2.8284271247461903], [3.5785347663529667, 2.078319483139414], [4.0, 1.0608124], [4.0, 0.0], [4.0, -1.0608124], [3.5785347663529667, -2.078319483139414], [2.8284271247461903, -2.8284271247461903], [2.078319483139414, -3.5785347663529667], [1.0608124, -4.0], [0.0, -4.0], [-1.0608124, -4.0], [-2.078319483139414, -3.5785347663529667], [-2.8284271247461903, -2.8284271247461903], [-3.5785347663529667, -2.078319483139414], [-4.0, -1.0608124], [-4.0, 0.0], [-4.0, 1.0608124], [-3.5785347663529667, 2.078319483139414], [-2.8284271247461903, 2.8284271247461903], [-2.078319483139414, 3.5785347663529667], [-1.0608124, 4.0], [0.0, 4.0]], ["M", "C", "C", "C", "C", "C", "C", "C", "C", "Z"]], "zorder": 2, "edgecolor": "#FF4400", "coordinates": "data", "data": "data34"}, {"xindex": 0, "yindex": 1, "alpha": 1, "facecolor": "#FF4400", "edgewidth": 1.0, "id": "el544265090002032pts", "markerpath": [[[0.0, 4.0], [1.0608124, 4.0], [2.078319483139414, 3.5785347663529667], [2.8284271247461903, 2.8284271247461903], [3.5785347663529667, 2.078319483139414], [4.0, 1.0608124], [4.0, 0.0], [4.0, -1.0608124], [3.5785347663529667, -2.078319483139414], [2.8284271247461903, -2.8284271247461903], [2.078319483139414, -3.5785347663529667], [1.0608124, -4.0], [0.0, -4.0], [-1.0608124, -4.0], [-2.078319483139414, -3.5785347663529667], [-2.8284271247461903, -2.8284271247461903], [-3.5785347663529667, -2.078319483139414], [-4.0, -1.0608124], [-4.0, 0.0], [-4.0, 1.0608124], [-3.5785347663529667, 2.078319483139414], [-2.8284271247461903, 2.8284271247461903], [-2.078319483139414, 3.5785347663529667], [-1.0608124, 4.0], [0.0, 4.0]], ["M", "C", "C", "C", "C", "C", "C", "C", "C", "Z"]], "zorder": 2, "edgecolor": "#FF4400", "coordinates": "data", "data": "data35"}, {"xindex": 0, "yindex": 1, "alpha": 1, "facecolor": "#FF4400", "edgewidth": 1.0, "id": "el544265090012240pts", "markerpath": [[[0.0, 4.0], [1.0608124, 4.0], [2.078319483139414, 3.5785347663529667], [2.8284271247461903, 2.8284271247461903], [3.5785347663529667, 2.078319483139414], [4.0, 1.0608124], [4.0, 0.0], [4.0, -1.0608124], [3.5785347663529667, -2.078319483139414], [2.8284271247461903, -2.8284271247461903], [2.078319483139414, -3.5785347663529667], [1.0608124, -4.0], [0.0, -4.0], [-1.0608124, -4.0], [-2.078319483139414, -3.5785347663529667], [-2.8284271247461903, -2.8284271247461903], [-3.5785347663529667, -2.078319483139414], [-4.0, -1.0608124], [-4.0, 0.0], [-4.0, 1.0608124], [-3.5785347663529667, 2.078319483139414], [-2.8284271247461903, 2.8284271247461903], [-2.078319483139414, 3.5785347663529667], [-1.0608124, 4.0], [0.0, 4.0]], ["M", "C", "C", "C", "C", "C", "C", "C", "C", "Z"]], "zorder": 2, "edgecolor": "#FF4400", "coordinates": "data", "data": "data36"}, {"xindex": 0, "yindex": 1, "alpha": 1, "facecolor": "#FF4400", "edgewidth": 1.0, "id": "el544265089353968pts", "markerpath": [[[0.0, 4.0], [1.0608124, 4.0], [2.078319483139414, 3.5785347663529667], [2.8284271247461903, 2.8284271247461903], [3.5785347663529667, 2.078319483139414], [4.0, 1.0608124], [4.0, 0.0], [4.0, -1.0608124], [3.5785347663529667, -2.078319483139414], [2.8284271247461903, -2.8284271247461903], [2.078319483139414, -3.5785347663529667], [1.0608124, -4.0], [0.0, -4.0], [-1.0608124, -4.0], [-2.078319483139414, -3.5785347663529667], [-2.8284271247461903, -2.8284271247461903], [-3.5785347663529667, -2.078319483139414], [-4.0, -1.0608124], [-4.0, 0.0], [-4.0, 1.0608124], [-3.5785347663529667, 2.078319483139414], [-2.8284271247461903, 2.8284271247461903], [-2.078319483139414, 3.5785347663529667], [-1.0608124, 4.0], [0.0, 4.0]], ["M", "C", "C", "C", "C", "C", "C", "C", "C", "Z"]], "zorder": 2, "edgecolor": "#FF4400", "coordinates": "data", "data": "data37"}, {"xindex": 0, "yindex": 1, "alpha": 1, "facecolor": "#FF4400", "edgewidth": 1.0, "id": "el544265090052976pts", "markerpath": [[[0.0, 4.0], [1.0608124, 4.0], [2.078319483139414, 3.5785347663529667], [2.8284271247461903, 2.8284271247461903], [3.5785347663529667, 2.078319483139414], [4.0, 1.0608124], [4.0, 0.0], [4.0, -1.0608124], [3.5785347663529667, -2.078319483139414], [2.8284271247461903, -2.8284271247461903], [2.078319483139414, -3.5785347663529667], [1.0608124, -4.0], [0.0, -4.0], [-1.0608124, -4.0], [-2.078319483139414, -3.5785347663529667], [-2.8284271247461903, -2.8284271247461903], [-3.5785347663529667, -2.078319483139414], [-4.0, -1.0608124], [-4.0, 0.0], [-4.0, 1.0608124], [-3.5785347663529667, 2.078319483139414], [-2.8284271247461903, 2.8284271247461903], [-2.078319483139414, 3.5785347663529667], [-1.0608124, 4.0], [0.0, 4.0]], ["M", "C", "C", "C", "C", "C", "C", "C", "C", "Z"]], "zorder": 2, "edgecolor": "#FF4400", "coordinates": "data", "data": "data38"}, {"xindex": 0, "yindex": 1, "alpha": 1, "facecolor": "#FF4400", "edgewidth": 1.0, "id": "el544265090067176pts", "markerpath": [[[0.0, 4.0], [1.0608124, 4.0], [2.078319483139414, 3.5785347663529667], [2.8284271247461903, 2.8284271247461903], [3.5785347663529667, 2.078319483139414], [4.0, 1.0608124], [4.0, 0.0], [4.0, -1.0608124], [3.5785347663529667, -2.078319483139414], [2.8284271247461903, -2.8284271247461903], [2.078319483139414, -3.5785347663529667], [1.0608124, -4.0], [0.0, -4.0], [-1.0608124, -4.0], [-2.078319483139414, -3.5785347663529667], [-2.8284271247461903, -2.8284271247461903], [-3.5785347663529667, -2.078319483139414], [-4.0, -1.0608124], [-4.0, 0.0], [-4.0, 1.0608124], [-3.5785347663529667, 2.078319483139414], [-2.8284271247461903, 2.8284271247461903], [-2.078319483139414, 3.5785347663529667], [-1.0608124, 4.0], [0.0, 4.0]], ["M", "C", "C", "C", "C", "C", "C", "C", "C", "Z"]], "zorder": 2, "edgecolor": "#FF4400", "coordinates": "data", "data": "data39"}, {"xindex": 0, "yindex": 1, "alpha": 1, "facecolor": "#FF4400", "edgewidth": 1.0, "id": "el544265090089616pts", "markerpath": [[[0.0, 4.0], [1.0608124, 4.0], [2.078319483139414, 3.5785347663529667], [2.8284271247461903, 2.8284271247461903], [3.5785347663529667, 2.078319483139414], [4.0, 1.0608124], [4.0, 0.0], [4.0, -1.0608124], [3.5785347663529667, -2.078319483139414], [2.8284271247461903, -2.8284271247461903], [2.078319483139414, -3.5785347663529667], [1.0608124, -4.0], [0.0, -4.0], [-1.0608124, -4.0], [-2.078319483139414, -3.5785347663529667], [-2.8284271247461903, -2.8284271247461903], [-3.5785347663529667, -2.078319483139414], [-4.0, -1.0608124], [-4.0, 0.0], [-4.0, 1.0608124], [-3.5785347663529667, 2.078319483139414], [-2.8284271247461903, 2.8284271247461903], [-2.078319483139414, 3.5785347663529667], [-1.0608124, 4.0], [0.0, 4.0]], ["M", "C", "C", "C", "C", "C", "C", "C", "C", "Z"]], "zorder": 2, "edgecolor": "#FF4400", "coordinates": "data", "data": "data40"}, {"xindex": 0, "yindex": 1, "alpha": 1, "facecolor": "#FF4400", "edgewidth": 1.0, "id": "el544265090107856pts", "markerpath": [[[0.0, 4.0], [1.0608124, 4.0], [2.078319483139414, 3.5785347663529667], [2.8284271247461903, 2.8284271247461903], [3.5785347663529667, 2.078319483139414], [4.0, 1.0608124], [4.0, 0.0], [4.0, -1.0608124], [3.5785347663529667, -2.078319483139414], [2.8284271247461903, -2.8284271247461903], [2.078319483139414, -3.5785347663529667], [1.0608124, -4.0], [0.0, -4.0], [-1.0608124, -4.0], [-2.078319483139414, -3.5785347663529667], [-2.8284271247461903, -2.8284271247461903], [-3.5785347663529667, -2.078319483139414], [-4.0, -1.0608124], [-4.0, 0.0], [-4.0, 1.0608124], [-3.5785347663529667, 2.078319483139414], [-2.8284271247461903, 2.8284271247461903], [-2.078319483139414, 3.5785347663529667], [-1.0608124, 4.0], [0.0, 4.0]], ["M", "C", "C", "C", "C", "C", "C", "C", "C", "Z"]], "zorder": 2, "edgecolor": "#FF4400", "coordinates": "data", "data": "data41"}, {"xindex": 0, "yindex": 1, "alpha": 1, "facecolor": "#FF4400", "edgewidth": 1.0, "id": "el544265090122104pts", "markerpath": [[[0.0, 4.0], [1.0608124, 4.0], [2.078319483139414, 3.5785347663529667], [2.8284271247461903, 2.8284271247461903], [3.5785347663529667, 2.078319483139414], [4.0, 1.0608124], [4.0, 0.0], [4.0, -1.0608124], [3.5785347663529667, -2.078319483139414], [2.8284271247461903, -2.8284271247461903], [2.078319483139414, -3.5785347663529667], [1.0608124, -4.0], [0.0, -4.0], [-1.0608124, -4.0], [-2.078319483139414, -3.5785347663529667], [-2.8284271247461903, -2.8284271247461903], [-3.5785347663529667, -2.078319483139414], [-4.0, -1.0608124], [-4.0, 0.0], [-4.0, 1.0608124], [-3.5785347663529667, 2.078319483139414], [-2.8284271247461903, 2.8284271247461903], [-2.078319483139414, 3.5785347663529667], [-1.0608124, 4.0], [0.0, 4.0]], ["M", "C", "C", "C", "C", "C", "C", "C", "C", "Z"]], "zorder": 2, "edgecolor": "#FF4400", "coordinates": "data", "data": "data42"}, {"xindex": 0, "yindex": 1, "alpha": 1, "facecolor": "#FF4400", "edgewidth": 1.0, "id": "el544265090144944pts", "markerpath": [[[0.0, 4.0], [1.0608124, 4.0], [2.078319483139414, 3.5785347663529667], [2.8284271247461903, 2.8284271247461903], [3.5785347663529667, 2.078319483139414], [4.0, 1.0608124], [4.0, 0.0], [4.0, -1.0608124], [3.5785347663529667, -2.078319483139414], [2.8284271247461903, -2.8284271247461903], [2.078319483139414, -3.5785347663529667], [1.0608124, -4.0], [0.0, -4.0], [-1.0608124, -4.0], [-2.078319483139414, -3.5785347663529667], [-2.8284271247461903, -2.8284271247461903], [-3.5785347663529667, -2.078319483139414], [-4.0, -1.0608124], [-4.0, 0.0], [-4.0, 1.0608124], [-3.5785347663529667, 2.078319483139414], [-2.8284271247461903, 2.8284271247461903], [-2.078319483139414, 3.5785347663529667], [-1.0608124, 4.0], [0.0, 4.0]], ["M", "C", "C", "C", "C", "C", "C", "C", "C", "Z"]], "zorder": 2, "edgecolor": "#FF4400", "coordinates": "data", "data": "data43"}, {"xindex": 0, "yindex": 1, "alpha": 1, "facecolor": "#FF4400", "edgewidth": 1.0, "id": "el544265090158576pts", "markerpath": [[[0.0, 4.0], [1.0608124, 4.0], [2.078319483139414, 3.5785347663529667], [2.8284271247461903, 2.8284271247461903], [3.5785347663529667, 2.078319483139414], [4.0, 1.0608124], [4.0, 0.0], [4.0, -1.0608124], [3.5785347663529667, -2.078319483139414], [2.8284271247461903, -2.8284271247461903], [2.078319483139414, -3.5785347663529667], [1.0608124, -4.0], [0.0, -4.0], [-1.0608124, -4.0], [-2.078319483139414, -3.5785347663529667], [-2.8284271247461903, -2.8284271247461903], [-3.5785347663529667, -2.078319483139414], [-4.0, -1.0608124], [-4.0, 0.0], [-4.0, 1.0608124], [-3.5785347663529667, 2.078319483139414], [-2.8284271247461903, 2.8284271247461903], [-2.078319483139414, 3.5785347663529667], [-1.0608124, 4.0], [0.0, 4.0]], ["M", "C", "C", "C", "C", "C", "C", "C", "C", "Z"]], "zorder": 2, "edgecolor": "#FF4400", "coordinates": "data", "data": "data44"}, {"xindex": 0, "yindex": 1, "alpha": 1, "facecolor": "#FF4400", "edgewidth": 1.0, "id": "el544265090959032pts", "markerpath": [[[0.0, 4.0], [1.0608124, 4.0], [2.078319483139414, 3.5785347663529667], [2.8284271247461903, 2.8284271247461903], [3.5785347663529667, 2.078319483139414], [4.0, 1.0608124], [4.0, 0.0], [4.0, -1.0608124], [3.5785347663529667, -2.078319483139414], [2.8284271247461903, -2.8284271247461903], [2.078319483139414, -3.5785347663529667], [1.0608124, -4.0], [0.0, -4.0], [-1.0608124, -4.0], [-2.078319483139414, -3.5785347663529667], [-2.8284271247461903, -2.8284271247461903], [-3.5785347663529667, -2.078319483139414], [-4.0, -1.0608124], [-4.0, 0.0], [-4.0, 1.0608124], [-3.5785347663529667, 2.078319483139414], [-2.8284271247461903, 2.8284271247461903], [-2.078319483139414, 3.5785347663529667], [-1.0608124, 4.0], [0.0, 4.0]], ["M", "C", "C", "C", "C", "C", "C", "C", "C", "Z"]], "zorder": 2, "edgecolor": "#FF4400", "coordinates": "data", "data": "data45"}, {"xindex": 0, "yindex": 1, "alpha": 1, "facecolor": "#FF4400", "edgewidth": 1.0, "id": "el544265090978336pts", "markerpath": [[[0.0, 4.0], [1.0608124, 4.0], [2.078319483139414, 3.5785347663529667], [2.8284271247461903, 2.8284271247461903], [3.5785347663529667, 2.078319483139414], [4.0, 1.0608124], [4.0, 0.0], [4.0, -1.0608124], [3.5785347663529667, -2.078319483139414], [2.8284271247461903, -2.8284271247461903], [2.078319483139414, -3.5785347663529667], [1.0608124, -4.0], [0.0, -4.0], [-1.0608124, -4.0], [-2.078319483139414, -3.5785347663529667], [-2.8284271247461903, -2.8284271247461903], [-3.5785347663529667, -2.078319483139414], [-4.0, -1.0608124], [-4.0, 0.0], [-4.0, 1.0608124], [-3.5785347663529667, 2.078319483139414], [-2.8284271247461903, 2.8284271247461903], [-2.078319483139414, 3.5785347663529667], [-1.0608124, 4.0], [0.0, 4.0]], ["M", "C", "C", "C", "C", "C", "C", "C", "C", "Z"]], "zorder": 2, "edgecolor": "#FF4400", "coordinates": "data", "data": "data46"}, {"xindex": 0, "yindex": 1, "alpha": 1, "facecolor": "#FF4400", "edgewidth": 1.0, "id": "el544265090991632pts", "markerpath": [[[0.0, 4.0], [1.0608124, 4.0], [2.078319483139414, 3.5785347663529667], [2.8284271247461903, 2.8284271247461903], [3.5785347663529667, 2.078319483139414], [4.0, 1.0608124], [4.0, 0.0], [4.0, -1.0608124], [3.5785347663529667, -2.078319483139414], [2.8284271247461903, -2.8284271247461903], [2.078319483139414, -3.5785347663529667], [1.0608124, -4.0], [0.0, -4.0], [-1.0608124, -4.0], [-2.078319483139414, -3.5785347663529667], [-2.8284271247461903, -2.8284271247461903], [-3.5785347663529667, -2.078319483139414], [-4.0, -1.0608124], [-4.0, 0.0], [-4.0, 1.0608124], [-3.5785347663529667, 2.078319483139414], [-2.8284271247461903, 2.8284271247461903], [-2.078319483139414, 3.5785347663529667], [-1.0608124, 4.0], [0.0, 4.0]], ["M", "C", "C", "C", "C", "C", "C", "C", "C", "Z"]], "zorder": 2, "edgecolor": "#FF4400", "coordinates": "data", "data": "data47"}, {"xindex": 0, "yindex": 1, "alpha": 1, "facecolor": "#FF4400", "edgewidth": 1.0, "id": "el544265091027152pts", "markerpath": [[[0.0, 4.0], [1.0608124, 4.0], [2.078319483139414, 3.5785347663529667], [2.8284271247461903, 2.8284271247461903], [3.5785347663529667, 2.078319483139414], [4.0, 1.0608124], [4.0, 0.0], [4.0, -1.0608124], [3.5785347663529667, -2.078319483139414], [2.8284271247461903, -2.8284271247461903], [2.078319483139414, -3.5785347663529667], [1.0608124, -4.0], [0.0, -4.0], [-1.0608124, -4.0], [-2.078319483139414, -3.5785347663529667], [-2.8284271247461903, -2.8284271247461903], [-3.5785347663529667, -2.078319483139414], [-4.0, -1.0608124], [-4.0, 0.0], [-4.0, 1.0608124], [-3.5785347663529667, 2.078319483139414], [-2.8284271247461903, 2.8284271247461903], [-2.078319483139414, 3.5785347663529667], [-1.0608124, 4.0], [0.0, 4.0]], ["M", "C", "C", "C", "C", "C", "C", "C", "C", "Z"]], "zorder": 2, "edgecolor": "#FF4400", "coordinates": "data", "data": "data48"}, {"xindex": 0, "yindex": 1, "alpha": 1, "facecolor": "#FF4400", "edgewidth": 1.0, "id": "el544265091049088pts", "markerpath": [[[0.0, 4.0], [1.0608124, 4.0], [2.078319483139414, 3.5785347663529667], [2.8284271247461903, 2.8284271247461903], [3.5785347663529667, 2.078319483139414], [4.0, 1.0608124], [4.0, 0.0], [4.0, -1.0608124], [3.5785347663529667, -2.078319483139414], [2.8284271247461903, -2.8284271247461903], [2.078319483139414, -3.5785347663529667], [1.0608124, -4.0], [0.0, -4.0], [-1.0608124, -4.0], [-2.078319483139414, -3.5785347663529667], [-2.8284271247461903, -2.8284271247461903], [-3.5785347663529667, -2.078319483139414], [-4.0, -1.0608124], [-4.0, 0.0], [-4.0, 1.0608124], [-3.5785347663529667, 2.078319483139414], [-2.8284271247461903, 2.8284271247461903], [-2.078319483139414, 3.5785347663529667], [-1.0608124, 4.0], [0.0, 4.0]], ["M", "C", "C", "C", "C", "C", "C", "C", "C", "Z"]], "zorder": 2, "edgecolor": "#FF4400", "coordinates": "data", "data": "data49"}, {"xindex": 0, "yindex": 1, "alpha": 1, "facecolor": "#FF4400", "edgewidth": 1.0, "id": "el544265091067888pts", "markerpath": [[[0.0, 4.0], [1.0608124, 4.0], [2.078319483139414, 3.5785347663529667], [2.8284271247461903, 2.8284271247461903], [3.5785347663529667, 2.078319483139414], [4.0, 1.0608124], [4.0, 0.0], [4.0, -1.0608124], [3.5785347663529667, -2.078319483139414], [2.8284271247461903, -2.8284271247461903], [2.078319483139414, -3.5785347663529667], [1.0608124, -4.0], [0.0, -4.0], [-1.0608124, -4.0], [-2.078319483139414, -3.5785347663529667], [-2.8284271247461903, -2.8284271247461903], [-3.5785347663529667, -2.078319483139414], [-4.0, -1.0608124], [-4.0, 0.0], [-4.0, 1.0608124], [-3.5785347663529667, 2.078319483139414], [-2.8284271247461903, 2.8284271247461903], [-2.078319483139414, 3.5785347663529667], [-1.0608124, 4.0], [0.0, 4.0]], ["M", "C", "C", "C", "C", "C", "C", "C", "C", "Z"]], "zorder": 2, "edgecolor": "#FF4400", "coordinates": "data", "data": "data50"}], "lines": [], "sharey": [], "axes": [{"visible": true, "tickvalues": null, "grid": {"gridOn": false}, "tickformat": null, "position": "bottom", "scale": "linear", "fontsize": 10.0, "nticks": 7}, {"visible": true, "tickvalues": null, "grid": {"gridOn": false}, "tickformat": null, "position": "left", "scale": "linear", "fontsize": 10.0, "nticks": 7}], "xscale": "linear", "axesbgalpha": null, "yscale": "linear", "images": [], "texts": [{"h_anchor": "middle", "alpha": 1, "text": "k", "position": [0.5, -0.0772626931567329], "zorder": 3, "v_baseline": "hanging", "rotation": -0.0, "color": "#000000", "id": "el544265088761336", "fontsize": 16.0, "coordinates": "axes"}, {"h_anchor": "middle", "alpha": 1, "text": "TSS", "position": [-0.07683691756272401, 0.5], "zorder": 3, "v_baseline": "auto", "rotation": -90.0, "color": "#000000", "id": "el544265088730696", "fontsize": 16.0, "coordinates": "axes"}, {"h_anchor": "middle", "alpha": 1, "text": "TSS per k using stratified k-fold cross-validation", "position": [0.5, 1.0220750551876379], "zorder": 3, "v_baseline": "auto", "rotation": -0.0, "color": "#000000", "id": "el544265088817280", "fontsize": 16.0, "coordinates": "axes"}], "id": "el544265088754040"}], "id": "el544265088751800", "plugins": [{"type": "reset"}, {"enabled": false, "button": true, "type": "zoom"}, {"enabled": false, "button": true, "type": "boxzoom"}], "width": 720.0, "data": {"data33": [[34.0, 0.7716817496229261]], "data15": [[16.0, 0.719747150997151]], "data48": [[49.0, 0.7607709750566893]], "data47": [[48.0, 0.7158564814814815]], "data51": [[0.0, 0.0]], "data07": [[8.0, 0.7191307731402072]], "data49": [[50.0, 0.7322222222222223]], "data44": [[45.0, 0.7733333333333333]], "data14": [[15.0, 0.7358237547892721]], "data21": [[22.0, 0.7017145135566188]], "data42": [[43.0, 0.7511627906976743]], "data01": [[2.0, 0.42880670161841805]], "data18": [[19.0, 0.7557208237986269]], "data08": [[9.0, 0.6817540057788284]], "data16": [[17.0, 0.7205429864253394]], "data04": [[5.0, 0.6390868673050616]], "data22": [[23.0, 0.7636028476989575]], "data26": [[27.0, 0.7601851851851852]], "data11": [[12.0, 0.6914021164021164]], "data30": [[31.0, 0.7559966914805624]], "data45": [[46.0, 0.7620772946859902]], "data32": [[33.0, 0.756021756021756]], "data05": [[6.0, 0.7473845924550151]], "data36": [[37.0, 0.7532760032760034]], "data43": [[44.0, 0.768939393939394]], "data12": [[13.0, 0.7243693806193806]], "data13": [[14.0, 0.7558371735791091]], "data31": [[32.0, 0.7679716117216118]], "data34": [[35.0, 0.7532967032967033]], "data35": [[36.0, 0.7798821548821548]], "data40": [[41.0, 0.760310421286031]], "data38": [[39.0, 0.7614607614607615]], "data24": [[25.0, 0.7369281045751634]], "data17": [[18.0, 0.7449677938808373]], "data29": [[30.0, 0.749047619047619]], "data06": [[7.0, 0.701762277912463]], "data20": [[21.0, 0.7492063492063491]], "data10": [[11.0, 0.7029023607970977]], "data41": [[42.0, 0.7480519480519481]], "data23": [[24.0, 0.7588507625272332]], "data03": [[4.0, 0.6890743213173119]], "data25": [[26.0, 0.7671568627450982]], "data46": [[47.0, 0.7349881796690307]], "data27": [[28.0, 0.7742559523809524]], "data02": [[3.0, 0.6669834251993877]], "data37": [[38.0, 0.7300637958532696]], "data39": [[40.0, 0.7575]], "data28": [[29.0, 0.7658456486042692]], "data09": [[10.0, 0.7346483942414175]], "data19": [[20.0, 0.7655952380952381]], "data50": [[51.0, 0.7551742919389978]]}});
+   }(mpld3);
+}else if(typeof define === "function" && define.amd){
+   // require.js is available: use it to load d3/mpld3
+   require.config({paths: {d3: "https://mpld3.github.io/js/d3.v3.min"}});
+   require(["d3"], function(d3){
+      window.d3 = d3;
+      mpld3_load_lib("https://mpld3.github.io/js/mpld3.v0.3.js", function(){
+         
+         mpld3.draw_figure("fig_el5442650887518003386049291", {"height": 360.0, "axes": [{"ylim": [0.0, 1.1], "ydomain": [0.0, 1.1], "collections": [{"xindex": 0, "yindex": 1, "offsetcoordinates": "display", "zorder": 2, "paths": [[[[2.0, 0.41976293594711644], [2.0, 0.43785046728971966]], ["M", "L"]]], "alphas": [null], "edgewidths": [1.5], "pathcoordinates": "data", "pathtransforms": [], "edgecolors": ["#FF4400"], "offsets": "data51", "facecolors": [], "id": "el544265089550688"}, {"xindex": 0, "yindex": 0, "offsetcoordinates": "display", "zorder": 2, "paths": [[[[3.0, 0.657351847800716], [3.0, 0.6766150025980594]], ["M", "L"]]], "alphas": [null], "edgewidths": [1.5], "pathcoordinates": "data", "pathtransforms": [], "edgecolors": ["#FF4400"], "offsets": "data51", "facecolors": [], "id": "el544265089561008"}, {"xindex": 0, "yindex": 0, "offsetcoordinates": "display", "zorder": 2, "paths": [[[[4.0, 0.6055088636789747], [4.0, 0.7726397789556492]], ["M", "L"]]], "alphas": [null], "edgewidths": [1.5], "pathcoordinates": "data", "pathtransforms": [], "edgecolors": ["#FF4400"], "offsets": "data51", "facecolors": [], "id": "el544265089596136"}, {"xindex": 0, "yindex": 0, "offsetcoordinates": "display", "zorder": 2, "paths": [[[[5.0, 0.5355001784826011], [5.0, 0.7426735561275221]], ["M", "L"]]], "alphas": [null], "edgewidths": [1.5], "pathcoordinates": "data", "pathtransforms": [], "edgecolors": ["#FF4400"], "offsets": "data51", "facecolors": [], "id": "el544265089605504"}, {"xindex": 0, "yindex": 0, "offsetcoordinates": "display", "zorder": 2, "paths": [[[[6.0, 0.602439548545725], [6.0, 0.8923296363643052]], ["M", "L"]]], "alphas": [null], "edgewidths": [1.5], "pathcoordinates": "data", "pathtransforms": [], "edgecolors": ["#FF4400"], "offsets": "data51", "facecolors": [], "id": "el544265089619752"}, {"xindex": 0, "yindex": 0, "offsetcoordinates": "display", "zorder": 2, "paths": [[[[7.0, 0.5755028818370691], [7.0, 0.828021673987857]], ["M", "L"]]], "alphas": [null], "edgewidths": [1.5], "pathcoordinates": "data", "pathtransforms": [], "edgecolors": ["#FF4400"], "offsets": "data51", "facecolors": [], "id": "el544265089638328"}, {"xindex": 0, "yindex": 0, "offsetcoordinates": "display", "zorder": 2, "paths": [[[[8.0, 0.6248759804534676], [8.0, 0.8133855658269469]], ["M", "L"]]], "alphas": [null], "edgewidths": [1.5], "pathcoordinates": "data", "pathtransforms": [], "edgecolors": ["#FF4400"], "offsets": "data51", "facecolors": [], "id": "el544265089656784"}, {"xindex": 0, "yindex": 0, "offsetcoordinates": "display", "zorder": 2, "paths": [[[[9.0, 0.5327327213787822], [9.0, 0.8307752901788745]], ["M", "L"]]], "alphas": [null], "edgewidths": [1.5], "pathcoordinates": "data", "pathtransforms": [], "edgecolors": ["#FF4400"], "offsets": "data51", "facecolors": [], "id": "el544265089674576"}, {"xindex": 0, "yindex": 0, "offsetcoordinates": "display", "zorder": 2, "paths": [[[[10.0, 0.6018537736187834], [10.0, 0.8674430148640515]], ["M", "L"]]], "alphas": [null], "edgewidths": [1.5], "pathcoordinates": "data", "pathtransforms": [], "edgecolors": ["#FF4400"], "offsets": "data51", "facecolors": [], "id": "el544265089693144"}, {"xindex": 0, "yindex": 0, "offsetcoordinates": "display", "zorder": 2, "paths": [[[[11.0, 0.5640164836161005], [11.0, 0.8417882379780949]], ["M", "L"]]], "alphas": [null], "edgewidths": [1.5], "pathcoordinates": "data", "pathtransforms": [], "edgecolors": ["#FF4400"], "offsets": "data51", "facecolors": [], "id": "el544265089342128"}, {"xindex": 0, "yindex": 0, "offsetcoordinates": "display", "zorder": 2, "paths": [[[[12.0, 0.5688060442864766], [12.0, 0.8139981885177561]], ["M", "L"]]], "alphas": [null], "edgewidths": [1.5], "pathcoordinates": "data", "pathtransforms": [], "edgecolors": ["#FF4400"], "offsets": "data51", "facecolors": [], "id": "el544265089713400"}, {"xindex": 0, "yindex": 0, "offsetcoordinates": "display", "zorder": 2, "paths": [[[[13.0, 0.5570277530115902], [13.0, 0.891711008227171]], ["M", "L"]]], "alphas": [null], "edgewidths": [1.5], "pathcoordinates": "data", "pathtransforms": [], "edgecolors": ["#FF4400"], "offsets": "data51", "facecolors": [], "id": "el544265089726416"}, {"xindex": 0, "yindex": 0, "offsetcoordinates": "display", "zorder": 2, "paths": [[[[14.0, 0.6037220765653896], [14.0, 0.9079522705928286]], ["M", "L"]]], "alphas": [null], "edgewidths": [1.5], "pathcoordinates": "data", "pathtransforms": [], "edgecolors": ["#FF4400"], "offsets": "data51", "facecolors": [], "id": "el544265089749536"}, {"xindex": 0, "yindex": 0, "offsetcoordinates": "display", "zorder": 2, "paths": [[[[15.0, 0.6025871193761885], [15.0, 0.8690603902023557]], ["M", "L"]]], "alphas": [null], "edgewidths": [1.5], "pathcoordinates": "data", "pathtransforms": [], "edgecolors": ["#FF4400"], "offsets": "data51", "facecolors": [], "id": "el544265089766816"}, {"xindex": 0, "yindex": 0, "offsetcoordinates": "display", "zorder": 2, "paths": [[[[16.0, 0.5618799749822365], [16.0, 0.8776143270120655]], ["M", "L"]]], "alphas": [null], "edgewidths": [1.5], "pathcoordinates": "data", "pathtransforms": [], "edgecolors": ["#FF4400"], "offsets": "data51", "facecolors": [], "id": "el544265090300984"}, {"xindex": 0, "yindex": 0, "offsetcoordinates": "display", "zorder": 2, "paths": [[[[17.0, 0.5647483647964187], [17.0, 0.8763376080542602]], ["M", "L"]]], "alphas": [null], "edgewidths": [1.5], "pathcoordinates": "data", "pathtransforms": [], "edgecolors": ["#FF4400"], "offsets": "data51", "facecolors": [], "id": "el544265090323984"}, {"xindex": 0, "yindex": 0, "offsetcoordinates": "display", "zorder": 2, "paths": [[[[18.0, 0.5297858549694562], [18.0, 0.9601497327922185]], ["M", "L"]]], "alphas": [null], "edgewidths": [1.5], "pathcoordinates": "data", "pathtransforms": [], "edgecolors": ["#FF4400"], "offsets": "data51", "facecolors": [], "id": "el544265090341944"}, {"xindex": 0, "yindex": 0, "offsetcoordinates": "display", "zorder": 2, "paths": [[[[19.0, 0.6044514430436652], [19.0, 0.9069902045535887]], ["M", "L"]]], "alphas": [null], "edgewidths": [1.5], "pathcoordinates": "data", "pathtransforms": [], "edgecolors": ["#FF4400"], "offsets": "data51", "facecolors": [], "id": "el544265090348448"}, {"xindex": 0, "yindex": 0, "offsetcoordinates": "display", "zorder": 2, "paths": [[[[20.0, 0.5467717396255675], [20.0, 0.9844187365649087]], ["M", "L"]]], "alphas": [null], "edgewidths": [1.5], "pathcoordinates": "data", "pathtransforms": [], "edgecolors": ["#FF4400"], "offsets": "data51", "facecolors": [], "id": "el544265090370504"}, {"xindex": 0, "yindex": 0, "offsetcoordinates": "display", "zorder": 2, "paths": [[[[21.0, 0.5316111777521653], [21.0, 0.9668015206605329]], ["M", "L"]]], "alphas": [null], "edgewidths": [1.5], "pathcoordinates": "data", "pathtransforms": [], "edgecolors": ["#FF4400"], "offsets": "data51", "facecolors": [], "id": "el544265090380824"}, {"xindex": 0, "yindex": 0, "offsetcoordinates": "display", "zorder": 2, "paths": [[[[22.0, 0.45969602061227915], [22.0, 0.9437330065009586]], ["M", "L"]]], "alphas": [null], "edgewidths": [1.5], "pathcoordinates": "data", "pathtransforms": [], "edgecolors": ["#FF4400"], "offsets": "data51", "facecolors": [], "id": "el544265090411296"}, {"xindex": 0, "yindex": 0, "offsetcoordinates": "display", "zorder": 2, "paths": [[[[23.0, 0.5078355672635193], [23.0, 1.0193701281343956]], ["M", "L"]]], "alphas": [null], "edgewidths": [1.5], "pathcoordinates": "data", "pathtransforms": [], "edgecolors": ["#FF4400"], "offsets": "data51", "facecolors": [], "id": "el544265090425656"}, {"xindex": 0, "yindex": 0, "offsetcoordinates": "display", "zorder": 2, "paths": [[[[24.0, 0.5906830771298823], [24.0, 0.927018447924584]], ["M", "L"]]], "alphas": [null], "edgewidths": [1.5], "pathcoordinates": "data", "pathtransforms": [], "edgecolors": ["#FF4400"], "offsets": "data51", "facecolors": [], "id": "el544265090439688"}, {"xindex": 0, "yindex": 0, "offsetcoordinates": "display", "zorder": 2, "paths": [[[[25.0, 0.49913904456047686], [25.0, 0.97471716458985]], ["M", "L"]]], "alphas": [null], "edgewidths": [1.5], "pathcoordinates": "data", "pathtransforms": [], "edgecolors": ["#FF4400"], "offsets": "data51", "facecolors": [], "id": "el544265090450008"}, {"xindex": 0, "yindex": 0, "offsetcoordinates": "display", "zorder": 2, "paths": [[[[26.0, 0.5339456251703518], [26.0, 1.0003681003198446]], ["M", "L"]]], "alphas": [null], "edgewidths": [1.5], "pathcoordinates": "data", "pathtransforms": [], "edgecolors": ["#FF4400"], "offsets": "data51", "facecolors": [], "id": "el544265090476328"}, {"xindex": 0, "yindex": 0, "offsetcoordinates": "display", "zorder": 2, "paths": [[[[27.0, 0.5075668661955219], [27.0, 1.0128035041748484]], ["M", "L"]]], "alphas": [null], "edgewidths": [1.5], "pathcoordinates": "data", "pathtransforms": [], "edgecolors": ["#FF4400"], "offsets": "data51", "facecolors": [], "id": "el544265090495344"}, {"xindex": 0, "yindex": 0, "offsetcoordinates": "display", "zorder": 2, "paths": [[[[28.0, 0.5611555704431681], [28.0, 0.9873563343187366]], ["M", "L"]]], "alphas": [null], "edgewidths": [1.5], "pathcoordinates": "data", "pathtransforms": [], "edgecolors": ["#FF4400"], "offsets": "data51", "facecolors": [], "id": "el544265090526544"}, {"xindex": 0, "yindex": 0, "offsetcoordinates": "display", "zorder": 2, "paths": [[[[29.0, 0.5554352651541445], [29.0, 0.9762560320543938]], ["M", "L"]]], "alphas": [null], "edgewidths": [1.5], "pathcoordinates": "data", "pathtransforms": [], "edgecolors": ["#FF4400"], "offsets": "data51", "facecolors": [], "id": "el544265088796456"}, {"xindex": 0, "yindex": 0, "offsetcoordinates": "display", "zorder": 2, "paths": [[[[30.0, 0.4970528561174785], [30.0, 1.0010423819777594]], ["M", "L"]]], "alphas": [null], "edgewidths": [1.5], "pathcoordinates": "data", "pathtransforms": [], "edgecolors": ["#FF4400"], "offsets": "data51", "facecolors": [], "id": "el544265090546800"}, {"xindex": 0, "yindex": 0, "offsetcoordinates": "display", "zorder": 2, "paths": [[[[31.0, 0.5051796248861131], [31.0, 1.0068137580750116]], ["M", "L"]]], "alphas": [null], "edgewidths": [1.5], "pathcoordinates": "data", "pathtransforms": [], "edgecolors": ["#FF4400"], "offsets": "data51", "facecolors": [], "id": "el544265089909840"}, {"xindex": 0, "yindex": 0, "offsetcoordinates": "display", "zorder": 2, "paths": [[[[32.0, 0.5562620425957578], [32.0, 0.9796811808474657]], ["M", "L"]]], "alphas": [null], "edgewidths": [1.5], "pathcoordinates": "data", "pathtransforms": [], "edgecolors": ["#FF4400"], "offsets": "data51", "facecolors": [], "id": "el544265089927064"}, {"xindex": 0, "yindex": 0, "offsetcoordinates": "display", "zorder": 2, "paths": [[[[33.0, 0.47655195536583395], [33.0, 1.0354915566776781]], ["M", "L"]]], "alphas": [null], "edgewidths": [1.5], "pathcoordinates": "data", "pathtransforms": [], "edgecolors": ["#FF4400"], "offsets": "data51", "facecolors": [], "id": "el544265089946480"}, {"xindex": 0, "yindex": 0, "offsetcoordinates": "display", "zorder": 2, "paths": [[[[34.0, 0.5080072426551658], [34.0, 1.0353562565906864]], ["M", "L"]]], "alphas": [null], "edgewidths": [1.5], "pathcoordinates": "data", "pathtransforms": [], "edgecolors": ["#FF4400"], "offsets": "data51", "facecolors": [], "id": "el544265089955568"}, {"xindex": 0, "yindex": 0, "offsetcoordinates": "display", "zorder": 2, "paths": [[[[35.0, 0.4724243276226902], [35.0, 1.0341690789707163]], ["M", "L"]]], "alphas": [null], "edgewidths": [1.5], "pathcoordinates": "data", "pathtransforms": [], "edgecolors": ["#FF4400"], "offsets": "data51", "facecolors": [], "id": "el544265089974760"}, {"xindex": 0, "yindex": 0, "offsetcoordinates": "display", "zorder": 2, "paths": [[[[36.0, 0.5337642990318341], [36.0, 1.0260000107324756]], ["M", "L"]]], "alphas": [null], "edgewidths": [1.5], "pathcoordinates": "data", "pathtransforms": [], "edgecolors": ["#FF4400"], "offsets": "data51", "facecolors": [], "id": "el544265089988504"}, {"xindex": 0, "yindex": 0, "offsetcoordinates": "display", "zorder": 2, "paths": [[[[37.0, 0.43304576664682226], [37.0, 1.0735062399051847]], ["M", "L"]]], "alphas": [null], "edgewidths": [1.5], "pathcoordinates": "data", "pathtransforms": [], "edgecolors": ["#FF4400"], "offsets": "data51", "facecolors": [], "id": "el544265090011568"}, {"xindex": 0, "yindex": 0, "offsetcoordinates": "display", "zorder": 2, "paths": [[[[38.0, 0.4942435277070292], [38.0, 0.9658840639995101]], ["M", "L"]]], "alphas": [null], "edgewidths": [1.5], "pathcoordinates": "data", "pathtransforms": [], "edgecolors": ["#FF4400"], "offsets": "data51", "facecolors": [], "id": "el544265090033448"}, {"xindex": 0, "yindex": 0, "offsetcoordinates": "display", "zorder": 2, "paths": [[[[39.0, 0.5013105043856534], [39.0, 1.0216110185358696]], ["M", "L"]]], "alphas": [null], "edgewidths": [1.5], "pathcoordinates": "data", "pathtransforms": [], "edgecolors": ["#FF4400"], "offsets": "data51", "facecolors": [], "id": "el544265090051968"}, {"xindex": 0, "yindex": 0, "offsetcoordinates": "display", "zorder": 2, "paths": [[[[40.0, 0.46270782288881807], [40.0, 1.0522921771111817]], ["M", "L"]]], "alphas": [null], "edgewidths": [1.5], "pathcoordinates": "data", "pathtransforms": [], "edgecolors": ["#FF4400"], "offsets": "data51", "facecolors": [], "id": "el544265090066272"}, {"xindex": 0, "yindex": 0, "offsetcoordinates": "display", "zorder": 2, "paths": [[[[41.0, 0.5067746021189365], [41.0, 1.0138462404531254]], ["M", "L"]]], "alphas": [null], "edgewidths": [1.5], "pathcoordinates": "data", "pathtransforms": [], "edgecolors": ["#FF4400"], "offsets": "data51", "facecolors": [], "id": "el544265090088832"}, {"xindex": 0, "yindex": 0, "offsetcoordinates": "display", "zorder": 2, "paths": [[[[42.0, 0.4053637435757018], [42.0, 1.0907401525281943]], ["M", "L"]]], "alphas": [null], "edgewidths": [1.5], "pathcoordinates": "data", "pathtransforms": [], "edgecolors": ["#FF4400"], "offsets": "data51", "facecolors": [], "id": "el544265090103024"}, {"xindex": 0, "yindex": 0, "offsetcoordinates": "display", "zorder": 2, "paths": [[[[43.0, 0.4474094536324521], [43.0, 1.0549161277628967]], ["M", "L"]]], "alphas": [null], "edgewidths": [1.5], "pathcoordinates": "data", "pathtransforms": [], "edgecolors": ["#FF4400"], "offsets": "data51", "facecolors": [], "id": "el544265090121152"}, {"xindex": 0, "yindex": 0, "offsetcoordinates": "display", "zorder": 2, "paths": [[[[44.0, 0.433428162457701], [44.0, 1.104450625421087]], ["M", "L"]]], "alphas": [null], "edgewidths": [1.5], "pathcoordinates": "data", "pathtransforms": [], "edgecolors": ["#FF4400"], "offsets": "data51", "facecolors": [], "id": "el544265090131248"}, {"xindex": 0, "yindex": 0, "offsetcoordinates": "display", "zorder": 2, "paths": [[[[45.0, 0.4562616841323628], [45.0, 1.0904049825343038]], ["M", "L"]]], "alphas": [null], "edgewidths": [1.5], "pathcoordinates": "data", "pathtransforms": [], "edgecolors": ["#FF4400"], "offsets": "data51", "facecolors": [], "id": "el544265090157792"}, {"xindex": 0, "yindex": 0, "offsetcoordinates": "display", "zorder": 2, "paths": [[[[46.0, 0.4674886317372425], [46.0, 1.056665957634738]], ["M", "L"]]], "alphas": [null], "edgewidths": [1.5], "pathcoordinates": "data", "pathtransforms": [], "edgecolors": ["#FF4400"], "offsets": "data51", "facecolors": [], "id": "el544265090958640"}, {"xindex": 0, "yindex": 0, "offsetcoordinates": "display", "zorder": 2, "paths": [[[[47.0, 0.39629231770663453], [47.0, 1.0736840416314268]], ["M", "L"]]], "alphas": [null], "edgewidths": [1.5], "pathcoordinates": "data", "pathtransforms": [], "edgecolors": ["#FF4400"], "offsets": "data51", "facecolors": [], "id": "el544265090976488"}, {"xindex": 0, "yindex": 0, "offsetcoordinates": "display", "zorder": 2, "paths": [[[[48.0, 0.34166154733084575], [48.0, 1.0900514156321173]], ["M", "L"]]], "alphas": [null], "edgewidths": [1.5], "pathcoordinates": "data", "pathtransforms": [], "edgecolors": ["#FF4400"], "offsets": "data51", "facecolors": [], "id": "el544265090990680"}, {"xindex": 0, "yindex": 0, "offsetcoordinates": "display", "zorder": 2, "paths": [[[[49.0, 0.46273865212543736], [49.0, 1.0588032979879414]], ["M", "L"]]], "alphas": [null], "edgewidths": [1.5], "pathcoordinates": "data", "pathtransforms": [], "edgecolors": ["#FF4400"], "offsets": "data51", "facecolors": [], "id": "el544265091012336"}, {"xindex": 0, "yindex": 0, "offsetcoordinates": "display", "zorder": 2, "paths": [[[[50.0, 0.3777856148550158], [50.0, 1.0866588295894288]], ["M", "L"]]], "alphas": [null], "edgewidths": [1.5], "pathcoordinates": "data", "pathtransforms": [], "edgecolors": ["#FF4400"], "offsets": "data51", "facecolors": [], "id": "el544265091047184"}, {"xindex": 0, "yindex": 0, "offsetcoordinates": "display", "zorder": 2, "paths": [[[[51.0, 0.4246217024684788], [51.0, 1.0857268814095167]], ["M", "L"]]], "alphas": [null], "edgewidths": [1.5], "pathcoordinates": "data", "pathtransforms": [], "edgecolors": ["#FF4400"], "offsets": "data51", "facecolors": [], "id": "el544265091061376"}], "bbox": [0.125, 0.125, 0.775, 0.755], "axesbg": "#FFFFFF", "paths": [], "xdomain": [0.0, 52.0], "xlim": [0.0, 52.0], "zoomable": true, "sharex": [], "markers": [{"xindex": 0, "yindex": 1, "alpha": 1, "facecolor": "#FF4400", "edgewidth": 1.0, "id": "el544265089552032pts", "markerpath": [[[0.0, 4.0], [1.0608124, 4.0], [2.078319483139414, 3.5785347663529667], [2.8284271247461903, 2.8284271247461903], [3.5785347663529667, 2.078319483139414], [4.0, 1.0608124], [4.0, 0.0], [4.0, -1.0608124], [3.5785347663529667, -2.078319483139414], [2.8284271247461903, -2.8284271247461903], [2.078319483139414, -3.5785347663529667], [1.0608124, -4.0], [0.0, -4.0], [-1.0608124, -4.0], [-2.078319483139414, -3.5785347663529667], [-2.8284271247461903, -2.8284271247461903], [-3.5785347663529667, -2.078319483139414], [-4.0, -1.0608124], [-4.0, 0.0], [-4.0, 1.0608124], [-3.5785347663529667, 2.078319483139414], [-2.8284271247461903, 2.8284271247461903], [-2.078319483139414, 3.5785347663529667], [-1.0608124, 4.0], [0.0, 4.0]], ["M", "C", "C", "C", "C", "C", "C", "C", "C", "Z"]], "zorder": 2, "edgecolor": "#FF4400", "coordinates": "data", "data": "data01"}, {"xindex": 0, "yindex": 1, "alpha": 1, "facecolor": "#FF4400", "edgewidth": 1.0, "id": "el544265089562128pts", "markerpath": [[[0.0, 4.0], [1.0608124, 4.0], [2.078319483139414, 3.5785347663529667], [2.8284271247461903, 2.8284271247461903], [3.5785347663529667, 2.078319483139414], [4.0, 1.0608124], [4.0, 0.0], [4.0, -1.0608124], [3.5785347663529667, -2.078319483139414], [2.8284271247461903, -2.8284271247461903], [2.078319483139414, -3.5785347663529667], [1.0608124, -4.0], [0.0, -4.0], [-1.0608124, -4.0], [-2.078319483139414, -3.5785347663529667], [-2.8284271247461903, -2.8284271247461903], [-3.5785347663529667, -2.078319483139414], [-4.0, -1.0608124], [-4.0, 0.0], [-4.0, 1.0608124], [-3.5785347663529667, 2.078319483139414], [-2.8284271247461903, 2.8284271247461903], [-2.078319483139414, 3.5785347663529667], [-1.0608124, 4.0], [0.0, 4.0]], ["M", "C", "C", "C", "C", "C", "C", "C", "C", "Z"]], "zorder": 2, "edgecolor": "#FF4400", "coordinates": "data", "data": "data02"}, {"xindex": 0, "yindex": 1, "alpha": 1, "facecolor": "#FF4400", "edgewidth": 1.0, "id": "el544265089596808pts", "markerpath": [[[0.0, 4.0], [1.0608124, 4.0], [2.078319483139414, 3.5785347663529667], [2.8284271247461903, 2.8284271247461903], [3.5785347663529667, 2.078319483139414], [4.0, 1.0608124], [4.0, 0.0], [4.0, -1.0608124], [3.5785347663529667, -2.078319483139414], [2.8284271247461903, -2.8284271247461903], [2.078319483139414, -3.5785347663529667], [1.0608124, -4.0], [0.0, -4.0], [-1.0608124, -4.0], [-2.078319483139414, -3.5785347663529667], [-2.8284271247461903, -2.8284271247461903], [-3.5785347663529667, -2.078319483139414], [-4.0, -1.0608124], [-4.0, 0.0], [-4.0, 1.0608124], [-3.5785347663529667, 2.078319483139414], [-2.8284271247461903, 2.8284271247461903], [-2.078319483139414, 3.5785347663529667], [-1.0608124, 4.0], [0.0, 4.0]], ["M", "C", "C", "C", "C", "C", "C", "C", "C", "Z"]], "zorder": 2, "edgecolor": "#FF4400", "coordinates": "data", "data": "data03"}, {"xindex": 0, "yindex": 1, "alpha": 1, "facecolor": "#FF4400", "edgewidth": 1.0, "id": "el544265089606904pts", "markerpath": [[[0.0, 4.0], [1.0608124, 4.0], [2.078319483139414, 3.5785347663529667], [2.8284271247461903, 2.8284271247461903], [3.5785347663529667, 2.078319483139414], [4.0, 1.0608124], [4.0, 0.0], [4.0, -1.0608124], [3.5785347663529667, -2.078319483139414], [2.8284271247461903, -2.8284271247461903], [2.078319483139414, -3.5785347663529667], [1.0608124, -4.0], [0.0, -4.0], [-1.0608124, -4.0], [-2.078319483139414, -3.5785347663529667], [-2.8284271247461903, -2.8284271247461903], [-3.5785347663529667, -2.078319483139414], [-4.0, -1.0608124], [-4.0, 0.0], [-4.0, 1.0608124], [-3.5785347663529667, 2.078319483139414], [-2.8284271247461903, 2.8284271247461903], [-2.078319483139414, 3.5785347663529667], [-1.0608124, 4.0], [0.0, 4.0]], ["M", "C", "C", "C", "C", "C", "C", "C", "C", "Z"]], "zorder": 2, "edgecolor": "#FF4400", "coordinates": "data", "data": "data04"}, {"xindex": 0, "yindex": 1, "alpha": 1, "facecolor": "#FF4400", "edgewidth": 1.0, "id": "el544265089625424pts", "markerpath": [[[0.0, 4.0], [1.0608124, 4.0], [2.078319483139414, 3.5785347663529667], [2.8284271247461903, 2.8284271247461903], [3.5785347663529667, 2.078319483139414], [4.0, 1.0608124], [4.0, 0.0], [4.0, -1.0608124], [3.5785347663529667, -2.078319483139414], [2.8284271247461903, -2.8284271247461903], [2.078319483139414, -3.5785347663529667], [1.0608124, -4.0], [0.0, -4.0], [-1.0608124, -4.0], [-2.078319483139414, -3.5785347663529667], [-2.8284271247461903, -2.8284271247461903], [-3.5785347663529667, -2.078319483139414], [-4.0, -1.0608124], [-4.0, 0.0], [-4.0, 1.0608124], [-3.5785347663529667, 2.078319483139414], [-2.8284271247461903, 2.8284271247461903], [-2.078319483139414, 3.5785347663529667], [-1.0608124, 4.0], [0.0, 4.0]], ["M", "C", "C", "C", "C", "C", "C", "C", "C", "Z"]], "zorder": 2, "edgecolor": "#FF4400", "coordinates": "data", "data": "data05"}, {"xindex": 0, "yindex": 1, "alpha": 1, "facecolor": "#FF4400", "edgewidth": 1.0, "id": "el544265089639840pts", "markerpath": [[[0.0, 4.0], [1.0608124, 4.0], [2.078319483139414, 3.5785347663529667], [2.8284271247461903, 2.8284271247461903], [3.5785347663529667, 2.078319483139414], [4.0, 1.0608124], [4.0, 0.0], [4.0, -1.0608124], [3.5785347663529667, -2.078319483139414], [2.8284271247461903, -2.8284271247461903], [2.078319483139414, -3.5785347663529667], [1.0608124, -4.0], [0.0, -4.0], [-1.0608124, -4.0], [-2.078319483139414, -3.5785347663529667], [-2.8284271247461903, -2.8284271247461903], [-3.5785347663529667, -2.078319483139414], [-4.0, -1.0608124], [-4.0, 0.0], [-4.0, 1.0608124], [-3.5785347663529667, 2.078319483139414], [-2.8284271247461903, 2.8284271247461903], [-2.078319483139414, 3.5785347663529667], [-1.0608124, 4.0], [0.0, 4.0]], ["M", "C", "C", "C", "C", "C", "C", "C", "C", "Z"]], "zorder": 2, "edgecolor": "#FF4400", "coordinates": "data", "data": "data06"}, {"xindex": 0, "yindex": 1, "alpha": 1, "facecolor": "#FF4400", "edgewidth": 1.0, "id": "el544265089662120pts", "markerpath": [[[0.0, 4.0], [1.0608124, 4.0], [2.078319483139414, 3.5785347663529667], [2.8284271247461903, 2.8284271247461903], [3.5785347663529667, 2.078319483139414], [4.0, 1.0608124], [4.0, 0.0], [4.0, -1.0608124], [3.5785347663529667, -2.078319483139414], [2.8284271247461903, -2.8284271247461903], [2.078319483139414, -3.5785347663529667], [1.0608124, -4.0], [0.0, -4.0], [-1.0608124, -4.0], [-2.078319483139414, -3.5785347663529667], [-2.8284271247461903, -2.8284271247461903], [-3.5785347663529667, -2.078319483139414], [-4.0, -1.0608124], [-4.0, 0.0], [-4.0, 1.0608124], [-3.5785347663529667, 2.078319483139414], [-2.8284271247461903, 2.8284271247461903], [-2.078319483139414, 3.5785347663529667], [-1.0608124, 4.0], [0.0, 4.0]], ["M", "C", "C", "C", "C", "C", "C", "C", "C", "Z"]], "zorder": 2, "edgecolor": "#FF4400", "coordinates": "data", "data": "data07"}, {"xindex": 0, "yindex": 1, "alpha": 1, "facecolor": "#FF4400", "edgewidth": 1.0, "id": "el544265089676312pts", "markerpath": [[[0.0, 4.0], [1.0608124, 4.0], [2.078319483139414, 3.5785347663529667], [2.8284271247461903, 2.8284271247461903], [3.5785347663529667, 2.078319483139414], [4.0, 1.0608124], [4.0, 0.0], [4.0, -1.0608124], [3.5785347663529667, -2.078319483139414], [2.8284271247461903, -2.8284271247461903], [2.078319483139414, -3.5785347663529667], [1.0608124, -4.0], [0.0, -4.0], [-1.0608124, -4.0], [-2.078319483139414, -3.5785347663529667], [-2.8284271247461903, -2.8284271247461903], [-3.5785347663529667, -2.078319483139414], [-4.0, -1.0608124], [-4.0, 0.0], [-4.0, 1.0608124], [-3.5785347663529667, 2.078319483139414], [-2.8284271247461903, 2.8284271247461903], [-2.078319483139414, 3.5785347663529667], [-1.0608124, 4.0], [0.0, 4.0]], ["M", "C", "C", "C", "C", "C", "C", "C", "C", "Z"]], "zorder": 2, "edgecolor": "#FF4400", "coordinates": "data", "data": "data08"}, {"xindex": 0, "yindex": 1, "alpha": 1, "facecolor": "#FF4400", "edgewidth": 1.0, "id": "el544265089698928pts", "markerpath": [[[0.0, 4.0], [1.0608124, 4.0], [2.078319483139414, 3.5785347663529667], [2.8284271247461903, 2.8284271247461903], [3.5785347663529667, 2.078319483139414], [4.0, 1.0608124], [4.0, 0.0], [4.0, -1.0608124], [3.5785347663529667, -2.078319483139414], [2.8284271247461903, -2.8284271247461903], [2.078319483139414, -3.5785347663529667], [1.0608124, -4.0], [0.0, -4.0], [-1.0608124, -4.0], [-2.078319483139414, -3.5785347663529667], [-2.8284271247461903, -2.8284271247461903], [-3.5785347663529667, -2.078319483139414], [-4.0, -1.0608124], [-4.0, 0.0], [-4.0, 1.0608124], [-3.5785347663529667, 2.078319483139414], [-2.8284271247461903, 2.8284271247461903], [-2.078319483139414, 3.5785347663529667], [-1.0608124, 4.0], [0.0, 4.0]], ["M", "C", "C", "C", "C", "C", "C", "C", "C", "Z"]], "zorder": 2, "edgecolor": "#FF4400", "coordinates": "data", "data": "data09"}, {"xindex": 0, "yindex": 1, "alpha": 1, "facecolor": "#FF4400", "edgewidth": 1.0, "id": "el544265088497336pts", "markerpath": [[[0.0, 4.0], [1.0608124, 4.0], [2.078319483139414, 3.5785347663529667], [2.8284271247461903, 2.8284271247461903], [3.5785347663529667, 2.078319483139414], [4.0, 1.0608124], [4.0, 0.0], [4.0, -1.0608124], [3.5785347663529667, -2.078319483139414], [2.8284271247461903, -2.8284271247461903], [2.078319483139414, -3.5785347663529667], [1.0608124, -4.0], [0.0, -4.0], [-1.0608124, -4.0], [-2.078319483139414, -3.5785347663529667], [-2.8284271247461903, -2.8284271247461903], [-3.5785347663529667, -2.078319483139414], [-4.0, -1.0608124], [-4.0, 0.0], [-4.0, 1.0608124], [-3.5785347663529667, 2.078319483139414], [-2.8284271247461903, 2.8284271247461903], [-2.078319483139414, 3.5785347663529667], [-1.0608124, 4.0], [0.0, 4.0]], ["M", "C", "C", "C", "C", "C", "C", "C", "C", "Z"]], "zorder": 2, "edgecolor": "#FF4400", "coordinates": "data", "data": "data10"}, {"xindex": 0, "yindex": 1, "alpha": 1, "facecolor": "#FF4400", "edgewidth": 1.0, "id": "el544265089713960pts", "markerpath": [[[0.0, 4.0], [1.0608124, 4.0], [2.078319483139414, 3.5785347663529667], [2.8284271247461903, 2.8284271247461903], [3.5785347663529667, 2.078319483139414], [4.0, 1.0608124], [4.0, 0.0], [4.0, -1.0608124], [3.5785347663529667, -2.078319483139414], [2.8284271247461903, -2.8284271247461903], [2.078319483139414, -3.5785347663529667], [1.0608124, -4.0], [0.0, -4.0], [-1.0608124, -4.0], [-2.078319483139414, -3.5785347663529667], [-2.8284271247461903, -2.8284271247461903], [-3.5785347663529667, -2.078319483139414], [-4.0, -1.0608124], [-4.0, 0.0], [-4.0, 1.0608124], [-3.5785347663529667, 2.078319483139414], [-2.8284271247461903, 2.8284271247461903], [-2.078319483139414, 3.5785347663529667], [-1.0608124, 4.0], [0.0, 4.0]], ["M", "C", "C", "C", "C", "C", "C", "C", "C", "Z"]], "zorder": 2, "edgecolor": "#FF4400", "coordinates": "data", "data": "data11"}, {"xindex": 0, "yindex": 1, "alpha": 1, "facecolor": "#FF4400", "edgewidth": 1.0, "id": "el544265089737304pts", "markerpath": [[[0.0, 4.0], [1.0608124, 4.0], [2.078319483139414, 3.5785347663529667], [2.8284271247461903, 2.8284271247461903], [3.5785347663529667, 2.078319483139414], [4.0, 1.0608124], [4.0, 0.0], [4.0, -1.0608124], [3.5785347663529667, -2.078319483139414], [2.8284271247461903, -2.8284271247461903], [2.078319483139414, -3.5785347663529667], [1.0608124, -4.0], [0.0, -4.0], [-1.0608124, -4.0], [-2.078319483139414, -3.5785347663529667], [-2.8284271247461903, -2.8284271247461903], [-3.5785347663529667, -2.078319483139414], [-4.0, -1.0608124], [-4.0, 0.0], [-4.0, 1.0608124], [-3.5785347663529667, 2.078319483139414], [-2.8284271247461903, 2.8284271247461903], [-2.078319483139414, 3.5785347663529667], [-1.0608124, 4.0], [0.0, 4.0]], ["M", "C", "C", "C", "C", "C", "C", "C", "C", "Z"]], "zorder": 2, "edgecolor": "#FF4400", "coordinates": "data", "data": "data12"}, {"xindex": 0, "yindex": 1, "alpha": 1, "facecolor": "#FF4400", "edgewidth": 1.0, "id": "el544265089750432pts", "markerpath": [[[0.0, 4.0], [1.0608124, 4.0], [2.078319483139414, 3.5785347663529667], [2.8284271247461903, 2.8284271247461903], [3.5785347663529667, 2.078319483139414], [4.0, 1.0608124], [4.0, 0.0], [4.0, -1.0608124], [3.5785347663529667, -2.078319483139414], [2.8284271247461903, -2.8284271247461903], [2.078319483139414, -3.5785347663529667], [1.0608124, -4.0], [0.0, -4.0], [-1.0608124, -4.0], [-2.078319483139414, -3.5785347663529667], [-2.8284271247461903, -2.8284271247461903], [-3.5785347663529667, -2.078319483139414], [-4.0, -1.0608124], [-4.0, 0.0], [-4.0, 1.0608124], [-3.5785347663529667, 2.078319483139414], [-2.8284271247461903, 2.8284271247461903], [-2.078319483139414, 3.5785347663529667], [-1.0608124, 4.0], [0.0, 4.0]], ["M", "C", "C", "C", "C", "C", "C", "C", "C", "Z"]], "zorder": 2, "edgecolor": "#FF4400", "coordinates": "data", "data": "data13"}, {"xindex": 0, "yindex": 1, "alpha": 1, "facecolor": "#FF4400", "edgewidth": 1.0, "id": "el544265089777984pts", "markerpath": [[[0.0, 4.0], [1.0608124, 4.0], [2.078319483139414, 3.5785347663529667], [2.8284271247461903, 2.8284271247461903], [3.5785347663529667, 2.078319483139414], [4.0, 1.0608124], [4.0, 0.0], [4.0, -1.0608124], [3.5785347663529667, -2.078319483139414], [2.8284271247461903, -2.8284271247461903], [2.078319483139414, -3.5785347663529667], [1.0608124, -4.0], [0.0, -4.0], [-1.0608124, -4.0], [-2.078319483139414, -3.5785347663529667], [-2.8284271247461903, -2.8284271247461903], [-3.5785347663529667, -2.078319483139414], [-4.0, -1.0608124], [-4.0, 0.0], [-4.0, 1.0608124], [-3.5785347663529667, 2.078319483139414], [-2.8284271247461903, 2.8284271247461903], [-2.078319483139414, 3.5785347663529667], [-1.0608124, 4.0], [0.0, 4.0]], ["M", "C", "C", "C", "C", "C", "C", "C", "C", "Z"]], "zorder": 2, "edgecolor": "#FF4400", "coordinates": "data", "data": "data14"}, {"xindex": 0, "yindex": 1, "alpha": 1, "facecolor": "#FF4400", "edgewidth": 1.0, "id": "el544265090303728pts", "markerpath": [[[0.0, 4.0], [1.0608124, 4.0], [2.078319483139414, 3.5785347663529667], [2.8284271247461903, 2.8284271247461903], [3.5785347663529667, 2.078319483139414], [4.0, 1.0608124], [4.0, 0.0], [4.0, -1.0608124], [3.5785347663529667, -2.078319483139414], [2.8284271247461903, -2.8284271247461903], [2.078319483139414, -3.5785347663529667], [1.0608124, -4.0], [0.0, -4.0], [-1.0608124, -4.0], [-2.078319483139414, -3.5785347663529667], [-2.8284271247461903, -2.8284271247461903], [-3.5785347663529667, -2.078319483139414], [-4.0, -1.0608124], [-4.0, 0.0], [-4.0, 1.0608124], [-3.5785347663529667, 2.078319483139414], [-2.8284271247461903, 2.8284271247461903], [-2.078319483139414, 3.5785347663529667], [-1.0608124, 4.0], [0.0, 4.0]], ["M", "C", "C", "C", "C", "C", "C", "C", "C", "Z"]], "zorder": 2, "edgecolor": "#FF4400", "coordinates": "data", "data": "data15"}, {"xindex": 0, "yindex": 1, "alpha": 1, "facecolor": "#FF4400", "edgewidth": 1.0, "id": "el544265088195808pts", "markerpath": [[[0.0, 4.0], [1.0608124, 4.0], [2.078319483139414, 3.5785347663529667], [2.8284271247461903, 2.8284271247461903], [3.5785347663529667, 2.078319483139414], [4.0, 1.0608124], [4.0, 0.0], [4.0, -1.0608124], [3.5785347663529667, -2.078319483139414], [2.8284271247461903, -2.8284271247461903], [2.078319483139414, -3.5785347663529667], [1.0608124, -4.0], [0.0, -4.0], [-1.0608124, -4.0], [-2.078319483139414, -3.5785347663529667], [-2.8284271247461903, -2.8284271247461903], [-3.5785347663529667, -2.078319483139414], [-4.0, -1.0608124], [-4.0, 0.0], [-4.0, 1.0608124], [-3.5785347663529667, 2.078319483139414], [-2.8284271247461903, 2.8284271247461903], [-2.078319483139414, 3.5785347663529667], [-1.0608124, 4.0], [0.0, 4.0]], ["M", "C", "C", "C", "C", "C", "C", "C", "C", "Z"]], "zorder": 2, "edgecolor": "#FF4400", "coordinates": "data", "data": "data16"}, {"xindex": 0, "yindex": 1, "alpha": 1, "facecolor": "#FF4400", "edgewidth": 1.0, "id": "el544265090343792pts", "markerpath": [[[0.0, 4.0], [1.0608124, 4.0], [2.078319483139414, 3.5785347663529667], [2.8284271247461903, 2.8284271247461903], [3.5785347663529667, 2.078319483139414], [4.0, 1.0608124], [4.0, 0.0], [4.0, -1.0608124], [3.5785347663529667, -2.078319483139414], [2.8284271247461903, -2.8284271247461903], [2.078319483139414, -3.5785347663529667], [1.0608124, -4.0], [0.0, -4.0], [-1.0608124, -4.0], [-2.078319483139414, -3.5785347663529667], [-2.8284271247461903, -2.8284271247461903], [-3.5785347663529667, -2.078319483139414], [-4.0, -1.0608124], [-4.0, 0.0], [-4.0, 1.0608124], [-3.5785347663529667, 2.078319483139414], [-2.8284271247461903, 2.8284271247461903], [-2.078319483139414, 3.5785347663529667], [-1.0608124, 4.0], [0.0, 4.0]], ["M", "C", "C", "C", "C", "C", "C", "C", "C", "Z"]], "zorder": 2, "edgecolor": "#FF4400", "coordinates": "data", "data": "data17"}, {"xindex": 0, "yindex": 1, "alpha": 1, "facecolor": "#FF4400", "edgewidth": 1.0, "id": "el544265090361472pts", "markerpath": [[[0.0, 4.0], [1.0608124, 4.0], [2.078319483139414, 3.5785347663529667], [2.8284271247461903, 2.8284271247461903], [3.5785347663529667, 2.078319483139414], [4.0, 1.0608124], [4.0, 0.0], [4.0, -1.0608124], [3.5785347663529667, -2.078319483139414], [2.8284271247461903, -2.8284271247461903], [2.078319483139414, -3.5785347663529667], [1.0608124, -4.0], [0.0, -4.0], [-1.0608124, -4.0], [-2.078319483139414, -3.5785347663529667], [-2.8284271247461903, -2.8284271247461903], [-3.5785347663529667, -2.078319483139414], [-4.0, -1.0608124], [-4.0, 0.0], [-4.0, 1.0608124], [-3.5785347663529667, 2.078319483139414], [-2.8284271247461903, 2.8284271247461903], [-2.078319483139414, 3.5785347663529667], [-1.0608124, 4.0], [0.0, 4.0]], ["M", "C", "C", "C", "C", "C", "C", "C", "C", "Z"]], "zorder": 2, "edgecolor": "#FF4400", "coordinates": "data", "data": "data18"}, {"xindex": 0, "yindex": 1, "alpha": 1, "facecolor": "#FF4400", "edgewidth": 1.0, "id": "el544265090372240pts", "markerpath": [[[0.0, 4.0], [1.0608124, 4.0], [2.078319483139414, 3.5785347663529667], [2.8284271247461903, 2.8284271247461903], [3.5785347663529667, 2.078319483139414], [4.0, 1.0608124], [4.0, 0.0], [4.0, -1.0608124], [3.5785347663529667, -2.078319483139414], [2.8284271247461903, -2.8284271247461903], [2.078319483139414, -3.5785347663529667], [1.0608124, -4.0], [0.0, -4.0], [-1.0608124, -4.0], [-2.078319483139414, -3.5785347663529667], [-2.8284271247461903, -2.8284271247461903], [-3.5785347663529667, -2.078319483139414], [-4.0, -1.0608124], [-4.0, 0.0], [-4.0, 1.0608124], [-3.5785347663529667, 2.078319483139414], [-2.8284271247461903, 2.8284271247461903], [-2.078319483139414, 3.5785347663529667], [-1.0608124, 4.0], [0.0, 4.0]], ["M", "C", "C", "C", "C", "C", "C", "C", "C", "Z"]], "zorder": 2, "edgecolor": "#FF4400", "coordinates": "data", "data": "data19"}, {"xindex": 0, "yindex": 1, "alpha": 1, "facecolor": "#FF4400", "edgewidth": 1.0, "id": "el544265090390480pts", "markerpath": [[[0.0, 4.0], [1.0608124, 4.0], [2.078319483139414, 3.5785347663529667], [2.8284271247461903, 2.8284271247461903], [3.5785347663529667, 2.078319483139414], [4.0, 1.0608124], [4.0, 0.0], [4.0, -1.0608124], [3.5785347663529667, -2.078319483139414], [2.8284271247461903, -2.8284271247461903], [2.078319483139414, -3.5785347663529667], [1.0608124, -4.0], [0.0, -4.0], [-1.0608124, -4.0], [-2.078319483139414, -3.5785347663529667], [-2.8284271247461903, -2.8284271247461903], [-3.5785347663529667, -2.078319483139414], [-4.0, -1.0608124], [-4.0, 0.0], [-4.0, 1.0608124], [-3.5785347663529667, 2.078319483139414], [-2.8284271247461903, 2.8284271247461903], [-2.078319483139414, 3.5785347663529667], [-1.0608124, 4.0], [0.0, 4.0]], ["M", "C", "C", "C", "C", "C", "C", "C", "C", "Z"]], "zorder": 2, "edgecolor": "#FF4400", "coordinates": "data", "data": "data20"}, {"xindex": 0, "yindex": 1, "alpha": 1, "facecolor": "#FF4400", "edgewidth": 1.0, "id": "el544265090412976pts", "markerpath": [[[0.0, 4.0], [1.0608124, 4.0], [2.078319483139414, 3.5785347663529667], [2.8284271247461903, 2.8284271247461903], [3.5785347663529667, 2.078319483139414], [4.0, 1.0608124], [4.0, 0.0], [4.0, -1.0608124], [3.5785347663529667, -2.078319483139414], [2.8284271247461903, -2.8284271247461903], [2.078319483139414, -3.5785347663529667], [1.0608124, -4.0], [0.0, -4.0], [-1.0608124, -4.0], [-2.078319483139414, -3.5785347663529667], [-2.8284271247461903, -2.8284271247461903], [-3.5785347663529667, -2.078319483139414], [-4.0, -1.0608124], [-4.0, 0.0], [-4.0, 1.0608124], [-3.5785347663529667, 2.078319483139414], [-2.8284271247461903, 2.8284271247461903], [-2.078319483139414, 3.5785347663529667], [-1.0608124, 4.0], [0.0, 4.0]], ["M", "C", "C", "C", "C", "C", "C", "C", "C", "Z"]], "zorder": 2, "edgecolor": "#FF4400", "coordinates": "data", "data": "data21"}, {"xindex": 0, "yindex": 1, "alpha": 1, "facecolor": "#FF4400", "edgewidth": 1.0, "id": "el544265090431328pts", "markerpath": [[[0.0, 4.0], [1.0608124, 4.0], [2.078319483139414, 3.5785347663529667], [2.8284271247461903, 2.8284271247461903], [3.5785347663529667, 2.078319483139414], [4.0, 1.0608124], [4.0, 0.0], [4.0, -1.0608124], [3.5785347663529667, -2.078319483139414], [2.8284271247461903, -2.8284271247461903], [2.078319483139414, -3.5785347663529667], [1.0608124, -4.0], [0.0, -4.0], [-1.0608124, -4.0], [-2.078319483139414, -3.5785347663529667], [-2.8284271247461903, -2.8284271247461903], [-3.5785347663529667, -2.078319483139414], [-4.0, -1.0608124], [-4.0, 0.0], [-4.0, 1.0608124], [-3.5785347663529667, 2.078319483139414], [-2.8284271247461903, 2.8284271247461903], [-2.078319483139414, 3.5785347663529667], [-1.0608124, 4.0], [0.0, 4.0]], ["M", "C", "C", "C", "C", "C", "C", "C", "C", "Z"]], "zorder": 2, "edgecolor": "#FF4400", "coordinates": "data", "data": "data22"}, {"xindex": 0, "yindex": 1, "alpha": 1, "facecolor": "#FF4400", "edgewidth": 1.0, "id": "el544265090441088pts", "markerpath": [[[0.0, 4.0], [1.0608124, 4.0], [2.078319483139414, 3.5785347663529667], [2.8284271247461903, 2.8284271247461903], [3.5785347663529667, 2.078319483139414], [4.0, 1.0608124], [4.0, 0.0], [4.0, -1.0608124], [3.5785347663529667, -2.078319483139414], [2.8284271247461903, -2.8284271247461903], [2.078319483139414, -3.5785347663529667], [1.0608124, -4.0], [0.0, -4.0], [-1.0608124, -4.0], [-2.078319483139414, -3.5785347663529667], [-2.8284271247461903, -2.8284271247461903], [-3.5785347663529667, -2.078319483139414], [-4.0, -1.0608124], [-4.0, 0.0], [-4.0, 1.0608124], [-3.5785347663529667, 2.078319483139414], [-2.8284271247461903, 2.8284271247461903], [-2.078319483139414, 3.5785347663529667], [-1.0608124, 4.0], [0.0, 4.0]], ["M", "C", "C", "C", "C", "C", "C", "C", "C", "Z"]], "zorder": 2, "edgecolor": "#FF4400", "coordinates": "data", "data": "data23"}, {"xindex": 0, "yindex": 1, "alpha": 1, "facecolor": "#FF4400", "edgewidth": 1.0, "id": "el544265090459720pts", "markerpath": [[[0.0, 4.0], [1.0608124, 4.0], [2.078319483139414, 3.5785347663529667], [2.8284271247461903, 2.8284271247461903], [3.5785347663529667, 2.078319483139414], [4.0, 1.0608124], [4.0, 0.0], [4.0, -1.0608124], [3.5785347663529667, -2.078319483139414], [2.8284271247461903, -2.8284271247461903], [2.078319483139414, -3.5785347663529667], [1.0608124, -4.0], [0.0, -4.0], [-1.0608124, -4.0], [-2.078319483139414, -3.5785347663529667], [-2.8284271247461903, -2.8284271247461903], [-3.5785347663529667, -2.078319483139414], [-4.0, -1.0608124], [-4.0, 0.0], [-4.0, 1.0608124], [-3.5785347663529667, 2.078319483139414], [-2.8284271247461903, 2.8284271247461903], [-2.078319483139414, 3.5785347663529667], [-1.0608124, 4.0], [0.0, 4.0]], ["M", "C", "C", "C", "C", "C", "C", "C", "C", "Z"]], "zorder": 2, "edgecolor": "#FF4400", "coordinates": "data", "data": "data24"}, {"xindex": 0, "yindex": 1, "alpha": 1, "facecolor": "#FF4400", "edgewidth": 1.0, "id": "el544265090478120pts", "markerpath": [[[0.0, 4.0], [1.0608124, 4.0], [2.078319483139414, 3.5785347663529667], [2.8284271247461903, 2.8284271247461903], [3.5785347663529667, 2.078319483139414], [4.0, 1.0608124], [4.0, 0.0], [4.0, -1.0608124], [3.5785347663529667, -2.078319483139414], [2.8284271247461903, -2.8284271247461903], [2.078319483139414, -3.5785347663529667], [1.0608124, -4.0], [0.0, -4.0], [-1.0608124, -4.0], [-2.078319483139414, -3.5785347663529667], [-2.8284271247461903, -2.8284271247461903], [-3.5785347663529667, -2.078319483139414], [-4.0, -1.0608124], [-4.0, 0.0], [-4.0, 1.0608124], [-3.5785347663529667, 2.078319483139414], [-2.8284271247461903, 2.8284271247461903], [-2.078319483139414, 3.5785347663529667], [-1.0608124, 4.0], [0.0, 4.0]], ["M", "C", "C", "C", "C", "C", "C", "C", "C", "Z"]], "zorder": 2, "edgecolor": "#FF4400", "coordinates": "data", "data": "data25"}, {"xindex": 0, "yindex": 1, "alpha": 1, "facecolor": "#FF4400", "edgewidth": 1.0, "id": "el544265090505000pts", "markerpath": [[[0.0, 4.0], [1.0608124, 4.0], [2.078319483139414, 3.5785347663529667], [2.8284271247461903, 2.8284271247461903], [3.5785347663529667, 2.078319483139414], [4.0, 1.0608124], [4.0, 0.0], [4.0, -1.0608124], [3.5785347663529667, -2.078319483139414], [2.8284271247461903, -2.8284271247461903], [2.078319483139414, -3.5785347663529667], [1.0608124, -4.0], [0.0, -4.0], [-1.0608124, -4.0], [-2.078319483139414, -3.5785347663529667], [-2.8284271247461903, -2.8284271247461903], [-3.5785347663529667, -2.078319483139414], [-4.0, -1.0608124], [-4.0, 0.0], [-4.0, 1.0608124], [-3.5785347663529667, 2.078319483139414], [-2.8284271247461903, 2.8284271247461903], [-2.078319483139414, 3.5785347663529667], [-1.0608124, 4.0], [0.0, 4.0]], ["M", "C", "C", "C", "C", "C", "C", "C", "C", "Z"]], "zorder": 2, "edgecolor": "#FF4400", "coordinates": "data", "data": "data26"}, {"xindex": 0, "yindex": 1, "alpha": 1, "facecolor": "#FF4400", "edgewidth": 1.0, "id": "el544265090526712pts", "markerpath": [[[0.0, 4.0], [1.0608124, 4.0], [2.078319483139414, 3.5785347663529667], [2.8284271247461903, 2.8284271247461903], [3.5785347663529667, 2.078319483139414], [4.0, 1.0608124], [4.0, 0.0], [4.0, -1.0608124], [3.5785347663529667, -2.078319483139414], [2.8284271247461903, -2.8284271247461903], [2.078319483139414, -3.5785347663529667], [1.0608124, -4.0], [0.0, -4.0], [-1.0608124, -4.0], [-2.078319483139414, -3.5785347663529667], [-2.8284271247461903, -2.8284271247461903], [-3.5785347663529667, -2.078319483139414], [-4.0, -1.0608124], [-4.0, 0.0], [-4.0, 1.0608124], [-3.5785347663529667, 2.078319483139414], [-2.8284271247461903, 2.8284271247461903], [-2.078319483139414, 3.5785347663529667], [-1.0608124, 4.0], [0.0, 4.0]], ["M", "C", "C", "C", "C", "C", "C", "C", "C", "Z"]], "zorder": 2, "edgecolor": "#FF4400", "coordinates": "data", "data": "data27"}, {"xindex": 0, "yindex": 1, "alpha": 1, "facecolor": "#FF4400", "edgewidth": 1.0, "id": "el544265088796008pts", "markerpath": [[[0.0, 4.0], [1.0608124, 4.0], [2.078319483139414, 3.5785347663529667], [2.8284271247461903, 2.8284271247461903], [3.5785347663529667, 2.078319483139414], [4.0, 1.0608124], [4.0, 0.0], [4.0, -1.0608124], [3.5785347663529667, -2.078319483139414], [2.8284271247461903, -2.8284271247461903], [2.078319483139414, -3.5785347663529667], [1.0608124, -4.0], [0.0, -4.0], [-1.0608124, -4.0], [-2.078319483139414, -3.5785347663529667], [-2.8284271247461903, -2.8284271247461903], [-3.5785347663529667, -2.078319483139414], [-4.0, -1.0608124], [-4.0, 0.0], [-4.0, 1.0608124], [-3.5785347663529667, 2.078319483139414], [-2.8284271247461903, 2.8284271247461903], [-2.078319483139414, 3.5785347663529667], [-1.0608124, 4.0], [0.0, 4.0]], ["M", "C", "C", "C", "C", "C", "C", "C", "C", "Z"]], "zorder": 2, "edgecolor": "#FF4400", "coordinates": "data", "data": "data28"}, {"xindex": 0, "yindex": 1, "alpha": 1, "facecolor": "#FF4400", "edgewidth": 1.0, "id": "el544265090547024pts", "markerpath": [[[0.0, 4.0], [1.0608124, 4.0], [2.078319483139414, 3.5785347663529667], [2.8284271247461903, 2.8284271247461903], [3.5785347663529667, 2.078319483139414], [4.0, 1.0608124], [4.0, 0.0], [4.0, -1.0608124], [3.5785347663529667, -2.078319483139414], [2.8284271247461903, -2.8284271247461903], [2.078319483139414, -3.5785347663529667], [1.0608124, -4.0], [0.0, -4.0], [-1.0608124, -4.0], [-2.078319483139414, -3.5785347663529667], [-2.8284271247461903, -2.8284271247461903], [-3.5785347663529667, -2.078319483139414], [-4.0, -1.0608124], [-4.0, 0.0], [-4.0, 1.0608124], [-3.5785347663529667, 2.078319483139414], [-2.8284271247461903, 2.8284271247461903], [-2.078319483139414, 3.5785347663529667], [-1.0608124, 4.0], [0.0, 4.0]], ["M", "C", "C", "C", "C", "C", "C", "C", "C", "Z"]], "zorder": 2, "edgecolor": "#FF4400", "coordinates": "data", "data": "data29"}, {"xindex": 0, "yindex": 1, "alpha": 1, "facecolor": "#FF4400", "edgewidth": 1.0, "id": "el544265089910120pts", "markerpath": [[[0.0, 4.0], [1.0608124, 4.0], [2.078319483139414, 3.5785347663529667], [2.8284271247461903, 2.8284271247461903], [3.5785347663529667, 2.078319483139414], [4.0, 1.0608124], [4.0, 0.0], [4.0, -1.0608124], [3.5785347663529667, -2.078319483139414], [2.8284271247461903, -2.8284271247461903], [2.078319483139414, -3.5785347663529667], [1.0608124, -4.0], [0.0, -4.0], [-1.0608124, -4.0], [-2.078319483139414, -3.5785347663529667], [-2.8284271247461903, -2.8284271247461903], [-3.5785347663529667, -2.078319483139414], [-4.0, -1.0608124], [-4.0, 0.0], [-4.0, 1.0608124], [-3.5785347663529667, 2.078319483139414], [-2.8284271247461903, 2.8284271247461903], [-2.078319483139414, 3.5785347663529667], [-1.0608124, 4.0], [0.0, 4.0]], ["M", "C", "C", "C", "C", "C", "C", "C", "C", "Z"]], "zorder": 2, "edgecolor": "#FF4400", "coordinates": "data", "data": "data30"}, {"xindex": 0, "yindex": 1, "alpha": 1, "facecolor": "#FF4400", "edgewidth": 1.0, "id": "el544265089932344pts", "markerpath": [[[0.0, 4.0], [1.0608124, 4.0], [2.078319483139414, 3.5785347663529667], [2.8284271247461903, 2.8284271247461903], [3.5785347663529667, 2.078319483139414], [4.0, 1.0608124], [4.0, 0.0], [4.0, -1.0608124], [3.5785347663529667, -2.078319483139414], [2.8284271247461903, -2.8284271247461903], [2.078319483139414, -3.5785347663529667], [1.0608124, -4.0], [0.0, -4.0], [-1.0608124, -4.0], [-2.078319483139414, -3.5785347663529667], [-2.8284271247461903, -2.8284271247461903], [-3.5785347663529667, -2.078319483139414], [-4.0, -1.0608124], [-4.0, 0.0], [-4.0, 1.0608124], [-3.5785347663529667, 2.078319483139414], [-2.8284271247461903, 2.8284271247461903], [-2.078319483139414, 3.5785347663529667], [-1.0608124, 4.0], [0.0, 4.0]], ["M", "C", "C", "C", "C", "C", "C", "C", "C", "Z"]], "zorder": 2, "edgecolor": "#FF4400", "coordinates": "data", "data": "data31"}, {"xindex": 0, "yindex": 1, "alpha": 1, "facecolor": "#FF4400", "edgewidth": 1.0, "id": "el544265089946592pts", "markerpath": [[[0.0, 4.0], [1.0608124, 4.0], [2.078319483139414, 3.5785347663529667], [2.8284271247461903, 2.8284271247461903], [3.5785347663529667, 2.078319483139414], [4.0, 1.0608124], [4.0, 0.0], [4.0, -1.0608124], [3.5785347663529667, -2.078319483139414], [2.8284271247461903, -2.8284271247461903], [2.078319483139414, -3.5785347663529667], [1.0608124, -4.0], [0.0, -4.0], [-1.0608124, -4.0], [-2.078319483139414, -3.5785347663529667], [-2.8284271247461903, -2.8284271247461903], [-3.5785347663529667, -2.078319483139414], [-4.0, -1.0608124], [-4.0, 0.0], [-4.0, 1.0608124], [-3.5785347663529667, 2.078319483139414], [-2.8284271247461903, 2.8284271247461903], [-2.078319483139414, 3.5785347663529667], [-1.0608124, 4.0], [0.0, 4.0]], ["M", "C", "C", "C", "C", "C", "C", "C", "C", "Z"]], "zorder": 2, "edgecolor": "#FF4400", "coordinates": "data", "data": "data32"}, {"xindex": 0, "yindex": 1, "alpha": 1, "facecolor": "#FF4400", "edgewidth": 1.0, "id": "el544265089968984pts", "markerpath": [[[0.0, 4.0], [1.0608124, 4.0], [2.078319483139414, 3.5785347663529667], [2.8284271247461903, 2.8284271247461903], [3.5785347663529667, 2.078319483139414], [4.0, 1.0608124], [4.0, 0.0], [4.0, -1.0608124], [3.5785347663529667, -2.078319483139414], [2.8284271247461903, -2.8284271247461903], [2.078319483139414, -3.5785347663529667], [1.0608124, -4.0], [0.0, -4.0], [-1.0608124, -4.0], [-2.078319483139414, -3.5785347663529667], [-2.8284271247461903, -2.8284271247461903], [-3.5785347663529667, -2.078319483139414], [-4.0, -1.0608124], [-4.0, 0.0], [-4.0, 1.0608124], [-3.5785347663529667, 2.078319483139414], [-2.8284271247461903, 2.8284271247461903], [-2.078319483139414, 3.5785347663529667], [-1.0608124, 4.0], [0.0, 4.0]], ["M", "C", "C", "C", "C", "C", "C", "C", "C", "Z"]], "zorder": 2, "edgecolor": "#FF4400", "coordinates": "data", "data": "data33"}, {"xindex": 0, "yindex": 1, "alpha": 1, "facecolor": "#FF4400", "edgewidth": 1.0, "id": "el544265089974928pts", "markerpath": [[[0.0, 4.0], [1.0608124, 4.0], [2.078319483139414, 3.5785347663529667], [2.8284271247461903, 2.8284271247461903], [3.5785347663529667, 2.078319483139414], [4.0, 1.0608124], [4.0, 0.0], [4.0, -1.0608124], [3.5785347663529667, -2.078319483139414], [2.8284271247461903, -2.8284271247461903], [2.078319483139414, -3.5785347663529667], [1.0608124, -4.0], [0.0, -4.0], [-1.0608124, -4.0], [-2.078319483139414, -3.5785347663529667], [-2.8284271247461903, -2.8284271247461903], [-3.5785347663529667, -2.078319483139414], [-4.0, -1.0608124], [-4.0, 0.0], [-4.0, 1.0608124], [-3.5785347663529667, 2.078319483139414], [-2.8284271247461903, 2.8284271247461903], [-2.078319483139414, 3.5785347663529667], [-1.0608124, 4.0], [0.0, 4.0]], ["M", "C", "C", "C", "C", "C", "C", "C", "C", "Z"]], "zorder": 2, "edgecolor": "#FF4400", "coordinates": "data", "data": "data34"}, {"xindex": 0, "yindex": 1, "alpha": 1, "facecolor": "#FF4400", "edgewidth": 1.0, "id": "el544265090002032pts", "markerpath": [[[0.0, 4.0], [1.0608124, 4.0], [2.078319483139414, 3.5785347663529667], [2.8284271247461903, 2.8284271247461903], [3.5785347663529667, 2.078319483139414], [4.0, 1.0608124], [4.0, 0.0], [4.0, -1.0608124], [3.5785347663529667, -2.078319483139414], [2.8284271247461903, -2.8284271247461903], [2.078319483139414, -3.5785347663529667], [1.0608124, -4.0], [0.0, -4.0], [-1.0608124, -4.0], [-2.078319483139414, -3.5785347663529667], [-2.8284271247461903, -2.8284271247461903], [-3.5785347663529667, -2.078319483139414], [-4.0, -1.0608124], [-4.0, 0.0], [-4.0, 1.0608124], [-3.5785347663529667, 2.078319483139414], [-2.8284271247461903, 2.8284271247461903], [-2.078319483139414, 3.5785347663529667], [-1.0608124, 4.0], [0.0, 4.0]], ["M", "C", "C", "C", "C", "C", "C", "C", "C", "Z"]], "zorder": 2, "edgecolor": "#FF4400", "coordinates": "data", "data": "data35"}, {"xindex": 0, "yindex": 1, "alpha": 1, "facecolor": "#FF4400", "edgewidth": 1.0, "id": "el544265090012240pts", "markerpath": [[[0.0, 4.0], [1.0608124, 4.0], [2.078319483139414, 3.5785347663529667], [2.8284271247461903, 2.8284271247461903], [3.5785347663529667, 2.078319483139414], [4.0, 1.0608124], [4.0, 0.0], [4.0, -1.0608124], [3.5785347663529667, -2.078319483139414], [2.8284271247461903, -2.8284271247461903], [2.078319483139414, -3.5785347663529667], [1.0608124, -4.0], [0.0, -4.0], [-1.0608124, -4.0], [-2.078319483139414, -3.5785347663529667], [-2.8284271247461903, -2.8284271247461903], [-3.5785347663529667, -2.078319483139414], [-4.0, -1.0608124], [-4.0, 0.0], [-4.0, 1.0608124], [-3.5785347663529667, 2.078319483139414], [-2.8284271247461903, 2.8284271247461903], [-2.078319483139414, 3.5785347663529667], [-1.0608124, 4.0], [0.0, 4.0]], ["M", "C", "C", "C", "C", "C", "C", "C", "C", "Z"]], "zorder": 2, "edgecolor": "#FF4400", "coordinates": "data", "data": "data36"}, {"xindex": 0, "yindex": 1, "alpha": 1, "facecolor": "#FF4400", "edgewidth": 1.0, "id": "el544265089353968pts", "markerpath": [[[0.0, 4.0], [1.0608124, 4.0], [2.078319483139414, 3.5785347663529667], [2.8284271247461903, 2.8284271247461903], [3.5785347663529667, 2.078319483139414], [4.0, 1.0608124], [4.0, 0.0], [4.0, -1.0608124], [3.5785347663529667, -2.078319483139414], [2.8284271247461903, -2.8284271247461903], [2.078319483139414, -3.5785347663529667], [1.0608124, -4.0], [0.0, -4.0], [-1.0608124, -4.0], [-2.078319483139414, -3.5785347663529667], [-2.8284271247461903, -2.8284271247461903], [-3.5785347663529667, -2.078319483139414], [-4.0, -1.0608124], [-4.0, 0.0], [-4.0, 1.0608124], [-3.5785347663529667, 2.078319483139414], [-2.8284271247461903, 2.8284271247461903], [-2.078319483139414, 3.5785347663529667], [-1.0608124, 4.0], [0.0, 4.0]], ["M", "C", "C", "C", "C", "C", "C", "C", "C", "Z"]], "zorder": 2, "edgecolor": "#FF4400", "coordinates": "data", "data": "data37"}, {"xindex": 0, "yindex": 1, "alpha": 1, "facecolor": "#FF4400", "edgewidth": 1.0, "id": "el544265090052976pts", "markerpath": [[[0.0, 4.0], [1.0608124, 4.0], [2.078319483139414, 3.5785347663529667], [2.8284271247461903, 2.8284271247461903], [3.5785347663529667, 2.078319483139414], [4.0, 1.0608124], [4.0, 0.0], [4.0, -1.0608124], [3.5785347663529667, -2.078319483139414], [2.8284271247461903, -2.8284271247461903], [2.078319483139414, -3.5785347663529667], [1.0608124, -4.0], [0.0, -4.0], [-1.0608124, -4.0], [-2.078319483139414, -3.5785347663529667], [-2.8284271247461903, -2.8284271247461903], [-3.5785347663529667, -2.078319483139414], [-4.0, -1.0608124], [-4.0, 0.0], [-4.0, 1.0608124], [-3.5785347663529667, 2.078319483139414], [-2.8284271247461903, 2.8284271247461903], [-2.078319483139414, 3.5785347663529667], [-1.0608124, 4.0], [0.0, 4.0]], ["M", "C", "C", "C", "C", "C", "C", "C", "C", "Z"]], "zorder": 2, "edgecolor": "#FF4400", "coordinates": "data", "data": "data38"}, {"xindex": 0, "yindex": 1, "alpha": 1, "facecolor": "#FF4400", "edgewidth": 1.0, "id": "el544265090067176pts", "markerpath": [[[0.0, 4.0], [1.0608124, 4.0], [2.078319483139414, 3.5785347663529667], [2.8284271247461903, 2.8284271247461903], [3.5785347663529667, 2.078319483139414], [4.0, 1.0608124], [4.0, 0.0], [4.0, -1.0608124], [3.5785347663529667, -2.078319483139414], [2.8284271247461903, -2.8284271247461903], [2.078319483139414, -3.5785347663529667], [1.0608124, -4.0], [0.0, -4.0], [-1.0608124, -4.0], [-2.078319483139414, -3.5785347663529667], [-2.8284271247461903, -2.8284271247461903], [-3.5785347663529667, -2.078319483139414], [-4.0, -1.0608124], [-4.0, 0.0], [-4.0, 1.0608124], [-3.5785347663529667, 2.078319483139414], [-2.8284271247461903, 2.8284271247461903], [-2.078319483139414, 3.5785347663529667], [-1.0608124, 4.0], [0.0, 4.0]], ["M", "C", "C", "C", "C", "C", "C", "C", "C", "Z"]], "zorder": 2, "edgecolor": "#FF4400", "coordinates": "data", "data": "data39"}, {"xindex": 0, "yindex": 1, "alpha": 1, "facecolor": "#FF4400", "edgewidth": 1.0, "id": "el544265090089616pts", "markerpath": [[[0.0, 4.0], [1.0608124, 4.0], [2.078319483139414, 3.5785347663529667], [2.8284271247461903, 2.8284271247461903], [3.5785347663529667, 2.078319483139414], [4.0, 1.0608124], [4.0, 0.0], [4.0, -1.0608124], [3.5785347663529667, -2.078319483139414], [2.8284271247461903, -2.8284271247461903], [2.078319483139414, -3.5785347663529667], [1.0608124, -4.0], [0.0, -4.0], [-1.0608124, -4.0], [-2.078319483139414, -3.5785347663529667], [-2.8284271247461903, -2.8284271247461903], [-3.5785347663529667, -2.078319483139414], [-4.0, -1.0608124], [-4.0, 0.0], [-4.0, 1.0608124], [-3.5785347663529667, 2.078319483139414], [-2.8284271247461903, 2.8284271247461903], [-2.078319483139414, 3.5785347663529667], [-1.0608124, 4.0], [0.0, 4.0]], ["M", "C", "C", "C", "C", "C", "C", "C", "C", "Z"]], "zorder": 2, "edgecolor": "#FF4400", "coordinates": "data", "data": "data40"}, {"xindex": 0, "yindex": 1, "alpha": 1, "facecolor": "#FF4400", "edgewidth": 1.0, "id": "el544265090107856pts", "markerpath": [[[0.0, 4.0], [1.0608124, 4.0], [2.078319483139414, 3.5785347663529667], [2.8284271247461903, 2.8284271247461903], [3.5785347663529667, 2.078319483139414], [4.0, 1.0608124], [4.0, 0.0], [4.0, -1.0608124], [3.5785347663529667, -2.078319483139414], [2.8284271247461903, -2.8284271247461903], [2.078319483139414, -3.5785347663529667], [1.0608124, -4.0], [0.0, -4.0], [-1.0608124, -4.0], [-2.078319483139414, -3.5785347663529667], [-2.8284271247461903, -2.8284271247461903], [-3.5785347663529667, -2.078319483139414], [-4.0, -1.0608124], [-4.0, 0.0], [-4.0, 1.0608124], [-3.5785347663529667, 2.078319483139414], [-2.8284271247461903, 2.8284271247461903], [-2.078319483139414, 3.5785347663529667], [-1.0608124, 4.0], [0.0, 4.0]], ["M", "C", "C", "C", "C", "C", "C", "C", "C", "Z"]], "zorder": 2, "edgecolor": "#FF4400", "coordinates": "data", "data": "data41"}, {"xindex": 0, "yindex": 1, "alpha": 1, "facecolor": "#FF4400", "edgewidth": 1.0, "id": "el544265090122104pts", "markerpath": [[[0.0, 4.0], [1.0608124, 4.0], [2.078319483139414, 3.5785347663529667], [2.8284271247461903, 2.8284271247461903], [3.5785347663529667, 2.078319483139414], [4.0, 1.0608124], [4.0, 0.0], [4.0, -1.0608124], [3.5785347663529667, -2.078319483139414], [2.8284271247461903, -2.8284271247461903], [2.078319483139414, -3.5785347663529667], [1.0608124, -4.0], [0.0, -4.0], [-1.0608124, -4.0], [-2.078319483139414, -3.5785347663529667], [-2.8284271247461903, -2.8284271247461903], [-3.5785347663529667, -2.078319483139414], [-4.0, -1.0608124], [-4.0, 0.0], [-4.0, 1.0608124], [-3.5785347663529667, 2.078319483139414], [-2.8284271247461903, 2.8284271247461903], [-2.078319483139414, 3.5785347663529667], [-1.0608124, 4.0], [0.0, 4.0]], ["M", "C", "C", "C", "C", "C", "C", "C", "C", "Z"]], "zorder": 2, "edgecolor": "#FF4400", "coordinates": "data", "data": "data42"}, {"xindex": 0, "yindex": 1, "alpha": 1, "facecolor": "#FF4400", "edgewidth": 1.0, "id": "el544265090144944pts", "markerpath": [[[0.0, 4.0], [1.0608124, 4.0], [2.078319483139414, 3.5785347663529667], [2.8284271247461903, 2.8284271247461903], [3.5785347663529667, 2.078319483139414], [4.0, 1.0608124], [4.0, 0.0], [4.0, -1.0608124], [3.5785347663529667, -2.078319483139414], [2.8284271247461903, -2.8284271247461903], [2.078319483139414, -3.5785347663529667], [1.0608124, -4.0], [0.0, -4.0], [-1.0608124, -4.0], [-2.078319483139414, -3.5785347663529667], [-2.8284271247461903, -2.8284271247461903], [-3.5785347663529667, -2.078319483139414], [-4.0, -1.0608124], [-4.0, 0.0], [-4.0, 1.0608124], [-3.5785347663529667, 2.078319483139414], [-2.8284271247461903, 2.8284271247461903], [-2.078319483139414, 3.5785347663529667], [-1.0608124, 4.0], [0.0, 4.0]], ["M", "C", "C", "C", "C", "C", "C", "C", "C", "Z"]], "zorder": 2, "edgecolor": "#FF4400", "coordinates": "data", "data": "data43"}, {"xindex": 0, "yindex": 1, "alpha": 1, "facecolor": "#FF4400", "edgewidth": 1.0, "id": "el544265090158576pts", "markerpath": [[[0.0, 4.0], [1.0608124, 4.0], [2.078319483139414, 3.5785347663529667], [2.8284271247461903, 2.8284271247461903], [3.5785347663529667, 2.078319483139414], [4.0, 1.0608124], [4.0, 0.0], [4.0, -1.0608124], [3.5785347663529667, -2.078319483139414], [2.8284271247461903, -2.8284271247461903], [2.078319483139414, -3.5785347663529667], [1.0608124, -4.0], [0.0, -4.0], [-1.0608124, -4.0], [-2.078319483139414, -3.5785347663529667], [-2.8284271247461903, -2.8284271247461903], [-3.5785347663529667, -2.078319483139414], [-4.0, -1.0608124], [-4.0, 0.0], [-4.0, 1.0608124], [-3.5785347663529667, 2.078319483139414], [-2.8284271247461903, 2.8284271247461903], [-2.078319483139414, 3.5785347663529667], [-1.0608124, 4.0], [0.0, 4.0]], ["M", "C", "C", "C", "C", "C", "C", "C", "C", "Z"]], "zorder": 2, "edgecolor": "#FF4400", "coordinates": "data", "data": "data44"}, {"xindex": 0, "yindex": 1, "alpha": 1, "facecolor": "#FF4400", "edgewidth": 1.0, "id": "el544265090959032pts", "markerpath": [[[0.0, 4.0], [1.0608124, 4.0], [2.078319483139414, 3.5785347663529667], [2.8284271247461903, 2.8284271247461903], [3.5785347663529667, 2.078319483139414], [4.0, 1.0608124], [4.0, 0.0], [4.0, -1.0608124], [3.5785347663529667, -2.078319483139414], [2.8284271247461903, -2.8284271247461903], [2.078319483139414, -3.5785347663529667], [1.0608124, -4.0], [0.0, -4.0], [-1.0608124, -4.0], [-2.078319483139414, -3.5785347663529667], [-2.8284271247461903, -2.8284271247461903], [-3.5785347663529667, -2.078319483139414], [-4.0, -1.0608124], [-4.0, 0.0], [-4.0, 1.0608124], [-3.5785347663529667, 2.078319483139414], [-2.8284271247461903, 2.8284271247461903], [-2.078319483139414, 3.5785347663529667], [-1.0608124, 4.0], [0.0, 4.0]], ["M", "C", "C", "C", "C", "C", "C", "C", "C", "Z"]], "zorder": 2, "edgecolor": "#FF4400", "coordinates": "data", "data": "data45"}, {"xindex": 0, "yindex": 1, "alpha": 1, "facecolor": "#FF4400", "edgewidth": 1.0, "id": "el544265090978336pts", "markerpath": [[[0.0, 4.0], [1.0608124, 4.0], [2.078319483139414, 3.5785347663529667], [2.8284271247461903, 2.8284271247461903], [3.5785347663529667, 2.078319483139414], [4.0, 1.0608124], [4.0, 0.0], [4.0, -1.0608124], [3.5785347663529667, -2.078319483139414], [2.8284271247461903, -2.8284271247461903], [2.078319483139414, -3.5785347663529667], [1.0608124, -4.0], [0.0, -4.0], [-1.0608124, -4.0], [-2.078319483139414, -3.5785347663529667], [-2.8284271247461903, -2.8284271247461903], [-3.5785347663529667, -2.078319483139414], [-4.0, -1.0608124], [-4.0, 0.0], [-4.0, 1.0608124], [-3.5785347663529667, 2.078319483139414], [-2.8284271247461903, 2.8284271247461903], [-2.078319483139414, 3.5785347663529667], [-1.0608124, 4.0], [0.0, 4.0]], ["M", "C", "C", "C", "C", "C", "C", "C", "C", "Z"]], "zorder": 2, "edgecolor": "#FF4400", "coordinates": "data", "data": "data46"}, {"xindex": 0, "yindex": 1, "alpha": 1, "facecolor": "#FF4400", "edgewidth": 1.0, "id": "el544265090991632pts", "markerpath": [[[0.0, 4.0], [1.0608124, 4.0], [2.078319483139414, 3.5785347663529667], [2.8284271247461903, 2.8284271247461903], [3.5785347663529667, 2.078319483139414], [4.0, 1.0608124], [4.0, 0.0], [4.0, -1.0608124], [3.5785347663529667, -2.078319483139414], [2.8284271247461903, -2.8284271247461903], [2.078319483139414, -3.5785347663529667], [1.0608124, -4.0], [0.0, -4.0], [-1.0608124, -4.0], [-2.078319483139414, -3.5785347663529667], [-2.8284271247461903, -2.8284271247461903], [-3.5785347663529667, -2.078319483139414], [-4.0, -1.0608124], [-4.0, 0.0], [-4.0, 1.0608124], [-3.5785347663529667, 2.078319483139414], [-2.8284271247461903, 2.8284271247461903], [-2.078319483139414, 3.5785347663529667], [-1.0608124, 4.0], [0.0, 4.0]], ["M", "C", "C", "C", "C", "C", "C", "C", "C", "Z"]], "zorder": 2, "edgecolor": "#FF4400", "coordinates": "data", "data": "data47"}, {"xindex": 0, "yindex": 1, "alpha": 1, "facecolor": "#FF4400", "edgewidth": 1.0, "id": "el544265091027152pts", "markerpath": [[[0.0, 4.0], [1.0608124, 4.0], [2.078319483139414, 3.5785347663529667], [2.8284271247461903, 2.8284271247461903], [3.5785347663529667, 2.078319483139414], [4.0, 1.0608124], [4.0, 0.0], [4.0, -1.0608124], [3.5785347663529667, -2.078319483139414], [2.8284271247461903, -2.8284271247461903], [2.078319483139414, -3.5785347663529667], [1.0608124, -4.0], [0.0, -4.0], [-1.0608124, -4.0], [-2.078319483139414, -3.5785347663529667], [-2.8284271247461903, -2.8284271247461903], [-3.5785347663529667, -2.078319483139414], [-4.0, -1.0608124], [-4.0, 0.0], [-4.0, 1.0608124], [-3.5785347663529667, 2.078319483139414], [-2.8284271247461903, 2.8284271247461903], [-2.078319483139414, 3.5785347663529667], [-1.0608124, 4.0], [0.0, 4.0]], ["M", "C", "C", "C", "C", "C", "C", "C", "C", "Z"]], "zorder": 2, "edgecolor": "#FF4400", "coordinates": "data", "data": "data48"}, {"xindex": 0, "yindex": 1, "alpha": 1, "facecolor": "#FF4400", "edgewidth": 1.0, "id": "el544265091049088pts", "markerpath": [[[0.0, 4.0], [1.0608124, 4.0], [2.078319483139414, 3.5785347663529667], [2.8284271247461903, 2.8284271247461903], [3.5785347663529667, 2.078319483139414], [4.0, 1.0608124], [4.0, 0.0], [4.0, -1.0608124], [3.5785347663529667, -2.078319483139414], [2.8284271247461903, -2.8284271247461903], [2.078319483139414, -3.5785347663529667], [1.0608124, -4.0], [0.0, -4.0], [-1.0608124, -4.0], [-2.078319483139414, -3.5785347663529667], [-2.8284271247461903, -2.8284271247461903], [-3.5785347663529667, -2.078319483139414], [-4.0, -1.0608124], [-4.0, 0.0], [-4.0, 1.0608124], [-3.5785347663529667, 2.078319483139414], [-2.8284271247461903, 2.8284271247461903], [-2.078319483139414, 3.5785347663529667], [-1.0608124, 4.0], [0.0, 4.0]], ["M", "C", "C", "C", "C", "C", "C", "C", "C", "Z"]], "zorder": 2, "edgecolor": "#FF4400", "coordinates": "data", "data": "data49"}, {"xindex": 0, "yindex": 1, "alpha": 1, "facecolor": "#FF4400", "edgewidth": 1.0, "id": "el544265091067888pts", "markerpath": [[[0.0, 4.0], [1.0608124, 4.0], [2.078319483139414, 3.5785347663529667], [2.8284271247461903, 2.8284271247461903], [3.5785347663529667, 2.078319483139414], [4.0, 1.0608124], [4.0, 0.0], [4.0, -1.0608124], [3.5785347663529667, -2.078319483139414], [2.8284271247461903, -2.8284271247461903], [2.078319483139414, -3.5785347663529667], [1.0608124, -4.0], [0.0, -4.0], [-1.0608124, -4.0], [-2.078319483139414, -3.5785347663529667], [-2.8284271247461903, -2.8284271247461903], [-3.5785347663529667, -2.078319483139414], [-4.0, -1.0608124], [-4.0, 0.0], [-4.0, 1.0608124], [-3.5785347663529667, 2.078319483139414], [-2.8284271247461903, 2.8284271247461903], [-2.078319483139414, 3.5785347663529667], [-1.0608124, 4.0], [0.0, 4.0]], ["M", "C", "C", "C", "C", "C", "C", "C", "C", "Z"]], "zorder": 2, "edgecolor": "#FF4400", "coordinates": "data", "data": "data50"}], "lines": [], "sharey": [], "axes": [{"visible": true, "tickvalues": null, "grid": {"gridOn": false}, "tickformat": null, "position": "bottom", "scale": "linear", "fontsize": 10.0, "nticks": 7}, {"visible": true, "tickvalues": null, "grid": {"gridOn": false}, "tickformat": null, "position": "left", "scale": "linear", "fontsize": 10.0, "nticks": 7}], "xscale": "linear", "axesbgalpha": null, "yscale": "linear", "images": [], "texts": [{"h_anchor": "middle", "alpha": 1, "text": "k", "position": [0.5, -0.0772626931567329], "zorder": 3, "v_baseline": "hanging", "rotation": -0.0, "color": "#000000", "id": "el544265088761336", "fontsize": 16.0, "coordinates": "axes"}, {"h_anchor": "middle", "alpha": 1, "text": "TSS", "position": [-0.07683691756272401, 0.5], "zorder": 3, "v_baseline": "auto", "rotation": -90.0, "color": "#000000", "id": "el544265088730696", "fontsize": 16.0, "coordinates": "axes"}, {"h_anchor": "middle", "alpha": 1, "text": "TSS per k using stratified k-fold cross-validation", "position": [0.5, 1.0220750551876379], "zorder": 3, "v_baseline": "auto", "rotation": -0.0, "color": "#000000", "id": "el544265088817280", "fontsize": 16.0, "coordinates": "axes"}], "id": "el544265088754040"}], "id": "el544265088751800", "plugins": [{"type": "reset"}, {"enabled": false, "button": true, "type": "zoom"}, {"enabled": false, "button": true, "type": "boxzoom"}], "width": 720.0, "data": {"data33": [[34.0, 0.7716817496229261]], "data15": [[16.0, 0.719747150997151]], "data48": [[49.0, 0.7607709750566893]], "data47": [[48.0, 0.7158564814814815]], "data51": [[0.0, 0.0]], "data07": [[8.0, 0.7191307731402072]], "data49": [[50.0, 0.7322222222222223]], "data44": [[45.0, 0.7733333333333333]], "data14": [[15.0, 0.7358237547892721]], "data21": [[22.0, 0.7017145135566188]], "data42": [[43.0, 0.7511627906976743]], "data01": [[2.0, 0.42880670161841805]], "data18": [[19.0, 0.7557208237986269]], "data08": [[9.0, 0.6817540057788284]], "data16": [[17.0, 0.7205429864253394]], "data04": [[5.0, 0.6390868673050616]], "data22": [[23.0, 0.7636028476989575]], "data26": [[27.0, 0.7601851851851852]], "data11": [[12.0, 0.6914021164021164]], "data30": [[31.0, 0.7559966914805624]], "data45": [[46.0, 0.7620772946859902]], "data32": [[33.0, 0.756021756021756]], "data05": [[6.0, 0.7473845924550151]], "data36": [[37.0, 0.7532760032760034]], "data43": [[44.0, 0.768939393939394]], "data12": [[13.0, 0.7243693806193806]], "data13": [[14.0, 0.7558371735791091]], "data31": [[32.0, 0.7679716117216118]], "data34": [[35.0, 0.7532967032967033]], "data35": [[36.0, 0.7798821548821548]], "data40": [[41.0, 0.760310421286031]], "data38": [[39.0, 0.7614607614607615]], "data24": [[25.0, 0.7369281045751634]], "data17": [[18.0, 0.7449677938808373]], "data29": [[30.0, 0.749047619047619]], "data06": [[7.0, 0.701762277912463]], "data20": [[21.0, 0.7492063492063491]], "data10": [[11.0, 0.7029023607970977]], "data41": [[42.0, 0.7480519480519481]], "data23": [[24.0, 0.7588507625272332]], "data03": [[4.0, 0.6890743213173119]], "data25": [[26.0, 0.7671568627450982]], "data46": [[47.0, 0.7349881796690307]], "data27": [[28.0, 0.7742559523809524]], "data02": [[3.0, 0.6669834251993877]], "data37": [[38.0, 0.7300637958532696]], "data39": [[40.0, 0.7575]], "data28": [[29.0, 0.7658456486042692]], "data09": [[10.0, 0.7346483942414175]], "data19": [[20.0, 0.7655952380952381]], "data50": [[51.0, 0.7551742919389978]]}});
+      });
+    });
+}else{
+    // require.js not available: dynamically load d3 & mpld3
+    mpld3_load_lib("https://mpld3.github.io/js/d3.v3.min.js", function(){
+         mpld3_load_lib("https://mpld3.github.io/js/mpld3.v0.3.js", function(){
+                 
+                 mpld3.draw_figure("fig_el5442650887518003386049291", {"height": 360.0, "axes": [{"ylim": [0.0, 1.1], "ydomain": [0.0, 1.1], "collections": [{"xindex": 0, "yindex": 1, "offsetcoordinates": "display", "zorder": 2, "paths": [[[[2.0, 0.41976293594711644], [2.0, 0.43785046728971966]], ["M", "L"]]], "alphas": [null], "edgewidths": [1.5], "pathcoordinates": "data", "pathtransforms": [], "edgecolors": ["#FF4400"], "offsets": "data51", "facecolors": [], "id": "el544265089550688"}, {"xindex": 0, "yindex": 0, "offsetcoordinates": "display", "zorder": 2, "paths": [[[[3.0, 0.657351847800716], [3.0, 0.6766150025980594]], ["M", "L"]]], "alphas": [null], "edgewidths": [1.5], "pathcoordinates": "data", "pathtransforms": [], "edgecolors": ["#FF4400"], "offsets": "data51", "facecolors": [], "id": "el544265089561008"}, {"xindex": 0, "yindex": 0, "offsetcoordinates": "display", "zorder": 2, "paths": [[[[4.0, 0.6055088636789747], [4.0, 0.7726397789556492]], ["M", "L"]]], "alphas": [null], "edgewidths": [1.5], "pathcoordinates": "data", "pathtransforms": [], "edgecolors": ["#FF4400"], "offsets": "data51", "facecolors": [], "id": "el544265089596136"}, {"xindex": 0, "yindex": 0, "offsetcoordinates": "display", "zorder": 2, "paths": [[[[5.0, 0.5355001784826011], [5.0, 0.7426735561275221]], ["M", "L"]]], "alphas": [null], "edgewidths": [1.5], "pathcoordinates": "data", "pathtransforms": [], "edgecolors": ["#FF4400"], "offsets": "data51", "facecolors": [], "id": "el544265089605504"}, {"xindex": 0, "yindex": 0, "offsetcoordinates": "display", "zorder": 2, "paths": [[[[6.0, 0.602439548545725], [6.0, 0.8923296363643052]], ["M", "L"]]], "alphas": [null], "edgewidths": [1.5], "pathcoordinates": "data", "pathtransforms": [], "edgecolors": ["#FF4400"], "offsets": "data51", "facecolors": [], "id": "el544265089619752"}, {"xindex": 0, "yindex": 0, "offsetcoordinates": "display", "zorder": 2, "paths": [[[[7.0, 0.5755028818370691], [7.0, 0.828021673987857]], ["M", "L"]]], "alphas": [null], "edgewidths": [1.5], "pathcoordinates": "data", "pathtransforms": [], "edgecolors": ["#FF4400"], "offsets": "data51", "facecolors": [], "id": "el544265089638328"}, {"xindex": 0, "yindex": 0, "offsetcoordinates": "display", "zorder": 2, "paths": [[[[8.0, 0.6248759804534676], [8.0, 0.8133855658269469]], ["M", "L"]]], "alphas": [null], "edgewidths": [1.5], "pathcoordinates": "data", "pathtransforms": [], "edgecolors": ["#FF4400"], "offsets": "data51", "facecolors": [], "id": "el544265089656784"}, {"xindex": 0, "yindex": 0, "offsetcoordinates": "display", "zorder": 2, "paths": [[[[9.0, 0.5327327213787822], [9.0, 0.8307752901788745]], ["M", "L"]]], "alphas": [null], "edgewidths": [1.5], "pathcoordinates": "data", "pathtransforms": [], "edgecolors": ["#FF4400"], "offsets": "data51", "facecolors": [], "id": "el544265089674576"}, {"xindex": 0, "yindex": 0, "offsetcoordinates": "display", "zorder": 2, "paths": [[[[10.0, 0.6018537736187834], [10.0, 0.8674430148640515]], ["M", "L"]]], "alphas": [null], "edgewidths": [1.5], "pathcoordinates": "data", "pathtransforms": [], "edgecolors": ["#FF4400"], "offsets": "data51", "facecolors": [], "id": "el544265089693144"}, {"xindex": 0, "yindex": 0, "offsetcoordinates": "display", "zorder": 2, "paths": [[[[11.0, 0.5640164836161005], [11.0, 0.8417882379780949]], ["M", "L"]]], "alphas": [null], "edgewidths": [1.5], "pathcoordinates": "data", "pathtransforms": [], "edgecolors": ["#FF4400"], "offsets": "data51", "facecolors": [], "id": "el544265089342128"}, {"xindex": 0, "yindex": 0, "offsetcoordinates": "display", "zorder": 2, "paths": [[[[12.0, 0.5688060442864766], [12.0, 0.8139981885177561]], ["M", "L"]]], "alphas": [null], "edgewidths": [1.5], "pathcoordinates": "data", "pathtransforms": [], "edgecolors": ["#FF4400"], "offsets": "data51", "facecolors": [], "id": "el544265089713400"}, {"xindex": 0, "yindex": 0, "offsetcoordinates": "display", "zorder": 2, "paths": [[[[13.0, 0.5570277530115902], [13.0, 0.891711008227171]], ["M", "L"]]], "alphas": [null], "edgewidths": [1.5], "pathcoordinates": "data", "pathtransforms": [], "edgecolors": ["#FF4400"], "offsets": "data51", "facecolors": [], "id": "el544265089726416"}, {"xindex": 0, "yindex": 0, "offsetcoordinates": "display", "zorder": 2, "paths": [[[[14.0, 0.6037220765653896], [14.0, 0.9079522705928286]], ["M", "L"]]], "alphas": [null], "edgewidths": [1.5], "pathcoordinates": "data", "pathtransforms": [], "edgecolors": ["#FF4400"], "offsets": "data51", "facecolors": [], "id": "el544265089749536"}, {"xindex": 0, "yindex": 0, "offsetcoordinates": "display", "zorder": 2, "paths": [[[[15.0, 0.6025871193761885], [15.0, 0.8690603902023557]], ["M", "L"]]], "alphas": [null], "edgewidths": [1.5], "pathcoordinates": "data", "pathtransforms": [], "edgecolors": ["#FF4400"], "offsets": "data51", "facecolors": [], "id": "el544265089766816"}, {"xindex": 0, "yindex": 0, "offsetcoordinates": "display", "zorder": 2, "paths": [[[[16.0, 0.5618799749822365], [16.0, 0.8776143270120655]], ["M", "L"]]], "alphas": [null], "edgewidths": [1.5], "pathcoordinates": "data", "pathtransforms": [], "edgecolors": ["#FF4400"], "offsets": "data51", "facecolors": [], "id": "el544265090300984"}, {"xindex": 0, "yindex": 0, "offsetcoordinates": "display", "zorder": 2, "paths": [[[[17.0, 0.5647483647964187], [17.0, 0.8763376080542602]], ["M", "L"]]], "alphas": [null], "edgewidths": [1.5], "pathcoordinates": "data", "pathtransforms": [], "edgecolors": ["#FF4400"], "offsets": "data51", "facecolors": [], "id": "el544265090323984"}, {"xindex": 0, "yindex": 0, "offsetcoordinates": "display", "zorder": 2, "paths": [[[[18.0, 0.5297858549694562], [18.0, 0.9601497327922185]], ["M", "L"]]], "alphas": [null], "edgewidths": [1.5], "pathcoordinates": "data", "pathtransforms": [], "edgecolors": ["#FF4400"], "offsets": "data51", "facecolors": [], "id": "el544265090341944"}, {"xindex": 0, "yindex": 0, "offsetcoordinates": "display", "zorder": 2, "paths": [[[[19.0, 0.6044514430436652], [19.0, 0.9069902045535887]], ["M", "L"]]], "alphas": [null], "edgewidths": [1.5], "pathcoordinates": "data", "pathtransforms": [], "edgecolors": ["#FF4400"], "offsets": "data51", "facecolors": [], "id": "el544265090348448"}, {"xindex": 0, "yindex": 0, "offsetcoordinates": "display", "zorder": 2, "paths": [[[[20.0, 0.5467717396255675], [20.0, 0.9844187365649087]], ["M", "L"]]], "alphas": [null], "edgewidths": [1.5], "pathcoordinates": "data", "pathtransforms": [], "edgecolors": ["#FF4400"], "offsets": "data51", "facecolors": [], "id": "el544265090370504"}, {"xindex": 0, "yindex": 0, "offsetcoordinates": "display", "zorder": 2, "paths": [[[[21.0, 0.5316111777521653], [21.0, 0.9668015206605329]], ["M", "L"]]], "alphas": [null], "edgewidths": [1.5], "pathcoordinates": "data", "pathtransforms": [], "edgecolors": ["#FF4400"], "offsets": "data51", "facecolors": [], "id": "el544265090380824"}, {"xindex": 0, "yindex": 0, "offsetcoordinates": "display", "zorder": 2, "paths": [[[[22.0, 0.45969602061227915], [22.0, 0.9437330065009586]], ["M", "L"]]], "alphas": [null], "edgewidths": [1.5], "pathcoordinates": "data", "pathtransforms": [], "edgecolors": ["#FF4400"], "offsets": "data51", "facecolors": [], "id": "el544265090411296"}, {"xindex": 0, "yindex": 0, "offsetcoordinates": "display", "zorder": 2, "paths": [[[[23.0, 0.5078355672635193], [23.0, 1.0193701281343956]], ["M", "L"]]], "alphas": [null], "edgewidths": [1.5], "pathcoordinates": "data", "pathtransforms": [], "edgecolors": ["#FF4400"], "offsets": "data51", "facecolors": [], "id": "el544265090425656"}, {"xindex": 0, "yindex": 0, "offsetcoordinates": "display", "zorder": 2, "paths": [[[[24.0, 0.5906830771298823], [24.0, 0.927018447924584]], ["M", "L"]]], "alphas": [null], "edgewidths": [1.5], "pathcoordinates": "data", "pathtransforms": [], "edgecolors": ["#FF4400"], "offsets": "data51", "facecolors": [], "id": "el544265090439688"}, {"xindex": 0, "yindex": 0, "offsetcoordinates": "display", "zorder": 2, "paths": [[[[25.0, 0.49913904456047686], [25.0, 0.97471716458985]], ["M", "L"]]], "alphas": [null], "edgewidths": [1.5], "pathcoordinates": "data", "pathtransforms": [], "edgecolors": ["#FF4400"], "offsets": "data51", "facecolors": [], "id": "el544265090450008"}, {"xindex": 0, "yindex": 0, "offsetcoordinates": "display", "zorder": 2, "paths": [[[[26.0, 0.5339456251703518], [26.0, 1.0003681003198446]], ["M", "L"]]], "alphas": [null], "edgewidths": [1.5], "pathcoordinates": "data", "pathtransforms": [], "edgecolors": ["#FF4400"], "offsets": "data51", "facecolors": [], "id": "el544265090476328"}, {"xindex": 0, "yindex": 0, "offsetcoordinates": "display", "zorder": 2, "paths": [[[[27.0, 0.5075668661955219], [27.0, 1.0128035041748484]], ["M", "L"]]], "alphas": [null], "edgewidths": [1.5], "pathcoordinates": "data", "pathtransforms": [], "edgecolors": ["#FF4400"], "offsets": "data51", "facecolors": [], "id": "el544265090495344"}, {"xindex": 0, "yindex": 0, "offsetcoordinates": "display", "zorder": 2, "paths": [[[[28.0, 0.5611555704431681], [28.0, 0.9873563343187366]], ["M", "L"]]], "alphas": [null], "edgewidths": [1.5], "pathcoordinates": "data", "pathtransforms": [], "edgecolors": ["#FF4400"], "offsets": "data51", "facecolors": [], "id": "el544265090526544"}, {"xindex": 0, "yindex": 0, "offsetcoordinates": "display", "zorder": 2, "paths": [[[[29.0, 0.5554352651541445], [29.0, 0.9762560320543938]], ["M", "L"]]], "alphas": [null], "edgewidths": [1.5], "pathcoordinates": "data", "pathtransforms": [], "edgecolors": ["#FF4400"], "offsets": "data51", "facecolors": [], "id": "el544265088796456"}, {"xindex": 0, "yindex": 0, "offsetcoordinates": "display", "zorder": 2, "paths": [[[[30.0, 0.4970528561174785], [30.0, 1.0010423819777594]], ["M", "L"]]], "alphas": [null], "edgewidths": [1.5], "pathcoordinates": "data", "pathtransforms": [], "edgecolors": ["#FF4400"], "offsets": "data51", "facecolors": [], "id": "el544265090546800"}, {"xindex": 0, "yindex": 0, "offsetcoordinates": "display", "zorder": 2, "paths": [[[[31.0, 0.5051796248861131], [31.0, 1.0068137580750116]], ["M", "L"]]], "alphas": [null], "edgewidths": [1.5], "pathcoordinates": "data", "pathtransforms": [], "edgecolors": ["#FF4400"], "offsets": "data51", "facecolors": [], "id": "el544265089909840"}, {"xindex": 0, "yindex": 0, "offsetcoordinates": "display", "zorder": 2, "paths": [[[[32.0, 0.5562620425957578], [32.0, 0.9796811808474657]], ["M", "L"]]], "alphas": [null], "edgewidths": [1.5], "pathcoordinates": "data", "pathtransforms": [], "edgecolors": ["#FF4400"], "offsets": "data51", "facecolors": [], "id": "el544265089927064"}, {"xindex": 0, "yindex": 0, "offsetcoordinates": "display", "zorder": 2, "paths": [[[[33.0, 0.47655195536583395], [33.0, 1.0354915566776781]], ["M", "L"]]], "alphas": [null], "edgewidths": [1.5], "pathcoordinates": "data", "pathtransforms": [], "edgecolors": ["#FF4400"], "offsets": "data51", "facecolors": [], "id": "el544265089946480"}, {"xindex": 0, "yindex": 0, "offsetcoordinates": "display", "zorder": 2, "paths": [[[[34.0, 0.5080072426551658], [34.0, 1.0353562565906864]], ["M", "L"]]], "alphas": [null], "edgewidths": [1.5], "pathcoordinates": "data", "pathtransforms": [], "edgecolors": ["#FF4400"], "offsets": "data51", "facecolors": [], "id": "el544265089955568"}, {"xindex": 0, "yindex": 0, "offsetcoordinates": "display", "zorder": 2, "paths": [[[[35.0, 0.4724243276226902], [35.0, 1.0341690789707163]], ["M", "L"]]], "alphas": [null], "edgewidths": [1.5], "pathcoordinates": "data", "pathtransforms": [], "edgecolors": ["#FF4400"], "offsets": "data51", "facecolors": [], "id": "el544265089974760"}, {"xindex": 0, "yindex": 0, "offsetcoordinates": "display", "zorder": 2, "paths": [[[[36.0, 0.5337642990318341], [36.0, 1.0260000107324756]], ["M", "L"]]], "alphas": [null], "edgewidths": [1.5], "pathcoordinates": "data", "pathtransforms": [], "edgecolors": ["#FF4400"], "offsets": "data51", "facecolors": [], "id": "el544265089988504"}, {"xindex": 0, "yindex": 0, "offsetcoordinates": "display", "zorder": 2, "paths": [[[[37.0, 0.43304576664682226], [37.0, 1.0735062399051847]], ["M", "L"]]], "alphas": [null], "edgewidths": [1.5], "pathcoordinates": "data", "pathtransforms": [], "edgecolors": ["#FF4400"], "offsets": "data51", "facecolors": [], "id": "el544265090011568"}, {"xindex": 0, "yindex": 0, "offsetcoordinates": "display", "zorder": 2, "paths": [[[[38.0, 0.4942435277070292], [38.0, 0.9658840639995101]], ["M", "L"]]], "alphas": [null], "edgewidths": [1.5], "pathcoordinates": "data", "pathtransforms": [], "edgecolors": ["#FF4400"], "offsets": "data51", "facecolors": [], "id": "el544265090033448"}, {"xindex": 0, "yindex": 0, "offsetcoordinates": "display", "zorder": 2, "paths": [[[[39.0, 0.5013105043856534], [39.0, 1.0216110185358696]], ["M", "L"]]], "alphas": [null], "edgewidths": [1.5], "pathcoordinates": "data", "pathtransforms": [], "edgecolors": ["#FF4400"], "offsets": "data51", "facecolors": [], "id": "el544265090051968"}, {"xindex": 0, "yindex": 0, "offsetcoordinates": "display", "zorder": 2, "paths": [[[[40.0, 0.46270782288881807], [40.0, 1.0522921771111817]], ["M", "L"]]], "alphas": [null], "edgewidths": [1.5], "pathcoordinates": "data", "pathtransforms": [], "edgecolors": ["#FF4400"], "offsets": "data51", "facecolors": [], "id": "el544265090066272"}, {"xindex": 0, "yindex": 0, "offsetcoordinates": "display", "zorder": 2, "paths": [[[[41.0, 0.5067746021189365], [41.0, 1.0138462404531254]], ["M", "L"]]], "alphas": [null], "edgewidths": [1.5], "pathcoordinates": "data", "pathtransforms": [], "edgecolors": ["#FF4400"], "offsets": "data51", "facecolors": [], "id": "el544265090088832"}, {"xindex": 0, "yindex": 0, "offsetcoordinates": "display", "zorder": 2, "paths": [[[[42.0, 0.4053637435757018], [42.0, 1.0907401525281943]], ["M", "L"]]], "alphas": [null], "edgewidths": [1.5], "pathcoordinates": "data", "pathtransforms": [], "edgecolors": ["#FF4400"], "offsets": "data51", "facecolors": [], "id": "el544265090103024"}, {"xindex": 0, "yindex": 0, "offsetcoordinates": "display", "zorder": 2, "paths": [[[[43.0, 0.4474094536324521], [43.0, 1.0549161277628967]], ["M", "L"]]], "alphas": [null], "edgewidths": [1.5], "pathcoordinates": "data", "pathtransforms": [], "edgecolors": ["#FF4400"], "offsets": "data51", "facecolors": [], "id": "el544265090121152"}, {"xindex": 0, "yindex": 0, "offsetcoordinates": "display", "zorder": 2, "paths": [[[[44.0, 0.433428162457701], [44.0, 1.104450625421087]], ["M", "L"]]], "alphas": [null], "edgewidths": [1.5], "pathcoordinates": "data", "pathtransforms": [], "edgecolors": ["#FF4400"], "offsets": "data51", "facecolors": [], "id": "el544265090131248"}, {"xindex": 0, "yindex": 0, "offsetcoordinates": "display", "zorder": 2, "paths": [[[[45.0, 0.4562616841323628], [45.0, 1.0904049825343038]], ["M", "L"]]], "alphas": [null], "edgewidths": [1.5], "pathcoordinates": "data", "pathtransforms": [], "edgecolors": ["#FF4400"], "offsets": "data51", "facecolors": [], "id": "el544265090157792"}, {"xindex": 0, "yindex": 0, "offsetcoordinates": "display", "zorder": 2, "paths": [[[[46.0, 0.4674886317372425], [46.0, 1.056665957634738]], ["M", "L"]]], "alphas": [null], "edgewidths": [1.5], "pathcoordinates": "data", "pathtransforms": [], "edgecolors": ["#FF4400"], "offsets": "data51", "facecolors": [], "id": "el544265090958640"}, {"xindex": 0, "yindex": 0, "offsetcoordinates": "display", "zorder": 2, "paths": [[[[47.0, 0.39629231770663453], [47.0, 1.0736840416314268]], ["M", "L"]]], "alphas": [null], "edgewidths": [1.5], "pathcoordinates": "data", "pathtransforms": [], "edgecolors": ["#FF4400"], "offsets": "data51", "facecolors": [], "id": "el544265090976488"}, {"xindex": 0, "yindex": 0, "offsetcoordinates": "display", "zorder": 2, "paths": [[[[48.0, 0.34166154733084575], [48.0, 1.0900514156321173]], ["M", "L"]]], "alphas": [null], "edgewidths": [1.5], "pathcoordinates": "data", "pathtransforms": [], "edgecolors": ["#FF4400"], "offsets": "data51", "facecolors": [], "id": "el544265090990680"}, {"xindex": 0, "yindex": 0, "offsetcoordinates": "display", "zorder": 2, "paths": [[[[49.0, 0.46273865212543736], [49.0, 1.0588032979879414]], ["M", "L"]]], "alphas": [null], "edgewidths": [1.5], "pathcoordinates": "data", "pathtransforms": [], "edgecolors": ["#FF4400"], "offsets": "data51", "facecolors": [], "id": "el544265091012336"}, {"xindex": 0, "yindex": 0, "offsetcoordinates": "display", "zorder": 2, "paths": [[[[50.0, 0.3777856148550158], [50.0, 1.0866588295894288]], ["M", "L"]]], "alphas": [null], "edgewidths": [1.5], "pathcoordinates": "data", "pathtransforms": [], "edgecolors": ["#FF4400"], "offsets": "data51", "facecolors": [], "id": "el544265091047184"}, {"xindex": 0, "yindex": 0, "offsetcoordinates": "display", "zorder": 2, "paths": [[[[51.0, 0.4246217024684788], [51.0, 1.0857268814095167]], ["M", "L"]]], "alphas": [null], "edgewidths": [1.5], "pathcoordinates": "data", "pathtransforms": [], "edgecolors": ["#FF4400"], "offsets": "data51", "facecolors": [], "id": "el544265091061376"}], "bbox": [0.125, 0.125, 0.775, 0.755], "axesbg": "#FFFFFF", "paths": [], "xdomain": [0.0, 52.0], "xlim": [0.0, 52.0], "zoomable": true, "sharex": [], "markers": [{"xindex": 0, "yindex": 1, "alpha": 1, "facecolor": "#FF4400", "edgewidth": 1.0, "id": "el544265089552032pts", "markerpath": [[[0.0, 4.0], [1.0608124, 4.0], [2.078319483139414, 3.5785347663529667], [2.8284271247461903, 2.8284271247461903], [3.5785347663529667, 2.078319483139414], [4.0, 1.0608124], [4.0, 0.0], [4.0, -1.0608124], [3.5785347663529667, -2.078319483139414], [2.8284271247461903, -2.8284271247461903], [2.078319483139414, -3.5785347663529667], [1.0608124, -4.0], [0.0, -4.0], [-1.0608124, -4.0], [-2.078319483139414, -3.5785347663529667], [-2.8284271247461903, -2.8284271247461903], [-3.5785347663529667, -2.078319483139414], [-4.0, -1.0608124], [-4.0, 0.0], [-4.0, 1.0608124], [-3.5785347663529667, 2.078319483139414], [-2.8284271247461903, 2.8284271247461903], [-2.078319483139414, 3.5785347663529667], [-1.0608124, 4.0], [0.0, 4.0]], ["M", "C", "C", "C", "C", "C", "C", "C", "C", "Z"]], "zorder": 2, "edgecolor": "#FF4400", "coordinates": "data", "data": "data01"}, {"xindex": 0, "yindex": 1, "alpha": 1, "facecolor": "#FF4400", "edgewidth": 1.0, "id": "el544265089562128pts", "markerpath": [[[0.0, 4.0], [1.0608124, 4.0], [2.078319483139414, 3.5785347663529667], [2.8284271247461903, 2.8284271247461903], [3.5785347663529667, 2.078319483139414], [4.0, 1.0608124], [4.0, 0.0], [4.0, -1.0608124], [3.5785347663529667, -2.078319483139414], [2.8284271247461903, -2.8284271247461903], [2.078319483139414, -3.5785347663529667], [1.0608124, -4.0], [0.0, -4.0], [-1.0608124, -4.0], [-2.078319483139414, -3.5785347663529667], [-2.8284271247461903, -2.8284271247461903], [-3.5785347663529667, -2.078319483139414], [-4.0, -1.0608124], [-4.0, 0.0], [-4.0, 1.0608124], [-3.5785347663529667, 2.078319483139414], [-2.8284271247461903, 2.8284271247461903], [-2.078319483139414, 3.5785347663529667], [-1.0608124, 4.0], [0.0, 4.0]], ["M", "C", "C", "C", "C", "C", "C", "C", "C", "Z"]], "zorder": 2, "edgecolor": "#FF4400", "coordinates": "data", "data": "data02"}, {"xindex": 0, "yindex": 1, "alpha": 1, "facecolor": "#FF4400", "edgewidth": 1.0, "id": "el544265089596808pts", "markerpath": [[[0.0, 4.0], [1.0608124, 4.0], [2.078319483139414, 3.5785347663529667], [2.8284271247461903, 2.8284271247461903], [3.5785347663529667, 2.078319483139414], [4.0, 1.0608124], [4.0, 0.0], [4.0, -1.0608124], [3.5785347663529667, -2.078319483139414], [2.8284271247461903, -2.8284271247461903], [2.078319483139414, -3.5785347663529667], [1.0608124, -4.0], [0.0, -4.0], [-1.0608124, -4.0], [-2.078319483139414, -3.5785347663529667], [-2.8284271247461903, -2.8284271247461903], [-3.5785347663529667, -2.078319483139414], [-4.0, -1.0608124], [-4.0, 0.0], [-4.0, 1.0608124], [-3.5785347663529667, 2.078319483139414], [-2.8284271247461903, 2.8284271247461903], [-2.078319483139414, 3.5785347663529667], [-1.0608124, 4.0], [0.0, 4.0]], ["M", "C", "C", "C", "C", "C", "C", "C", "C", "Z"]], "zorder": 2, "edgecolor": "#FF4400", "coordinates": "data", "data": "data03"}, {"xindex": 0, "yindex": 1, "alpha": 1, "facecolor": "#FF4400", "edgewidth": 1.0, "id": "el544265089606904pts", "markerpath": [[[0.0, 4.0], [1.0608124, 4.0], [2.078319483139414, 3.5785347663529667], [2.8284271247461903, 2.8284271247461903], [3.5785347663529667, 2.078319483139414], [4.0, 1.0608124], [4.0, 0.0], [4.0, -1.0608124], [3.5785347663529667, -2.078319483139414], [2.8284271247461903, -2.8284271247461903], [2.078319483139414, -3.5785347663529667], [1.0608124, -4.0], [0.0, -4.0], [-1.0608124, -4.0], [-2.078319483139414, -3.5785347663529667], [-2.8284271247461903, -2.8284271247461903], [-3.5785347663529667, -2.078319483139414], [-4.0, -1.0608124], [-4.0, 0.0], [-4.0, 1.0608124], [-3.5785347663529667, 2.078319483139414], [-2.8284271247461903, 2.8284271247461903], [-2.078319483139414, 3.5785347663529667], [-1.0608124, 4.0], [0.0, 4.0]], ["M", "C", "C", "C", "C", "C", "C", "C", "C", "Z"]], "zorder": 2, "edgecolor": "#FF4400", "coordinates": "data", "data": "data04"}, {"xindex": 0, "yindex": 1, "alpha": 1, "facecolor": "#FF4400", "edgewidth": 1.0, "id": "el544265089625424pts", "markerpath": [[[0.0, 4.0], [1.0608124, 4.0], [2.078319483139414, 3.5785347663529667], [2.8284271247461903, 2.8284271247461903], [3.5785347663529667, 2.078319483139414], [4.0, 1.0608124], [4.0, 0.0], [4.0, -1.0608124], [3.5785347663529667, -2.078319483139414], [2.8284271247461903, -2.8284271247461903], [2.078319483139414, -3.5785347663529667], [1.0608124, -4.0], [0.0, -4.0], [-1.0608124, -4.0], [-2.078319483139414, -3.5785347663529667], [-2.8284271247461903, -2.8284271247461903], [-3.5785347663529667, -2.078319483139414], [-4.0, -1.0608124], [-4.0, 0.0], [-4.0, 1.0608124], [-3.5785347663529667, 2.078319483139414], [-2.8284271247461903, 2.8284271247461903], [-2.078319483139414, 3.5785347663529667], [-1.0608124, 4.0], [0.0, 4.0]], ["M", "C", "C", "C", "C", "C", "C", "C", "C", "Z"]], "zorder": 2, "edgecolor": "#FF4400", "coordinates": "data", "data": "data05"}, {"xindex": 0, "yindex": 1, "alpha": 1, "facecolor": "#FF4400", "edgewidth": 1.0, "id": "el544265089639840pts", "markerpath": [[[0.0, 4.0], [1.0608124, 4.0], [2.078319483139414, 3.5785347663529667], [2.8284271247461903, 2.8284271247461903], [3.5785347663529667, 2.078319483139414], [4.0, 1.0608124], [4.0, 0.0], [4.0, -1.0608124], [3.5785347663529667, -2.078319483139414], [2.8284271247461903, -2.8284271247461903], [2.078319483139414, -3.5785347663529667], [1.0608124, -4.0], [0.0, -4.0], [-1.0608124, -4.0], [-2.078319483139414, -3.5785347663529667], [-2.8284271247461903, -2.8284271247461903], [-3.5785347663529667, -2.078319483139414], [-4.0, -1.0608124], [-4.0, 0.0], [-4.0, 1.0608124], [-3.5785347663529667, 2.078319483139414], [-2.8284271247461903, 2.8284271247461903], [-2.078319483139414, 3.5785347663529667], [-1.0608124, 4.0], [0.0, 4.0]], ["M", "C", "C", "C", "C", "C", "C", "C", "C", "Z"]], "zorder": 2, "edgecolor": "#FF4400", "coordinates": "data", "data": "data06"}, {"xindex": 0, "yindex": 1, "alpha": 1, "facecolor": "#FF4400", "edgewidth": 1.0, "id": "el544265089662120pts", "markerpath": [[[0.0, 4.0], [1.0608124, 4.0], [2.078319483139414, 3.5785347663529667], [2.8284271247461903, 2.8284271247461903], [3.5785347663529667, 2.078319483139414], [4.0, 1.0608124], [4.0, 0.0], [4.0, -1.0608124], [3.5785347663529667, -2.078319483139414], [2.8284271247461903, -2.8284271247461903], [2.078319483139414, -3.5785347663529667], [1.0608124, -4.0], [0.0, -4.0], [-1.0608124, -4.0], [-2.078319483139414, -3.5785347663529667], [-2.8284271247461903, -2.8284271247461903], [-3.5785347663529667, -2.078319483139414], [-4.0, -1.0608124], [-4.0, 0.0], [-4.0, 1.0608124], [-3.5785347663529667, 2.078319483139414], [-2.8284271247461903, 2.8284271247461903], [-2.078319483139414, 3.5785347663529667], [-1.0608124, 4.0], [0.0, 4.0]], ["M", "C", "C", "C", "C", "C", "C", "C", "C", "Z"]], "zorder": 2, "edgecolor": "#FF4400", "coordinates": "data", "data": "data07"}, {"xindex": 0, "yindex": 1, "alpha": 1, "facecolor": "#FF4400", "edgewidth": 1.0, "id": "el544265089676312pts", "markerpath": [[[0.0, 4.0], [1.0608124, 4.0], [2.078319483139414, 3.5785347663529667], [2.8284271247461903, 2.8284271247461903], [3.5785347663529667, 2.078319483139414], [4.0, 1.0608124], [4.0, 0.0], [4.0, -1.0608124], [3.5785347663529667, -2.078319483139414], [2.8284271247461903, -2.8284271247461903], [2.078319483139414, -3.5785347663529667], [1.0608124, -4.0], [0.0, -4.0], [-1.0608124, -4.0], [-2.078319483139414, -3.5785347663529667], [-2.8284271247461903, -2.8284271247461903], [-3.5785347663529667, -2.078319483139414], [-4.0, -1.0608124], [-4.0, 0.0], [-4.0, 1.0608124], [-3.5785347663529667, 2.078319483139414], [-2.8284271247461903, 2.8284271247461903], [-2.078319483139414, 3.5785347663529667], [-1.0608124, 4.0], [0.0, 4.0]], ["M", "C", "C", "C", "C", "C", "C", "C", "C", "Z"]], "zorder": 2, "edgecolor": "#FF4400", "coordinates": "data", "data": "data08"}, {"xindex": 0, "yindex": 1, "alpha": 1, "facecolor": "#FF4400", "edgewidth": 1.0, "id": "el544265089698928pts", "markerpath": [[[0.0, 4.0], [1.0608124, 4.0], [2.078319483139414, 3.5785347663529667], [2.8284271247461903, 2.8284271247461903], [3.5785347663529667, 2.078319483139414], [4.0, 1.0608124], [4.0, 0.0], [4.0, -1.0608124], [3.5785347663529667, -2.078319483139414], [2.8284271247461903, -2.8284271247461903], [2.078319483139414, -3.5785347663529667], [1.0608124, -4.0], [0.0, -4.0], [-1.0608124, -4.0], [-2.078319483139414, -3.5785347663529667], [-2.8284271247461903, -2.8284271247461903], [-3.5785347663529667, -2.078319483139414], [-4.0, -1.0608124], [-4.0, 0.0], [-4.0, 1.0608124], [-3.5785347663529667, 2.078319483139414], [-2.8284271247461903, 2.8284271247461903], [-2.078319483139414, 3.5785347663529667], [-1.0608124, 4.0], [0.0, 4.0]], ["M", "C", "C", "C", "C", "C", "C", "C", "C", "Z"]], "zorder": 2, "edgecolor": "#FF4400", "coordinates": "data", "data": "data09"}, {"xindex": 0, "yindex": 1, "alpha": 1, "facecolor": "#FF4400", "edgewidth": 1.0, "id": "el544265088497336pts", "markerpath": [[[0.0, 4.0], [1.0608124, 4.0], [2.078319483139414, 3.5785347663529667], [2.8284271247461903, 2.8284271247461903], [3.5785347663529667, 2.078319483139414], [4.0, 1.0608124], [4.0, 0.0], [4.0, -1.0608124], [3.5785347663529667, -2.078319483139414], [2.8284271247461903, -2.8284271247461903], [2.078319483139414, -3.5785347663529667], [1.0608124, -4.0], [0.0, -4.0], [-1.0608124, -4.0], [-2.078319483139414, -3.5785347663529667], [-2.8284271247461903, -2.8284271247461903], [-3.5785347663529667, -2.078319483139414], [-4.0, -1.0608124], [-4.0, 0.0], [-4.0, 1.0608124], [-3.5785347663529667, 2.078319483139414], [-2.8284271247461903, 2.8284271247461903], [-2.078319483139414, 3.5785347663529667], [-1.0608124, 4.0], [0.0, 4.0]], ["M", "C", "C", "C", "C", "C", "C", "C", "C", "Z"]], "zorder": 2, "edgecolor": "#FF4400", "coordinates": "data", "data": "data10"}, {"xindex": 0, "yindex": 1, "alpha": 1, "facecolor": "#FF4400", "edgewidth": 1.0, "id": "el544265089713960pts", "markerpath": [[[0.0, 4.0], [1.0608124, 4.0], [2.078319483139414, 3.5785347663529667], [2.8284271247461903, 2.8284271247461903], [3.5785347663529667, 2.078319483139414], [4.0, 1.0608124], [4.0, 0.0], [4.0, -1.0608124], [3.5785347663529667, -2.078319483139414], [2.8284271247461903, -2.8284271247461903], [2.078319483139414, -3.5785347663529667], [1.0608124, -4.0], [0.0, -4.0], [-1.0608124, -4.0], [-2.078319483139414, -3.5785347663529667], [-2.8284271247461903, -2.8284271247461903], [-3.5785347663529667, -2.078319483139414], [-4.0, -1.0608124], [-4.0, 0.0], [-4.0, 1.0608124], [-3.5785347663529667, 2.078319483139414], [-2.8284271247461903, 2.8284271247461903], [-2.078319483139414, 3.5785347663529667], [-1.0608124, 4.0], [0.0, 4.0]], ["M", "C", "C", "C", "C", "C", "C", "C", "C", "Z"]], "zorder": 2, "edgecolor": "#FF4400", "coordinates": "data", "data": "data11"}, {"xindex": 0, "yindex": 1, "alpha": 1, "facecolor": "#FF4400", "edgewidth": 1.0, "id": "el544265089737304pts", "markerpath": [[[0.0, 4.0], [1.0608124, 4.0], [2.078319483139414, 3.5785347663529667], [2.8284271247461903, 2.8284271247461903], [3.5785347663529667, 2.078319483139414], [4.0, 1.0608124], [4.0, 0.0], [4.0, -1.0608124], [3.5785347663529667, -2.078319483139414], [2.8284271247461903, -2.8284271247461903], [2.078319483139414, -3.5785347663529667], [1.0608124, -4.0], [0.0, -4.0], [-1.0608124, -4.0], [-2.078319483139414, -3.5785347663529667], [-2.8284271247461903, -2.8284271247461903], [-3.5785347663529667, -2.078319483139414], [-4.0, -1.0608124], [-4.0, 0.0], [-4.0, 1.0608124], [-3.5785347663529667, 2.078319483139414], [-2.8284271247461903, 2.8284271247461903], [-2.078319483139414, 3.5785347663529667], [-1.0608124, 4.0], [0.0, 4.0]], ["M", "C", "C", "C", "C", "C", "C", "C", "C", "Z"]], "zorder": 2, "edgecolor": "#FF4400", "coordinates": "data", "data": "data12"}, {"xindex": 0, "yindex": 1, "alpha": 1, "facecolor": "#FF4400", "edgewidth": 1.0, "id": "el544265089750432pts", "markerpath": [[[0.0, 4.0], [1.0608124, 4.0], [2.078319483139414, 3.5785347663529667], [2.8284271247461903, 2.8284271247461903], [3.5785347663529667, 2.078319483139414], [4.0, 1.0608124], [4.0, 0.0], [4.0, -1.0608124], [3.5785347663529667, -2.078319483139414], [2.8284271247461903, -2.8284271247461903], [2.078319483139414, -3.5785347663529667], [1.0608124, -4.0], [0.0, -4.0], [-1.0608124, -4.0], [-2.078319483139414, -3.5785347663529667], [-2.8284271247461903, -2.8284271247461903], [-3.5785347663529667, -2.078319483139414], [-4.0, -1.0608124], [-4.0, 0.0], [-4.0, 1.0608124], [-3.5785347663529667, 2.078319483139414], [-2.8284271247461903, 2.8284271247461903], [-2.078319483139414, 3.5785347663529667], [-1.0608124, 4.0], [0.0, 4.0]], ["M", "C", "C", "C", "C", "C", "C", "C", "C", "Z"]], "zorder": 2, "edgecolor": "#FF4400", "coordinates": "data", "data": "data13"}, {"xindex": 0, "yindex": 1, "alpha": 1, "facecolor": "#FF4400", "edgewidth": 1.0, "id": "el544265089777984pts", "markerpath": [[[0.0, 4.0], [1.0608124, 4.0], [2.078319483139414, 3.5785347663529667], [2.8284271247461903, 2.8284271247461903], [3.5785347663529667, 2.078319483139414], [4.0, 1.0608124], [4.0, 0.0], [4.0, -1.0608124], [3.5785347663529667, -2.078319483139414], [2.8284271247461903, -2.8284271247461903], [2.078319483139414, -3.5785347663529667], [1.0608124, -4.0], [0.0, -4.0], [-1.0608124, -4.0], [-2.078319483139414, -3.5785347663529667], [-2.8284271247461903, -2.8284271247461903], [-3.5785347663529667, -2.078319483139414], [-4.0, -1.0608124], [-4.0, 0.0], [-4.0, 1.0608124], [-3.5785347663529667, 2.078319483139414], [-2.8284271247461903, 2.8284271247461903], [-2.078319483139414, 3.5785347663529667], [-1.0608124, 4.0], [0.0, 4.0]], ["M", "C", "C", "C", "C", "C", "C", "C", "C", "Z"]], "zorder": 2, "edgecolor": "#FF4400", "coordinates": "data", "data": "data14"}, {"xindex": 0, "yindex": 1, "alpha": 1, "facecolor": "#FF4400", "edgewidth": 1.0, "id": "el544265090303728pts", "markerpath": [[[0.0, 4.0], [1.0608124, 4.0], [2.078319483139414, 3.5785347663529667], [2.8284271247461903, 2.8284271247461903], [3.5785347663529667, 2.078319483139414], [4.0, 1.0608124], [4.0, 0.0], [4.0, -1.0608124], [3.5785347663529667, -2.078319483139414], [2.8284271247461903, -2.8284271247461903], [2.078319483139414, -3.5785347663529667], [1.0608124, -4.0], [0.0, -4.0], [-1.0608124, -4.0], [-2.078319483139414, -3.5785347663529667], [-2.8284271247461903, -2.8284271247461903], [-3.5785347663529667, -2.078319483139414], [-4.0, -1.0608124], [-4.0, 0.0], [-4.0, 1.0608124], [-3.5785347663529667, 2.078319483139414], [-2.8284271247461903, 2.8284271247461903], [-2.078319483139414, 3.5785347663529667], [-1.0608124, 4.0], [0.0, 4.0]], ["M", "C", "C", "C", "C", "C", "C", "C", "C", "Z"]], "zorder": 2, "edgecolor": "#FF4400", "coordinates": "data", "data": "data15"}, {"xindex": 0, "yindex": 1, "alpha": 1, "facecolor": "#FF4400", "edgewidth": 1.0, "id": "el544265088195808pts", "markerpath": [[[0.0, 4.0], [1.0608124, 4.0], [2.078319483139414, 3.5785347663529667], [2.8284271247461903, 2.8284271247461903], [3.5785347663529667, 2.078319483139414], [4.0, 1.0608124], [4.0, 0.0], [4.0, -1.0608124], [3.5785347663529667, -2.078319483139414], [2.8284271247461903, -2.8284271247461903], [2.078319483139414, -3.5785347663529667], [1.0608124, -4.0], [0.0, -4.0], [-1.0608124, -4.0], [-2.078319483139414, -3.5785347663529667], [-2.8284271247461903, -2.8284271247461903], [-3.5785347663529667, -2.078319483139414], [-4.0, -1.0608124], [-4.0, 0.0], [-4.0, 1.0608124], [-3.5785347663529667, 2.078319483139414], [-2.8284271247461903, 2.8284271247461903], [-2.078319483139414, 3.5785347663529667], [-1.0608124, 4.0], [0.0, 4.0]], ["M", "C", "C", "C", "C", "C", "C", "C", "C", "Z"]], "zorder": 2, "edgecolor": "#FF4400", "coordinates": "data", "data": "data16"}, {"xindex": 0, "yindex": 1, "alpha": 1, "facecolor": "#FF4400", "edgewidth": 1.0, "id": "el544265090343792pts", "markerpath": [[[0.0, 4.0], [1.0608124, 4.0], [2.078319483139414, 3.5785347663529667], [2.8284271247461903, 2.8284271247461903], [3.5785347663529667, 2.078319483139414], [4.0, 1.0608124], [4.0, 0.0], [4.0, -1.0608124], [3.5785347663529667, -2.078319483139414], [2.8284271247461903, -2.8284271247461903], [2.078319483139414, -3.5785347663529667], [1.0608124, -4.0], [0.0, -4.0], [-1.0608124, -4.0], [-2.078319483139414, -3.5785347663529667], [-2.8284271247461903, -2.8284271247461903], [-3.5785347663529667, -2.078319483139414], [-4.0, -1.0608124], [-4.0, 0.0], [-4.0, 1.0608124], [-3.5785347663529667, 2.078319483139414], [-2.8284271247461903, 2.8284271247461903], [-2.078319483139414, 3.5785347663529667], [-1.0608124, 4.0], [0.0, 4.0]], ["M", "C", "C", "C", "C", "C", "C", "C", "C", "Z"]], "zorder": 2, "edgecolor": "#FF4400", "coordinates": "data", "data": "data17"}, {"xindex": 0, "yindex": 1, "alpha": 1, "facecolor": "#FF4400", "edgewidth": 1.0, "id": "el544265090361472pts", "markerpath": [[[0.0, 4.0], [1.0608124, 4.0], [2.078319483139414, 3.5785347663529667], [2.8284271247461903, 2.8284271247461903], [3.5785347663529667, 2.078319483139414], [4.0, 1.0608124], [4.0, 0.0], [4.0, -1.0608124], [3.5785347663529667, -2.078319483139414], [2.8284271247461903, -2.8284271247461903], [2.078319483139414, -3.5785347663529667], [1.0608124, -4.0], [0.0, -4.0], [-1.0608124, -4.0], [-2.078319483139414, -3.5785347663529667], [-2.8284271247461903, -2.8284271247461903], [-3.5785347663529667, -2.078319483139414], [-4.0, -1.0608124], [-4.0, 0.0], [-4.0, 1.0608124], [-3.5785347663529667, 2.078319483139414], [-2.8284271247461903, 2.8284271247461903], [-2.078319483139414, 3.5785347663529667], [-1.0608124, 4.0], [0.0, 4.0]], ["M", "C", "C", "C", "C", "C", "C", "C", "C", "Z"]], "zorder": 2, "edgecolor": "#FF4400", "coordinates": "data", "data": "data18"}, {"xindex": 0, "yindex": 1, "alpha": 1, "facecolor": "#FF4400", "edgewidth": 1.0, "id": "el544265090372240pts", "markerpath": [[[0.0, 4.0], [1.0608124, 4.0], [2.078319483139414, 3.5785347663529667], [2.8284271247461903, 2.8284271247461903], [3.5785347663529667, 2.078319483139414], [4.0, 1.0608124], [4.0, 0.0], [4.0, -1.0608124], [3.5785347663529667, -2.078319483139414], [2.8284271247461903, -2.8284271247461903], [2.078319483139414, -3.5785347663529667], [1.0608124, -4.0], [0.0, -4.0], [-1.0608124, -4.0], [-2.078319483139414, -3.5785347663529667], [-2.8284271247461903, -2.8284271247461903], [-3.5785347663529667, -2.078319483139414], [-4.0, -1.0608124], [-4.0, 0.0], [-4.0, 1.0608124], [-3.5785347663529667, 2.078319483139414], [-2.8284271247461903, 2.8284271247461903], [-2.078319483139414, 3.5785347663529667], [-1.0608124, 4.0], [0.0, 4.0]], ["M", "C", "C", "C", "C", "C", "C", "C", "C", "Z"]], "zorder": 2, "edgecolor": "#FF4400", "coordinates": "data", "data": "data19"}, {"xindex": 0, "yindex": 1, "alpha": 1, "facecolor": "#FF4400", "edgewidth": 1.0, "id": "el544265090390480pts", "markerpath": [[[0.0, 4.0], [1.0608124, 4.0], [2.078319483139414, 3.5785347663529667], [2.8284271247461903, 2.8284271247461903], [3.5785347663529667, 2.078319483139414], [4.0, 1.0608124], [4.0, 0.0], [4.0, -1.0608124], [3.5785347663529667, -2.078319483139414], [2.8284271247461903, -2.8284271247461903], [2.078319483139414, -3.5785347663529667], [1.0608124, -4.0], [0.0, -4.0], [-1.0608124, -4.0], [-2.078319483139414, -3.5785347663529667], [-2.8284271247461903, -2.8284271247461903], [-3.5785347663529667, -2.078319483139414], [-4.0, -1.0608124], [-4.0, 0.0], [-4.0, 1.0608124], [-3.5785347663529667, 2.078319483139414], [-2.8284271247461903, 2.8284271247461903], [-2.078319483139414, 3.5785347663529667], [-1.0608124, 4.0], [0.0, 4.0]], ["M", "C", "C", "C", "C", "C", "C", "C", "C", "Z"]], "zorder": 2, "edgecolor": "#FF4400", "coordinates": "data", "data": "data20"}, {"xindex": 0, "yindex": 1, "alpha": 1, "facecolor": "#FF4400", "edgewidth": 1.0, "id": "el544265090412976pts", "markerpath": [[[0.0, 4.0], [1.0608124, 4.0], [2.078319483139414, 3.5785347663529667], [2.8284271247461903, 2.8284271247461903], [3.5785347663529667, 2.078319483139414], [4.0, 1.0608124], [4.0, 0.0], [4.0, -1.0608124], [3.5785347663529667, -2.078319483139414], [2.8284271247461903, -2.8284271247461903], [2.078319483139414, -3.5785347663529667], [1.0608124, -4.0], [0.0, -4.0], [-1.0608124, -4.0], [-2.078319483139414, -3.5785347663529667], [-2.8284271247461903, -2.8284271247461903], [-3.5785347663529667, -2.078319483139414], [-4.0, -1.0608124], [-4.0, 0.0], [-4.0, 1.0608124], [-3.5785347663529667, 2.078319483139414], [-2.8284271247461903, 2.8284271247461903], [-2.078319483139414, 3.5785347663529667], [-1.0608124, 4.0], [0.0, 4.0]], ["M", "C", "C", "C", "C", "C", "C", "C", "C", "Z"]], "zorder": 2, "edgecolor": "#FF4400", "coordinates": "data", "data": "data21"}, {"xindex": 0, "yindex": 1, "alpha": 1, "facecolor": "#FF4400", "edgewidth": 1.0, "id": "el544265090431328pts", "markerpath": [[[0.0, 4.0], [1.0608124, 4.0], [2.078319483139414, 3.5785347663529667], [2.8284271247461903, 2.8284271247461903], [3.5785347663529667, 2.078319483139414], [4.0, 1.0608124], [4.0, 0.0], [4.0, -1.0608124], [3.5785347663529667, -2.078319483139414], [2.8284271247461903, -2.8284271247461903], [2.078319483139414, -3.5785347663529667], [1.0608124, -4.0], [0.0, -4.0], [-1.0608124, -4.0], [-2.078319483139414, -3.5785347663529667], [-2.8284271247461903, -2.8284271247461903], [-3.5785347663529667, -2.078319483139414], [-4.0, -1.0608124], [-4.0, 0.0], [-4.0, 1.0608124], [-3.5785347663529667, 2.078319483139414], [-2.8284271247461903, 2.8284271247461903], [-2.078319483139414, 3.5785347663529667], [-1.0608124, 4.0], [0.0, 4.0]], ["M", "C", "C", "C", "C", "C", "C", "C", "C", "Z"]], "zorder": 2, "edgecolor": "#FF4400", "coordinates": "data", "data": "data22"}, {"xindex": 0, "yindex": 1, "alpha": 1, "facecolor": "#FF4400", "edgewidth": 1.0, "id": "el544265090441088pts", "markerpath": [[[0.0, 4.0], [1.0608124, 4.0], [2.078319483139414, 3.5785347663529667], [2.8284271247461903, 2.8284271247461903], [3.5785347663529667, 2.078319483139414], [4.0, 1.0608124], [4.0, 0.0], [4.0, -1.0608124], [3.5785347663529667, -2.078319483139414], [2.8284271247461903, -2.8284271247461903], [2.078319483139414, -3.5785347663529667], [1.0608124, -4.0], [0.0, -4.0], [-1.0608124, -4.0], [-2.078319483139414, -3.5785347663529667], [-2.8284271247461903, -2.8284271247461903], [-3.5785347663529667, -2.078319483139414], [-4.0, -1.0608124], [-4.0, 0.0], [-4.0, 1.0608124], [-3.5785347663529667, 2.078319483139414], [-2.8284271247461903, 2.8284271247461903], [-2.078319483139414, 3.5785347663529667], [-1.0608124, 4.0], [0.0, 4.0]], ["M", "C", "C", "C", "C", "C", "C", "C", "C", "Z"]], "zorder": 2, "edgecolor": "#FF4400", "coordinates": "data", "data": "data23"}, {"xindex": 0, "yindex": 1, "alpha": 1, "facecolor": "#FF4400", "edgewidth": 1.0, "id": "el544265090459720pts", "markerpath": [[[0.0, 4.0], [1.0608124, 4.0], [2.078319483139414, 3.5785347663529667], [2.8284271247461903, 2.8284271247461903], [3.5785347663529667, 2.078319483139414], [4.0, 1.0608124], [4.0, 0.0], [4.0, -1.0608124], [3.5785347663529667, -2.078319483139414], [2.8284271247461903, -2.8284271247461903], [2.078319483139414, -3.5785347663529667], [1.0608124, -4.0], [0.0, -4.0], [-1.0608124, -4.0], [-2.078319483139414, -3.5785347663529667], [-2.8284271247461903, -2.8284271247461903], [-3.5785347663529667, -2.078319483139414], [-4.0, -1.0608124], [-4.0, 0.0], [-4.0, 1.0608124], [-3.5785347663529667, 2.078319483139414], [-2.8284271247461903, 2.8284271247461903], [-2.078319483139414, 3.5785347663529667], [-1.0608124, 4.0], [0.0, 4.0]], ["M", "C", "C", "C", "C", "C", "C", "C", "C", "Z"]], "zorder": 2, "edgecolor": "#FF4400", "coordinates": "data", "data": "data24"}, {"xindex": 0, "yindex": 1, "alpha": 1, "facecolor": "#FF4400", "edgewidth": 1.0, "id": "el544265090478120pts", "markerpath": [[[0.0, 4.0], [1.0608124, 4.0], [2.078319483139414, 3.5785347663529667], [2.8284271247461903, 2.8284271247461903], [3.5785347663529667, 2.078319483139414], [4.0, 1.0608124], [4.0, 0.0], [4.0, -1.0608124], [3.5785347663529667, -2.078319483139414], [2.8284271247461903, -2.8284271247461903], [2.078319483139414, -3.5785347663529667], [1.0608124, -4.0], [0.0, -4.0], [-1.0608124, -4.0], [-2.078319483139414, -3.5785347663529667], [-2.8284271247461903, -2.8284271247461903], [-3.5785347663529667, -2.078319483139414], [-4.0, -1.0608124], [-4.0, 0.0], [-4.0, 1.0608124], [-3.5785347663529667, 2.078319483139414], [-2.8284271247461903, 2.8284271247461903], [-2.078319483139414, 3.5785347663529667], [-1.0608124, 4.0], [0.0, 4.0]], ["M", "C", "C", "C", "C", "C", "C", "C", "C", "Z"]], "zorder": 2, "edgecolor": "#FF4400", "coordinates": "data", "data": "data25"}, {"xindex": 0, "yindex": 1, "alpha": 1, "facecolor": "#FF4400", "edgewidth": 1.0, "id": "el544265090505000pts", "markerpath": [[[0.0, 4.0], [1.0608124, 4.0], [2.078319483139414, 3.5785347663529667], [2.8284271247461903, 2.8284271247461903], [3.5785347663529667, 2.078319483139414], [4.0, 1.0608124], [4.0, 0.0], [4.0, -1.0608124], [3.5785347663529667, -2.078319483139414], [2.8284271247461903, -2.8284271247461903], [2.078319483139414, -3.5785347663529667], [1.0608124, -4.0], [0.0, -4.0], [-1.0608124, -4.0], [-2.078319483139414, -3.5785347663529667], [-2.8284271247461903, -2.8284271247461903], [-3.5785347663529667, -2.078319483139414], [-4.0, -1.0608124], [-4.0, 0.0], [-4.0, 1.0608124], [-3.5785347663529667, 2.078319483139414], [-2.8284271247461903, 2.8284271247461903], [-2.078319483139414, 3.5785347663529667], [-1.0608124, 4.0], [0.0, 4.0]], ["M", "C", "C", "C", "C", "C", "C", "C", "C", "Z"]], "zorder": 2, "edgecolor": "#FF4400", "coordinates": "data", "data": "data26"}, {"xindex": 0, "yindex": 1, "alpha": 1, "facecolor": "#FF4400", "edgewidth": 1.0, "id": "el544265090526712pts", "markerpath": [[[0.0, 4.0], [1.0608124, 4.0], [2.078319483139414, 3.5785347663529667], [2.8284271247461903, 2.8284271247461903], [3.5785347663529667, 2.078319483139414], [4.0, 1.0608124], [4.0, 0.0], [4.0, -1.0608124], [3.5785347663529667, -2.078319483139414], [2.8284271247461903, -2.8284271247461903], [2.078319483139414, -3.5785347663529667], [1.0608124, -4.0], [0.0, -4.0], [-1.0608124, -4.0], [-2.078319483139414, -3.5785347663529667], [-2.8284271247461903, -2.8284271247461903], [-3.5785347663529667, -2.078319483139414], [-4.0, -1.0608124], [-4.0, 0.0], [-4.0, 1.0608124], [-3.5785347663529667, 2.078319483139414], [-2.8284271247461903, 2.8284271247461903], [-2.078319483139414, 3.5785347663529667], [-1.0608124, 4.0], [0.0, 4.0]], ["M", "C", "C", "C", "C", "C", "C", "C", "C", "Z"]], "zorder": 2, "edgecolor": "#FF4400", "coordinates": "data", "data": "data27"}, {"xindex": 0, "yindex": 1, "alpha": 1, "facecolor": "#FF4400", "edgewidth": 1.0, "id": "el544265088796008pts", "markerpath": [[[0.0, 4.0], [1.0608124, 4.0], [2.078319483139414, 3.5785347663529667], [2.8284271247461903, 2.8284271247461903], [3.5785347663529667, 2.078319483139414], [4.0, 1.0608124], [4.0, 0.0], [4.0, -1.0608124], [3.5785347663529667, -2.078319483139414], [2.8284271247461903, -2.8284271247461903], [2.078319483139414, -3.5785347663529667], [1.0608124, -4.0], [0.0, -4.0], [-1.0608124, -4.0], [-2.078319483139414, -3.5785347663529667], [-2.8284271247461903, -2.8284271247461903], [-3.5785347663529667, -2.078319483139414], [-4.0, -1.0608124], [-4.0, 0.0], [-4.0, 1.0608124], [-3.5785347663529667, 2.078319483139414], [-2.8284271247461903, 2.8284271247461903], [-2.078319483139414, 3.5785347663529667], [-1.0608124, 4.0], [0.0, 4.0]], ["M", "C", "C", "C", "C", "C", "C", "C", "C", "Z"]], "zorder": 2, "edgecolor": "#FF4400", "coordinates": "data", "data": "data28"}, {"xindex": 0, "yindex": 1, "alpha": 1, "facecolor": "#FF4400", "edgewidth": 1.0, "id": "el544265090547024pts", "markerpath": [[[0.0, 4.0], [1.0608124, 4.0], [2.078319483139414, 3.5785347663529667], [2.8284271247461903, 2.8284271247461903], [3.5785347663529667, 2.078319483139414], [4.0, 1.0608124], [4.0, 0.0], [4.0, -1.0608124], [3.5785347663529667, -2.078319483139414], [2.8284271247461903, -2.8284271247461903], [2.078319483139414, -3.5785347663529667], [1.0608124, -4.0], [0.0, -4.0], [-1.0608124, -4.0], [-2.078319483139414, -3.5785347663529667], [-2.8284271247461903, -2.8284271247461903], [-3.5785347663529667, -2.078319483139414], [-4.0, -1.0608124], [-4.0, 0.0], [-4.0, 1.0608124], [-3.5785347663529667, 2.078319483139414], [-2.8284271247461903, 2.8284271247461903], [-2.078319483139414, 3.5785347663529667], [-1.0608124, 4.0], [0.0, 4.0]], ["M", "C", "C", "C", "C", "C", "C", "C", "C", "Z"]], "zorder": 2, "edgecolor": "#FF4400", "coordinates": "data", "data": "data29"}, {"xindex": 0, "yindex": 1, "alpha": 1, "facecolor": "#FF4400", "edgewidth": 1.0, "id": "el544265089910120pts", "markerpath": [[[0.0, 4.0], [1.0608124, 4.0], [2.078319483139414, 3.5785347663529667], [2.8284271247461903, 2.8284271247461903], [3.5785347663529667, 2.078319483139414], [4.0, 1.0608124], [4.0, 0.0], [4.0, -1.0608124], [3.5785347663529667, -2.078319483139414], [2.8284271247461903, -2.8284271247461903], [2.078319483139414, -3.5785347663529667], [1.0608124, -4.0], [0.0, -4.0], [-1.0608124, -4.0], [-2.078319483139414, -3.5785347663529667], [-2.8284271247461903, -2.8284271247461903], [-3.5785347663529667, -2.078319483139414], [-4.0, -1.0608124], [-4.0, 0.0], [-4.0, 1.0608124], [-3.5785347663529667, 2.078319483139414], [-2.8284271247461903, 2.8284271247461903], [-2.078319483139414, 3.5785347663529667], [-1.0608124, 4.0], [0.0, 4.0]], ["M", "C", "C", "C", "C", "C", "C", "C", "C", "Z"]], "zorder": 2, "edgecolor": "#FF4400", "coordinates": "data", "data": "data30"}, {"xindex": 0, "yindex": 1, "alpha": 1, "facecolor": "#FF4400", "edgewidth": 1.0, "id": "el544265089932344pts", "markerpath": [[[0.0, 4.0], [1.0608124, 4.0], [2.078319483139414, 3.5785347663529667], [2.8284271247461903, 2.8284271247461903], [3.5785347663529667, 2.078319483139414], [4.0, 1.0608124], [4.0, 0.0], [4.0, -1.0608124], [3.5785347663529667, -2.078319483139414], [2.8284271247461903, -2.8284271247461903], [2.078319483139414, -3.5785347663529667], [1.0608124, -4.0], [0.0, -4.0], [-1.0608124, -4.0], [-2.078319483139414, -3.5785347663529667], [-2.8284271247461903, -2.8284271247461903], [-3.5785347663529667, -2.078319483139414], [-4.0, -1.0608124], [-4.0, 0.0], [-4.0, 1.0608124], [-3.5785347663529667, 2.078319483139414], [-2.8284271247461903, 2.8284271247461903], [-2.078319483139414, 3.5785347663529667], [-1.0608124, 4.0], [0.0, 4.0]], ["M", "C", "C", "C", "C", "C", "C", "C", "C", "Z"]], "zorder": 2, "edgecolor": "#FF4400", "coordinates": "data", "data": "data31"}, {"xindex": 0, "yindex": 1, "alpha": 1, "facecolor": "#FF4400", "edgewidth": 1.0, "id": "el544265089946592pts", "markerpath": [[[0.0, 4.0], [1.0608124, 4.0], [2.078319483139414, 3.5785347663529667], [2.8284271247461903, 2.8284271247461903], [3.5785347663529667, 2.078319483139414], [4.0, 1.0608124], [4.0, 0.0], [4.0, -1.0608124], [3.5785347663529667, -2.078319483139414], [2.8284271247461903, -2.8284271247461903], [2.078319483139414, -3.5785347663529667], [1.0608124, -4.0], [0.0, -4.0], [-1.0608124, -4.0], [-2.078319483139414, -3.5785347663529667], [-2.8284271247461903, -2.8284271247461903], [-3.5785347663529667, -2.078319483139414], [-4.0, -1.0608124], [-4.0, 0.0], [-4.0, 1.0608124], [-3.5785347663529667, 2.078319483139414], [-2.8284271247461903, 2.8284271247461903], [-2.078319483139414, 3.5785347663529667], [-1.0608124, 4.0], [0.0, 4.0]], ["M", "C", "C", "C", "C", "C", "C", "C", "C", "Z"]], "zorder": 2, "edgecolor": "#FF4400", "coordinates": "data", "data": "data32"}, {"xindex": 0, "yindex": 1, "alpha": 1, "facecolor": "#FF4400", "edgewidth": 1.0, "id": "el544265089968984pts", "markerpath": [[[0.0, 4.0], [1.0608124, 4.0], [2.078319483139414, 3.5785347663529667], [2.8284271247461903, 2.8284271247461903], [3.5785347663529667, 2.078319483139414], [4.0, 1.0608124], [4.0, 0.0], [4.0, -1.0608124], [3.5785347663529667, -2.078319483139414], [2.8284271247461903, -2.8284271247461903], [2.078319483139414, -3.5785347663529667], [1.0608124, -4.0], [0.0, -4.0], [-1.0608124, -4.0], [-2.078319483139414, -3.5785347663529667], [-2.8284271247461903, -2.8284271247461903], [-3.5785347663529667, -2.078319483139414], [-4.0, -1.0608124], [-4.0, 0.0], [-4.0, 1.0608124], [-3.5785347663529667, 2.078319483139414], [-2.8284271247461903, 2.8284271247461903], [-2.078319483139414, 3.5785347663529667], [-1.0608124, 4.0], [0.0, 4.0]], ["M", "C", "C", "C", "C", "C", "C", "C", "C", "Z"]], "zorder": 2, "edgecolor": "#FF4400", "coordinates": "data", "data": "data33"}, {"xindex": 0, "yindex": 1, "alpha": 1, "facecolor": "#FF4400", "edgewidth": 1.0, "id": "el544265089974928pts", "markerpath": [[[0.0, 4.0], [1.0608124, 4.0], [2.078319483139414, 3.5785347663529667], [2.8284271247461903, 2.8284271247461903], [3.5785347663529667, 2.078319483139414], [4.0, 1.0608124], [4.0, 0.0], [4.0, -1.0608124], [3.5785347663529667, -2.078319483139414], [2.8284271247461903, -2.8284271247461903], [2.078319483139414, -3.5785347663529667], [1.0608124, -4.0], [0.0, -4.0], [-1.0608124, -4.0], [-2.078319483139414, -3.5785347663529667], [-2.8284271247461903, -2.8284271247461903], [-3.5785347663529667, -2.078319483139414], [-4.0, -1.0608124], [-4.0, 0.0], [-4.0, 1.0608124], [-3.5785347663529667, 2.078319483139414], [-2.8284271247461903, 2.8284271247461903], [-2.078319483139414, 3.5785347663529667], [-1.0608124, 4.0], [0.0, 4.0]], ["M", "C", "C", "C", "C", "C", "C", "C", "C", "Z"]], "zorder": 2, "edgecolor": "#FF4400", "coordinates": "data", "data": "data34"}, {"xindex": 0, "yindex": 1, "alpha": 1, "facecolor": "#FF4400", "edgewidth": 1.0, "id": "el544265090002032pts", "markerpath": [[[0.0, 4.0], [1.0608124, 4.0], [2.078319483139414, 3.5785347663529667], [2.8284271247461903, 2.8284271247461903], [3.5785347663529667, 2.078319483139414], [4.0, 1.0608124], [4.0, 0.0], [4.0, -1.0608124], [3.5785347663529667, -2.078319483139414], [2.8284271247461903, -2.8284271247461903], [2.078319483139414, -3.5785347663529667], [1.0608124, -4.0], [0.0, -4.0], [-1.0608124, -4.0], [-2.078319483139414, -3.5785347663529667], [-2.8284271247461903, -2.8284271247461903], [-3.5785347663529667, -2.078319483139414], [-4.0, -1.0608124], [-4.0, 0.0], [-4.0, 1.0608124], [-3.5785347663529667, 2.078319483139414], [-2.8284271247461903, 2.8284271247461903], [-2.078319483139414, 3.5785347663529667], [-1.0608124, 4.0], [0.0, 4.0]], ["M", "C", "C", "C", "C", "C", "C", "C", "C", "Z"]], "zorder": 2, "edgecolor": "#FF4400", "coordinates": "data", "data": "data35"}, {"xindex": 0, "yindex": 1, "alpha": 1, "facecolor": "#FF4400", "edgewidth": 1.0, "id": "el544265090012240pts", "markerpath": [[[0.0, 4.0], [1.0608124, 4.0], [2.078319483139414, 3.5785347663529667], [2.8284271247461903, 2.8284271247461903], [3.5785347663529667, 2.078319483139414], [4.0, 1.0608124], [4.0, 0.0], [4.0, -1.0608124], [3.5785347663529667, -2.078319483139414], [2.8284271247461903, -2.8284271247461903], [2.078319483139414, -3.5785347663529667], [1.0608124, -4.0], [0.0, -4.0], [-1.0608124, -4.0], [-2.078319483139414, -3.5785347663529667], [-2.8284271247461903, -2.8284271247461903], [-3.5785347663529667, -2.078319483139414], [-4.0, -1.0608124], [-4.0, 0.0], [-4.0, 1.0608124], [-3.5785347663529667, 2.078319483139414], [-2.8284271247461903, 2.8284271247461903], [-2.078319483139414, 3.5785347663529667], [-1.0608124, 4.0], [0.0, 4.0]], ["M", "C", "C", "C", "C", "C", "C", "C", "C", "Z"]], "zorder": 2, "edgecolor": "#FF4400", "coordinates": "data", "data": "data36"}, {"xindex": 0, "yindex": 1, "alpha": 1, "facecolor": "#FF4400", "edgewidth": 1.0, "id": "el544265089353968pts", "markerpath": [[[0.0, 4.0], [1.0608124, 4.0], [2.078319483139414, 3.5785347663529667], [2.8284271247461903, 2.8284271247461903], [3.5785347663529667, 2.078319483139414], [4.0, 1.0608124], [4.0, 0.0], [4.0, -1.0608124], [3.5785347663529667, -2.078319483139414], [2.8284271247461903, -2.8284271247461903], [2.078319483139414, -3.5785347663529667], [1.0608124, -4.0], [0.0, -4.0], [-1.0608124, -4.0], [-2.078319483139414, -3.5785347663529667], [-2.8284271247461903, -2.8284271247461903], [-3.5785347663529667, -2.078319483139414], [-4.0, -1.0608124], [-4.0, 0.0], [-4.0, 1.0608124], [-3.5785347663529667, 2.078319483139414], [-2.8284271247461903, 2.8284271247461903], [-2.078319483139414, 3.5785347663529667], [-1.0608124, 4.0], [0.0, 4.0]], ["M", "C", "C", "C", "C", "C", "C", "C", "C", "Z"]], "zorder": 2, "edgecolor": "#FF4400", "coordinates": "data", "data": "data37"}, {"xindex": 0, "yindex": 1, "alpha": 1, "facecolor": "#FF4400", "edgewidth": 1.0, "id": "el544265090052976pts", "markerpath": [[[0.0, 4.0], [1.0608124, 4.0], [2.078319483139414, 3.5785347663529667], [2.8284271247461903, 2.8284271247461903], [3.5785347663529667, 2.078319483139414], [4.0, 1.0608124], [4.0, 0.0], [4.0, -1.0608124], [3.5785347663529667, -2.078319483139414], [2.8284271247461903, -2.8284271247461903], [2.078319483139414, -3.5785347663529667], [1.0608124, -4.0], [0.0, -4.0], [-1.0608124, -4.0], [-2.078319483139414, -3.5785347663529667], [-2.8284271247461903, -2.8284271247461903], [-3.5785347663529667, -2.078319483139414], [-4.0, -1.0608124], [-4.0, 0.0], [-4.0, 1.0608124], [-3.5785347663529667, 2.078319483139414], [-2.8284271247461903, 2.8284271247461903], [-2.078319483139414, 3.5785347663529667], [-1.0608124, 4.0], [0.0, 4.0]], ["M", "C", "C", "C", "C", "C", "C", "C", "C", "Z"]], "zorder": 2, "edgecolor": "#FF4400", "coordinates": "data", "data": "data38"}, {"xindex": 0, "yindex": 1, "alpha": 1, "facecolor": "#FF4400", "edgewidth": 1.0, "id": "el544265090067176pts", "markerpath": [[[0.0, 4.0], [1.0608124, 4.0], [2.078319483139414, 3.5785347663529667], [2.8284271247461903, 2.8284271247461903], [3.5785347663529667, 2.078319483139414], [4.0, 1.0608124], [4.0, 0.0], [4.0, -1.0608124], [3.5785347663529667, -2.078319483139414], [2.8284271247461903, -2.8284271247461903], [2.078319483139414, -3.5785347663529667], [1.0608124, -4.0], [0.0, -4.0], [-1.0608124, -4.0], [-2.078319483139414, -3.5785347663529667], [-2.8284271247461903, -2.8284271247461903], [-3.5785347663529667, -2.078319483139414], [-4.0, -1.0608124], [-4.0, 0.0], [-4.0, 1.0608124], [-3.5785347663529667, 2.078319483139414], [-2.8284271247461903, 2.8284271247461903], [-2.078319483139414, 3.5785347663529667], [-1.0608124, 4.0], [0.0, 4.0]], ["M", "C", "C", "C", "C", "C", "C", "C", "C", "Z"]], "zorder": 2, "edgecolor": "#FF4400", "coordinates": "data", "data": "data39"}, {"xindex": 0, "yindex": 1, "alpha": 1, "facecolor": "#FF4400", "edgewidth": 1.0, "id": "el544265090089616pts", "markerpath": [[[0.0, 4.0], [1.0608124, 4.0], [2.078319483139414, 3.5785347663529667], [2.8284271247461903, 2.8284271247461903], [3.5785347663529667, 2.078319483139414], [4.0, 1.0608124], [4.0, 0.0], [4.0, -1.0608124], [3.5785347663529667, -2.078319483139414], [2.8284271247461903, -2.8284271247461903], [2.078319483139414, -3.5785347663529667], [1.0608124, -4.0], [0.0, -4.0], [-1.0608124, -4.0], [-2.078319483139414, -3.5785347663529667], [-2.8284271247461903, -2.8284271247461903], [-3.5785347663529667, -2.078319483139414], [-4.0, -1.0608124], [-4.0, 0.0], [-4.0, 1.0608124], [-3.5785347663529667, 2.078319483139414], [-2.8284271247461903, 2.8284271247461903], [-2.078319483139414, 3.5785347663529667], [-1.0608124, 4.0], [0.0, 4.0]], ["M", "C", "C", "C", "C", "C", "C", "C", "C", "Z"]], "zorder": 2, "edgecolor": "#FF4400", "coordinates": "data", "data": "data40"}, {"xindex": 0, "yindex": 1, "alpha": 1, "facecolor": "#FF4400", "edgewidth": 1.0, "id": "el544265090107856pts", "markerpath": [[[0.0, 4.0], [1.0608124, 4.0], [2.078319483139414, 3.5785347663529667], [2.8284271247461903, 2.8284271247461903], [3.5785347663529667, 2.078319483139414], [4.0, 1.0608124], [4.0, 0.0], [4.0, -1.0608124], [3.5785347663529667, -2.078319483139414], [2.8284271247461903, -2.8284271247461903], [2.078319483139414, -3.5785347663529667], [1.0608124, -4.0], [0.0, -4.0], [-1.0608124, -4.0], [-2.078319483139414, -3.5785347663529667], [-2.8284271247461903, -2.8284271247461903], [-3.5785347663529667, -2.078319483139414], [-4.0, -1.0608124], [-4.0, 0.0], [-4.0, 1.0608124], [-3.5785347663529667, 2.078319483139414], [-2.8284271247461903, 2.8284271247461903], [-2.078319483139414, 3.5785347663529667], [-1.0608124, 4.0], [0.0, 4.0]], ["M", "C", "C", "C", "C", "C", "C", "C", "C", "Z"]], "zorder": 2, "edgecolor": "#FF4400", "coordinates": "data", "data": "data41"}, {"xindex": 0, "yindex": 1, "alpha": 1, "facecolor": "#FF4400", "edgewidth": 1.0, "id": "el544265090122104pts", "markerpath": [[[0.0, 4.0], [1.0608124, 4.0], [2.078319483139414, 3.5785347663529667], [2.8284271247461903, 2.8284271247461903], [3.5785347663529667, 2.078319483139414], [4.0, 1.0608124], [4.0, 0.0], [4.0, -1.0608124], [3.5785347663529667, -2.078319483139414], [2.8284271247461903, -2.8284271247461903], [2.078319483139414, -3.5785347663529667], [1.0608124, -4.0], [0.0, -4.0], [-1.0608124, -4.0], [-2.078319483139414, -3.5785347663529667], [-2.8284271247461903, -2.8284271247461903], [-3.5785347663529667, -2.078319483139414], [-4.0, -1.0608124], [-4.0, 0.0], [-4.0, 1.0608124], [-3.5785347663529667, 2.078319483139414], [-2.8284271247461903, 2.8284271247461903], [-2.078319483139414, 3.5785347663529667], [-1.0608124, 4.0], [0.0, 4.0]], ["M", "C", "C", "C", "C", "C", "C", "C", "C", "Z"]], "zorder": 2, "edgecolor": "#FF4400", "coordinates": "data", "data": "data42"}, {"xindex": 0, "yindex": 1, "alpha": 1, "facecolor": "#FF4400", "edgewidth": 1.0, "id": "el544265090144944pts", "markerpath": [[[0.0, 4.0], [1.0608124, 4.0], [2.078319483139414, 3.5785347663529667], [2.8284271247461903, 2.8284271247461903], [3.5785347663529667, 2.078319483139414], [4.0, 1.0608124], [4.0, 0.0], [4.0, -1.0608124], [3.5785347663529667, -2.078319483139414], [2.8284271247461903, -2.8284271247461903], [2.078319483139414, -3.5785347663529667], [1.0608124, -4.0], [0.0, -4.0], [-1.0608124, -4.0], [-2.078319483139414, -3.5785347663529667], [-2.8284271247461903, -2.8284271247461903], [-3.5785347663529667, -2.078319483139414], [-4.0, -1.0608124], [-4.0, 0.0], [-4.0, 1.0608124], [-3.5785347663529667, 2.078319483139414], [-2.8284271247461903, 2.8284271247461903], [-2.078319483139414, 3.5785347663529667], [-1.0608124, 4.0], [0.0, 4.0]], ["M", "C", "C", "C", "C", "C", "C", "C", "C", "Z"]], "zorder": 2, "edgecolor": "#FF4400", "coordinates": "data", "data": "data43"}, {"xindex": 0, "yindex": 1, "alpha": 1, "facecolor": "#FF4400", "edgewidth": 1.0, "id": "el544265090158576pts", "markerpath": [[[0.0, 4.0], [1.0608124, 4.0], [2.078319483139414, 3.5785347663529667], [2.8284271247461903, 2.8284271247461903], [3.5785347663529667, 2.078319483139414], [4.0, 1.0608124], [4.0, 0.0], [4.0, -1.0608124], [3.5785347663529667, -2.078319483139414], [2.8284271247461903, -2.8284271247461903], [2.078319483139414, -3.5785347663529667], [1.0608124, -4.0], [0.0, -4.0], [-1.0608124, -4.0], [-2.078319483139414, -3.5785347663529667], [-2.8284271247461903, -2.8284271247461903], [-3.5785347663529667, -2.078319483139414], [-4.0, -1.0608124], [-4.0, 0.0], [-4.0, 1.0608124], [-3.5785347663529667, 2.078319483139414], [-2.8284271247461903, 2.8284271247461903], [-2.078319483139414, 3.5785347663529667], [-1.0608124, 4.0], [0.0, 4.0]], ["M", "C", "C", "C", "C", "C", "C", "C", "C", "Z"]], "zorder": 2, "edgecolor": "#FF4400", "coordinates": "data", "data": "data44"}, {"xindex": 0, "yindex": 1, "alpha": 1, "facecolor": "#FF4400", "edgewidth": 1.0, "id": "el544265090959032pts", "markerpath": [[[0.0, 4.0], [1.0608124, 4.0], [2.078319483139414, 3.5785347663529667], [2.8284271247461903, 2.8284271247461903], [3.5785347663529667, 2.078319483139414], [4.0, 1.0608124], [4.0, 0.0], [4.0, -1.0608124], [3.5785347663529667, -2.078319483139414], [2.8284271247461903, -2.8284271247461903], [2.078319483139414, -3.5785347663529667], [1.0608124, -4.0], [0.0, -4.0], [-1.0608124, -4.0], [-2.078319483139414, -3.5785347663529667], [-2.8284271247461903, -2.8284271247461903], [-3.5785347663529667, -2.078319483139414], [-4.0, -1.0608124], [-4.0, 0.0], [-4.0, 1.0608124], [-3.5785347663529667, 2.078319483139414], [-2.8284271247461903, 2.8284271247461903], [-2.078319483139414, 3.5785347663529667], [-1.0608124, 4.0], [0.0, 4.0]], ["M", "C", "C", "C", "C", "C", "C", "C", "C", "Z"]], "zorder": 2, "edgecolor": "#FF4400", "coordinates": "data", "data": "data45"}, {"xindex": 0, "yindex": 1, "alpha": 1, "facecolor": "#FF4400", "edgewidth": 1.0, "id": "el544265090978336pts", "markerpath": [[[0.0, 4.0], [1.0608124, 4.0], [2.078319483139414, 3.5785347663529667], [2.8284271247461903, 2.8284271247461903], [3.5785347663529667, 2.078319483139414], [4.0, 1.0608124], [4.0, 0.0], [4.0, -1.0608124], [3.5785347663529667, -2.078319483139414], [2.8284271247461903, -2.8284271247461903], [2.078319483139414, -3.5785347663529667], [1.0608124, -4.0], [0.0, -4.0], [-1.0608124, -4.0], [-2.078319483139414, -3.5785347663529667], [-2.8284271247461903, -2.8284271247461903], [-3.5785347663529667, -2.078319483139414], [-4.0, -1.0608124], [-4.0, 0.0], [-4.0, 1.0608124], [-3.5785347663529667, 2.078319483139414], [-2.8284271247461903, 2.8284271247461903], [-2.078319483139414, 3.5785347663529667], [-1.0608124, 4.0], [0.0, 4.0]], ["M", "C", "C", "C", "C", "C", "C", "C", "C", "Z"]], "zorder": 2, "edgecolor": "#FF4400", "coordinates": "data", "data": "data46"}, {"xindex": 0, "yindex": 1, "alpha": 1, "facecolor": "#FF4400", "edgewidth": 1.0, "id": "el544265090991632pts", "markerpath": [[[0.0, 4.0], [1.0608124, 4.0], [2.078319483139414, 3.5785347663529667], [2.8284271247461903, 2.8284271247461903], [3.5785347663529667, 2.078319483139414], [4.0, 1.0608124], [4.0, 0.0], [4.0, -1.0608124], [3.5785347663529667, -2.078319483139414], [2.8284271247461903, -2.8284271247461903], [2.078319483139414, -3.5785347663529667], [1.0608124, -4.0], [0.0, -4.0], [-1.0608124, -4.0], [-2.078319483139414, -3.5785347663529667], [-2.8284271247461903, -2.8284271247461903], [-3.5785347663529667, -2.078319483139414], [-4.0, -1.0608124], [-4.0, 0.0], [-4.0, 1.0608124], [-3.5785347663529667, 2.078319483139414], [-2.8284271247461903, 2.8284271247461903], [-2.078319483139414, 3.5785347663529667], [-1.0608124, 4.0], [0.0, 4.0]], ["M", "C", "C", "C", "C", "C", "C", "C", "C", "Z"]], "zorder": 2, "edgecolor": "#FF4400", "coordinates": "data", "data": "data47"}, {"xindex": 0, "yindex": 1, "alpha": 1, "facecolor": "#FF4400", "edgewidth": 1.0, "id": "el544265091027152pts", "markerpath": [[[0.0, 4.0], [1.0608124, 4.0], [2.078319483139414, 3.5785347663529667], [2.8284271247461903, 2.8284271247461903], [3.5785347663529667, 2.078319483139414], [4.0, 1.0608124], [4.0, 0.0], [4.0, -1.0608124], [3.5785347663529667, -2.078319483139414], [2.8284271247461903, -2.8284271247461903], [2.078319483139414, -3.5785347663529667], [1.0608124, -4.0], [0.0, -4.0], [-1.0608124, -4.0], [-2.078319483139414, -3.5785347663529667], [-2.8284271247461903, -2.8284271247461903], [-3.5785347663529667, -2.078319483139414], [-4.0, -1.0608124], [-4.0, 0.0], [-4.0, 1.0608124], [-3.5785347663529667, 2.078319483139414], [-2.8284271247461903, 2.8284271247461903], [-2.078319483139414, 3.5785347663529667], [-1.0608124, 4.0], [0.0, 4.0]], ["M", "C", "C", "C", "C", "C", "C", "C", "C", "Z"]], "zorder": 2, "edgecolor": "#FF4400", "coordinates": "data", "data": "data48"}, {"xindex": 0, "yindex": 1, "alpha": 1, "facecolor": "#FF4400", "edgewidth": 1.0, "id": "el544265091049088pts", "markerpath": [[[0.0, 4.0], [1.0608124, 4.0], [2.078319483139414, 3.5785347663529667], [2.8284271247461903, 2.8284271247461903], [3.5785347663529667, 2.078319483139414], [4.0, 1.0608124], [4.0, 0.0], [4.0, -1.0608124], [3.5785347663529667, -2.078319483139414], [2.8284271247461903, -2.8284271247461903], [2.078319483139414, -3.5785347663529667], [1.0608124, -4.0], [0.0, -4.0], [-1.0608124, -4.0], [-2.078319483139414, -3.5785347663529667], [-2.8284271247461903, -2.8284271247461903], [-3.5785347663529667, -2.078319483139414], [-4.0, -1.0608124], [-4.0, 0.0], [-4.0, 1.0608124], [-3.5785347663529667, 2.078319483139414], [-2.8284271247461903, 2.8284271247461903], [-2.078319483139414, 3.5785347663529667], [-1.0608124, 4.0], [0.0, 4.0]], ["M", "C", "C", "C", "C", "C", "C", "C", "C", "Z"]], "zorder": 2, "edgecolor": "#FF4400", "coordinates": "data", "data": "data49"}, {"xindex": 0, "yindex": 1, "alpha": 1, "facecolor": "#FF4400", "edgewidth": 1.0, "id": "el544265091067888pts", "markerpath": [[[0.0, 4.0], [1.0608124, 4.0], [2.078319483139414, 3.5785347663529667], [2.8284271247461903, 2.8284271247461903], [3.5785347663529667, 2.078319483139414], [4.0, 1.0608124], [4.0, 0.0], [4.0, -1.0608124], [3.5785347663529667, -2.078319483139414], [2.8284271247461903, -2.8284271247461903], [2.078319483139414, -3.5785347663529667], [1.0608124, -4.0], [0.0, -4.0], [-1.0608124, -4.0], [-2.078319483139414, -3.5785347663529667], [-2.8284271247461903, -2.8284271247461903], [-3.5785347663529667, -2.078319483139414], [-4.0, -1.0608124], [-4.0, 0.0], [-4.0, 1.0608124], [-3.5785347663529667, 2.078319483139414], [-2.8284271247461903, 2.8284271247461903], [-2.078319483139414, 3.5785347663529667], [-1.0608124, 4.0], [0.0, 4.0]], ["M", "C", "C", "C", "C", "C", "C", "C", "C", "Z"]], "zorder": 2, "edgecolor": "#FF4400", "coordinates": "data", "data": "data50"}], "lines": [], "sharey": [], "axes": [{"visible": true, "tickvalues": null, "grid": {"gridOn": false}, "tickformat": null, "position": "bottom", "scale": "linear", "fontsize": 10.0, "nticks": 7}, {"visible": true, "tickvalues": null, "grid": {"gridOn": false}, "tickformat": null, "position": "left", "scale": "linear", "fontsize": 10.0, "nticks": 7}], "xscale": "linear", "axesbgalpha": null, "yscale": "linear", "images": [], "texts": [{"h_anchor": "middle", "alpha": 1, "text": "k", "position": [0.5, -0.0772626931567329], "zorder": 3, "v_baseline": "hanging", "rotation": -0.0, "color": "#000000", "id": "el544265088761336", "fontsize": 16.0, "coordinates": "axes"}, {"h_anchor": "middle", "alpha": 1, "text": "TSS", "position": [-0.07683691756272401, 0.5], "zorder": 3, "v_baseline": "auto", "rotation": -90.0, "color": "#000000", "id": "el544265088730696", "fontsize": 16.0, "coordinates": "axes"}, {"h_anchor": "middle", "alpha": 1, "text": "TSS per k using stratified k-fold cross-validation", "position": [0.5, 1.0220750551876379], "zorder": 3, "v_baseline": "auto", "rotation": -0.0, "color": "#000000", "id": "el544265088817280", "fontsize": 16.0, "coordinates": "axes"}], "id": "el544265088754040"}], "id": "el544265088751800", "plugins": [{"type": "reset"}, {"enabled": false, "button": true, "type": "zoom"}, {"enabled": false, "button": true, "type": "boxzoom"}], "width": 720.0, "data": {"data33": [[34.0, 0.7716817496229261]], "data15": [[16.0, 0.719747150997151]], "data48": [[49.0, 0.7607709750566893]], "data47": [[48.0, 0.7158564814814815]], "data51": [[0.0, 0.0]], "data07": [[8.0, 0.7191307731402072]], "data49": [[50.0, 0.7322222222222223]], "data44": [[45.0, 0.7733333333333333]], "data14": [[15.0, 0.7358237547892721]], "data21": [[22.0, 0.7017145135566188]], "data42": [[43.0, 0.7511627906976743]], "data01": [[2.0, 0.42880670161841805]], "data18": [[19.0, 0.7557208237986269]], "data08": [[9.0, 0.6817540057788284]], "data16": [[17.0, 0.7205429864253394]], "data04": [[5.0, 0.6390868673050616]], "data22": [[23.0, 0.7636028476989575]], "data26": [[27.0, 0.7601851851851852]], "data11": [[12.0, 0.6914021164021164]], "data30": [[31.0, 0.7559966914805624]], "data45": [[46.0, 0.7620772946859902]], "data32": [[33.0, 0.756021756021756]], "data05": [[6.0, 0.7473845924550151]], "data36": [[37.0, 0.7532760032760034]], "data43": [[44.0, 0.768939393939394]], "data12": [[13.0, 0.7243693806193806]], "data13": [[14.0, 0.7558371735791091]], "data31": [[32.0, 0.7679716117216118]], "data34": [[35.0, 0.7532967032967033]], "data35": [[36.0, 0.7798821548821548]], "data40": [[41.0, 0.760310421286031]], "data38": [[39.0, 0.7614607614607615]], "data24": [[25.0, 0.7369281045751634]], "data17": [[18.0, 0.7449677938808373]], "data29": [[30.0, 0.749047619047619]], "data06": [[7.0, 0.701762277912463]], "data20": [[21.0, 0.7492063492063491]], "data10": [[11.0, 0.7029023607970977]], "data41": [[42.0, 0.7480519480519481]], "data23": [[24.0, 0.7588507625272332]], "data03": [[4.0, 0.6890743213173119]], "data25": [[26.0, 0.7671568627450982]], "data46": [[47.0, 0.7349881796690307]], "data27": [[28.0, 0.7742559523809524]], "data02": [[3.0, 0.6669834251993877]], "data37": [[38.0, 0.7300637958532696]], "data39": [[40.0, 0.7575]], "data28": [[29.0, 0.7658456486042692]], "data09": [[10.0, 0.7346483942414175]], "data19": [[20.0, 0.7655952380952381]], "data50": [[51.0, 0.7551742919389978]]}});
+            })
+         });
+}
+</script>
+</div>
 
 
 As such, we confirm that high k-values result in a high variance. We find it reasonable to use the stratified 10-fold cross-validation method to compute the TSS and will follow this recommendation. Therefore we report this score as our final result:
@@ -1093,7 +4420,7 @@ print("The TSS equals", array_of_avg_TSS[9],
 
 {:.output .output_stream}
 ```
-The TSS equals 0.6289981947876684 plus or minus 0.14972842704649209 .
+The TSS equals 0.7029023607970977 plus or minus 0.13888587718099718 .
 
 ```
 
@@ -1139,8 +4466,8 @@ exp.show_in_notebook(show_table=False, show_all=False)
 
 {:.output .output_stream}
 ```
-Here is the prediction explanation for NOAA Active Region 11165 (HARPNUM  394 ),
- which produced a M1.5 class flare on 2011.03.06_07:54_TAI .
+Here is the prediction explanation for NOAA Active Region 11302 (HARPNUM  892 ),
+ which produced a M1.3 class flare on 2011.10.01_17:23_TAI .
 
 ```
 
@@ -36948,22 +40275,22 @@ Here is the prediction explanation for NOAA Active Region 11165 (HARPNUM  394 ),
 /***/ })
 /******/ ]);
 //# sourceMappingURL=bundle.js.map </script></head><body>
-        <div class="lime top_div" id="top_divGXWGREMR5UJLAY6"></div>
+        <div class="lime top_div" id="top_divMZJA0OFEGRKK6R2"></div>
         
         <script>
-        var top_div = d3.select('#top_divGXWGREMR5UJLAY6').classed('lime top_div', true);
+        var top_div = d3.select('#top_divMZJA0OFEGRKK6R2').classed('lime top_div', true);
         
             var pp_div = top_div.append('div')
                                 .classed('lime predict_proba', true);
             var pp_svg = pp_div.append('svg').style('width', '100%');
-            var pp = new lime.PredictProba(pp_svg, ["CME", "no CME"], [0.9969646782160456, 0.0030353217839542944]);
+            var pp = new lime.PredictProba(pp_svg, ["CME", "no CME"], [0.9129039943743517, 0.08709600562564815]);
             
         
         var exp_div;
             var exp = new lime.Explanation(["CME", "no CME"]);
         
                 exp_div = top_div.append('div').classed('lime explanation', true);
-                exp.show([["Mean angle of field from radial <= -0.73", 0.14645464122872082], ["Mean photospheric magnetic free energy <= -0.78", -0.14126800877021786], ["Mean shear angle <= -0.87", -0.11449996356310786], ["-0.69 < Mean gradient of horizontal field <= 0.00", 0.06756544286020162], ["Total photospheric magnetic free energy density <= -0.35", 0.05795406956141204], ["-0.41 < Total unsigned vertical current <= 0.00", -0.05550769961969793], ["-0.33 < Absolute value of the net current helicity <= 0.01", 0.05375377999971436], ["Mean vertical current density <= -0.56", -0.05036421567586379]], 1, exp_div);
+                exp.show([["-0.66 < Mean gradient of horizontal field <= 0.00", 0.08204376906063945], ["-0.46 < Total unsigned vertical current <= 0.00", -0.07749865980205074], ["0.00 < Mean shear angle <= 0.64", 0.051721277008718154], ["Mean current helicity (Bz contribution) <= -0.40", 0.05107727974882535], ["0.01 < Mean photospheric magnetic free energy <= 0.66", 0.036400282072792806], ["Mean characteristic twist parameter, alpha <= -0.47", 0.034453622104135245], ["-0.65 < Mean gradient of total field <= 0.00", -0.033738903075771993], ["0.01 < Mean angle of field from radial <= 0.81", -0.03195663243491451]], 1, exp_div);
                 
         var raw_div = top_div.append('div');
         </script>
@@ -36990,21 +40317,21 @@ for i in range(len(explained_list)):
 
 {:.output .output_stream}
 ```
-The following condition: Mean angle of field from radial <= -0.73 
- predicts CME with a model weight of 0.14645464122872082 .
-The following condition: Mean photospheric magnetic free energy <= -0.78 
- predicts no CME with a model weight of 0.14126800877021786 .
-The following condition: Mean shear angle <= -0.87 
- predicts no CME with a model weight of 0.11449996356310786 .
-The following condition: -0.69 < Mean gradient of horizontal field <= 0.00 
- predicts CME with a model weight of 0.06756544286020162 .
-The following condition: Total photospheric magnetic free energy density <= -0.35 
- predicts CME with a model weight of 0.05795406956141204 .
-The following condition: -0.41 < Total unsigned vertical current <= 0.00 
- predicts no CME with a model weight of 0.05550769961969793 .
-The following condition: -0.33 < Absolute value of the net current helicity <= 0.01 
- predicts CME with a model weight of 0.05375377999971436 .
-The following condition: Mean vertical current density <= -0.56 
- predicts no CME with a model weight of 0.05036421567586379 .
+The following condition: -0.66 < Mean gradient of horizontal field <= 0.00 
+ predicts CME with a model weight of 0.08204376906063945 .
+The following condition: -0.46 < Total unsigned vertical current <= 0.00 
+ predicts no CME with a model weight of 0.07749865980205074 .
+The following condition: 0.00 < Mean shear angle <= 0.64 
+ predicts CME with a model weight of 0.051721277008718154 .
+The following condition: Mean current helicity (Bz contribution) <= -0.40 
+ predicts CME with a model weight of 0.05107727974882535 .
+The following condition: 0.01 < Mean photospheric magnetic free energy <= 0.66 
+ predicts CME with a model weight of 0.036400282072792806 .
+The following condition: Mean characteristic twist parameter, alpha <= -0.47 
+ predicts CME with a model weight of 0.034453622104135245 .
+The following condition: -0.65 < Mean gradient of total field <= 0.00 
+ predicts no CME with a model weight of 0.033738903075771993 .
+The following condition: 0.01 < Mean angle of field from radial <= 0.81 
+ predicts no CME with a model weight of 0.03195663243491451 .
 
 ```

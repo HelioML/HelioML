@@ -15,9 +15,9 @@ dependencies:
     - scipy
     - sklearn
     - seaborn
-    - sunpy==0.9.5
+    - sunpy
     - suds-jurko
-    - astropy==3.1
+    - astropy
     - drms
     - mpld3
     - matplotlib

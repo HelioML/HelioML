@@ -27,7 +27,7 @@ First we'll import all the stuff we're going to need, just to get that out of th
 
 
 {:.input_area}
-```python
+```
 # Standard modules
 import numpy as np
 import pandas as pd
@@ -40,6 +40,8 @@ from sklearn.pipeline import make_pipeline
 from sklearn.model_selection import validation_curve, ShuffleSplit
 from sklearn.metrics import explained_variance_score, make_scorer
 from sklearn.svm import SVR
+from pandas.plotting import register_matplotlib_converters
+register_matplotlib_converters()
 
 # Custom modules
 from jpm_time_conversions import metatimes_to_seconds_since_start, datetimeindex_to_human
@@ -53,7 +55,7 @@ Next we will load up the data. You can download that dataset from [here](https:/
 
 
 {:.input_area}
-```python
+```
 idl_generated_data = readsav('./Example Dimming Light Curve.sav')
 light_curve_df = pd.DataFrame({'irradiance':idl_generated_data.irradiance.byteswap().newbyteorder(),  # [W/m^2]
                                'uncertainty':idl_generated_data.uncertainty.byteswap().newbyteorder()})  # [%]
@@ -126,7 +128,7 @@ Next we'll plot the data so we can get a quick idea of what we're working with.
 
 
 {:.input_area}
-```python
+```
 plt.errorbar(x=light_curve_df.index, 
              y=light_curve_df['irradiance'], 
              yerr=light_curve_df['uncertainty'], 
@@ -150,7 +152,7 @@ So we want to pull out the smooth curve underlying that data. There are plenty o
 
 
 {:.input_area}
-```python
+```
 # Pull data out of the DataFrame for compatibility formatting
 X = metatimes_to_seconds_since_start(light_curve_df.index)
 y = light_curve_df['irradiance'].values
@@ -164,7 +166,7 @@ Next we'll do a bit of cleaning. Most machine learning methods cannot accept mis
 
 
 {:.input_area}
-```python
+```
 finite_irradiance_indices = np.isfinite(y)
 X = X[finite_irradiance_indices]
 X = X.reshape(len(X), 1)
@@ -180,7 +182,7 @@ Here, we're just defining a quick helper function that we'll be using in the nex
 
 
 {:.input_area}
-```python
+```
 # Helper function for compatibility with validation_curve
 def svr_pipe(gamma=5e-8, **kwargs):
     return make_pipeline(SVR(kernel='rbf', C=1e3, gamma=gamma, **kwargs))
@@ -192,7 +194,7 @@ Now to figure out which fit is going to be the best one, we still need to decide
 
 
 {:.input_area}
-```python
+```
 gamma = np.logspace(-10, -5, num=20, base=10)
 ```
 
@@ -202,7 +204,7 @@ Another thing we'll need in order to determine which fit is best is a metric to 
 
 
 {:.input_area}
-```python
+```
 evs = make_scorer(explained_variance_score)
 ```
 
@@ -212,7 +214,7 @@ The last bit of prep before we can figure out which fit is best is to decide whi
 
 
 {:.input_area}
-```python
+```
 shuffle_split = ShuffleSplit(n_splits=20, train_size=0.5, test_size=0.5, random_state=None)
 ```
 
@@ -228,7 +230,7 @@ Next we've got a few optional inputs. ```cv``` is the cross-validation strategy.
 
 
 {:.input_area}
-```python
+```
 train_score, val_score = validation_curve(svr_pipe(), X, y,
                                           'svr__gamma',
                                           gamma, cv=shuffle_split, n_jobs=3, scoring=evs)
@@ -238,7 +240,7 @@ train_score, val_score = validation_curve(svr_pipe(), X, y,
 
 
 {:.input_area}
-```python
+```
 p1 = plt.semilogx(gamma, np.median(train_score, 1), label='training score')
 p2 = plt.semilogx(gamma, np.median(val_score, 1), label='validation score')
 plt.title('Validation Curve')
@@ -260,7 +262,7 @@ This is a pretty iconic looking validation curve. The major common features are 
 
 
 {:.input_area}
-```python
+```
 scores = np.median(val_score, axis=1)
 best_fit_score = np.max(scores)
 best_fit_gamma = gamma[np.argmax(scores)]
@@ -299,7 +301,7 @@ Now that we've identified which gamma results in the best fit, we can actually r
 
 
 {:.input_area}
-```python
+```
 sample_weight = 1 / uncertainty
 model = SVR(kernel='rbf', C=1e3, gamma=best_fit_gamma).fit(X, y, sample_weight)
 y_fit = model.predict(X)
@@ -311,7 +313,7 @@ Finally we can produce a nice plot showing our new machine-learning-identified b
 
 
 {:.input_area}
-```python
+```
 plt.errorbar(X.ravel(), y, yerr=uncertainty, color='black', fmt='o', label='Input light curve')
 plt.plot(X.ravel(), y_fit, linewidth=6, label='Fit')
 plt.title("t$_0$ = " + datetimeindex_to_human(light_curve_df.index)[0])

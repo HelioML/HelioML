@@ -1099,7 +1099,7 @@ methods to apply the trained networks used in this work to HMI images or re-trai
 
 ---
 
-*We would like to thank Dr. Monica Bobra and her collaborators for promoting these new methods of analysis to be used in solar physics and for inviting us to do it with this contribution.*
+*We would like to thank Monica Bobra and her collaborators for promoting these new methods of analysis to be used in solar physics and for inviting us to do it with this contribution.*
 
 *As this chapter is based on a publication in A&A, 614, A5 (2018) we also like to thank the anonymous referee of our article. We thank Mark Cheung for kindly sharing with us the simulation data, without which this study would not have been possible.* 
 
