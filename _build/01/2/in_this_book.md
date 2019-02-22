@@ -30,7 +30,6 @@ Below is a short summary of each chapter. Each summary gives a brief overview of
 * Data source(s): 
 	* Solar spectral irradiance¹ > extreme ultraviolet light > extracted emission line time series > SDO²/EVE³
 	
-
 ## Chapter 2
 * Author(s): Monica Bobra
 * Objective: Predict solar flares (outbursts of high energy light) and coronal mass ejections (outbursts of particles) based on measurements of the sun's surface magnetic field
@@ -41,6 +40,7 @@ Below is a short summary of each chapter. Each summary gives a brief overview of
 	* Solar surface magnetic field (AKA magnetograms) > SDO/HMI⁴
 	* Solar spectral irradiance > soft x-ray light > extracted flare peak intensity and time > GOES⁵/XRS⁶ flare event database
 	* Solar disk-blocked coronal images > visible light > extracted ejection occurrence and time > SOHO⁷/LASCO⁸ and STEREO⁹/SECCHI¹⁰/COR¹¹ coronal mass ejection database
+* Published and refereed paper: [Bobra & Ilonidis, 2016, <i> Astrophysical Journal</i>, 821, 127](https://ui.adsabs.harvard.edu/#abs/2016ApJ...821..127B/abstract)
 
 ## Chapter 3
 * Author(s): Carlos José Díaz Baso and Andrés Asensio Ramos
@@ -53,6 +53,7 @@ Below is a short summary of each chapter. Each summary gives a brief overview of
 	* Solar surface magnetic field (AKA magnetograms) > SDO/HMI
 	* Solar surface images > visible light > SDO/HMI
 	* Solar surface images > visible light > Hinode/SOT¹²
+* Published and refereed paper: [Díaz Baso & Asensio Ramos, 2018, <i> Astronomy & Astrophysics</i>, 614, A5](https://ui.adsabs.harvard.edu/#abs/2018A&A...614A...5D/abstract)
 
 ## Chapter 4
 * Author(s): Paul Wright, Mark Cheung, Rajat Thomas, Richard Galvez, Alexandre Szenicer, Meng Jin, Andrés Muñoz-Jaramillo, and David Fouhey
@@ -63,6 +64,24 @@ Below is a short summary of each chapter. Each summary gives a brief overview of
 * Data source(s): 
 	* Solar spectral images > extreme ultraviolet light > SDO/AIA
 	* Solar spectral irradiance > extreme ultraviolet light > extracted emission line time series > SDO/EVE
+* Published and refereed paper: Submitted
+
+## Future Chapters
+
+* Author(s): Brandon Panos, Lucia Kleint, Cedric Huwyler, Säm Krucker, Martin Melchior, Denis Ullmann, Sviatoslav Voloshynovskiy
+* Objective: Analyzing the behavior of a single spectral line (MgII) across many different flaring active regions
+* ML method(s) and concepts: 
+	* Clustering > K-means
+* Data source(s): 
+    * Solar spectral data > ultraviolet light > IRIS
+* Published and refereed paper: [Panos et al., 2018, <i> Astrophysical Journal</i>, 861, 1](https://ui.adsabs.harvard.edu/#abs/2018ApJ...861...62P/abstract)  
+    
+* Author(s): Ryan M. McGranaghan, Anthony Mannucci, Brian Wilson, Chris Mattmann, Richard Chadwick
+* Objective: Predicting high-latitude ionospheric scintillation
+* ML method(s) and concepts:
+	* Classification > support vector machine > support vector classifier 
+* Data source(s): solar wind, geomagnetic activity, particle precipitation, and ionospheric Global Navigation Satellite System (GNSS) data
+* Published and refereed paper: [McGranaghan et al., 2018, <i> Space Weather</i>, 16, 11](https://ui.adsabs.harvard.edu/#abs/2018SpWea..16.1817M/abstract)  
 
 ## Definitions
 1. Irradiance is the total output of light from the sun. Spectral irradiance is that intensity as a function of wavelength.
@@ -78,3 +97,4 @@ Below is a short summary of each chapter. Each summary gives a brief overview of
 11. COR: Coronagraph
 12. SOT: Solar Optical Telescope
 13. AIA: Atmospheric Imaging Assembly
+14. IRIS: Iterface Region Imaging Spectrograph
