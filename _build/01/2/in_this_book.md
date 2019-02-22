@@ -64,7 +64,7 @@ Below is a short summary of each chapter. Each summary gives a brief overview of
 * Data source(s): 
 	* Solar spectral images > extreme ultraviolet light > SDO/AIA
 	* Solar spectral irradiance > extreme ultraviolet light > extracted emission line time series > SDO/EVE
-* Published and refereed paper: Submitted
+* Published and refereed paper: In progress
 
 ## Future Chapters
 
@@ -80,7 +80,8 @@ Below is a short summary of each chapter. Each summary gives a brief overview of
 * Objective: Predicting high-latitude ionospheric scintillation
 * ML method(s) and concepts:
 	* Classification > support vector machine > support vector classifier 
-* Data source(s): solar wind, geomagnetic activity, particle precipitation, and ionospheric Global Navigation Satellite System (GNSS) data
+* Data source(s): 
+    * Solar wind, geomagnetic activity, particle precipitation, and ionospheric Global Navigation Satellite System (GNSS) data
 * Published and refereed paper: [McGranaghan et al., 2018, <i> Space Weather</i>, 16, 11](https://ui.adsabs.harvard.edu/#abs/2018SpWea..16.1817M/abstract)  
 
 ## Definitions
