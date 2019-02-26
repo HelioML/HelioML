@@ -5,7 +5,7 @@ We consider this book a living document and we're planning to add chapters frequ
 This is how you make a contribution: 
 
 1. Clone this entire repository.
-2. Add another enumerated folder within in the notebooks folder (e.g. /notebooks/07).
+2. Add another enumerated folder within in the content folder (e.g. /content/07).
 3. Within this enumerated folder, add your notebook.
 4. Modify the environment.yml file, at the top level, with the libraries you need to run your notebook.
 5. Issue a pull request.
