@@ -4,7 +4,7 @@ We consider this book a living document and we're planning to add chapters frequ
 
 When contributing a chapter, we recommend the following scientific workflow:
 
-1. **Publish your code with yourself as first author.** The code could be published in a digital repository managed by an institutional library or [published in Zenodo directly via Github](https://guides.github.com/activities/citable-code/). The [SAO/NASA Astrophysics Data System](http://adsabs.harvard.edu/) will automatically index software published in Zenodo via the [Asclepias project](https://github.com/asclepias). Either way, generate a DOI for the code. 
+1. **Publish your code with yourself as first author.** Generate a DOI for your code by publishing it in an institutional digital repository or [in Zenodo directly via Github](https://guides.github.com/activities/citable-code/). The [SAO/NASA Astrophysics Data System](http://adsabs.harvard.edu/) will automatically index software published in Zenodo via the [Asclepias project](https://github.com/asclepias). Either way, generate a DOI for the code. 
 
 2. **Publish your scientific paper with yourself as first author, and cite the published code in the published paper.** This generates a separate DOI for the published paper (accepted papers are welcome too). AAS Journals' [software policy](https://journals.aas.org/policy-statement-on-software/) contains examples of how to cite software in scientific papers.
 
