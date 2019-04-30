@@ -21,6 +21,7 @@ dependencies:
     - drms
     - mpld3
     - matplotlib
+    - mpld3
     - datetime
     - lime
     - torch
