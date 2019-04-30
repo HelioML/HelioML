@@ -1,6 +1,4 @@
 ---
-redirect_from:
-  - "/"
 title: 'Title'
 prev_page:
   url: 

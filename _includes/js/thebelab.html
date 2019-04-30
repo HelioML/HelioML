@@ -6,6 +6,9 @@
       binderOptions: {
         repo: '{{ site.binder_repo_org }}/{{ site.binder_repo_name }}',
         ref: '{{ site.binder_repo_branch }}',
+      },
+      kernelOptions: {
+        name: '{% if page.kernel_name %}{{ page.kernel_name }}{% else %}python3{% endif %}',
       }
     }
 </script>
@@ -14,7 +17,7 @@
     /**
      * Add attributes to Thebelab blocks
      */
-    
+
     const initThebelab = () => {
         const addThebelabToCodeCells = () => {
             console.log("Adding thebelab to code cells...");
@@ -24,12 +27,12 @@
                 setTimeout(addThebelabToCodeCells, 250)
             return
             }
-    
+
             // If we already detect a Thebelab cell, don't re-run
             if (document.querySelectorAll('div.thebelab-cell').length > 0) {
                 return;
             }
-            
+
             // Find all code cells, replace with Thebelab interactive code cells
             const codeCells = document.querySelectorAll('.input_area pre')
             codeCells.forEach((codeCell, index) => {
@@ -56,9 +59,14 @@
                 }
             });
 
+            // Remove the event listener from the page so keyboard press doesn't
+            // Change page
+            document.removeEventListener('keydown', initPageNav)
+            keyboardListener = false;
+
             // Init thebelab
             thebelab.bootstrap();
-    
+
             // Remove copy buttons since they won't work anymore
             const copyButtons = document.querySelectorAll('.copybtn')
             copyButtons.forEach((copyButton, index) => {
@@ -71,7 +79,7 @@
                 output.remove();
             });
         }
-    
+
         // Add event listener for the function to modify code cells
         const thebelabButton = document.getElementById('interact-button-thebelab');
         if (thebelabButton === null) {
@@ -80,7 +88,7 @@
         };
         thebelabButton.addEventListener('click', addThebelabToCodeCells);
     }
-    
+
     // Initialize Thebelab
     initFunction(initThebelab);
 </script>
