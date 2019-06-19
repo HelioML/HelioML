@@ -47,3 +47,9 @@
   sections:
   - title: Notebook
     url: /04/1/notebook
+    
+- title: Scintillation Prediction
+  url: /05/Scintillation_Prediction
+  sections:
+  - title: Notebook
+    url: /05/1/notebook

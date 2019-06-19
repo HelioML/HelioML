@@ -1,6 +1,7 @@
 ---
 interact_link: content/02/1/notebook.ipynb
 kernel_name: python3
+has_widgets: false
 title: 'Notebook'
 prev_page:
   url: /02/Predicting_Coronal_Mass_Ejections
