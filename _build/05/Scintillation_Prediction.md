@@ -10,7 +10,7 @@ next_page:
   title: 'Notebook'
 comment: "***PROGRAMMATICALLY GENERATED, DO NOT EDIT. SEE ORIGINAL FILES IN /content***"
 ---
-ew Capabilities for Prediction of High‐Latitude Ionospheric Scintillation: A Novel Approach With Machine Learning
+New Capabilities for Prediction of High‐Latitude Ionospheric Scintillation: A Novel Approach With Machine Learning
 ============================================
 *by Ryan M McGranaghan, Anthony J. Mannucci, Brian Wilson, Chris A Mattmann, and Richard Chadwick*
 
