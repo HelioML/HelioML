@@ -12,10 +12,11 @@ When contributing a chapter, we recommend the following scientific workflow:
 
    1. Fork this entire repository.
    2. Modify the environment.yml file with the libraries you need to run your notebook.
-   3. Add another enumerated folder within in the content folder (e.g. HelioML/content/07).
-   4. Within this enumerated folder, add two documents: 
+   3. Modify the title page and add your name, in alphabetical order, to the list of contributors.
+   4. Modify the Table of Contents and add a short description of your chapter.
+   5. Add another enumerated folder within in the content folder (e.g. HelioML/content/07). Within this enumerated folder, add two documents: 
        * A .md file that acts as an introduction to the chapter, and
        * A folder named /1 that contains the Jupyter notebook named as `notebook.ipynb` and any ancillary files.  
-   5. That's it!
+   6. That's it!
 
 Contributors are required to abide by our [Code of Conduct](https://github.com/HelioML/HelioML/blob/master/CODE_OF_CONDUCT.md).

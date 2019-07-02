@@ -1,14 +1,13 @@
 ---
 interact_link: content/04/1/notebook.ipynb
 kernel_name: python3
-has_widgets: false
 title: 'Notebook'
 prev_page:
   url: /04/Differential_Emission_Measurements
   title: 'Differential Emission Measurements'
 next_page:
-  url: 
-  title: ''
+  url: /05/Scintillation_Prediction
+  title: 'Scintillation Prediction'
 comment: "***PROGRAMMATICALLY GENERATED, DO NOT EDIT. SEE ORIGINAL FILES IN /content***"
 ---
 
