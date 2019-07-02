@@ -27,3 +27,7 @@ dependencies:
     - torch
     - keras
     - jupyter_contrib_nbextensions
+    - irisreader
+    - IPython
+    - scipy
+    - warnings
