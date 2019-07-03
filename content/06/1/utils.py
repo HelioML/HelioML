@@ -183,8 +183,8 @@ def preprocess_obs( obs, obs_type, lambda_min, lambda_max, n_bins, start_stop_in
     
     if verbosity_level >= 2:
         display( animate( obs ) )
-        print("HEK URL:")
-        display( obs.get_hek_url() )
+        url = obs.get_hek_url(html=False)
+        display( HTML( "<a href="+ url + ">link to HEK data</a>" ) )
     
     data = get_interpolated_raster_data( raster, lambda_min, lambda_max, n_bins )
         
@@ -234,9 +234,9 @@ def extract_flare( obs, lambda_min, lambda_max, n_bins, length_minutes=25, flare
         # show animation
         if verbosity_level >= 2:
             display( animate( obs ) )
-            print("HEK URL:")
-            display( obs.get_hek_url() )
-        
+            url = obs.get_hek_url(html=False)
+            display( HTML( "<a href="+ url + ">link to HEK data</a>" ) )
+
         # save the data
 #         print( "Saving data.." )
         data = get_interpolated_raster_data( raster, lambda_min, lambda_max, n_bins )
