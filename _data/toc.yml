@@ -59,7 +59,3 @@
   sections:
   - title: Notebook
     url: /06/1/notebook
-
-- title: References
-  url: /references
-  not_numbered: true
