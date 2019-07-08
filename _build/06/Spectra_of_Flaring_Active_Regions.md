@@ -19,4 +19,5 @@ In this chapter we will explore how the spectral line associated with once ioniz
 
 This chapter draws heavily on the functionality provided by <a href="https://github.com/i4Ds/IRISreader">IRISreader</a>, a library constructed for the purposes of supporting machine learning exploration on data collected by IRIS. The contents presented in this chapter are hosted on <a href="https://github.com/Brandonleighpanos/k-means-analysis-of-MgII-spectra">Github</a> and are reflections of the publication <a href="https://iopscience.iop.org/article/10.3847/1538-4357/aac779/meta">Panos et al, 2018, ApJ, 806, 14 </a>.
 
- <img src="files/into_fig.png" width="1000">
+![example](1/into_fig.png)
+Example of the k-means learning algorithm applied to several different flares. The emergent spectra are color coded in accordance to which group (lower left panel) they are most similar to.
