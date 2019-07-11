@@ -3,7 +3,7 @@ redirect_from:
   - "/02/predicting-coronal-mass-ejections"
 title: 'Predicting Coronal Mass Ejections'
 prev_page:
-  url: /01/3/other_references
+  url: /01/2/other_references
   title: 'Other References'
 next_page:
   url: /02/1/notebook
