@@ -6,8 +6,8 @@ prev_page:
   url: /05/Scintillation_Prediction
   title: 'Scintillation Prediction'
 next_page:
-  url: /references
-  title: 'References'
+  url: /06/Spectra_of_Flaring_Active_Regions
+  title: 'Spectra of Flaring Active Regions'
 comment: "***PROGRAMMATICALLY GENERATED, DO NOT EDIT. SEE ORIGINAL FILES IN /content***"
 ---
 

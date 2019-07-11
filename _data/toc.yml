@@ -56,6 +56,8 @@
   - title: Notebook
     url: /05/1/notebook
 
-- title: References
-  url: /references
-  not_numbered: true
+- title: Spectra of Flaring Active Regions
+  url: /06/Spectra_of_Flaring_Active_Regions
+  sections:
+  - title: Notebook
+    url: /06/1/notebook
