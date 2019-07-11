@@ -4,8 +4,8 @@ prev_page:
   url: /title
   title: 'Title'
 next_page:
-  url: /01/whys_and_whats
-  title: 'Whys and Whats'
+  url: /table_of_contents
+  title: 'Table of Contents'
 comment: "***PROGRAMMATICALLY GENERATED, DO NOT EDIT. SEE ORIGINAL FILES IN /content***"
 ---
 # Acknowledgements

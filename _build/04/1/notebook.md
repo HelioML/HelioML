@@ -1,6 +1,7 @@
 ---
 interact_link: content/04/1/notebook.ipynb
 kernel_name: python3
+has_widgets: false
 title: 'Notebook'
 prev_page:
   url: /04/Differential_Emission_Measurements
