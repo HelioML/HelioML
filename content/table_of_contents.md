@@ -67,16 +67,20 @@ Below is a short summary of each chapter. Each summary gives a brief overview of
     * Ionosphere > total electron content > GISTM
     * Ionosphere > radio spectrum > GISTM
     * Ionosphere > scintillation > GISTM
-* Published and refereed paper: [McGranaghan et al., 2018, <i> Space Weather</i>, 16, 11](https://ui.adsabs.harvard.edu/#abs/2018SpWea..16.1817M/abstract)  
+* Published and refereed paper: [McGranaghan et al., 2018, <i> Space Weather</i>, 16, 11](https://ui.adsabs.harvard.edu/#abs/2018SpWea..16.1817M/abstract)
 
-## Future Chapters
+## Chapter 6
+
 * Author(s): Brandon Panos, Lucia Kleint, Cedric Huwyler, Säm Krucker, Martin Melchior, Denis Ullmann, Sviatoslav Voloshynovskiy
 * Objective: Analyzing the behavior of a single spectral line (MgII) across many different flaring active regions
 * ML method(s) and concepts: 
 	* Clustering > K-means
 * Data source(s): 
     * Solar spectral data > ultraviolet light > IRIS
-* Published and refereed paper: [Panos et al., 2018, <i> Astrophysical Journal</i>, 861, 1](https://ui.adsabs.harvard.edu/#abs/2018ApJ...861...62P/abstract)     
+* Published and refereed paper: [Panos et al., 2018, <i> Astrophysical Journal</i>, 861, 1](https://ui.adsabs.harvard.edu/#abs/2018ApJ...861...62P/abstract)   
+
+## Future Chapters
+* Contact us! Open a [issue on the GitHub repository](https://github.com/HelioML/HelioML/issues) with your idea. See our [guide for contributing here](https://github.com/HelioML/HelioML/blob/master/CONTRIBUTING.md). 
 
 ## Definitions
 * ACE: Advanced Composition Explorer
