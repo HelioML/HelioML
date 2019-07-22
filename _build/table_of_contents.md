@@ -92,7 +92,7 @@ Below is a short summary of each chapter. Each summary gives a brief overview of
 * Published and refereed paper: [Panos et al., 2018, <i> Astrophysical Journal</i>, 861, 1](https://ui.adsabs.harvard.edu/#abs/2018ApJ...861...62P/abstract)   
 
 ## Future Chapters
-* Contact us! Open a [issue on the GitHub repository](https://github.com/HelioML/HelioML/issues) with your idea. See our [guide for contributing here](https://github.com/HelioML/HelioML/blob/master/CONTRIBUTING.md). 
+* Contact us! Open an [issue on the GitHub repository](https://github.com/HelioML/HelioML/issues) with your idea. See our [guide for contributing here](https://github.com/HelioML/HelioML/blob/master/CONTRIBUTING.md). 
 
 ## Definitions
 * ACE: Advanced Composition Explorer
