@@ -72,23 +72,34 @@ Below is a short summary of each chapter. Each summary gives a brief overview of
 	* Classification > support vector machine > support vector classifier ([sklearn.svm.svc](https://scikit-learn.org/stable/modules/generated/sklearn.svm.SVC.html))
 	* Dimensionality reduction > feature selection > Fisher ranking score ([Gu et al. 2011](https://dslpitt.org/uai/papers/11/p266-gu.pdf))
 * Data source(s): 
-    * Solar wind > 
-    * geomagnetic activity, particle precipitation, and ionospheric Global Navigation Satellite System (GNSS) data
-* Published and refereed paper: [McGranaghan et al., 2018, <i> Space Weather</i>, 16, 11](https://ui.adsabs.harvard.edu/#abs/2018SpWea..16.1817M/abstract)  
+    * Solar wind > magnetic field strength and direction > ACE, Wind, IMP 8, and Geotail
+    * Solar wind > velocity and pressure > ACE, Wind, IMP 8, and Geotail
+    * Aurora > electrojets > various ground-based polar observatories complied by Kyoto WDCG
+    * Geomagnetic field > symmetric disturbances > "" Kyoto WDCG
+    * Ionosphere > total electron content > GISTM
+    * Ionosphere > radio spectrum > GISTM
+    * Ionosphere > scintillation > GISTM
+* Published and refereed paper: [McGranaghan et al., 2018, <i> Space Weather</i>, 16, 11](https://ui.adsabs.harvard.edu/#abs/2018SpWea..16.1817M/abstract)
 
-## Future Chapters
+## Chapter 6
+
 * Author(s): Brandon Panos, Lucia Kleint, Cedric Huwyler, Säm Krucker, Martin Melchior, Denis Ullmann, Sviatoslav Voloshynovskiy
 * Objective: Analyzing the behavior of a single spectral line (MgII) across many different flaring active regions
 * ML method(s) and concepts: 
 	* Clustering > K-means
 * Data source(s): 
     * Solar spectral data > ultraviolet light > IRIS
-* Published and refereed paper: [Panos et al., 2018, <i> Astrophysical Journal</i>, 861, 1](https://ui.adsabs.harvard.edu/#abs/2018ApJ...861...62P/abstract)     
+* Published and refereed paper: [Panos et al., 2018, <i> Astrophysical Journal</i>, 861, 1](https://ui.adsabs.harvard.edu/#abs/2018ApJ...861...62P/abstract)   
+
+## Future Chapters
+* Contact us! Open a [issue on the GitHub repository](https://github.com/HelioML/HelioML/issues) with your idea. See our [guide for contributing here](https://github.com/HelioML/HelioML/blob/master/CONTRIBUTING.md). 
 
 ## Definitions
+* ACE: Advanced Composition Explorer
 * AIA: Atmospheric Imaging Assembly onboard SDO
 * COR: Coronagraph onboard STEREO
 * EVE: Extreme Ultraviolet Variability Experiment onboard SDO
+* GISTM: Global Navigation Satellite System Ionospheric Scintillation and Total Electron Content Measurements Monitor
 * GOES: Geostationary Operational Environmental Satellites
 * HMI: Helioseismic Magnetic Imager onboard SDO'
 * IRIS: Iterface Region Imaging Spectrograph
@@ -99,4 +110,5 @@ Below is a short summary of each chapter. Each summary gives a brief overview of
 * SOHO: Solar and Heliospheric Observatory
 * SOT: Solar Optical Telescope onboard Hinode
 * STEREO: Solar Terrestrial Relations Observatory
+* WDCG: World Data Center for Geomagnetism
 * XRS: X-Ray Sensor
