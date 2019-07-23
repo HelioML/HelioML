@@ -75,7 +75,7 @@ Below is a short summary of each chapter. Each summary gives a brief overview of
     * Solar wind > magnetic field strength and direction > ACE, Wind, IMP 8, and Geotail
     * Solar wind > velocity and pressure > ACE, Wind, IMP 8, and Geotail
     * Aurora > electrojets > various ground-based polar observatories complied by Kyoto WDCG
-    * Geomagnetic field > symmetric disturbances > "" Kyoto WDCG
+    * Geomagnetic field > symmetric disturbances > various ground-based polar observatories complied by Kyoto WDCG
     * Ionosphere > total electron content > GISTM
     * Ionosphere > radio spectrum > GISTM
     * Ionosphere > scintillation > GISTM
