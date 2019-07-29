@@ -3,13 +3,14 @@ redirect_from:
   - "/01/1/example-fitting-time-series"
 interact_link: content/01/1/example_fitting_time_series.ipynb
 kernel_name: conda-env-textbook-py
+has_widgets: false
 title: 'Example Fitting Time Series'
 prev_page:
   url: /01/whys_and_whats
   title: 'Whys and Whats'
 next_page:
-  url: /01/2/in_this_book
-  title: 'In This Book'
+  url: /01/2/other_references
+  title: 'Other References'
 comment: "***PROGRAMMATICALLY GENERATED, DO NOT EDIT. SEE ORIGINAL FILES IN /content***"
 ---
 

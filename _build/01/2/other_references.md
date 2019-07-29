@@ -1,10 +1,10 @@
 ---
 redirect_from:
-  - "/01/3/other-references"
+  - "/01/2/other-references"
 title: 'Other References'
 prev_page:
-  url: /01/2/in_this_book
-  title: 'In This Book'
+  url: /01/1/example_fitting_time_series
+  title: 'Example Fitting Time Series'
 next_page:
   url: /02/Predicting_Coronal_Mass_Ejections
   title: 'Predicting Coronal Mass Ejections'

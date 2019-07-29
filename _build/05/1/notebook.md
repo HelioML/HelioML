@@ -1,6 +1,7 @@
 ---
 interact_link: content/05/1/notebook.ipynb
 kernel_name: python3
+has_widgets: false
 title: 'Notebook'
 prev_page:
   url: /05/Scintillation_Prediction

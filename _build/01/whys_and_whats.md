@@ -3,8 +3,8 @@ redirect_from:
   - "/01/whys-and-whats"
 title: 'Whys and Whats'
 prev_page:
-  url: /acknowledgements
-  title: 'Acknowledgements'
+  url: /table_of_contents
+  title: 'Table of Contents'
 next_page:
   url: /01/1/example_fitting_time_series
   title: 'Example Fitting Time Series'

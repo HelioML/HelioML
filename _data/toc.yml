@@ -19,16 +19,18 @@
 - title: Acknowledgements
   url: /acknowledgements
   not_numbered: true
+  
+- title: Table of Contents
+  url: /table_of_contents
+  not_numbered: true
 
 - title: Whys and Whats
   url: /01/whys_and_whats
   sections:
   - title: Example Fitting Time Series
     url: /01/1/example_fitting_time_series
-  - title: In This Book
-    url: /01/2/in_this_book
   - title: Other References
-    url: /01/3/other_references
+    url: /01/2/other_references
 
 - title: Predicting Coronal Mass Ejections
   url: /02/Predicting_Coronal_Mass_Ejections
