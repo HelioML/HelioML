@@ -27,7 +27,7 @@ dependencies:
     - torch
     - keras
     - jupyter_contrib_nbextensions
-    - irisreader
+    - git+https://github.com/i4Ds/IRISreader.git
     - IPython
     - scipy
     - warnings
