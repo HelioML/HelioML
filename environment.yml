@@ -5,7 +5,6 @@ channels:
 
 dependencies:
   - python
-  - pip
   - pip:
     - bs4
     - tqdm
