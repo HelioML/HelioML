@@ -4,6 +4,8 @@ channels:
   - conda-forge
 
 dependencies:
+  - python
+  - pip
   - pip:
     - bs4
     - tqdm
@@ -29,5 +31,4 @@ dependencies:
     - jupyter_contrib_nbextensions
     - IPython
     - scipy
-    - warnings
     - git+https://github.com/i4Ds/IRISreader.git@master
