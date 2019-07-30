@@ -30,4 +30,4 @@ dependencies:
     - IPython
     - scipy
     - warnings
-    - https://github.com/i4Ds/IRISreader.zip
+    - git+https://github.com/i4Ds/IRISreader.git@master
