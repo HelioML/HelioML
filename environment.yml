@@ -30,4 +30,4 @@ dependencies:
     - IPython
     - scipy
     - warnings
-    - "--editable=git+https://github.com/i4Ds/IRISreader.git"
+    - "--editable=git+https://github.com/i4Ds/IRISreader.git@ab6ecd9fafdcdb04e70f0b7b8cde7a1fc4ec55a0#egg=IRISreader"
