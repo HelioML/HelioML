@@ -4,7 +4,6 @@ channels:
   - conda-forge
 
 dependencies:
-  - python
   - pip:
     - bs4
     - tqdm
