@@ -17,10 +17,10 @@ The contents of this book are licensed for free consumption under the following 
 If you'd like to cite the evolving book, instead of a specific version, use the following DOI: [https://doi.org/10.5281/zenodo.1412824](https://doi.org/10.5281/zenodo.1412824). Here is the bibtex entry for the paper:
 
 ```
-@BOOK{2018mlsd.book.....B,
+@BOOK{BobraMason2019,
        author = {{Bobra}, Monica G. and {Mason}, James P.},
         title = "{Machine Learning, Statistics, and Data Mining for Heliophysics}",
-         year = "2018",
+         year = "2019",
           doi = {10.5281/zenodo.1412824},
        adsurl = {https://ui.adsabs.harvard.edu/abs/2018mlsd.book.....B}
 }
