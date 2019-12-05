@@ -16,7 +16,7 @@ When contributing a chapter, we recommend the following scientific workflow:
    4. Modify the Table of Contents and add a short description of your chapter.
    5. Add another enumerated folder within in the content folder (e.g. HelioML/content/07). Within this enumerated folder, add two documents: 
        * A .md file that acts as an introduction to the chapter, and
-       * A folder named /1 that contains the Jupyter notebook named as `notebook.ipynb` and any ancillary files.  
-   6. That's it!
+       * A folder named /1 that contains the Jupyter notebook named as `notebook.ipynb` and any ancillary files.
+   6. Commit and push your forked repository. From your forked repository, create a new Pull Request. The default behavior will be to merge your fork back into helioml/helioml master. Monica and James will review your submission, work with you to make sure it's good to go, and approve the merge. Your chapter will show up at helioml.org a few minutes later. 
 
 Contributors are required to abide by our [Code of Conduct](https://github.com/HelioML/HelioML/blob/master/CODE_OF_CONDUCT.md).
