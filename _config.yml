@@ -144,3 +144,6 @@ plugins:
 - jekyll-redirect-from
 - jekyll-scholar
 jupyter_book_version: 0.4.2
+
+# Google Analytics
+google_analytics: UA-51404822-2
