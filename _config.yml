@@ -18,11 +18,13 @@
 # Jekyll site settings
 title: ''
 author: Monica Bobra and James Mason
+email: choldgraf@berkeley.edu
 description: >-
   "A book about machine learning, statistics, and data mining for heliophysics"
 
-baseurl: /               # the subpath of your site
+baseurl: /               # the subpath of your site, e.g. /blog. If there is no subpath for your site, use an empty string ""
 url: https://helioml.github.io # the base hostname & protocol for your site, e.g. http://example.com
+
 
 #######################################################################################
 # Jupyter Book settings
@@ -56,7 +58,7 @@ jupyterhub_interact_text: Interact             # The text that interact buttons 
 
 # Binder link settings
 use_binder_button: true                  # If 'true', add a binder button for interactive links
-binderhub_url: http://35.188.220.68                         # The URL for your BinderHub. If no URL, use ""
+binderhub_url: http://35.188.220.68                        # The URL for your BinderHub. If no URL, use ""
 binder_repo_base: https://github.com/                     # The site on which the textbook repository is hosted
 binder_repo_org: HelioML                      # The username or organization that owns this repository
 binder_repo_name: HelioML                          # The name of the repository on the web
