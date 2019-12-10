@@ -1,7 +1,6 @@
 ---
 interact_link: content/03/1/notebook.ipynb
 kernel_name: python3
-has_widgets: false
 title: 'Notebook'
 prev_page:
   url: /03/Enhancing_SDO_images
