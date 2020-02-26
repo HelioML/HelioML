@@ -6,3 +6,6 @@ Local helioseismology techniques allow the detection of active regions in the no
 In this notebook, we will show a method to improve the detection of active regions in far-side seismic maps using a machine learning algorithm.
 
 This work is published in [Felipe & Asensio Ramos, 2019, A&A, 632, 82](https://www.aanda.org/articles/aa/abs/2019/12/aa36838-19/aa36838-19.html)
+
+![example](1/figures/NN2019_002-eps-converted-to.pdf)
+Example of a detection of a far-side active region.
