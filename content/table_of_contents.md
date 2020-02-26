@@ -79,6 +79,20 @@ Below is a short summary of each chapter. Each summary gives a brief overview of
     * Solar spectral data > ultraviolet light > IRIS
 * Published and refereed paper: [Panos et al., 2018, <i> Astrophysical Journal</i>, 861, 1](https://ui.adsabs.harvard.edu/#abs/2018ApJ...861...62P/abstract)   
 
+## Chapter 7
+* Author(s): Carlos José Díaz Baso and Andrés Asensio Ramos
+* Objective: Rapid and robust image resolution enhancement 
+* ML method(s) and concepts: 
+	* Classification > deconvolution > convolutional neural network ([keras](https://keras.io/))
+	* Image processing > up-sampling > convolutional neural network ([keras](https://keras.io/))
+	* Model selection > determining best performing model > regularization ([keras](https://keras.io/))
+* Data source(s): 
+	* Solar surface magnetic field (AKA magnetograms) > SDO/HMI
+	* Solar surface images > visible light > SDO/HMI
+	* Solar surface images > visible light > Hinode/SOT
+* Published and refereed paper: [Díaz Baso & Asensio Ramos, 2018, <i> Astronomy & Astrophysics</i>, 614, A5](https://ui.adsabs.harvard.edu/#abs/2018A&A...614A...5D/abstract)
+
+
 ## Future Chapters
 * Contact us! Open an [issue on the GitHub repository](https://github.com/HelioML/HelioML/issues) with your idea. See our [guide for contributing here](https://github.com/HelioML/HelioML/blob/master/CONTRIBUTING.md). 
 
