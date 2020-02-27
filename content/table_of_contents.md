@@ -83,7 +83,8 @@ Below is a short summary of each chapter. Each summary gives a brief overview of
 * Author(s): Tobías Felipe and Andrés Asensio Ramos
 * Objective: Detection of far-side active regions
 * ML method(s) and concepts: 
-
+	* Image transformation > mapping > convolutional neural networks ([pytorch](https://pytorch.org/))
+	* Model selection > determining model performance > binary cross-entropy ([torch.nn.BCELoss](https://pytorch.org/docs/0.3.1/nn.html#torch.nn.BCELoss))
 * Data source(s): 
 	* Solar surface magnetic field (AKA magnetograms) > SDO/HMI
 	* Solar far-side seismic maps > SDO/HMI	
