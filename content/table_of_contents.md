@@ -79,6 +79,18 @@ Below is a short summary of each chapter. Each summary gives a brief overview of
     * Solar spectral data > ultraviolet light > IRIS
 * Published and refereed paper: [Panos et al., 2018, <i> Astrophysical Journal</i>, 861, 1](https://ui.adsabs.harvard.edu/#abs/2018ApJ...861...62P/abstract)   
 
+## Chapter 7
+* Author(s): Tobías Felipe and Andrés Asensio Ramos
+* Objective: Detection of far-side active regions
+* ML method(s) and concepts: 
+	* Image transformation > mapping > convolutional neural networks ([pytorch](https://pytorch.org/))
+	* Model selection > determining model performance > binary cross-entropy ([torch.nn.BCELoss](https://pytorch.org/docs/0.3.1/nn.html#torch.nn.BCELoss))
+* Data source(s): 
+	* Solar surface magnetic field (AKA magnetograms) > SDO/HMI
+	* Solar far-side seismic maps > SDO/HMI	
+* Published and refereed paper: [Felipe & Asensio Ramos, 2019, <i> Astronomy & Astrophysics</i>, 632, A82](https://ui.adsabs.harvard.edu/abs/2019A%26A...632A..82F/abstract)
+
+
 ## Future Chapters
 * Contact us! Open an [issue on the GitHub repository](https://github.com/HelioML/HelioML/issues) with your idea. See our [guide for contributing here](https://github.com/HelioML/HelioML/blob/master/CONTRIBUTING.md). 
 
