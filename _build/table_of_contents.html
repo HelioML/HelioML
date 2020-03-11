@@ -1,0 +1,171 @@
+---
+redirect_from:
+  - "/table-of-contents"
+title: |-
+  Table of Contents
+pagenum: 2
+prev_page:
+  url: /acknowledgements.html
+next_page:
+  url: /01/whys_and_whats.html
+suffix: .md
+search: solar s sklearn data model org selection sdo light html chapter concepts modules generated paper published author objective ml method scikit learn stable spectral onboard machine ultraviolet support vector svm source surface magnetic field hmi refereed keras pytorch nn validation irradiance ui adsabs harvard edu abs abstract chapters into modelselection determining extreme extracted eve coronal based svc images stereo asensio ramos image convolutional neural torch wind gistm helioml active research journal learning sun series measurements preprocessing splitting training sets line classification aka magnetograms visible soho andrs io aia scintillation et al ace wdcg ionosphere total github observatory cover scientific methods
+
+comment: "***PROGRAMMATICALLY GENERATED, DO NOT EDIT. SEE ORIGINAL FILES IN /content***"
+---
+
+    <main class="jupyter-page">
+    <div id="page-info"><div id="page-title">Table of Contents</div>
+</div>
+    
+<div class="jb_cell">
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="What's-In-This-Book?">What's In This Book?<a class="anchor-link" href="#What's-In-This-Book?"> </a></h1><p>In the following chapters, we'll cover examples from active research. Each chapter provides the motivation for the research and all of the code necessary to reproduce the results of a paper published in a peer-reviewed scientific journal. These chapters cover a variety of topics, but they all employ machine learning methods to heliophysics, which includes the study of the Sun and its effects on our solar system -- the Earth, planets, minor objects, and all of the space in between.</p>
+<p>Below is a short summary of each chapter. Each summary gives a brief overview of the machine learning methods and data types involved in solving a specific research problem. Each "&gt;" symbol is designed to drill down from a general idea into a specific one. If some of these terms don't make sense, don't worry! Acronyms are defined at the bottom and the chapters explain each scientific and machine learning concept in detail.</p>
+<h2 id="Chapter-1">Chapter 1<a class="anchor-link" href="#Chapter-1"> </a></h2><ul>
+<li>Author(s): James Paul Mason</li>
+<li>Objective: Fit time series measurements of solar ultraviolet light to contrast new and familiar concepts</li>
+<li>ML method(s) and concepts: <ul>
+<li>Preprocessing &gt; data cleaning &gt; imputing (<a href="https://sklearn.org/modules/generated/sklearn.preprocessing.Imputer.html">sklearn.preprocessing.Imputer</a>)</li>
+<li>Model selection &gt; splitting data into training and validation sets &gt; shuffle split (<a href="https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.ShuffleSplit.html">sklearn.model_selection.ShuffleSplit</a>)</li>
+<li>Regression &gt; support vector machine &gt; support vector regression (<a href="https://scikit-learn.org/stable/modules/generated/sklearn.svm.SVR.html">sklearn.svm.SVR</a>)</li>
+<li>Model selection &gt; determining best performing model &gt; validation curve (<a href="https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.validation_curve.html">sklearn.model_selection.validation_curve</a>)</li>
+</ul>
+</li>
+<li>Data source(s): <ul>
+<li>Solar spectral irradiance &gt; extreme ultraviolet light &gt; extracted emission line time series &gt; SDO/EVE</li>
+</ul>
+</li>
+</ul>
+<h2 id="Chapter-2">Chapter 2<a class="anchor-link" href="#Chapter-2"> </a></h2><ul>
+<li>Author(s): Monica Bobra</li>
+<li>Objective: Predict solar flares (outbursts of high energy light) and coronal mass ejections (outbursts of particles) based on measurements of the sun's surface magnetic field</li>
+<li>ML method(s) and concepts: <ul>
+<li>Classification &gt; support vector machine &gt; support vector classifier (<a href="https://scikit-learn.org/stable/modules/generated/sklearn.svm.SVC.html">sklearn.svm.svc</a>)</li>
+<li>Model selection &gt; splitting data into training and validation sets &gt; stratified k-folds (<a href="https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.StratifiedKFold.html">sklearn.model_selection.StratifiedKFold</a>)</li>
+</ul>
+</li>
+<li>Data sources(s): <ul>
+<li>Solar surface magnetic field (AKA magnetograms) &gt; SDO/HMI</li>
+<li>Solar spectral irradiance &gt; soft x-ray light &gt; extracted flare peak intensity and time &gt; GOES/XRS flare event database</li>
+<li>Solar disk-blocked coronal images &gt; visible light &gt; extracted ejection occurrence and time &gt; SOHO/LASCO and STEREO/SECCHI/COR coronal mass ejection database</li>
+</ul>
+</li>
+<li>Published and refereed paper: <a href="https://ui.adsabs.harvard.edu/#abs/2016ApJ...821..127B/abstract">Bobra &amp; Ilonidis, 2016, <i> Astrophysical Journal</i>, 821, 127</a></li>
+</ul>
+<h2 id="Chapter-3">Chapter 3<a class="anchor-link" href="#Chapter-3"> </a></h2><ul>
+<li>Author(s): Carlos José Díaz Baso and Andrés Asensio Ramos</li>
+<li>Objective: Rapid and robust image resolution enhancement </li>
+<li>ML method(s) and concepts: <ul>
+<li>Classification &gt; deconvolution &gt; convolutional neural network (<a href="https://keras.io/">keras</a>)</li>
+<li>Image processing &gt; up-sampling &gt; convolutional neural network (<a href="https://keras.io/">keras</a>)</li>
+<li>Model selection &gt; determining best performing model &gt; regularization (<a href="https://keras.io/">keras</a>)</li>
+</ul>
+</li>
+<li>Data source(s): <ul>
+<li>Solar surface magnetic field (AKA magnetograms) &gt; SDO/HMI</li>
+<li>Solar surface images &gt; visible light &gt; SDO/HMI</li>
+<li>Solar surface images &gt; visible light &gt; Hinode/SOT</li>
+</ul>
+</li>
+<li>Published and refereed paper: <a href="https://ui.adsabs.harvard.edu/#abs/2018A&amp;A...614A...5D/abstract">Díaz Baso &amp; Asensio Ramos, 2018, <i> Astronomy & Astrophysics</i>, 614, A5</a></li>
+</ul>
+<h2 id="Chapter-4">Chapter 4<a class="anchor-link" href="#Chapter-4"> </a></h2><ul>
+<li>Author(s): Paul Wright, Mark Cheung, Rajat Thomas, Richard Galvez, Alexandre Szenicer, Meng Jin, Andrés Muñoz-Jaramillo, and David Fouhey</li>
+<li>Objective: Simulating data from a lost instrument (EVE) based on another of a totally different type (AIA¹³)</li>
+<li>ML method(s) and concepts: <ul>
+<li>Image transformation &gt; mapping &gt; convolutional neural networks (<a href="https://pytorch.org/">pytorch</a>)</li>
+<li>Model selection &gt; determining model performance &gt; mean squared error loss (<a href="https://pytorch.org/docs/0.3.1/nn.html#torch.nn.MSELoss">torch.nn.MSELoss</a>)</li>
+</ul>
+</li>
+<li>Data source(s): <ul>
+<li>Solar spectral images &gt; extreme ultraviolet light &gt; SDO/AIA</li>
+<li>Solar spectral irradiance &gt; extreme ultraviolet light &gt; extracted emission line time series &gt; SDO/EVE</li>
+</ul>
+</li>
+<li>Published and refereed paper: In progress</li>
+</ul>
+<h2 id="Chapter-5">Chapter 5<a class="anchor-link" href="#Chapter-5"> </a></h2><ul>
+<li>Author(s): Ryan M. McGranaghan, Anthony Mannucci, Brian Wilson, Chris Mattmann, Richard Chadwick</li>
+<li>Objective: Predicting high-latitude ionospheric scintillation</li>
+<li>ML method(s) and concepts:<ul>
+<li>Model selection &gt; splitting data into training and validation sets &gt; random (<a href="https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.train_test_split.html">sklearn.model_selection.train_test_split</a>)</li>
+<li>Classification &gt; support vector machine &gt; support vector classifier (<a href="https://scikit-learn.org/stable/modules/generated/sklearn.svm.SVC.html">sklearn.svm.svc</a>)</li>
+<li>Dimensionality reduction &gt; feature selection &gt; Fisher ranking score (<a href="https://dslpitt.org/uai/papers/11/p266-gu.pdf">Gu et al. 2011</a>)</li>
+</ul>
+</li>
+<li>Data source(s): <ul>
+<li>Solar wind &gt; magnetic field strength and direction &gt; ACE, Wind, IMP 8, and Geotail</li>
+<li>Solar wind &gt; velocity and pressure &gt; ACE, Wind, IMP 8, and Geotail</li>
+<li>Aurora &gt; electrojets &gt; various ground-based polar observatories complied by Kyoto WDCG</li>
+<li>Geomagnetic field &gt; symmetric disturbances &gt; various ground-based polar observatories complied by Kyoto WDCG</li>
+<li>Ionosphere &gt; total electron content &gt; GISTM</li>
+<li>Ionosphere &gt; radio spectrum &gt; GISTM</li>
+<li>Ionosphere &gt; scintillation &gt; GISTM</li>
+</ul>
+</li>
+<li>Published and refereed paper: <a href="https://ui.adsabs.harvard.edu/#abs/2018SpWea..16.1817M/abstract">McGranaghan et al., 2018, <i> Space Weather</i>, 16, 11</a></li>
+</ul>
+<h2 id="Chapter-6">Chapter 6<a class="anchor-link" href="#Chapter-6"> </a></h2><ul>
+<li>Author(s): Brandon Panos, Lucia Kleint, Cedric Huwyler, Säm Krucker, Martin Melchior, Denis Ullmann, Sviatoslav Voloshynovskiy</li>
+<li>Objective: Analyzing the behavior of a single spectral line (MgII) across many different flaring active regions</li>
+<li>ML method(s) and concepts: <ul>
+<li>Clustering &gt; K-means</li>
+</ul>
+</li>
+<li>Data source(s): <ul>
+<li>Solar spectral data &gt; ultraviolet light &gt; IRIS</li>
+</ul>
+</li>
+<li>Published and refereed paper: <a href="https://ui.adsabs.harvard.edu/#abs/2018ApJ...861...62P/abstract">Panos et al., 2018, <i> Astrophysical Journal</i>, 861, 1</a>   </li>
+</ul>
+<h2 id="Chapter-7">Chapter 7<a class="anchor-link" href="#Chapter-7"> </a></h2><ul>
+<li>Author(s): Tobías Felipe and Andrés Asensio Ramos</li>
+<li>Objective: Detection of far-side active regions</li>
+<li>ML method(s) and concepts: <ul>
+<li>Image transformation &gt; mapping &gt; convolutional neural networks (<a href="https://pytorch.org/">pytorch</a>)</li>
+<li>Model selection &gt; determining model performance &gt; binary cross-entropy (<a href="https://pytorch.org/docs/0.3.1/nn.html#torch.nn.BCELoss">torch.nn.BCELoss</a>)</li>
+</ul>
+</li>
+<li>Data source(s): <ul>
+<li>Solar surface magnetic field (AKA magnetograms) &gt; SDO/HMI</li>
+<li>Solar far-side seismic maps &gt; SDO/HMI </li>
+</ul>
+</li>
+<li>Published and refereed paper: <a href="https://ui.adsabs.harvard.edu/abs/2019A%26A...632A..82F/abstract">Felipe &amp; Asensio Ramos, 2019, <i> Astronomy & Astrophysics</i>, 632, A82</a></li>
+</ul>
+<h2 id="Future-Chapters">Future Chapters<a class="anchor-link" href="#Future-Chapters"> </a></h2><ul>
+<li>Contact us! Open an <a href="https://github.com/HelioML/HelioML/issues">issue on the GitHub repository</a> with your idea. See our <a href="https://github.com/HelioML/HelioML/blob/master/CONTRIBUTING.md">guide for contributing here</a>. </li>
+</ul>
+<h2 id="Definitions">Definitions<a class="anchor-link" href="#Definitions"> </a></h2><ul>
+<li>ACE: Advanced Composition Explorer</li>
+<li>AIA: Atmospheric Imaging Assembly onboard SDO</li>
+<li>COR: Coronagraph onboard STEREO</li>
+<li>EVE: Extreme Ultraviolet Variability Experiment onboard SDO</li>
+<li>GISTM: Global Navigation Satellite System Ionospheric Scintillation and Total Electron Content Measurements Monitor</li>
+<li>GOES: Geostationary Operational Environmental Satellites</li>
+<li>HMI: Helioseismic Magnetic Imager onboard SDO'</li>
+<li>IRIS: Iterface Region Imaging Spectrograph</li>
+<li>Irradiance is the total output of light from the sun. Spectral irradiance is that intensity as a function of wavelength.</li>
+<li>LASCO: Large Angle and Spectrometric Coronagraph onboard SOHO</li>
+<li>SDO: Solar Dynamics Observatory</li>
+<li>SECCHI: Sun Earth Connection Coronal and Heliospheric Investigation suite of instruments onboard STEREO</li>
+<li>SOHO: Solar and Heliospheric Observatory</li>
+<li>SOT: Solar Optical Telescope onboard Hinode</li>
+<li>STEREO: Solar Terrestrial Relations Observatory</li>
+<li>WDCG: World Data Center for Geomagnetism</li>
+<li>XRS: X-Ray Sensor</li>
+</ul>
+
+</div>
+</div>
+</div>
+</div>
+
+ 
+
+
+    </main>
+    
