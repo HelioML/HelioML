@@ -16,9 +16,9 @@
 
 #######################################################################################
 # Jekyll site settings
-title: 'Machine Learning, Statistics, and Data Mining for Heliophysics'
+title: ''
 author: Monica Bobra and James Mason
-email: choldgraf@berkeley.edu
+email: mbobra@stanford.edu
 description: >-
   "A book about machine learning, statistics, and data mining for heliophysics"
 
