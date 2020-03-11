@@ -12,7 +12,7 @@
 # divider: true if this entry should just be rendered as a horizontal divider
 #   in the sidebar. All other values are ignored.
 
-- title: Title
+- title: Machine Learning, Statistics, and Data Mining for Heliophysics
   url: /title
   not_numbered: true
 
@@ -24,7 +24,7 @@
   url: /table_of_contents
   not_numbered: true
 
-- title: Whys and Whats
+- title: What Is This Book and Why Does It Exist?
   url: /01/whys_and_whats
   sections:
   - title: Example Fitting Time Series
