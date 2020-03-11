@@ -1,5 +1,3 @@
-# Machine Learning, Statistics, and Data Mining for Heliophysics
-
 **By [Monica Bobra](https://web.stanford.edu/~mbobra/) and [James Mason](http://jamespaulmason.strikingly.com/)**
 
 Contributions by Andrés Asensio Ramos, Mark Cheung, Carlos José Díaz Baso, Tobías Felipe, David Fouhey, Richard Galvez, Meng Jin, Andrés Muñoz-Jaramillo, Brandon Panos, Alexandre Szenicer, Rajat Thomas, and Paul Wright.
