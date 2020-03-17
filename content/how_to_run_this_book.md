@@ -1,6 +1,3 @@
-Appendix: How to Run This Book, Locally and in the Cloud
-========================================================
-
 ## Running Locally
 **Disclaimer: These are instructions for the nominal case. If they don't work for you, and you've done some Googling to try to resolve the issue, feel free to [post an issue on the GitHub repository](https://github.com/HelioML/HelioML/issues) and we'll do everything we can to help.**
 
