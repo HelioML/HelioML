@@ -9,7 +9,7 @@ pagenum: 17
 prev_page:
   url: /07/Detection_of_Far-Side_Solar_Active_Regions.html
 next_page:
-  url: 
+  url: /how_to_run_this_book.html
 suffix: .ipynb
 search: active regions maps far seismic network region probability data neural map magnetograms aa longitude hmi magnetogram visible hemisphere set employed solar training between fig layers detection example shift panel org where phase travel used after latitude times pi through series degrees ut because circ value binary threshold noise using work abs near negative consecutive presence input output architecture applied computed obtained days previous bottom row left above size model integrated felipe signal strong method machine learning helioseismic focus point doppler space very dnns function available indicated magnetic corrected removed location shows selected u net images arrows feature t asensio ramos
 
@@ -19,8 +19,7 @@ comment: "***PROGRAMMATICALLY GENERATED, DO NOT EDIT. SEE ORIGINAL FILES IN /con
     <main class="jupyter-page">
     <div id="page-info"><div id="page-title">Notebook</div>
 </div>
-    
-<div class="jb_cell">
+    <div class="jb_cell">
 
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
@@ -251,7 +250,7 @@ size of 30.</p>
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="k">class</span> <span class="nc">double_conv</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;(conv =&gt; BN =&gt; ReLU) * 2&#39;&#39;&#39;</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">in_ch</span><span class="p">,</span> <span class="n">out_ch</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">in_ch</span><span class="p">,</span> <span class="n">out_ch</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">double_conv</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">conv</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span>
             <span class="n">nn</span><span class="o">.</span><span class="n">Conv2d</span><span class="p">(</span><span class="n">in_ch</span><span class="p">,</span> <span class="n">out_ch</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span>
@@ -268,7 +267,7 @@ size of 30.</p>
 
 
 <span class="k">class</span> <span class="nc">inconv</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">in_ch</span><span class="p">,</span> <span class="n">out_ch</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">in_ch</span><span class="p">,</span> <span class="n">out_ch</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">inconv</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">conv</span> <span class="o">=</span> <span class="n">double_conv</span><span class="p">(</span><span class="n">in_ch</span><span class="p">,</span> <span class="n">out_ch</span><span class="p">)</span>
 
@@ -278,7 +277,7 @@ size of 30.</p>
 
 
 <span class="k">class</span> <span class="nc">down</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">in_ch</span><span class="p">,</span> <span class="n">out_ch</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">in_ch</span><span class="p">,</span> <span class="n">out_ch</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">down</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">mpconv</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span>
             <span class="n">nn</span><span class="o">.</span><span class="n">MaxPool2d</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span>
@@ -291,7 +290,7 @@ size of 30.</p>
 
 
 <span class="k">class</span> <span class="nc">up</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">in_ch</span><span class="p">,</span> <span class="n">out_ch</span><span class="p">,</span> <span class="n">bilinear</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">in_ch</span><span class="p">,</span> <span class="n">out_ch</span><span class="p">,</span> <span class="n">bilinear</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">up</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">bilinear</span> <span class="o">=</span> <span class="n">bilinear</span>
@@ -326,7 +325,7 @@ size of 30.</p>
 
 
 <span class="k">class</span> <span class="nc">outconv</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">in_ch</span><span class="p">,</span> <span class="n">out_ch</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">in_ch</span><span class="p">,</span> <span class="n">out_ch</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">outconv</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">conv</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Conv2d</span><span class="p">(</span><span class="n">in_ch</span><span class="p">,</span> <span class="n">out_ch</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
 
@@ -336,7 +335,7 @@ size of 30.</p>
 
 
 <span class="k">class</span> <span class="nc">UNet</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_channels</span><span class="p">,</span> <span class="n">n_classes</span><span class="p">,</span> <span class="n">n_hidden</span><span class="o">=</span><span class="mi">64</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_channels</span><span class="p">,</span> <span class="n">n_classes</span><span class="p">,</span> <span class="n">n_hidden</span><span class="o">=</span><span class="mi">64</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">UNet</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">inc</span> <span class="o">=</span> <span class="n">inconv</span><span class="p">(</span><span class="n">n_channels</span><span class="p">,</span> <span class="n">n_hidden</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">down1</span> <span class="o">=</span> <span class="n">down</span><span class="p">(</span><span class="n">n_hidden</span><span class="p">,</span> <span class="mi">2</span><span class="o">*</span><span class="n">n_hidden</span><span class="p">)</span>
@@ -388,7 +387,7 @@ size of 30.</p>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="k">class</span> <span class="nc">deep_farside</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">maxbatch</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">maxbatch</span><span class="p">):</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">cuda</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">is_available</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">device</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span><span class="s2">&quot;cuda&quot;</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">cuda</span> <span class="k">else</span> <span class="s2">&quot;cpu&quot;</span><span class="p">)</span>
@@ -546,10 +545,10 @@ Successfully installed astropy-3.2.3 photutils-0.7.2
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1">#import some modules</span>
 <span class="kn">import</span> <span class="nn">h5py</span>
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
-<span class="kn">from</span> <span class="nn">astropy.convolution</span> <span class="k">import</span> <span class="n">Gaussian2DKernel</span>
-<span class="kn">from</span> <span class="nn">astropy.stats</span> <span class="k">import</span> <span class="n">gaussian_fwhm_to_sigma</span>
-<span class="kn">from</span> <span class="nn">photutils</span> <span class="k">import</span> <span class="n">detect_sources</span>
-<span class="kn">from</span> <span class="nn">photutils</span> <span class="k">import</span> <span class="n">detect_threshold</span>
+<span class="kn">from</span> <span class="nn">astropy.convolution</span> <span class="kn">import</span> <span class="n">Gaussian2DKernel</span>
+<span class="kn">from</span> <span class="nn">astropy.stats</span> <span class="kn">import</span> <span class="n">gaussian_fwhm_to_sigma</span>
+<span class="kn">from</span> <span class="nn">photutils</span> <span class="kn">import</span> <span class="n">detect_sources</span>
+<span class="kn">from</span> <span class="nn">photutils</span> <span class="kn">import</span> <span class="n">detect_threshold</span>
 <span class="kn">import</span> <span class="nn">scipy.io</span>
 <span class="o">%</span><span class="k">matplotlib</span> inline
 </pre></div>
