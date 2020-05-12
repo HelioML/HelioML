@@ -1,5 +1,3 @@
-New Capabilities for Prediction of High‐Latitude Ionospheric Scintillation: A Novel Approach With Machine Learning
-============================================
 *by Ryan M McGranaghan, Anthony J. Mannucci, Brian Wilson, Chris A Mattmann, and Richard Chadwick*
 
 The purpose of this notebook is to detail the data science methodology used to produce classification (i.e., yes/no) predictions of high-latitude ionospheric phase scintillation. The reference for this work is:

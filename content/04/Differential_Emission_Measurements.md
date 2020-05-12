@@ -1,5 +1,3 @@
-DeepEM: A Deep Learning Approach for DEM Inversion
-============================================
 *by Paul Wright, Mark Cheung, Rajat Thomas, Richard Galvez, Alexandre Szenicer, Meng Jin, Andrés Muñoz-Jaramillo, and David Fouhey*
 
 The Atmospheric Imaging Assembly (AIA) instrument aboard the Solar Dynamics Observatory images the solar atmosphere nearly simultaneously using ten different filters in broad wavelengths ranging from 4500 Å to 94 Å, which correspond to temperatures ranging from 5000K up to 10MK ([Lemen et al. 2012](https://link.springer.com/article/10.1007%2Fs11207-011-9776-8)). Solar features span a vast range of temperatures -- for example, flaring regions can heat up to 10MK, while other features, such as coronal holes, remain several orders of magnitude cooler. By using near-simultaneous multi-wavelength observations of the solar corona, we can effectively constrain the temperature of localized solar features. 

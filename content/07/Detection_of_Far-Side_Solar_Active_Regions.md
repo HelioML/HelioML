@@ -1,4 +1,3 @@
-# Detection of far-side solar active regions
 *by T. Felipe and A. Asensio Ramos*
 
 Local helioseismology techniques allow the detection of active regions in the non-visible solar hemisphere (far-side) by analyzing the oscillations in the visible side of the Sun. However, this identification is challenged by the low signal-to-noise of the seismic data, and only strong active regions can be reliably detected. 
