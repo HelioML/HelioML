@@ -1,5 +1,3 @@
-Enhancing SDO/HMI images using deep learning
-============================================
 *by C. J. Diaz Baso and A. Asensio Ramos*
 
 

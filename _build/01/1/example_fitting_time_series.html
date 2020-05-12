@@ -2,11 +2,11 @@
 redirect_from:
   - "/01/1/example-fitting-time-series"
 interact_link: content/01/1/example_fitting_time_series.ipynb
-kernel_name: conda-env-textbook-py
+kernel_name: python3
 kernel_path: content/01/1
 has_widgets: false
 title: |-
-  Example Fitting Time Series
+  
 pagenum: 4
 prev_page:
   url: /01/whys_and_whats.html
@@ -19,13 +19,14 @@ comment: "***PROGRAMMATICALLY GENERATED, DO NOT EDIT. SEE ORIGINAL FILES IN /con
 ---
 
     <main class="jupyter-page">
-    <div id="page-info"><div id="page-title">Example Fitting Time Series</div>
+    <div id="page-info"><div id="page-title"></div>
 </div>
-    <div class="jb_cell">
+    
+<div class="jb_cell">
 
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h1 id="Example-1:-Fitting-a-time-series">Example 1: Fitting a time series<a class="anchor-link" href="#Example-1:-Fitting-a-time-series"> </a></h1>
+<h1 id="Example-1:-Fitting-A-Time-Series">Example 1: Fitting A Time Series<a class="anchor-link" href="#Example-1:-Fitting-A-Time-Series"> </a></h1>
 </div>
 </div>
 </div>
@@ -80,16 +81,16 @@ comment: "***PROGRAMMATICALLY GENERATED, DO NOT EDIT. SEE ORIGINAL FILES IN /con
 <span class="o">%</span><span class="k">matplotlib</span> inline
 <span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">use</span><span class="p">(</span><span class="s1">&#39;seaborn&#39;</span><span class="p">)</span>
-<span class="kn">from</span> <span class="nn">scipy.io.idl</span> <span class="kn">import</span> <span class="n">readsav</span>
-<span class="kn">from</span> <span class="nn">sklearn.pipeline</span> <span class="kn">import</span> <span class="n">make_pipeline</span>
-<span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">validation_curve</span><span class="p">,</span> <span class="n">ShuffleSplit</span>
-<span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">explained_variance_score</span><span class="p">,</span> <span class="n">make_scorer</span>
-<span class="kn">from</span> <span class="nn">sklearn.svm</span> <span class="kn">import</span> <span class="n">SVR</span>
-<span class="kn">from</span> <span class="nn">pandas.plotting</span> <span class="kn">import</span> <span class="n">register_matplotlib_converters</span>
+<span class="kn">from</span> <span class="nn">scipy.io.idl</span> <span class="k">import</span> <span class="n">readsav</span>
+<span class="kn">from</span> <span class="nn">sklearn.pipeline</span> <span class="k">import</span> <span class="n">make_pipeline</span>
+<span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="k">import</span> <span class="n">validation_curve</span><span class="p">,</span> <span class="n">ShuffleSplit</span>
+<span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="k">import</span> <span class="n">explained_variance_score</span><span class="p">,</span> <span class="n">make_scorer</span>
+<span class="kn">from</span> <span class="nn">sklearn.svm</span> <span class="k">import</span> <span class="n">SVR</span>
+<span class="kn">from</span> <span class="nn">pandas.plotting</span> <span class="k">import</span> <span class="n">register_matplotlib_converters</span>
 <span class="n">register_matplotlib_converters</span><span class="p">()</span>
 
 <span class="c1"># Custom modules</span>
-<span class="kn">from</span> <span class="nn">jpm_time_conversions</span> <span class="kn">import</span> <span class="n">metatimes_to_seconds_since_start</span><span class="p">,</span> <span class="n">datetimeindex_to_human</span>
+<span class="kn">from</span> <span class="nn">jpm_time_conversions</span> <span class="k">import</span> <span class="n">metatimes_to_seconds_since_start</span><span class="p">,</span> <span class="n">datetimeindex_to_human</span>
 </pre></div>
 
     </div>

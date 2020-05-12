@@ -4,7 +4,7 @@ kernel_name: python3
 kernel_path: content/03/1
 has_widgets: false
 title: |-
-  Notebook
+  
 pagenum: 9
 prev_page:
   url: /03/Enhancing_SDO_images.html
@@ -17,9 +17,10 @@ comment: "***PROGRAMMATICALLY GENERATED, DO NOT EDIT. SEE ORIGINAL FILES IN /con
 ---
 
     <main class="jupyter-page">
-    <div id="page-info"><div id="page-title">Notebook</div>
+    <div id="page-info"><div id="page-title"></div>
 </div>
-    <div class="jb_cell">
+    
+<div class="jb_cell">
 
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
@@ -98,10 +99,10 @@ $\newcommand{\AA}{Å}$</p>
 <span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s2">&quot;ignore&quot;</span><span class="p">)</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">from</span> <span class="nn">congrid</span> <span class="kn">import</span> <span class="n">resample</span>
+<span class="kn">from</span> <span class="nn">congrid</span> <span class="k">import</span> <span class="n">resample</span>
 <span class="kn">import</span> <span class="nn">radialProfile</span> 
-<span class="kn">from</span> <span class="nn">hmiutils</span> <span class="kn">import</span> <span class="o">*</span>
-<span class="kn">from</span> <span class="nn">astropy.convolution</span> <span class="kn">import</span> <span class="n">convolve_fft</span>
+<span class="kn">from</span> <span class="nn">hmiutils</span> <span class="k">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">astropy.convolution</span> <span class="k">import</span> <span class="n">convolve_fft</span>
 <span class="kn">import</span> <span class="nn">astropy.io.fits</span> <span class="k">as</span> <span class="nn">fits</span>
 <span class="kn">import</span> <span class="nn">scipy.special</span> <span class="k">as</span> <span class="nn">sp</span>
 </pre></div>
@@ -500,14 +501,14 @@ the weights associated to the layer. This is of no importance for intensity imag
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">keras.layers</span> <span class="kn">import</span> <span class="n">Input</span><span class="p">,</span> <span class="n">Conv2D</span><span class="p">,</span> <span class="n">Activation</span><span class="p">,</span> <span class="n">BatchNormalization</span><span class="p">,</span> <span class="n">GaussianNoise</span><span class="p">,</span> <span class="n">add</span><span class="p">,</span> <span class="n">UpSampling2D</span>
-<span class="kn">from</span> <span class="nn">keras.models</span> <span class="kn">import</span> <span class="n">Model</span>
-<span class="kn">from</span> <span class="nn">keras.regularizers</span> <span class="kn">import</span> <span class="n">l2</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">keras.layers</span> <span class="k">import</span> <span class="n">Input</span><span class="p">,</span> <span class="n">Conv2D</span><span class="p">,</span> <span class="n">Activation</span><span class="p">,</span> <span class="n">BatchNormalization</span><span class="p">,</span> <span class="n">GaussianNoise</span><span class="p">,</span> <span class="n">add</span><span class="p">,</span> <span class="n">UpSampling2D</span>
+<span class="kn">from</span> <span class="nn">keras.models</span> <span class="k">import</span> <span class="n">Model</span>
+<span class="kn">from</span> <span class="nn">keras.regularizers</span> <span class="k">import</span> <span class="n">l2</span>
 <span class="kn">import</span> <span class="nn">tensorflow</span> <span class="k">as</span> <span class="nn">tf</span>
-<span class="kn">from</span> <span class="nn">keras.engine.topology</span> <span class="kn">import</span> <span class="n">Layer</span>
-<span class="kn">from</span> <span class="nn">keras.engine</span> <span class="kn">import</span> <span class="n">InputSpec</span>
-<span class="kn">from</span> <span class="nn">keras.utils</span> <span class="kn">import</span> <span class="n">conv_utils</span>
-<span class="kn">from</span> <span class="nn">models</span> <span class="kn">import</span> <span class="n">ReflectionPadding2D</span>
+<span class="kn">from</span> <span class="nn">keras.engine.topology</span> <span class="k">import</span> <span class="n">Layer</span>
+<span class="kn">from</span> <span class="nn">keras.engine</span> <span class="k">import</span> <span class="n">InputSpec</span>
+<span class="kn">from</span> <span class="nn">keras.utils</span> <span class="k">import</span> <span class="n">conv_utils</span>
+<span class="kn">from</span> <span class="nn">models</span> <span class="k">import</span> <span class="n">ReflectionPadding2D</span>
 </pre></div>
 
     </div>
@@ -1622,7 +1623,7 @@ which goes down to less than 1% in the RL case (this is a clear indication that 
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">rlucy</span><span class="p">(</span><span class="n">raw</span><span class="p">,</span> <span class="n">psf</span><span class="p">,</span> <span class="n">niter</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">damped</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; working on it&quot;&quot;&quot;</span>
-    <span class="kn">from</span> <span class="nn">astropy.convolution</span> <span class="kn">import</span> <span class="n">convolve_fft</span> <span class="k">as</span> <span class="n">convolve</span>
+    <span class="kn">from</span> <span class="nn">astropy.convolution</span> <span class="k">import</span> <span class="n">convolve_fft</span> <span class="k">as</span> <span class="n">convolve</span>
 
     <span class="n">psf</span> <span class="o">/=</span> <span class="n">psf</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
     <span class="n">lucy</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">raw</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">*</span> <span class="n">raw</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>

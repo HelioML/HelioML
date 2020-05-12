@@ -27,45 +27,45 @@
 - title: What Is This Book and Why Does It Exist?
   url: /01/whys_and_whats
   sections:
-  - title: Example Fitting Time Series
+  - title: ''
     url: /01/1/example_fitting_time_series
-  - title: Other References
+  - title: ''
     url: /01/2/other_references
 
 - title: Predicting Coronal Mass Ejections
   url: /02/Predicting_Coronal_Mass_Ejections
   sections:
-  - title: Notebook
+  - title: ''
     url: /02/1/notebook
 
 - title: Enhancing SDO Images
   url: /03/Enhancing_SDO_images
   sections:
-  - title: Notebook
+  - title: ''
     url: /03/1/notebook
 
-- title: Differential Emission Measurements
+- title: Differential_Emission_Measurements
   url: /04/Differential_Emission_Measurements
   sections:
-  - title: Notebook
+  - title: ''
     url: /04/1/notebook
 
 - title: Scintillation Prediction
   url: /05/Scintillation_Prediction
   sections:
-  - title: Notebook
+  - title: ''
     url: /05/1/notebook
 
 - title: Spectra of Flaring Active Regions
   url: /06/Spectra_of_Flaring_Active_Regions
   sections:
-  - title: Notebook
+  - title: ''
     url: /06/1/notebook
 
 - title: Detection of Far-Side Solar Active Regions
   url: /07/Detection_of_Far-Side_Solar_Active_Regions
   sections:
-  - title: Notebook
+  - title: ''
     url: /07/1/notebook
 
 - title: Appendix - How to Run This Book

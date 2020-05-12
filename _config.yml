@@ -45,7 +45,7 @@ number_toc_chapters: true         # Whether to add numbers to chapterse in your 
 search_max_words_in_content: 100   # In the search function, use at most this many words (too many words will make search slow)
 
 # Controlling page information
-page_titles: None                      # Either `None`, `infer`, or `toc`
+page_titles: None                       # Either `None`, `infer`, or `toc`
 page_authors: None                     # Either `None` or `infer`
 filename_title_split_character: _     # If inferring titles based on filename, splt on this character.
 
@@ -60,17 +60,17 @@ use_jupyterlab: false                     # If 'true', interact links will use J
 
 # Jupyterhub link settings
 use_jupyterhub_button: false              # If 'true', display a button that will direct users to a JupyterHub (that you provide)
-jupyterhub_url: ""                     # The URL for your JupyterHub. If no URL, use ""
-jupyterhub_interact_text: ""             # The text that interact buttons will contain.
+jupyterhub_url: ''                     # The URL for your JupyterHub. If no URL, use ""
+jupyterhub_interact_text: ''                   # The text that interact buttons will contain.
 
 # Binder link settings
-use_binder_button: false                  # If 'true', add a binder button for interactive links
+use_binder_button: false                 # If 'true', add a binder button for interactive links
 binderhub_url: https://mybinder.org                        # The URL for your BinderHub. If no URL, use ""
 binder_repo_base: https://github.com/                     # The site on which the textbook repository is hosted
 binder_repo_org: HelioML                      # The username or organization that owns this repository
 binder_repo_name: HelioML                          # The name of the repository on the web
 binder_repo_branch: master                     # The branch on which your textbook is hosted.
-binderhub_interact_text: ""              # The text that interact buttons will contain.
+binderhub_interact_text: ''                    # The text that interact buttons will contain.
 
 # Thebelab settings
 use_thebelab_button: false               # If 'true', display a button to allow in-page running code cells with Thebelab
@@ -78,12 +78,12 @@ thebelab_button_text: Thebelab                 # The text to display inside the 
 codemirror_theme: abcdef                     # Theme for codemirror cells, for options see https://codemirror.net/doc/manual.html#config
 
 # nbinteract settings
-use_show_widgets_button: false                # If 'true', display a button to allow in-page running code cells with nbinteract
+use_show_widgets_button: false               # If 'true', display a button to allow in-page running code cells with nbinteract
 
 # Download settings
 use_download_button: true                # If 'true', display a button to download a zip file for the notebook
 download_button_text: Download                # The text that download buttons will contain
-download_page_header: ''                # A header that will be displayed at the top of and PDF-printed page
+download_page_header: ''                                    # A header that will be displayed at the top of and PDF-printed page
 
 #######################################################################################
 # Jupyter book extensions and additional features

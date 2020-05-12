@@ -1,6 +1,3 @@
-
-# Analyzing the behavior of a single spectral line using unsupervised learning
-
 *by Brandon Panos*  
 
 In this chapter we will explore how the spectral line associated with once ionized Magnesium (Mg II) behaves during a solar flare. To do this, we will make use of one of the most celebrated classical machine learning algorithms known as the k-means algorithm, to conjointly analyze slit-jaw images (SJI) and spectra collected by the Interface Region Imaging Spectrograph (IRIS).
