@@ -1,4 +1,4 @@
-name: textbook
+name: helioml
 
 channels:
   - conda-forge
