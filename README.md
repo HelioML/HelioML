@@ -15,14 +15,15 @@ We publish each release of HelioML on Zenodo; here is a list of every version:
 |-------|----|---|
 | [v0.1.0](https://github.com/HelioML/HelioML/releases/tag/v0.1.0) | 2018-09-10 | [![10.5281/zenodo.1412825](https://zenodo.org/badge/DOI/10.5281/zenodo.1412825.svg)](https://doi.org/10.5281/zenodo.1412825) |
 | [v0.2.0](https://github.com/HelioML/HelioML/releases/tag/v0.2.0) | 2019-02-22 | [![10.5281/zenodo.2575738](https://zenodo.org/badge/DOI/10.5281/zenodo.2575738.svg)](https://doi.org/10.5281/zenodo.2575738) |
+| [v0.3.0](https://github.com/HelioML/HelioML/releases/tag/v0.3.0) | 2020-05-11 | [![10.5281/zenodo.3820932](https://zenodo.org/badge/DOI/10.5281/zenodo.3820932.svg)](https://doi.org/10.5281/zenodo.3820932) |
 
 If you'd like to cite the evolving book, instead of a specific version, use the following DOI: [https://doi.org/10.5281/zenodo.1412824](https://doi.org/10.5281/zenodo.1412824). Here is the bibtex entry for the book:
 
 ```
-@BOOK{BobraMason2019,
+@BOOK{HelioML2020,
        author = {{Bobra}, Monica G. and {Mason}, James P.},
         title = "{Machine Learning, Statistics, and Data Mining for Heliophysics}",
-         year = "2019",
+         year = "2020",
           doi = {10.5281/zenodo.1412824},
        adsurl = {https://ui.adsabs.harvard.edu/abs/2018mlsd.book.....B}
 }
