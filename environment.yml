@@ -6,6 +6,7 @@ channels:
 dependencies:
   - pip
   - pip:
+    - Pillow
     - bs4
     - tqdm
     - numpy
