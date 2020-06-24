@@ -1,0 +1,34 @@
+name: helioml
+
+channels:
+  - conda-forge
+
+dependencies:
+  - pip
+  - pip:
+    - Pillow
+    - bs4
+    - tqdm
+    - numpy
+    - pyyaml
+    - nbformat
+    - nbclean
+    - pandas
+    - scipy
+    - sklearn
+    - seaborn
+    - sunpy
+    - suds-jurko
+    - astropy
+    - drms
+    - mpld3
+    - matplotlib
+    - mpld3
+    - datetime
+    - lime
+    - torch
+    - keras
+    - jupyter_contrib_nbextensions
+    - IPython
+    - scipy
+    - git+https://github.com/i4Ds/IRISreader.git@master
