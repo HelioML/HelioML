@@ -11,7 +11,7 @@ prev_page:
 next_page:
   url: /03/Enhancing_SDO_images.html
 suffix: .ipynb
-search: active feature data region class cme positive not features negative k database svm into flare our space regions tss machine case called br well donki jsoc method score edu associated any goes examples selection set its values using learning magnetic solar cmes abs example total within noaa function step lets predict high here value such dimensional cross fold testing lime flux flares adsabs harvard produced bobra us query before module only compute between univariate performance plot non negatives stratified validation true skill useful et al x flaring also algorithm scikit learn support vector every com calculate classes produce nasa convert
+search: active feature data region class cme positive not features negative k flare database svm into our space regions tss machine case called br well donki jsoc method score edu associated any here goes examples selection set its values using learning magnetic solar cmes abs example between total within noaa function step lets predict high value such dimensional cross fold testing lime flux flares adsabs harvard produced bobra us query before module only compute univariate performance plot non negatives stratified validation true skill useful et al x flaring also algorithm scikit learn support vector every com calculate classes produce nasa convert
 
 comment: "***PROGRAMMATICALLY GENERATED, DO NOT EDIT. SEE ORIGINAL FILES IN /content***"
 ---
@@ -37,6 +37,7 @@ comment: "***PROGRAMMATICALLY GENERATED, DO NOT EDIT. SEE ORIGINAL FILES IN /con
 <p>In general, the more energetic a flare, the more likely it is to be associated with a CME (<a href="http://adsabs.harvard.edu/abs/2005JGRA..11012S05Y">Yashiro et al. 2005</a>) -- but this is not, by any means, a rule. For example, <a href="http://adsabs.harvard.edu/abs/2015ApJ...804L..28S">Sun et al. (2015)</a> found that the largest active region in the last 24 years, shown below, produced 6 X-class flares but not a single observed CME.<br></p>
 <p>In this notebook, we will be predicting whether or not a flaring active region will also emit a CME using a machine learning algorithm from the scikit-learn package called Support Vector Machine.</p>
 <p>The analysis that follows is published in <a href="http://adsabs.harvard.edu/abs/2016ApJ...821..127B">Bobra &amp; Ilonidis, 2016, <i> Astrophysical Journal</i>, 821, 127</a>. If you use any of this code, we ask that you cite Bobra &amp; Ilonidis (2016).</p>
+<p>Here is a video that explains the difference between a flare and a CME:</p>
 
 </div>
 </div>
@@ -51,7 +52,7 @@ comment: "***PROGRAMMATICALLY GENERATED, DO NOT EDIT. SEE ORIGINAL FILES IN /con
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">IPython.display</span> <span class="kn">import</span> <span class="n">YouTubeVideo</span>
-<span class="n">YouTubeVideo</span><span class="p">(</span><span class="s2">&quot;lPvD8o9Q3ac&quot;</span><span class="p">)</span>
+<span class="n">YouTubeVideo</span><span class="p">(</span><span class="s2">&quot;TWjtYSRlOUI&quot;</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -70,7 +71,7 @@ comment: "***PROGRAMMATICALLY GENERATED, DO NOT EDIT. SEE ORIGINAL FILES IN /con
 <iframe
     width="400"
     height="300"
-    src="https://www.youtube.com/embed/lPvD8o9Q3ac"
+    src="https://www.youtube.com/embed/TWjtYSRlOUI"
     frameborder="0"
     allowfullscreen
 ></iframe>
