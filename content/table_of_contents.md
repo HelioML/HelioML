@@ -99,9 +99,9 @@ Below is a short summary of each chapter. Each summary gives a brief overview of
     * Regression > convolutional neural networks ([TensorFlow](https://tensorflow.org/))
 	* Model evaluation > determining best performing model > validation curve ([sklearn.model\_selection.validation\_curve](https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.validation_curve.html)) 
 * Data source(s): 
-    * OMNI: geomagnetic disturbance index Dst and upstream solar wind conditions.
-    * POES: measurements from low-Earth-orbit satellite POES-15 for electrons with different energies.
-    * RBSP: 1 MeV electrons measurements.  
+    * Geomagnetic disturbance index Dst and upstream solar wind conditions > OMNI
+    * Measurements from low-Earth-orbit satellite POES-15 for electrons with different energies > POES
+    * 1 MeV electrons measurements > RBSP
 * Published and refereed paper: [Pires de Lima et al., 2020, <i> Space Weather</i>, 18, 2](https://ui.adsabs.harvard.edu/abs/2020SpWea..1802399P/abstract)
 
 
@@ -119,6 +119,8 @@ Below is a short summary of each chapter. Each summary gives a brief overview of
 * IRIS: Iterface Region Imaging Spectrograph
 * Irradiance is the total output of light from the sun. Spectral irradiance is that intensity as a function of wavelength.
 * LASCO: Large Angle and Spectrometric Coronagraph onboard SOHO
+* POES: Polar Operational Environmental Satellites
+* RBSP: Radiation Belt Storm Probes
 * SDO: Solar Dynamics Observatory
 * SECCHI: Sun Earth Connection Coronal and Heliospheric Investigation suite of instruments onboard STEREO
 * SOHO: Solar and Heliospheric Observatory
