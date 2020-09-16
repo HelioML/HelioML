@@ -90,6 +90,20 @@ Below is a short summary of each chapter. Each summary gives a brief overview of
 	* Solar far-side seismic maps > SDO/HMI	
 * Published and refereed paper: [Felipe & Asensio Ramos, 2019, <i> Astronomy & Astrophysics</i>, 632, A82](https://ui.adsabs.harvard.edu/abs/2019A%26A...632A..82F/abstract)
 
+## Chapter 9
+* Author(s): Rafael Pires de Lima and Yue Chen
+* Objective: Forecast relativistic electrons in Earth's Outer Radiation Belt
+* ML method(s) and concepts:
+	* Preprocessing > data management > splitting data into training, validation, and test sets 
+	* Regression > linear regression ([sklearn.linear_model.LinearRegression](https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LinearRegression.html))
+    * Regression > convolutional neural networks ([TensorFlow](https://tensorflow.org/))
+	* Model evaluation > determining best performing model > validation curve ([sklearn.model\_selection.validation\_curve](https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.validation_curve.html)) 
+* Data source(s): 
+    * OMNI: geomagnetic disturbance index Dst and upstream solar wind conditions.
+    * POES: measurements from low-Earth-orbit satellite POES-15 for electrons with different energies.
+    * RBSP: 1 MeV electrons measurements.  
+* Published and refereed paper: [Pires de Lima et al., 2020, <i> Space Weather</i>, 18, 2](https://ui.adsabs.harvard.edu/abs/2020SpWea..1802399P/abstract)
+
 
 ## Future Chapters
 * Contact us! Open an [issue on the GitHub repository](https://github.com/HelioML/HelioML/issues) with your idea. See our [guide for contributing here](https://github.com/HelioML/HelioML/blob/master/CONTRIBUTING.md). 
