@@ -32,3 +32,5 @@ dependencies:
     - IPython
     - scipy
     - git+https://github.com/i4Ds/IRISreader.git@master
+    - plotly == 4.4.1
+    - tensorflow == 2.3.0
