@@ -7,6 +7,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ## [Unreleased]
 
 ### Added
+* Chapters 7-9
 * environment.yml file for each chapter. This allows each chapter to define the versions of every package they depend on, particularly in cases where different chapters use different versions of the same package. 
 
 ### Changed
