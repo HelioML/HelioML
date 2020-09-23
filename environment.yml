@@ -32,3 +32,5 @@ dependencies:
     - IPython
     - scipy
     - git+https://github.com/i4Ds/IRISreader.git@master
+    - nasa-pymms
+    - tensorflow<=1.15
