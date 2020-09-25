@@ -14,15 +14,12 @@
 
 - title: Machine Learning, Statistics, and Data Mining for Heliophysics
   url: /title
-  not_numbered: true
 
 - title: Acknowledgements
   url: /acknowledgements
-  not_numbered: true
 
 - title: Table of Contents
   url: /table_of_contents
-  not_numbered: true
 
 - title: What Is This Book and Why Does It Exist?
   url: /01/whys_and_whats
@@ -67,7 +64,12 @@
   sections:
   - title: Notebook
     url: /07/1/notebook
+    
+- title: Automated Detection Of Magnetopause Crossings
+  url: /08/Automated_Detection_Of_Magnetopause_Crossings
+  sections:
+  - title: Notebook
+    url: /08/1/notebook
 
 - title: Appendix - How to Run This Book
   url: /how_to_run_this_book
-  not_numbered: true
