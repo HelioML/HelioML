@@ -90,6 +90,16 @@ Below is a short summary of each chapter. Each summary gives a brief overview of
 	* Solar far-side seismic maps > SDO/HMI	
 * Published and refereed paper: [Felipe & Asensio Ramos, 2019, <i> Astronomy & Astrophysics</i>, 632, A82](https://ui.adsabs.harvard.edu/abs/2019A%26A...632A..82F/abstract)
 
+## Chapter 8
+* Author(s): Colin Small, Matthew R. Argall, Marek Petrik
+* Objective: Automated detection of magnetopause crossings
+* ML method(s) and concepts: 
+	* Classification > recurrent neural network > long short-term memory ([tf.keras.layers.LSTM](https://www.tensorflow.org/versions/r1.15/api_docs/python/tf/keras/layers/LSTM))
+* Data source(s): 
+    * Electron diffusion region > magnetopause > magnetic field strength and direction > MMS
+    * Electron diffusion region > magnetopause > velocity and pressure > MMS
+* Published and refereed paper: [Argall, Small, et al., 2020, <i> Front. Astron. Space Sci.</i>, 7](https://www.frontiersin.org/articles/10.3389/fspas.2020.00054)
+
 ## Chapter 9
 * Author(s): Rafael Pires de Lima and Yue Chen
 * Objective: Forecast relativistic electrons in Earth's Outer Radiation Belt
@@ -103,7 +113,6 @@ Below is a short summary of each chapter. Each summary gives a brief overview of
     * Measurements from low-Earth-orbit satellite POES-15 for electrons with different energies > POES
     * 1 MeV electrons measurements > RBSP
 * Published and refereed paper: [Pires de Lima et al., 2020, <i> Space Weather</i>, 18, 2](https://ui.adsabs.harvard.edu/abs/2020SpWea..1802399P/abstract)
-
 
 ## Future Chapters
 * Contact us! Open an [issue on the GitHub repository](https://github.com/HelioML/HelioML/issues) with your idea. See our [guide for contributing here](https://github.com/HelioML/HelioML/blob/master/CONTRIBUTING.md). 
