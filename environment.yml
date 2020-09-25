@@ -32,5 +32,6 @@ dependencies:
     - IPython
     - scipy
     - git+https://github.com/i4Ds/IRISreader.git@master
+    - plotly == 4.4.1
+    - tensorflow # Chapter 9 requires tensorflow == 2.3.0; Chapter 8 requires tensorflow<=1.15
     - nasa-pymms
-    - tensorflow<=1.15

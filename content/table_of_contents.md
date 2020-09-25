@@ -100,6 +100,19 @@ Below is a short summary of each chapter. Each summary gives a brief overview of
     * Electron diffusion region > magnetopause > velocity and pressure > MMS
 * Published and refereed paper: [Argall, Small, et al., 2020, <i> Front. Astron. Space Sci.</i>, 7](https://www.frontiersin.org/articles/10.3389/fspas.2020.00054)
 
+## Chapter 9
+* Author(s): Rafael Pires de Lima and Yue Chen
+* Objective: Forecast relativistic electrons in Earth's Outer Radiation Belt
+* ML method(s) and concepts:
+	* Preprocessing > data management > splitting data into training, validation, and test sets 
+	* Regression > linear regression ([sklearn.linear_model.LinearRegression](https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LinearRegression.html))
+    * Regression > convolutional neural networks ([TensorFlow](https://tensorflow.org/))
+	* Model evaluation > determining best performing model > validation curve ([sklearn.model\_selection.validation\_curve](https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.validation_curve.html)) 
+* Data source(s): 
+    * Geomagnetic disturbance index Dst and upstream solar wind conditions > OMNI
+    * Measurements from low-Earth-orbit satellite POES-15 for electrons with different energies > POES
+    * 1 MeV electrons measurements > RBSP
+* Published and refereed paper: [Pires de Lima et al., 2020, <i> Space Weather</i>, 18, 2](https://ui.adsabs.harvard.edu/abs/2020SpWea..1802399P/abstract)
 
 ## Future Chapters
 * Contact us! Open an [issue on the GitHub repository](https://github.com/HelioML/HelioML/issues) with your idea. See our [guide for contributing here](https://github.com/HelioML/HelioML/blob/master/CONTRIBUTING.md). 
@@ -115,6 +128,8 @@ Below is a short summary of each chapter. Each summary gives a brief overview of
 * IRIS: Iterface Region Imaging Spectrograph
 * Irradiance is the total output of light from the sun. Spectral irradiance is that intensity as a function of wavelength.
 * LASCO: Large Angle and Spectrometric Coronagraph onboard SOHO
+* POES: Polar Operational Environmental Satellites
+* RBSP: Radiation Belt Storm Probes
 * MMS: Magnetospheric MultiScale mission
 * SDO: Solar Dynamics Observatory
 * SECCHI: Sun Earth Connection Coronal and Heliospheric Investigation suite of instruments onboard STEREO
