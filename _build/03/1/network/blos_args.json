@@ -1,0 +1,1 @@
+{"output": "networks/blos", "epochs": "15", "noise": "1e-2", "depth": "5", "kernels": "64", "action": "start", "model": "keepsize", "activation": "relu", "lr": "1e-4", "lr_multiplier": "1.0", "l2_regularization": "1e-5", "batchsize": "32"}

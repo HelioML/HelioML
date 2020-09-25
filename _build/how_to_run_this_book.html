@@ -1,0 +1,59 @@
+---
+redirect_from:
+  - "/how-to-run-this-book"
+title: |-
+  Appendix - How to Run This Book
+pagenum: 20
+prev_page:
+  url: /08/1/notebook.html
+next_page:
+  url: 
+suffix: .md
+search: github helioml com into repository download environment conda load instructions notebook anaconda here docs install type en jupyter cloud click ipynb file directory yml command line latest html fork running locally disclaimer dont youve issue everything help youre select should local downloads right open files downloaded default creating io activate run just compute computing platform choice google colab notebooks amazon microsoft azure nominal case work done googling try resolve feel free post issues well chapter interested org top page hover icon save link already distribution python installed highly recommend installing terminal prompt windows navigate folder containing step above wherever decided
+
+comment: "***PROGRAMMATICALLY GENERATED, DO NOT EDIT. SEE ORIGINAL FILES IN /content***"
+---
+
+    <main class="jupyter-page">
+    <div id="page-info"><div id="page-title">Appendix - How to Run This Book</div>
+</div>
+    <div class="jb_cell">
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Running-Locally">Running Locally<a class="anchor-link" href="#Running-Locally"> </a></h2><p><strong>Disclaimer: These are instructions for the nominal case. If they don't work for you, and you've done some Googling to try to resolve the issue, feel free to <a href="https://github.com/HelioML/HelioML/issues">post an issue on the GitHub repository</a> and we'll do everything we can to help.</strong></p>
+<ol>
+<li>Go to the chapter you're interested in on helioml.org and select the Notebook.</li>
+<li>Download.<ul>
+<li>At the top of the page, hover over the download icon, and click ".ipynb". This file should download to your local downloads directory.</li>
+<li>Go to the <a href="https://github.com/HelioML/HelioML">HelioML GitHub repository</a>, right click "environment.yml" and select "Save Link As" to download the file into your local downloads directory.</li>
+</ul>
+</li>
+<li>If you don't already have the anaconda distribution of python installed, we highly recommend installing it. <a href="https://docs.anaconda.com/anaconda/install/">Here are the instructions for that</a>.</li>
+<li>Open up your terminal (or Anaconda Prompt if on Windows) and navigate to the folder containing the files you downloaded in step 2 above (this could be your default download directory or wherever you've decided to move the files).</li>
+<li>Install. At your command line, type <code>conda env create -f environment.yml</code> (we're following the instructions for creating a conda environment from <a href="https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html#creating-an-environment-from-an-environment-yml-file">here</a>). When it prompts you if you want to install all of the detected packages, type <code>y</code> and hit enter. It'll take about a minute to install everything.</li>
+<li>Activate. At your command line, type <code>conda activate textbook</code>.</li>
+<li>Run. Finally, at your command line, type <code>jupyter notebook</code> or <code>jupyter lab</code> (whichever is your preference). This will open up jupyter in your default browser. Just click on the notebook.ipynb you downloaded and you should now be able to run all of the code locally.</li>
+</ol>
+<h2 id="Running-in-the-Cloud">Running in the Cloud<a class="anchor-link" href="#Running-in-the-Cloud"> </a></h2><p><strong>Disclaimer: Some of these chapters require a fair amount of compute so be conscious of the resource draw on your cloud computing platform of choice.</strong></p>
+<ol>
+<li>Fork the <a href="https://github.com/HelioML/HelioML">HelioML repository on GitHub</a>. <a href="https://help.github.com/en/github/getting-started-with-github/fork-a-repo">Here are instructions for how to do that if you're not familiar</a> (but it's basically just clicking the "Fork" button in the upper right corner of the repository on GitHub).</li>
+<li>Load the repository into your cloud computing platform of choice. Here are links for how to do that for a few of the options.<ul>
+<li><a href="https://colab.research.google.com/github/googlecolab/colabtools/blob/master/notebooks/colab-github-demo.ipynb">Load into Google Collab</a></li>
+<li><a href="https://mybinder.readthedocs.io/en/latest/introduction.html">Load into Binder</a></li>
+<li><a href="https://docs.aws.amazon.com/codedeploy/latest/userguide/tutorials-github.html">Load into Amazon Web Services Elastic Compute Cloud</a></li>
+<li><a href="https://docs.microsoft.com/en-us/azure/notebooks/quickstart-clone-jupyter-notebook">Load into Microsoft Azure</a></li>
+</ul>
+</li>
+</ol>
+
+</div>
+</div>
+</div>
+</div>
+
+ 
+
+
+    </main>
+    

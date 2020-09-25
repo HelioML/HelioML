@@ -130,6 +130,7 @@ Below is a short summary of each chapter. Each summary gives a brief overview of
 * LASCO: Large Angle and Spectrometric Coronagraph onboard SOHO
 * POES: Polar Operational Environmental Satellites
 * RBSP: Radiation Belt Storm Probes
+* MMS: Magnetospheric MultiScale mission
 * SDO: Solar Dynamics Observatory
 * SECCHI: Sun Earth Connection Coronal and Heliospheric Investigation suite of instruments onboard STEREO
 * SOHO: Solar and Heliospheric Observatory
