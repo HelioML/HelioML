@@ -11,12 +11,11 @@ When contributing a chapter, we recommend the following scientific workflow:
 3. **Issue a PR to HelioML.** This way, HelioML is not showing anything for the first time. Chapter contributors totally own the first publication of the code and the first publication of the paper. To issue a PR to HelioML:
 
    1. Fork this entire repository.
-   2. Modify the environment.yml file with the libraries you need to run your notebook.
-   3. Modify the title page and add your name, in alphabetical order, to the list of contributors.
-   4. Modify the Table of Contents and add a short description of your chapter.
-   5. Add another enumerated folder within in the content folder (e.g. HelioML/content/07). Within this enumerated folder, add two documents: 
+   2. Modify the title page and add your name, in alphabetical order, to the list of contributors.
+   3. Modify the Table of Contents and add a short description of your chapter.
+   4. Add another enumerated folder within in the content folder (e.g. HelioML/content/13). Within this enumerated folder, add two documents: 
        * A .md file that acts as an introduction to the chapter, and
-       * A folder named /1 that contains the Jupyter notebook named as `notebook.ipynb` and any ancillary files.
-   6. Commit and push your forked repository. From your forked repository, create a new Pull Request. The default behavior will be to merge your fork back into helioml/helioml master. Monica and James will review your submission, work with you to make sure it's good to go, and approve the merge. Your chapter will show up at helioml.org a few minutes later. 
+       * A folder named /1 that contains the Jupyter notebook named as `notebook.ipynb` and any ancillary files. Please include a Markdown cell at the beginning of your notebook listing all the required packages and version numbers to run the notebook (e.g. "This notebook uses NumPy version 1.19.2, SunPy version 2.0.1, and scikit-learn version 0.23.").
+   5. Create a pull request. We will review your submission, work with you to make sure it's good to go, and approve the merge.
 
 Contributors are required to abide by our [Code of Conduct](https://github.com/HelioML/HelioML/blob/master/CODE_OF_CONDUCT.md).
