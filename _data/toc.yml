@@ -71,5 +71,11 @@
   - title: Notebook
     url: /08/1/notebook
 
+- title: Forecasting Relativistic Electrons in the Outer Radiation Belt
+  url: /09/Forecasting_Relativistic_Electrons_Outer_Radiation_Belt
+  sections:
+  - title: Notebook
+    url: /09/1/notebook
+
 - title: Appendix - How to Run This Book
   url: /how_to_run_this_book
