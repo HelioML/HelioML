@@ -1,0 +1,777 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>An Example &#8212; Machine Learning, Statistics, and Data Mining for Heliophysics</title>
+    
+  <link rel="stylesheet" href="../_static/css/index.73d71520a4ca3b99cfee5594769eaaae.css">
+
+    
+  <link rel="stylesheet"
+    href="../_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    
+      
+  <link rel="stylesheet"
+    href="../_static/vendor/open-sans_all/1.44.1/index.css">
+  <link rel="stylesheet"
+    href="../_static/vendor/lato_latin-ext/1.44.1/index.css">
+
+    
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/sphinx-book-theme.40e2e510f6b7d1648584402491bb10fe.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" />
+    
+  <link rel="preload" as="script" href="../_static/js/index.3da636dd464baa7582d2.js">
+
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script src="../_static/togglebutton.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <script >var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="../_static/sphinx-book-theme.d31b09fe5c1d09cb49b26a786de4a05d.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["\\(", "\\)"]], "displayMath": [["\\[", "\\]"]], "processRefs": false, "processEnvironments": false}})</script>
+    <script async="async" src="https://unpkg.com/thebelab@latest/lib/index.js"></script>
+    <script >
+        const thebe_selector = ".thebe"
+        const thebe_selector_input = "pre"
+        const thebe_selector_output = ".output"
+    </script>
+    <script async="async" src="../_static/sphinx-thebe.js"></script>
+    <link rel="shortcut icon" href="../_static/logo.png"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Where to look for more information" href="other_references.html" />
+    <link rel="prev" title="What is this book and why does it exist?" href="whys_and_whats.html" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="en" />
+
+
+
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+<div class="col-12 col-md-3 bd-sidebar site-navigation show" id="site-navigation">
+    
+        <div class="navbar-brand-box">
+<a class="navbar-brand text-wrap" href="../index.html">
+  
+  <img src="../_static/logo.png" class="logo" alt="logo">
+  
+  
+  <h1 class="site-logo" id="site-title">Machine Learning, Statistics, and Data Mining for Heliophysics</h1>
+  
+</a>
+</div><form class="bd-search d-flex align-items-center" action="../search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" >
+</form>
+<nav class="bd-links" id="bd-docs-nav" aria-label="Main navigation">
+    <p class="caption collapsible-parent">
+ <span class="caption-text">
+  Front Matter
+ </span>
+</p>
+<ul class="nav sidenav_l1">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../FrontMatter/acknowledgements.html">
+   Acknowledgements
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../FrontMatter/table_of_contents.html">
+   Table of Contents
+  </a>
+ </li>
+</ul>
+<p class="caption collapsible-parent">
+ <span class="caption-text">
+  About This Book
+ </span>
+</p>
+<ul class="current nav sidenav_l1">
+ <li class="toctree-l1">
+  <a class="reference internal" href="whys_and_whats.html">
+   What is this book and why does it exist?
+  </a>
+ </li>
+ <li class="toctree-l1 current active">
+  <a class="current reference internal" href="#">
+   An Example
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="other_references.html">
+   Where to look for more information
+  </a>
+ </li>
+</ul>
+<p class="caption collapsible-parent">
+ <span class="caption-text">
+  Chapter 1
+ </span>
+</p>
+<ul class="nav sidenav_l1">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../02/Predicting_Coronal_Mass_Ejections.html">
+   Predicting Coronal Mass Ejections
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../02/notebook.html">
+   Notebook
+  </a>
+ </li>
+</ul>
+<p class="caption collapsible-parent">
+ <span class="caption-text">
+  Chapter 2
+ </span>
+</p>
+<ul class="nav sidenav_l1">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../03/Enhancing_SDO_images.html">
+   Enhancing SDO Images
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../03/notebook.html">
+   Notebook
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../03/notebook.html#references">
+   References
+  </a>
+ </li>
+</ul>
+<p class="caption collapsible-parent">
+ <span class="caption-text">
+  Chapter 3
+ </span>
+</p>
+<ul class="nav sidenav_l1">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../04/Differential_Emission_Measurements.html">
+   Differential Emission Measurements
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../04/notebook.html">
+   Notebook
+  </a>
+ </li>
+</ul>
+<p class="caption collapsible-parent">
+ <span class="caption-text">
+  Chapter 4
+ </span>
+</p>
+<ul class="nav sidenav_l1">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../05/Scintillation_Prediction.html">
+   Scintillation Prediction
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../05/notebook.html">
+   Notebook
+  </a>
+ </li>
+</ul>
+<p class="caption collapsible-parent">
+ <span class="caption-text">
+  Chapter 5
+ </span>
+</p>
+<ul class="nav sidenav_l1">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../06/Spectra_of_Flaring_Active_Regions.html">
+   Spectra of Flaring Active Regions
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../06/notebook.html">
+   Notebook
+  </a>
+ </li>
+</ul>
+<p class="caption collapsible-parent">
+ <span class="caption-text">
+  Chapter 6
+ </span>
+</p>
+<ul class="nav sidenav_l1">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../07/Detection_of_Far-Side_Solar_Active_Regions.html">
+   Detection of Far-Side Solar Active Regions
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../07/notebook.html">
+   Notebook
+  </a>
+ </li>
+</ul>
+<p class="caption collapsible-parent">
+ <span class="caption-text">
+  Chapter 7
+ </span>
+</p>
+<ul class="nav sidenav_l1">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../08/Automated_Detection_Of_Magnetopause_Crossings.html">
+   Automated Detection of Magnetopause Crossings
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../08/notebook.html">
+   Notebook
+  </a>
+ </li>
+</ul>
+<p class="caption collapsible-parent">
+ <span class="caption-text">
+  Chapter 8
+ </span>
+</p>
+<ul class="nav sidenav_l1">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../09/Forecasting_Relativistic_Electrons_Outer_Radiation_Belt.html">
+   Forecasting Megaelectron‐Volt Electrons Inside Earth’s Outer Radiation Belt With Machine Learning
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../09/notebook.html">
+   Notebook
+  </a>
+ </li>
+</ul>
+<p class="caption collapsible-parent">
+ <span class="caption-text">
+  Appendix
+ </span>
+</p>
+<ul class="nav sidenav_l1">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../Appendix/how_to_run_this_book.html">
+   How to run this book
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../Appendix/how_to_run_this_book.html#running-the-book-locally">
+   Running the book locally
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../Appendix/how_to_run_this_book.html#running-the-book-in-the-cloud">
+   Running the book in the cloud
+  </a>
+ </li>
+</ul>
+
+</nav> <!-- To handle the deprecated key -->
+
+<div class="navbar_extra_footer">
+  Powered by <a href="https://jupyterbook.org">Jupyter Book</a>
+</div>
+
+</div>
+
+
+          
+
+
+          
+<main class="col py-md-3 pl-md-4 bd-content overflow-auto" role="main">
+    
+    <div class="row topbar fixed-top container-xl">
+    <div class="col-12 col-md-3 bd-topbar-whitespace site-navigation show">
+    </div>
+    <div class="col pl-2 topbar-main">
+        
+        <button id="navbar-toggler" class="navbar-toggler ml-0" type="button" data-toggle="collapse"
+            data-toggle="tooltip" data-placement="bottom" data-target=".site-navigation" aria-controls="navbar-menu"
+            aria-expanded="true" aria-label="Toggle navigation" aria-controls="site-navigation"
+            title="Toggle navigation" data-toggle="tooltip" data-placement="left">
+            <i class="fas fa-bars"></i>
+            <i class="fas fa-arrow-left"></i>
+            <i class="fas fa-arrow-up"></i>
+        </button>
+        
+        
+<div class="dropdown-buttons-trigger">
+    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn" aria-label="Download this page"><i
+            class="fas fa-download"></i></button>
+
+    <div class="dropdown-buttons">
+        <!-- ipynb file if we had a myst markdown file -->
+        
+        <!-- Download raw file -->
+        <a class="dropdown-buttons" href="../_sources/01/example_fitting_time_series.ipynb"><button type="button"
+                class="btn btn-secondary topbarbtn" title="Download source file" data-toggle="tooltip"
+                data-placement="left">.ipynb</button></a>
+        <!-- Download PDF via print -->
+        <button type="button" id="download-print" class="btn btn-secondary topbarbtn" title="Print to PDF"
+            onClick="window.print()" data-toggle="tooltip" data-placement="left">.pdf</button>
+    </div>
+</div>
+
+        <!-- Source interaction buttons -->
+
+<div class="dropdown-buttons-trigger">
+    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn"
+        aria-label="Connect with source repository"><i class="fab fa-github"></i></button>
+    <div class="dropdown-buttons sourcebuttons">
+        <a class="repository-button"
+            href="https://github.com/HelioML/HelioML/"><button type="button" class="btn btn-secondary topbarbtn"
+                data-toggle="tooltip" data-placement="left" title="Source repository"><i
+                    class="fab fa-github"></i>repository</button></a>
+        <a class="issues-button"
+            href="https://github.com/HelioML/HelioML//issues/new?title=Issue%20on%20page%20%2F01/example_fitting_time_series.html&body=Your%20issue%20content%20here."><button
+                type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip" data-placement="left"
+                title="Open an issue"><i class="fas fa-lightbulb"></i>open issue</button></a>
+        <a class="edit-button" href="https://github.com/HelioML/HelioML/edit/master/book/01/example_fitting_time_series.ipynb"><button
+                type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip" data-placement="left"
+                title="Edit this page"><i class="fas fa-pencil-alt"></i>suggest edit</button></a>
+    </div>
+</div>
+
+
+        <!-- Full screen (wrap in <a> to have style consistency -->
+        <a class="full-screen-button"><button type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip"
+                data-placement="bottom" onclick="toggleFullScreen()" aria-label="Fullscreen mode"
+                title="Fullscreen mode"><i
+                    class="fas fa-expand"></i></button></a>
+
+        <!-- Launch buttons -->
+
+<div class="dropdown-buttons-trigger">
+    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn"
+        aria-label="Launch interactive content"><i class="fas fa-rocket"></i></button>
+    <div class="dropdown-buttons">
+        
+        <a class="binder-button" href="https://mybinder.org/v2/gh/HelioML/HelioML/master?urlpath=tree/book/01/example_fitting_time_series.ipynb"><button type="button"
+                class="btn btn-secondary topbarbtn" title="Launch Binder" data-toggle="tooltip"
+                data-placement="left"><img class="binder-button-logo"
+                    src="../_static/images/logo_binder.svg"
+                    alt="Interact on binder">Binder</button></a>
+        
+        
+        
+        
+    </div>
+</div>
+
+    </div>
+
+    <!-- Table of contents -->
+    <div class="d-none d-md-block col-md-2 bd-toc show">
+        
+        <div class="tocsection onthispage pt-5 pb-3">
+            <i class="fas fa-list"></i> Contents
+        </div>
+        <nav id="bd-toc-nav">
+            <ul class="nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#load-and-clean-data">
+   Load and clean data
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#best-fit-determination">
+   Best fit determination
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#explore">
+   Explore!
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#fitting-the-data">
+   Fitting the data
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#id1">
+   Explore!
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#recap">
+   Recap
+  </a>
+ </li>
+</ul>
+
+        </nav>
+        
+    </div>
+</div>
+    <div id="main-content" class="row">
+        <div class="col-12 col-md-9 pl-md-3 pr-md-0">
+        
+              <div>
+                
+  <div class="section" id="an-example">
+<h1>An Example<a class="headerlink" href="#an-example" title="Permalink to this headline">¶</a></h1>
+<p>All right, we hope that was a sufficiently grandiose introduction. Now it’s time to get our hands dirty and work through an example. We’ll start very simple and throughout the book delve deeper.</p>
+<p>This notebook loads up some actual measurements of the sun over time, cleans the data, and then uses machine learning techniques to fit those data.</p>
+<p>Specifically for the data, the observations are from the Solar Dynamics Observatory (SDO) Extreme Ultraviolet Variability Experiment (EVE) that measures all the light coming from the sun between 5 nanometers (nm) and 105 nm. We’ll be working just with the measurements taken at 17.1 nm; light that is emitted from the Iron (Fe) IX ion in the corona, which only exists at a temperature of about 600,000 K – a fairly moderate temperature for the solar corona.</p>
+<p>Specifically for the machine learning, we’ll be using Support Vector Regression (SVR) and validation curves. Support Vector Machines (SVM) are typically used in a type of <strong>classification</strong>, an important category of machine learning that focuses on identifying and labeling groups in the data. SVMs can be extended to regression. There’s some discussion of the function we’ll be using <a class="reference external" href="http://scikit-learn.org/stable/modules/generated/sklearn.svm.SVR.html">here</a> and <a class="reference external" href="http://scikit-learn.org/stable/modules/svm.html#svm-regression">here</a>. Validation curves are a way of quantifying the question: <em>which fit is the best fit?</em> Data scientists are probably used to seeing things like reduced <span class="math notranslate nohighlight">\(\chi^2\)</span>. The purpose is the same, but these tools are built together in a python module we’ll be using extensively, called <a class="reference external" href="http://scikit-learn.org/stable/">scikit-learn</a>.</p>
+<p>First we’ll import all the stuff we’re going to need, just to get that out of the way.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Standard modules</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="o">%</span><span class="k">matplotlib</span> inline
+<span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">use</span><span class="p">(</span><span class="s1">&#39;seaborn&#39;</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">scipy.io.idl</span> <span class="kn">import</span> <span class="n">readsav</span>
+<span class="kn">from</span> <span class="nn">sklearn.pipeline</span> <span class="kn">import</span> <span class="n">make_pipeline</span>
+<span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">validation_curve</span><span class="p">,</span> <span class="n">ShuffleSplit</span>
+<span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">explained_variance_score</span><span class="p">,</span> <span class="n">make_scorer</span>
+<span class="kn">from</span> <span class="nn">sklearn.svm</span> <span class="kn">import</span> <span class="n">SVR</span>
+<span class="kn">from</span> <span class="nn">pandas.plotting</span> <span class="kn">import</span> <span class="n">register_matplotlib_converters</span>
+<span class="n">register_matplotlib_converters</span><span class="p">()</span>
+
+<span class="c1"># Custom modules</span>
+<span class="kn">from</span> <span class="nn">jpm_time_conversions</span> <span class="kn">import</span> <span class="n">metatimes_to_seconds_since_start</span><span class="p">,</span> <span class="n">datetimeindex_to_human</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="load-and-clean-data">
+<h2>Load and clean data<a class="headerlink" href="#load-and-clean-data" title="Permalink to this headline">¶</a></h2>
+<p>Next we will load up the data. You can download that dataset from <a class="reference external" href="https://www.dropbox.com/s/hmrb6eajwv6g6ec/Example%20Dimming%20Light%20Curve.sav?dl=0">here</a> or from the HelioML folder containing this notebook and then just update the path below as necessary to point to it. We’re using <a class="reference external" href="https://pandas.pydata.org/">pandas</a> DataFrames largely because they are highly compatible with scikit-learn, as we’ll see later. Finally, we’ll use the <code class="docutils literal notranslate"><span class="pre">head()</span></code> function to take a quick look at the data.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">idl_generated_data</span> <span class="o">=</span> <span class="n">readsav</span><span class="p">(</span><span class="s1">&#39;./Example Dimming Light Curve.sav&#39;</span><span class="p">)</span>
+<span class="n">light_curve_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s1">&#39;irradiance&#39;</span><span class="p">:</span><span class="n">idl_generated_data</span><span class="o">.</span><span class="n">irradiance</span><span class="o">.</span><span class="n">byteswap</span><span class="p">()</span><span class="o">.</span><span class="n">newbyteorder</span><span class="p">(),</span>  <span class="c1"># [W/m^2]</span>
+                               <span class="s1">&#39;uncertainty&#39;</span><span class="p">:</span><span class="n">idl_generated_data</span><span class="o">.</span><span class="n">uncertainty</span><span class="o">.</span><span class="n">byteswap</span><span class="p">()</span><span class="o">.</span><span class="n">newbyteorder</span><span class="p">()})</span>  <span class="c1"># [%]</span>
+<span class="n">light_curve_df</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DatetimeIndex</span><span class="p">(</span><span class="n">idl_generated_data</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">))</span>
+<span class="n">light_curve_df</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>irradiance</th>
+      <th>uncertainty</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>2012-04-16 17:43:20</th>
+      <td>0.246831</td>
+      <td>0.052733</td>
+    </tr>
+    <tr>
+      <th>2012-04-16 17:44:19</th>
+      <td>0.399922</td>
+      <td>0.085439</td>
+    </tr>
+    <tr>
+      <th>2012-04-16 17:45:18</th>
+      <td>0.275836</td>
+      <td>0.058930</td>
+    </tr>
+    <tr>
+      <th>2012-04-16 17:46:17</th>
+      <td>0.319487</td>
+      <td>0.068255</td>
+    </tr>
+    <tr>
+      <th>2012-04-16 17:47:16</th>
+      <td>0.920058</td>
+      <td>0.196561</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<p>Next we’ll plot the data so we can get a quick idea of what we’re working with.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">errorbar</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">light_curve_df</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> 
+             <span class="n">y</span><span class="o">=</span><span class="n">light_curve_df</span><span class="p">[</span><span class="s1">&#39;irradiance&#39;</span><span class="p">],</span> 
+             <span class="n">yerr</span><span class="o">=</span><span class="n">light_curve_df</span><span class="p">[</span><span class="s1">&#39;uncertainty&#39;</span><span class="p">],</span> 
+             <span class="n">fmt</span><span class="o">=</span><span class="s1">&#39;o&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;t$_0$ = &quot;</span> <span class="o">+</span> <span class="n">datetimeindex_to_human</span><span class="p">(</span><span class="n">light_curve_df</span><span class="o">.</span><span class="n">index</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;time&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;irradiance [%]&#39;</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/example_fitting_time_series_9_0.png" src="../_images/example_fitting_time_series_9_0.png" />
+</div>
+</div>
+<p>So sure, these are some measurements of ultraviolet light from the sun. But looking at it, it could be almost anything. It’s just a time series. Your eye can naturally trace some basic shapes in the data; you can pretty easily see through the noise. But what we’d like is to have just that smooth curve. The original motivation that lead to the example was to be able to parameterize the depth and slope of that dip about a quarter of the way through; that’s a coronal dimming and it contains information about a violent coronal mass ejection that resulted in some bad space weather. If interested, you can read the papers about this coronal dimming work <a class="reference external" href="https://ui.adsabs.harvard.edu/#abs/2016SPD....4740402M/abstract">here</a> and <a class="reference external" href="https://ui.adsabs.harvard.edu/#abs/2014ApJ...789...61M/abstract">here</a>.</p>
+<p>So we want to pull out the smooth curve underlying that data. There are plenty of traditional approaches to do this. We could smooth. We could fit polynomials. We could fit a spline. We chose this as a first example to help bridge the gap between the familiar and the probably less familiar machine learning method. Lets start with a little bit of code.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Pull data out of the DataFrame for compatibility formatting</span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">metatimes_to_seconds_since_start</span><span class="p">(</span><span class="n">light_curve_df</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">light_curve_df</span><span class="p">[</span><span class="s1">&#39;irradiance&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>This X, y format is the standard when using nearly anything in scikit-learn. They’ve built a very nice, uniform application programming interface (API). In this particular case, it’s pretty obvious that the X is time and y is the intensity. They are each 1 dimensional. But in general, this same syntax is used even when we have highly dimensional data. Each of the y dimensions is known as a <strong>feature</strong>, in machine learning parlance. We convert the times to seconds since start to avoid issues interpreting timestamps later.</p>
+<p>Next we’ll do a bit of cleaning. Most machine learning methods cannot accept missing data. You have to “impute”, i.e., decide how you want to fill in those missing data. scikit-learn has a whole <a class="reference external" href="http://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.Imputer.html">Imputer</a> tool for dealing with this. In our case, we’ll just get rid of those missing data, marked by a NaN, since we still maintain the proper timing with our X axis. We’ll also do a bit of shaping for compatibility with scikit-learn functions.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">finite_irradiance_indices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">X</span><span class="p">[</span><span class="n">finite_irradiance_indices</span><span class="p">]</span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">X</span><span class="p">),</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">uncertainty</span> <span class="o">=</span> <span class="n">light_curve_df</span><span class="p">[</span><span class="s1">&#39;uncertainty&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">y</span><span class="p">)]</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">y</span><span class="p">[</span><span class="n">finite_irradiance_indices</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="best-fit-determination">
+<h2>Best fit determination<a class="headerlink" href="#best-fit-determination" title="Permalink to this headline">¶</a></h2>
+<p>Here, we’re just defining a quick helper function that we’ll be using in the next section. We’ll come back and explain this momentarily.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Helper function for compatibility with validation_curve</span>
+<span class="k">def</span> <span class="nf">svr_pipe</span><span class="p">(</span><span class="n">gamma</span><span class="o">=</span><span class="mf">5e-8</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">make_pipeline</span><span class="p">(</span><span class="n">SVR</span><span class="p">(</span><span class="n">kernel</span><span class="o">=</span><span class="s1">&#39;rbf&#39;</span><span class="p">,</span> <span class="n">C</span><span class="o">=</span><span class="mf">1e3</span><span class="p">,</span> <span class="n">gamma</span><span class="o">=</span><span class="n">gamma</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Now to figure out which fit is going to be the best one, we still need to decide on what range we’re going to test across. If this were a polynomial fit, we’d be talking about which polynomial orders we’d like to try fitting. In the case of SVR, that free parameter is called <span class="math notranslate nohighlight">\(\gamma\)</span>. Having some a priori knowledge of what range is sensible for this data, we’ll generate an array of <span class="math notranslate nohighlight">\(\gamma\)</span>s to test. Another note of nomenclature, in machine learning, these are known as *<em>hyper parameters</em></p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">gamma</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">logspace</span><span class="p">(</span><span class="o">-</span><span class="mi">10</span><span class="p">,</span> <span class="o">-</span><span class="mi">5</span><span class="p">,</span> <span class="n">num</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">base</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Another thing we’ll need in order to determine which fit is best is a metric to do that scoring. scikit-learn has many options available. The default is R^2 but we’ll overwrite that default with explained variance.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">evs</span> <span class="o">=</span> <span class="n">make_scorer</span><span class="p">(</span><span class="n">explained_variance_score</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>The last bit of prep before we can figure out which fit is best is to decide which data will be used to train the data and which will be used to score the fit. This concept is probably new to those who haven’t dealt with machine learning before. It comes from one of the fundamental purposes of the discipline: prediction. If I’d like to validate my model without waiting for new data to come in (if new data are even still being generated), then I can simply allocate some of my existing data for training and treat the other chunk like new incoming data to validate and quantify how good the predictions are. Relatedly, a common problem is that if you fit <em>all</em> of the data, your model will do a really good job of fitting that data, but do terrible with any new data. It’s sort of like overfitting. We’ll come back to that next, but first, lets just split the data 50/50. A shuffle split picks a uniformly random selection of data points. This way we can be sure our data still span the whole time series, instead of just picking e.g., the first quarter of data to train on. With the <code class="docutils literal notranslate"><span class="pre">n_splits</span></code> optional input, we can decide how many different sets we want to make. In other words, choose some random points to train on. Now choose another random set of points to train on. Repeat, repeat, repeat for as many times as you define with <code class="docutils literal notranslate"><span class="pre">n_splits</span></code>. This helps make our results more robust. You can play around with how many splits you need to get final results (later) that don’t vary much. We’ve already done that and found that 20 works pretty well.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">shuffle_split</span> <span class="o">=</span> <span class="n">ShuffleSplit</span><span class="p">(</span><span class="n">n_splits</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">train_size</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">test_size</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Now we can get to the validation curve. First we’ll discuss the input, then run it, plot it, and discuss it.</p>
+<p>The first input makes use of our earlier helper function, <code class="docutils literal notranslate"><span class="pre">svr_pipe()</span></code>. All this function does is make a pipeline around the SVR function. Pipelines in scikit-learn are pretty nifty. They result in an object that has the same API as any other model type, but allow you to wrap up a whole bunch of different methods together. For example, you could wrap up a bunch of pre-processing like Impute in here. In this case, our helper function is just allowing us to input a variety of <span class="math notranslate nohighlight">\(\gamma\)</span>s in a single call to validation curve.</p>
+<p>The next inputs are just the X and y arrays. Pretty straight forward. Next we define the name of the parameter that is going to be varied: <span class="math notranslate nohighlight">\(\gamma\)</span> in this case. Models other than SVR would have other hyperparameters and may even have more than one. Then we pass in that array of different <span class="math notranslate nohighlight">\(\gamma\)</span>s to vary.</p>
+<p>Next we’ve got a few optional inputs. <code class="docutils literal notranslate"><span class="pre">cv</span></code> is the cross-validation strategy. This is where we can input our <code class="docutils literal notranslate"><span class="pre">shuffle_split</span></code> object just defined. <code class="docutils literal notranslate"><span class="pre">n_jobs</span></code> is a really nice and quick way to parallelize this work. Literally just pass in the number of parallel threads you want. Be careful using this out in the wild though. If you’re building this into a bigger suite of code that is itself already running in parallel, you can end up actually slowing things down and get confusing results when each higher-level parallel thread try to spin off new threads for the validation curve. Then finally, we have <code class="docutils literal notranslate"><span class="pre">scoring</span></code>, where we can input the explained variance object we defined earlier.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">train_score</span><span class="p">,</span> <span class="n">val_score</span> <span class="o">=</span> <span class="n">validation_curve</span><span class="p">(</span><span class="n">svr_pipe</span><span class="p">(),</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span>
+                                          <span class="s1">&#39;svr__gamma&#39;</span><span class="p">,</span>
+                                          <span class="n">gamma</span><span class="p">,</span> <span class="n">cv</span><span class="o">=</span><span class="n">shuffle_split</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">scoring</span><span class="o">=</span><span class="n">evs</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">p1</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">semilogx</span><span class="p">(</span><span class="n">gamma</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">median</span><span class="p">(</span><span class="n">train_score</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;training score&#39;</span><span class="p">)</span>
+<span class="n">p2</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">semilogx</span><span class="p">(</span><span class="n">gamma</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">median</span><span class="p">(</span><span class="n">val_score</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;validation score&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Validation Curve&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;gamma&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;score&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s1">&#39;best&#39;</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/example_fitting_time_series_27_0.png" src="../_images/example_fitting_time_series_27_0.png" />
+</div>
+</div>
+<p>This is a pretty iconic looking validation curve. The major common features are all there. The training score starts low for low values of the hyperparameter (<span class="math notranslate nohighlight">\(\gamma\)</span> in this case for SVR). It then monotonically increases across the whole range. In other words, ever more complicated models do a better job of fitting the training data. Where things get interesting is when you look at the validation score. It too starts out low for low values of <span class="math notranslate nohighlight">\(\gamma\)</span>, but it is also low at very high <span class="math notranslate nohighlight">\(\gamma\)</span>. In the middle somewhere we find a peak. This tells us that a complicated model can do an excellent job with data it is trained on, but does terrible when that learned model is applied to new data. In more traditional terms, you can think of the gap between the training and validation score at high <span class="math notranslate nohighlight">\(\gamma\)</span> as overfitting and the terrible scores at low <span class="math notranslate nohighlight">\(\gamma\)</span> as underfitting. That peak in the middle is our best fit. So lets now programmatically grab that peak value of <span class="math notranslate nohighlight">\(\gamma\)</span>. Note that for each of the <code class="docutils literal notranslate"><span class="pre">n_splits</span></code> in our <code class="docutils literal notranslate"><span class="pre">shuffle_split</span></code>, we have a different set of scores. That’s why in the plot and below, we’re taking a median across axis 1.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">scores</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">median</span><span class="p">(</span><span class="n">val_score</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">best_fit_score</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">scores</span><span class="p">)</span>
+<span class="n">best_fit_gamma</span> <span class="o">=</span> <span class="n">gamma</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">scores</span><span class="p">)]</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Scores: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">scores</span><span class="p">)))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Best score: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">best_fit_score</span><span class="p">)))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Best fit gamma: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">best_fit_gamma</span><span class="p">)))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Scores: [ 0.04358878  0.03958091  0.0451772   0.10093495  0.23978932  0.30938329
+  0.33549612  0.34180725  0.36860643  0.41418053  0.49269953  0.47297995
+  0.46954943  0.44814739  0.43845708  0.46262919  0.4160298   0.32722679
+ -0.00148252 -0.82051905]
+Best score: 0.49269953179258585
+Best fit gamma: 4.281332398719396e-08
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="explore">
+<h2>Explore!<a class="headerlink" href="#explore" title="Permalink to this headline">¶</a></h2>
+<p>Here’s a chance to play around with the tools you’ve seen so far. Here are some suggestions to try out:</p>
+<ul class="simple">
+<li><p>Try different ranges of gamma and see what happens to the plot.</p></li>
+<li><p>Try changing n_jobs to see how it affects processing time. Open up your Activity Monitor (macOS) or Task Manager (Windows) to see the multiple threads and their impact on your CPU usage.</p></li>
+<li><p>Try different scoring methods. You can import <a class="reference external" href="http://scikit-learn.org/stable/modules/classes.html#regression-metrics">any of these different regression metrics</a> (follow the import example at the top of the notebook) and feed them to the <code class="docutils literal notranslate"><span class="pre">make_scorer()</span></code> above.</p></li>
+<li><p>Try a different number of splits (<code class="docutils literal notranslate"><span class="pre">n_splits</span></code>) in <code class="docutils literal notranslate"><span class="pre">ShuffleSplit()</span></code>.</p></li>
+<li><p>Try different <code class="docutils literal notranslate"><span class="pre">train_size</span></code> and <code class="docutils literal notranslate"><span class="pre">test_size</span></code> in <code class="docutils literal notranslate"><span class="pre">ShuffleSplit()</span></code>.</p></li>
+<li><p>Try a totally different method of splitting the data between training and testing. You can import <a class="reference external" href="http://scikit-learn.org/stable/modules/classes.html#splitter-classes">any of these splitter classes</a> (follow the import example at the top of the notebook) and use them in place of <code class="docutils literal notranslate"><span class="pre">ShuffleSplit()</span></code>.</p></li>
+</ul>
+<p>You can use the cells below (and add more if you like) to produce new plots/best fit numbers and compare them. Or just use the cells as a scratch space. You are now a human learning machine learning.</p>
+</div>
+<div class="section" id="fitting-the-data">
+<h2>Fitting the data<a class="headerlink" href="#fitting-the-data" title="Permalink to this headline">¶</a></h2>
+<p>Now that we’ve identified which gamma results in the best fit, we can actually run that fit on the data and include uncertainties as well. Unfortunately, validation curve doesn’t let us pass uncertainties in yet, but there is <a class="reference external" href="https://github.com/scikit-learn/scikit-learn/issues/10252">an active issue on the GitHub repository to do so</a>. The API expects us to provide sample weight instead of uncertainty, so we just do an inverse. Then we run the SVR fit with our best gamma. Finally, we <em>predict</em>. This is the common parlance in machine learning but in this context what we’re really getting back is the y values of the fit.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sample_weight</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">/</span> <span class="n">uncertainty</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">SVR</span><span class="p">(</span><span class="n">kernel</span><span class="o">=</span><span class="s1">&#39;rbf&#39;</span><span class="p">,</span> <span class="n">C</span><span class="o">=</span><span class="mf">1e3</span><span class="p">,</span> <span class="n">gamma</span><span class="o">=</span><span class="n">best_fit_gamma</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">sample_weight</span><span class="p">)</span>
+<span class="n">y_fit</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Finally we can produce a nice plot showing our new machine-learning-identified best fit over the original data.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">errorbar</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">ravel</span><span class="p">(),</span> <span class="n">y</span><span class="p">,</span> <span class="n">yerr</span><span class="o">=</span><span class="n">uncertainty</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;black&#39;</span><span class="p">,</span> <span class="n">fmt</span><span class="o">=</span><span class="s1">&#39;o&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Input light curve&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">ravel</span><span class="p">(),</span> <span class="n">y_fit</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Fit&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;t$_0$ = &quot;</span> <span class="o">+</span> <span class="n">datetimeindex_to_human</span><span class="p">(</span><span class="n">light_curve_df</span><span class="o">.</span><span class="n">index</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;time [seconds since start]&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;irradiance [%]&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s1">&#39;best&#39;</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/example_fitting_time_series_38_0.png" src="../_images/example_fitting_time_series_38_0.png" />
+</div>
+</div>
+</div>
+<div class="section" id="id1">
+<h2>Explore!<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<p>Here’s another chance to see how your changes impact the final result: the fit to the data. Here’s some suggestions:</p>
+<ul class="simple">
+<li><p>Input your favorite number as the <code class="docutils literal notranslate"><span class="pre">best_fit_gamma</span></code> and see how the fit does.</p></li>
+<li><p>Try a different penalty parameter (<code class="docutils literal notranslate"><span class="pre">C</span></code>). The default value is 1.0. We used 1e3.</p></li>
+<li><p>Try a different kernel. You can use any of <a class="reference external" href="http://scikit-learn.org/stable/modules/generated/sklearn.svm.SVR.html">these kernels</a>. Warning: be careful with the ‘linear’ kernel because it can take a long time to fit depending on the other parameters.</p></li>
+<li><p>Try modifying the <code class="docutils literal notranslate"><span class="pre">sample_weight</span></code> to see how that impacts the fit.</p></li>
+</ul>
+</div>
+<div class="section" id="recap">
+<h2>Recap<a class="headerlink" href="#recap" title="Permalink to this headline">¶</a></h2>
+<p>In this example, we’ve used a familiar goal – fitting a time series – as a way to introduce some common machine learning concepts. In particular, we introduced data cleaning (e.g., <code class="docutils literal notranslate"><span class="pre">Impute</span></code>), training vs validation/prediction data sets (e.g., <code class="docutils literal notranslate"><span class="pre">shuffle_split</span></code>), and validation (e.g., <code class="docutils literal notranslate"><span class="pre">validation_curve</span></code>).</p>
+</div>
+</div>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            kernelName: "python3",
+            path: "./01"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+              </div>
+              
+        </div>
+    </div>
+    
+    
+    <div class='prev-next-bottom'>
+        
+    <a class='left-prev' id="prev-link" href="whys_and_whats.html" title="previous page">What is this book and why does it exist?</a>
+    <a class='right-next' id="next-link" href="other_references.html" title="next page">Where to look for more information</a>
+
+    </div>
+    <footer class="footer mt-5 mt-md-0">
+    <div class="container">
+      <p>
+        
+          By Monica Bobra and James Mason<br/>
+        
+      </p>
+    </div>
+  </footer>
+</main>
+
+
+      </div>
+    </div>
+
+    
+  <script src="../_static/js/index.3da636dd464baa7582d2.js"></script>
+
+
+    
+  </body>
+</html>
