@@ -1,0 +1,56 @@
+- file: Introduction/title.md
+
+- part: Front Matter
+  chapters:
+    - file: FrontMatter/acknowledgements.md
+    - file: FrontMatter/table_of_contents.md
+
+- part: About This Book
+  chapters:
+    - file: 01/whys_and_whats.md
+    - file: 01/example_fitting_time_series.ipynb
+    - file: 01/other_references.md
+
+- part: Chapter 1
+  chapters:
+  - file: 02/Predicting_Coronal_Mass_Ejections.md
+  - file: 02/notebook.ipynb
+
+- part: Chapter 2
+  chapters:
+  - file: 03/Enhancing_SDO_images.md
+  - file: 03/notebook.ipynb
+
+- part: Chapter 3
+  chapters:
+  - file: 04/Differential_Emission_Measurements.md
+  - file: 04/notebook.ipynb
+
+- part: Chapter 4
+  chapters:
+  - file: 05/Scintillation_Prediction.md
+  - file: 05/notebook.ipynb
+
+- part: Chapter 5
+  chapters:
+  - file: 06/Spectra_of_Flaring_Active_Regions.md
+  - file: 06/notebook.ipynb
+
+- part: Chapter 6
+  chapters:
+  - file: 07/Detection_of_Far-Side_Solar_Active_Regions.md
+  - file: 07/notebook.ipynb
+
+- part: Chapter 7
+  chapters:
+  - file: 08/Automated_Detection_Of_Magnetopause_Crossings.md
+  - file: 08/notebook.ipynb
+
+- part: Chapter 8
+  chapters:
+  - file: 09/Forecasting_Relativistic_Electrons_Outer_Radiation_Belt.md
+  - file: 09/notebook.ipynb
+
+- part: Appendix
+  chapters:
+    - file: Appendix/how_to_run_this_book.md
