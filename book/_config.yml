@@ -15,6 +15,21 @@ repository:
   branch: master
   path_to_book: book
 
+latex:
+  latex_engine              : xelatex
+
+execute:
+  execute_notebooks         : off
+
+launch_buttons:
+  binder             : false
+  binderhub          : false
+  binderhub_url      : off
+  jupyterhub         : false
+  thebe              : false
+  colab              : false
+
 sphinx:
   config:
     html_show_copyright: false
+    myst_amsmath_enable: true

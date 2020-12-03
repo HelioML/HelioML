@@ -161,11 +161,6 @@
    Notebook
   </a>
  </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="#references">
-   References
-  </a>
- </li>
 </ul>
 <p class="caption collapsible-parent">
  <span class="caption-text">
@@ -280,16 +275,6 @@
    How to run this book
   </a>
  </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../Appendix/how_to_run_this_book.html#running-the-book-locally">
-   Running the book locally
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../Appendix/how_to_run_this_book.html#running-the-book-in-the-cloud">
-   Running the book in the cloud
-  </a>
- </li>
 </ul>
 
 </nav> <!-- To handle the deprecated key -->
@@ -368,23 +353,6 @@
 
         <!-- Launch buttons -->
 
-<div class="dropdown-buttons-trigger">
-    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn"
-        aria-label="Launch interactive content"><i class="fas fa-rocket"></i></button>
-    <div class="dropdown-buttons">
-        
-        <a class="binder-button" href="https://mybinder.org/v2/gh/HelioML/HelioML/master?urlpath=tree/book/03/notebook.ipynb"><button type="button"
-                class="btn btn-secondary topbarbtn" title="Launch Binder" data-toggle="tooltip"
-                data-placement="left"><img class="binder-button-logo"
-                    src="../_static/images/logo_binder.svg"
-                    alt="Interact on binder">Binder</button></a>
-        
-        
-        
-        
-    </div>
-</div>
-
     </div>
 
     <!-- Table of contents -->
@@ -395,98 +363,91 @@
         </div>
         <nav id="bd-toc-nav">
             <ul class="nav section-nav flex-column">
- <li class="toc-h1 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#">
-   Notebook
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#introduction">
+   Introduction
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#deep-convolutional-neural-networks">
+   Deep convolutional neural networks
   </a>
   <ul class="nav section-nav flex-column">
-   <li class="toc-h2 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#introduction">
-     Introduction
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#deep-neural-networks">
+     Deep neural networks
     </a>
    </li>
-   <li class="toc-h2 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#deep-convolutional-neural-networks">
-     Deep convolutional neural networks
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#convolutional-neural-networks">
+     Convolutional neural networks
     </a>
-    <ul class="nav section-nav flex-column">
-     <li class="toc-h3 nav-item toc-entry">
-      <a class="reference internal nav-link" href="#deep-neural-networks">
-       Deep neural networks
-      </a>
-     </li>
-     <li class="toc-h3 nav-item toc-entry">
-      <a class="reference internal nav-link" href="#convolutional-neural-networks">
-       Convolutional neural networks
-      </a>
-     </li>
-     <li class="toc-h3 nav-item toc-entry">
-      <a class="reference internal nav-link" href="#activation-layers">
-       Activation layers
-      </a>
-     </li>
-     <li class="toc-h3 nav-item toc-entry">
-      <a class="reference internal nav-link" href="#general-training-process">
-       General training process
-      </a>
-     </li>
-     <li class="toc-h3 nav-item toc-entry">
-      <a class="reference internal nav-link" href="#our-architecture">
-       Our architecture
-      </a>
-     </li>
-     <li class="toc-h3 nav-item toc-entry">
-      <a class="reference internal nav-link" href="#our-training-data-and-process">
-       Our training data and process
-      </a>
-     </li>
-    </ul>
    </li>
-   <li class="toc-h2 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#results">
-     Results
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#activation-layers">
+     Activation layers
     </a>
-    <ul class="nav section-nav flex-column">
-     <li class="toc-h3 nav-item toc-entry">
-      <a class="reference internal nav-link" href="#validation-with-synthetic-images">
-       Validation with synthetic images
-      </a>
-     </li>
-     <li class="toc-h3 nav-item toc-entry">
-      <a class="reference internal nav-link" href="#in-the-wild">
-       In the wild
-      </a>
-     </li>
-     <li class="toc-h3 nav-item toc-entry">
-      <a class="reference internal nav-link" href="#continuum-images">
-       Continuum images
-      </a>
-     </li>
-     <li class="toc-h3 nav-item toc-entry">
-      <a class="reference internal nav-link" href="#a-magnetogram-example-ar-11158">
-       A magnetogram example: AR 11158
-      </a>
-     </li>
-     <li class="toc-h3 nav-item toc-entry">
-      <a class="reference internal nav-link" href="#other-general-properties">
-       Other general properties
-      </a>
-     </li>
-     <li class="toc-h3 nav-item toc-entry">
-      <a class="reference internal nav-link" href="#comparison-with-a-standard-rl-deconvolution-algorithm">
-       Comparison with a standard RL deconvolution algorithm
-      </a>
-     </li>
-    </ul>
    </li>
-   <li class="toc-h2 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#conclusions-and-future-work">
-     Conclusions and future work
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#general-training-process">
+     General training process
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#our-architecture">
+     Our architecture
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#our-training-data-and-process">
+     Our training data and process
     </a>
    </li>
   </ul>
  </li>
- <li class="toc-h1 nav-item toc-entry">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#results">
+   Results
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#validation-with-synthetic-images">
+     Validation with synthetic images
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#in-the-wild">
+     In the wild
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#continuum-images">
+     Continuum images
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#a-magnetogram-example-ar-11158">
+     A magnetogram example: AR 11158
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#other-general-properties">
+     Other general properties
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#comparison-with-a-standard-rl-deconvolution-algorithm">
+     Comparison with a standard RL deconvolution algorithm
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#conclusions-and-future-work">
+   Conclusions and future work
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#references">
    References
   </a>
@@ -537,27 +498,6 @@
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span>---------------------------------------------------------------------------
-ModuleNotFoundError                       Traceback (most recent call last)
-&lt;ipython-input-1-f9eb17e3fdd2&gt; in &lt;module&gt;
-     12 from congrid import resample
-     13 import radialProfile
----&gt; 14 from hmiutils import *
-     15 from astropy.convolution import convolve_fft
-     16 import astropy.io.fits as fits
-
-~/Desktop/🔥/github/mbobra/HelioML/book/03/hmiutils.py in &lt;module&gt;
-     15 # import time
-     16 # time0 = time.time()
----&gt; 17 from astropy.convolution import AiryDisk2DKernel
-     18 # from  scipy.io import readsav
-     19 from scipy import fftpack
-
-ModuleNotFoundError: No module named &#39;astropy&#39;
-</pre></div>
-</div>
-</div>
 </div>
 <hr class="docutils" />
 <div class="section" id="introduction">
@@ -577,9 +517,10 @@ great success by <a class="reference external" href="#references">van Noort (201
 <p>A great science case for the application of deconvolution and super-resolution techniques is the Helioseismic and Magnetic Imager <a class="reference external" href="#references">(HMI; Scherrer et al. 2012)</a> onboard the Solar Dynamics Observatory (SDO; <a class="reference external" href="#references">Pesnell et al. 2012</a>). HMI is a space-borne observatory that deploys full-disk images (plus a magnetogram and Dopplergram) of the Sun every 45 s (or every 720 s for a better signal-to-noise ratio). The spatial resolution of these images is  <span class="math notranslate nohighlight">\(\sim 1.1''\)</span>, with a sampling of <span class="math notranslate nohighlight">\(\sim 0.5''\)</span>/pix. In spite of the enormous advantage of having such a synoptic spatial telescope without the problematic Earth’s atmosphere, the spatial resolution is not enough to track many of the small-scale solar structures of interest. The main reason for that is the sacrifice that HMI makes to cover the full disk of the Sun in the FOV on a single sensor. We think that, in the process of pushing for the advancement of science,
 it is preferable to have images with a better spatial resolution and which are already compensated for the telescope PSF.</p>
 <p>Under the assumption of the linear theory of image formation, and writing images in lexicographic order (so that they are assumed to be sampled at a given resolution), the observed image can be written as:</p>
-<p>\begin{equation}
+<div class="amsmath math notranslate nohighlight" id="equation-de8b2f7d-203f-445f-984b-f6ac6ead7057">
+<span class="eqno">(1)<a class="headerlink" href="#equation-de8b2f7d-203f-445f-984b-f6ac6ead7057" title="Permalink to this equation">¶</a></span>\[\begin{equation}
 \mathbf{I} = \mathbf{D} [\mathbf{P} * \mathbf{O}] + \mathbf{N},                             \tag{1}
-\end{equation}</p>
+\end{equation}\]</div>
 <p>where <span class="math notranslate nohighlight">\(\mathbf{O}\)</span> is the solar image at the entrance of the telescope, <span class="math notranslate nohighlight">\(\mathbf{P}\)</span> is a convolution matrix that simulates the effect of the PSF on the image, <span class="math notranslate nohighlight">\(\mathbf{D}\)</span> is a sub-sampling (non-square) matrix that reduces the
 resolution of the input image to the desired output spatial resolution and <span class="math notranslate nohighlight">\(\mathbf{N}\)</span> represents noise (usually with Gaussian or Poisson statistics). The solution to the single-image deconvolution+super-resolution problem (SR; <a class="reference external" href="#references">Borman &amp; Stevenson 1998</a>) requires the recovery of <span class="math notranslate nohighlight">\(\mathbf{O}\)</span> (a high-resolution image of <span class="math notranslate nohighlight">\(2N \times 2N\)</span> pixels) from a single measurement <span class="math notranslate nohighlight">\(\mathbf{I}\)</span> (a low-resolution image of <span class="math notranslate nohighlight">\(N \times N\)</span> pixels). This problem is extremely ill-posed, even worse than the usual deconvolution to correct from the effect of the PSF. A multiplicity (potentially an infinite number) of solutions exists. This problem is then typically solved by imposing strong priors on the image (e.g., <a class="reference external" href="#references">Tipping &amp; Bishop 2003</a>).</p>
 <p>Despite the difficulty of the problem, we think there is great interest in enhancing the HMI images using post-facto
@@ -601,9 +542,10 @@ created for each 3D kernel. When all feature maps are stacked, a feature map ten
 <div class="section" id="deep-neural-networks">
 <h3>Deep neural networks<a class="headerlink" href="#deep-neural-networks" title="Permalink to this headline">¶</a></h3>
 <p>Artificial neural networks (ANN) are well-known computing systems based on connectionism that can be considered to be very powerful approximators to arbitrary functions <a class="reference external" href="#references">(Bishop 1996)</a>. They are constructed by putting together many basic fundamental structures (called neurons) and connecting them massively. Each neuron <span class="math notranslate nohighlight">\(i\)</span> is only able to carry out a very basic operation on the input vector: it multiplies all the input values <span class="math notranslate nohighlight">\(x_j\)</span> by some weights <span class="math notranslate nohighlight">\(w_j\)</span>, adds some bias <span class="math notranslate nohighlight">\(b_i\)</span> and finally returns the value of a certain user-defined nonlinear activation function <span class="math notranslate nohighlight">\(f(x)\)</span>. In mathematical notation, a neuron computes:</p>
-<p>\begin{equation}
-o_i = f(\Sigma_j,x_j\cdot w_j + b_i).              \tag{2}
-\end{equation}</p>
+<div class="amsmath math notranslate nohighlight" id="equation-2e6ce54f-a55d-4e76-834a-7294dfdaa1c9">
+<span class="eqno">(2)<a class="headerlink" href="#equation-2e6ce54f-a55d-4e76-834a-7294dfdaa1c9" title="Permalink to this equation">¶</a></span>\[\begin{equation}
+o_i = f(\Sigma_j\,x_j\cdot w_j + b_i).              \tag{2}
+\end{equation}\]</div>
 <p>The output <span class="math notranslate nohighlight">\(o_i\)</span> is then input in another neuron that carries out a similar task. An ANN can be understood as a pipeline where the information goes from the input to the output, with each neuron making a transformation like the one described above (see left panel of Fig. <a class="reference external" href="#fig:networks">2</a>). Given that neurons are usually grouped in layers, the term deep neural network comes from the large number of layers that are used to build the neural network. Some of the most successful and recent neural networks contain several million neurons organized in several tens or hundreds of layers <a class="reference external" href="#references">(Simonyan &amp; Zisserman 2014)</a>. As a consequence, deep neural networks can be considered to be a very complex composition of very simple nonlinear functions, which provides the capacity to make very complex transformations.</p>
 <p>The most used type of neural network from the 1980s to the 2000s is the fully connected network (FCN; see <a class="reference external" href="#references">Schmidhuber 2014</a>, for an overview), in which every input is connected to every neuron of the following layer. Likewise, the output transformation becomes the input of the following layer (see left panel of Fig. <a class="reference external" href="#fig:networks">2</a>).
 This kind of architecture succeeded in solving problems that were considered to be not easily solvable, such as the recognition of handwritten characters <a class="reference external" href="#references">(Bishop 1996)</a>. A selection of applications in solar physics include the inversion of Stokes profiles (e.g., <a class="reference external" href="#references">Socas-Navarro 2005; Carroll &amp; Kopf 2008</a>), the acceleration of the solution of chemical equilibrium <a class="reference external" href="#references">(Asensio Ramos &amp; Socas-Navarro 2005)</a>, and the automatic classification of sunspot groups <a class="reference external" href="#references">(Colak &amp; Qahwaji 2008)</a>.</p>
@@ -624,9 +566,10 @@ or ConvNets; <a class="reference external" href="#references">LeCun &amp; Bengio
 drastically reducing the number of unknowns. This also makes CNN shift invariant (features can be detected in an image irrespectively of where they are located).</p>
 <p>In mathematical notation, for a two-dimensional input <span class="math notranslate nohighlight">\(X\)</span> of size <span class="math notranslate nohighlight">\(N \times N\)</span> with <span class="math notranslate nohighlight">\(C\)</span> channels<a class="reference external" href="#footnote2"><span class="math notranslate nohighlight">\(^{[2]}\)</span></a>
 (really a cube or tensor of size <span class="math notranslate nohighlight">\(N \times N \times C\)</span>), each output feature map <span class="math notranslate nohighlight">\(O_i\)</span> (with size <span class="math notranslate nohighlight">\(N \times N \times 1\)</span>) of a convolutional layer is computed as:</p>
-<p>\begin{equation}
+<div class="amsmath math notranslate nohighlight" id="equation-8c50967a-46d6-47b2-bcf4-0bee3a34305e">
+<span class="eqno">(3)<a class="headerlink" href="#equation-8c50967a-46d6-47b2-bcf4-0bee3a34305e" title="Permalink to this equation">¶</a></span>\[\begin{equation}
 O_i=K_i * X + b_i,               \tag{3}
-\end{equation}</p>
+\end{equation}\]</div>
 <p>where <span class="math notranslate nohighlight">\(K_i\)</span> is the <span class="math notranslate nohighlight">\(K \times K \times C\)</span> kernel tensor associated with the output feature map <span class="math notranslate nohighlight">\(i\)</span>, <span class="math notranslate nohighlight">\(b_i\)</span> is a bias value (<span class="math notranslate nohighlight">\(1 \times 1 \times 1\)</span>) and the convolution is displayed with the symbol <span class="math notranslate nohighlight">\(*\)</span>. Once the convolution with <span class="math notranslate nohighlight">\(M\)</span> different kernels is carried out and stacked together, the output <span class="math notranslate nohighlight">\(O\)</span> will have size <span class="math notranslate nohighlight">\(N \times N \times M\)</span>. All convolutions are here indeed intrinsically three dimensional, but one could see them as the total of <span class="math notranslate nohighlight">\(M \times C\)</span> two-dimensional convolutions plus the bias (see right panel of Fig. <a class="reference external" href="#fig:networks">2</a>).</p>
 <p><a id="footnote2"></a></p>
 <blockquote>
@@ -686,10 +629,11 @@ with any sigmoid-type activation function is that its gradient vanishes for very
 of the network and the desired output of the training data. The optimization is routinely solved using simple first-order gradient-descent algorithms (GD; see <a class="reference external" href="#references">Rumelhart et al. 1988</a>), which modifies the weights along
 the negative gradient of the loss function with respect to the model parameters to carry out the update. The gradient of the loss function with respect to the free parameters of the neural network is obtained through the backpropagation algorithm <a class="reference external" href="#references">(LeCun et al. 1998)</a>. Given that neural networks are defined as a stack of modules (or layers), the gradient of the loss function can be calculated using the chain rule as the product of the gradient of each module and, ultimately, of the last layer and the specific loss function.</p>
 <p>In practice, procedures based on the so-called stochastic gradient descent (SGD) are used, in which only a few examples (termed batch) from the training set are used during each iteration to compute a noisy estimation of the gradient and adjust the weights accordingly. Although the calculated gradient is a noisy estimation of the one calculated with the whole training set, the training is faster, as we have less to compute, and is more reliable. If the general loss function <span class="math notranslate nohighlight">\(Q\)</span> is the average of each loss <span class="math notranslate nohighlight">\(Q_j\)</span>  computed on a batch of inputs and  can be written as <span class="math notranslate nohighlight">\(Q=\Sigma_j^n Q_j/n\)</span>, the weights <span class="math notranslate nohighlight">\(w_i\)</span> are updated following the same recipe as the GD algorithm but calculating the gradient within a single batch:</p>
-<p>\begin{equation}
+<div class="amsmath math notranslate nohighlight" id="equation-a37891c9-a9d5-4e52-a57f-68e70ed8bf8b">
+<span class="eqno">(4)<a class="headerlink" href="#equation-a37891c9-a9d5-4e52-a57f-68e70ed8bf8b" title="Permalink to this equation">¶</a></span>\[\begin{equation}
 w_{i+1} = w_i -\eta\nabla Q(w_i) = w_i -\eta\nabla\Sigma_j^n Q_j(w_i)/n \simeq w_i -\eta\nabla Q_j(w_i),     \tag{4}
-\end{equation}
-where <span class="math notranslate nohighlight">\(\eta\)</span> is the so-called learning rate. It can be kept fixed or it can be changed according to our requirements. This parameter has to be tuned to find a compromise between the accuracy of the network and the speed of convergence. If <span class="math notranslate nohighlight">\(\eta\)</span> is too large, the steps will be too large and the solution could potentially overshoot the minimum. On the contrary, if it is too small it will take too many iterations to reach the minimum. Adaptive methods like
+\end{equation}\]</div>
+<p>where <span class="math notranslate nohighlight">\(\eta\)</span> is the so-called learning rate. It can be kept fixed or it can be changed according to our requirements. This parameter has to be tuned to find a compromise between the accuracy of the network and the speed of convergence. If <span class="math notranslate nohighlight">\(\eta\)</span> is too large, the steps will be too large and the solution could potentially overshoot the minimum. On the contrary, if it is too small it will take too many iterations to reach the minimum. Adaptive methods like
 Adam \citep{adam14} have been developed to automatically tune the
 learning rate.</p>
 <p>Because of the large number of free parameters in a deep CNN, overfitting can be
@@ -702,12 +646,13 @@ loss in the validation set will increase.</p>
 the training of CNNs and also to improve generalization. Batch normalization <a class="reference external" href="#references">(Ioffe &amp; Szegedy 2015)</a>
 is a very convenient and easy-to-use technique that consistently produces large accelerations in the
 training. It works by normalizing every batch to have
-zero mean and unit variance. Mathematically, the input is normalized so that:
-\begin{align}
-y_i &amp;= \gamma \hat{x_i} + \beta \nonumber \
+zero mean and unit variance. Mathematically, the input is normalized so that:</p>
+<div class="amsmath math notranslate nohighlight" id="equation-1239ccd6-c7e3-4e9f-8600-5daa7d47f012">
+<span class="eqno">(5)<a class="headerlink" href="#equation-1239ccd6-c7e3-4e9f-8600-5daa7d47f012" title="Permalink to this equation">¶</a></span>\[\begin{align}
+y_i &amp;= \gamma \hat{x_i} + \beta \nonumber \\
 \hat{x_i} &amp;= \frac{x_i - \mu}{\sqrt{\sigma^2 + \epsilon}},      \tag{5}
-\end{align}
-where <span class="math notranslate nohighlight">\(\mu\)</span> and <span class="math notranslate nohighlight">\(\sigma\)</span> are the mean and standard deviation of the inputs on the batch and
+\end{align}\]</div>
+<p>where <span class="math notranslate nohighlight">\(\mu\)</span> and <span class="math notranslate nohighlight">\(\sigma\)</span> are the mean and standard deviation of the inputs on the batch and
 <span class="math notranslate nohighlight">\(\epsilon=10^{-3}\)</span> is a small number to avoid underflow. The parameters <span class="math notranslate nohighlight">\(\gamma\)</span> and <span class="math notranslate nohighlight">\(\beta\)</span>
 are learnable parameters that are modified during the training.</p>
 <img align="right" src="https://cdn-images-1.medium.com/max/800/1*SYE7k-7o-O5qQ-4Q6u2qGw.png" width="40%"/> 
@@ -978,12 +923,13 @@ network is trained properly and generalizes well, the network does not memorize 
 <p>The radiative MHD simulation was carried out with the MURaM code <a class="reference external" href="#references">(Vögler et al. 2005)</a>. The box spans 92 Mm <span class="math notranslate nohighlight">\(\times\)</span> 49 Mm in the two horizontal directions and 8.2 Mm in the vertical direction (with horizontal and vertical grid spacing of 48 and 32 km, respectively). After <span class="math notranslate nohighlight">\(\sim\)</span>20 h of solar time, an active region is formed as a consequence of the buoyancy of an injected flux tube in the convection zone. An umbra, umbral dots, light bridges, and penumbral filaments are formed during the evolution. As mentioned above, this constitutes a very nice dataset of simulated images that look very similar to those on the Sun. Synthetic gray images are generated from the simulated snapshots <a class="reference external" href="#references">(Cheung et al. 2010)</a> and magnetograms are obtained by just using the vertical magnetic field component at optical depth unity at 5000 <span class="math notranslate nohighlight">\({\AA}\)</span>. A total of 250 time steps are used in the training (slightly less for the magnetograms
 when the active region has already emerged at the surface).</p>
 <p>We note that the magnetograms of HMI in the Fe I 6173 <span class="math notranslate nohighlight">\({\AA}\)</span> correspond to layers in the atmosphere around log<span class="math notranslate nohighlight">\(\tau=-1\)</span> <a class="reference external" href="#references">(Bello González et al. 2009)</a>, while our magnetograms are extracted from log<span class="math notranslate nohighlight">\(\tau=0\)</span>, where <span class="math notranslate nohighlight">\(\tau\)</span> is the optical depth at 5000 <span class="math notranslate nohighlight">\({\AA}\)</span>. In our opinion this will not affect the results because the concentration of the magnetic field is similar in terms of size and shape at both atmospheric heights.</p>
-<p>The synthetic images (and magnetograms) are then treated to simulate a real HMI observation. All 250 frames of 1920 <span class="math notranslate nohighlight">\(\times\)</span> 1024 images are convolved with the HMI PSF <a class="reference external" href="#references">(Wachter et al. 2012; Yeo et al. 2014; Couvidat et al. 2016)</a> and resampled to 0.504<span class="math notranslate nohighlight">\(\arcsec\)</span>/pixel. For simplicity, we have used the PSF described in <a class="reference external" href="#references">Wachter et al. (2012)</a>. The PSF functional form is azimuthally symmetric and it is given by
-\begin{equation}
-\mathrm{PSF}(r) = (1-\epsilon) \exp \left[ -\left(\frac{r}{\omega}\right)^2 \right] +
+<p>The synthetic images (and magnetograms) are then treated to simulate a real HMI observation. All 250 frames of 1920 <span class="math notranslate nohighlight">\(\times\)</span> 1024 images are convolved with the HMI PSF <a class="reference external" href="#references">(Wachter et al. 2012; Yeo et al. 2014; Couvidat et al. 2016)</a> and resampled to 0.504<span class="math notranslate nohighlight">\(\arcsec\)</span>/pixel. For simplicity, we have used the PSF described in <a class="reference external" href="#references">Wachter et al. (2012)</a>. The PSF functional form is azimuthally symmetric and it is given by</p>
+<div class="amsmath math notranslate nohighlight" id="equation-0781aa67-9863-4c3c-a39a-413ac9849d4b">
+<span class="eqno">(6)<a class="headerlink" href="#equation-0781aa67-9863-4c3c-a39a-413ac9849d4b" title="Permalink to this equation">¶</a></span>\[\begin{equation}
+\mathrm{PSF}(r) = (1-\epsilon) \exp \left[ -\left(\frac{r}{\omega}\right)^2 \right] + 
 \epsilon \left[1+\left( \frac{r}{W}\right)^k \right]^{-1},
-\end{equation}
-which is a linear combination of a Gaussian and a Lorentzian. We note that the radial distance is <span class="math notranslate nohighlight">\(r=\pi D \theta/\lambda\)</span>, with <span class="math notranslate nohighlight">\(D\)</span> the telescope diameter, <span class="math notranslate nohighlight">\(\lambda\)</span> the observing wavelength and <span class="math notranslate nohighlight">\(\theta\)</span> the distance
+\end{equation}\]</div>
+<p>which is a linear combination of a Gaussian and a Lorentzian. We note that the radial distance is <span class="math notranslate nohighlight">\(r=\pi D \theta/\lambda\)</span>, with <span class="math notranslate nohighlight">\(D\)</span> the telescope diameter, <span class="math notranslate nohighlight">\(\lambda\)</span> the observing wavelength and <span class="math notranslate nohighlight">\(\theta\)</span> the distance
 in the focal plane in arcsec. The reference values for the parameters <a class="reference external" href="#references">(Wachter et al. 2012)</a> are <span class="math notranslate nohighlight">\(\epsilon=0.1\)</span>, <span class="math notranslate nohighlight">\(\omega=1.8\)</span>, <span class="math notranslate nohighlight">\(k=3\)</span> and <span class="math notranslate nohighlight">\(W=3\)</span>.</p>
 <p>Figure <a class="reference external" href="#fig:database">5</a> demonstrates the similarity between an HMI image of the quiet Sun (upper left panel) and the simulations degraded and downsampled (lower left panel). The simulation at the original resolution is displayed in the upper right panel. For clarity, we display the horizontal and vertical axis in pixel units, instead of physical units. This reveals the difference in spatial resolution, both from the PSF convolution and the resampling. In this process we also realized that using the PSF of <a class="reference external" href="#references">Wachter et al. (2012)</a>, the azimuthally averaged power spectrum of the degraded simulated quiet Sun turns out to have stronger tails than those of the observation. For this reason, we slightly modified it so that we finally used <span class="math notranslate nohighlight">\(\omega=2\)</span> and <span class="math notranslate nohighlight">\(W=3.4\)</span>. The curve with these modified values is displayed in orange as the new PSF in Fig. <a class="reference external" href="#fig:database">5</a> with the original PSF and the default values in blue. For consistency, we also applied this PSF to the magneto-convection simulations described by <a class="reference external" href="#references">Stein &amp; Nordlund (2012)</a> and <a class="reference external" href="#references">Stein (2012)</a>, finding a similar improvement in the comparison with observations.</p>
 <p>One could argue that using the more elaborate PSFs of <a class="reference external" href="#references">Yeo et al. (2014)</a> (obtained via observations of the Venus transit) or <a class="reference external" href="#references">Couvidat et al. (2016)</a> (obtained with ground data before the launch) is preferred. However, we point out that applying the PSF of <a class="reference external" href="#references">Wachter et al. (2012)</a> (with some modifications that are specified above) to the simulations produces images that compare excellently at a quantitative level with the observations. Anyway, given that our code is open sourced, anyone interested in using a different PSF can easily retrain the deep networks.</p>
@@ -1465,10 +1411,9 @@ methods to apply the trained networks used in this work to HMI images or re-trai
 and SunPy (sunpy.org).</em></p>
 <hr class="docutils" />
 </div>
-</div>
 <hr class="docutils" />
 <div class="section" id="references">
-<h1>References<a class="headerlink" href="#references" title="Permalink to this headline">¶</a></h1>
+<h2>References<a class="headerlink" href="#references" title="Permalink to this headline">¶</a></h2>
 <p><a id="references"></a></p>
 <ul class="simple">
 <li><p><a class="reference external" href="https://www.aanda.org/articles/aa/abs/2015/05/aa25508-14/aa25508-14.html">Asensio Ramos, A. &amp; de la Cruz Rodríguez, J. 2015, A&amp;A, 577, A140</a></p></li>
@@ -1530,6 +1475,7 @@ and SunPy (sunpy.org).</em></p>
 <li><p><a class="reference external" href="http://adsabs.harvard.edu/abs/2017arXiv170304244Z">Zhao, Y., Wang, R., Dong, W., et al. 2017, ArXiv e-prints arXiv:1703.04244</a></p></li>
 </ul>
 <hr class="docutils" />
+</div>
 </div>
 
     <script type="text/x-thebe-config">

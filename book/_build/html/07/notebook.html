@@ -161,11 +161,6 @@
    Notebook
   </a>
  </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../03/notebook.html#references">
-   References
-  </a>
- </li>
 </ul>
 <p class="caption collapsible-parent">
  <span class="caption-text">
@@ -280,16 +275,6 @@
    How to run this book
   </a>
  </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../Appendix/how_to_run_this_book.html#running-the-book-locally">
-   Running the book locally
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../Appendix/how_to_run_this_book.html#running-the-book-in-the-cloud">
-   Running the book in the cloud
-  </a>
- </li>
 </ul>
 
 </nav> <!-- To handle the deprecated key -->
@@ -367,23 +352,6 @@
                     class="fas fa-expand"></i></button></a>
 
         <!-- Launch buttons -->
-
-<div class="dropdown-buttons-trigger">
-    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn"
-        aria-label="Launch interactive content"><i class="fas fa-rocket"></i></button>
-    <div class="dropdown-buttons">
-        
-        <a class="binder-button" href="https://mybinder.org/v2/gh/HelioML/HelioML/master?urlpath=tree/book/07/notebook.ipynb"><button type="button"
-                class="btn btn-secondary topbarbtn" title="Launch Binder" data-toggle="tooltip"
-                data-placement="left"><img class="binder-button-logo"
-                    src="../_static/images/logo_binder.svg"
-                    alt="Interact on binder">Binder</button></a>
-        
-        
-        
-        
-    </div>
-</div>
 
     </div>
 
@@ -578,12 +546,13 @@ through a sigmoid activation function that was applied in the last layer after a
 <p>The neural
 network was trained by minimizing the binary cross entropy between the output of
 the network per pixel (<span class="math notranslate nohighlight">\(p_i\)</span>) and the binarized magnetograms (<span class="math notranslate nohighlight">\(y_i\)</span>), summed
-over all pixels in the output magnetogram (<span class="math notranslate nohighlight">\(N\)</span>),
-\begin{equation}
-\ell = -\frac{1}{N} \sum_{i=1}^{N} y_{i} \cdot \log p_i+
-\left(1-y_{i}\right) \cdot \log \left(1-p_i\right)
-.\end{equation}
-To optimize the previous loss function, we employed the Adam optimizer <a class="reference external" href="https://arxiv.org/abs/1412.6980">(Kingma &amp; Ba 2014, ArXiv)</a> with a
+over all pixels in the output magnetogram (<span class="math notranslate nohighlight">\(N\)</span>),</p>
+<div class="amsmath math notranslate nohighlight" id="equation-82906199-13a1-4b8f-a6fa-328402ea6d70">
+<span class="eqno">(8)<a class="headerlink" href="#equation-82906199-13a1-4b8f-a6fa-328402ea6d70" title="Permalink to this equation">¶</a></span>\[\begin{equation}
+    \ell = -\frac{1}{N} \sum_{i=1}^{N} y_{i} \cdot \log p_i+
+    \left(1-y_{i}\right) \cdot \log \left(1-p_i\right)
+.\end{equation}\]</div>
+<p>To optimize the previous loss function, we employed the Adam optimizer <a class="reference external" href="https://arxiv.org/abs/1412.6980">(Kingma &amp; Ba 2014, ArXiv)</a> with a
 constant learning rate of 3<span class="math notranslate nohighlight">\(\times\)</span>10<span class="math notranslate nohighlight">\(^{-4}\)</span> during 300 epochs and a batch
 size of 30.</p>
 <p>The neural network can be downloaded from the repository <a class="reference external" href="https://github.com/aasensio/farside">https://github.com/aasensio/farside</a>.</p>
@@ -602,20 +571,6 @@ size of 30.</p>
 <span class="kn">import</span> <span class="nn">torch.nn</span> <span class="k">as</span> <span class="nn">nn</span>
 <span class="kn">import</span> <span class="nn">torch.utils.data</span>
 <span class="kn">import</span> <span class="nn">torch.nn.functional</span> <span class="k">as</span> <span class="nn">F</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
-<span class="ne">ModuleNotFoundError</span><span class="g g-Whitespace">                       </span>Traceback (most recent call last)
-<span class="o">&lt;</span><span class="n">ipython</span><span class="o">-</span><span class="nb">input</span><span class="o">-</span><span class="mi">1</span><span class="o">-</span><span class="mf">6687e6</span><span class="n">eecae7</span><span class="o">&gt;</span> <span class="ow">in</span> <span class="o">&lt;</span><span class="n">module</span><span class="o">&gt;</span>
-<span class="g g-Whitespace">      </span><span class="mi">1</span> <span class="c1">#We first import the necessary modules</span>
-<span class="g g-Whitespace">      </span><span class="mi">2</span> <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="ne">----&gt; </span><span class="mi">3</span> <span class="kn">import</span> <span class="nn">torch</span>
-<span class="g g-Whitespace">      </span><span class="mi">4</span> <span class="kn">import</span> <span class="nn">torch.nn</span> <span class="k">as</span> <span class="nn">nn</span>
-<span class="g g-Whitespace">      </span><span class="mi">5</span> <span class="kn">import</span> <span class="nn">torch.utils.data</span>
-
-<span class="ne">ModuleNotFoundError</span>: No module named &#39;torch&#39;
 </pre></div>
 </div>
 </div>

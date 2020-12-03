@@ -9,6 +9,5 @@ In this notebook, we will show a method to improve the detection of active regio
 
 This work is published in [Felipe & Asensio Ramos, 2019, A&A, 632, 82](https://www.aanda.org/articles/aa/abs/2019/12/aa36838-19/aa36838-19.html)
 
-![example](1/figures/NN2019_002.jpg)
-
+![example](figures/NN2019_002.jpg)
 Detection of a far-side active region.

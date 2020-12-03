@@ -5,7 +5,7 @@ In the following chapters, we'll cover examples from active research. Each chapt
 
 Below is a short summary of each chapter. Each summary gives a brief overview of the machine learning methods and data types involved in solving a specific research problem. Each ">" symbol is designed to drill down from a general idea into a specific one. If some of these terms don't make sense, don't worry! Acronyms are defined at the bottom and the chapters explain each scientific and machine learning concept in detail.
 
-## Chapter 1
+## About This Book
 * Author(s): James Paul Mason
 * Objective: Fit time series measurements of solar ultraviolet light to contrast new and familiar concepts
 * ML method(s) and concepts: 
@@ -16,7 +16,7 @@ Below is a short summary of each chapter. Each summary gives a brief overview of
 * Data source(s): 
 	* Solar spectral irradiance > extreme ultraviolet light > extracted emission line time series > SDO/EVE
 	
-## Chapter 2
+## Chapter 1
 * Author(s): Monica Bobra
 * Objective: Predict solar flares (outbursts of high energy light) and coronal mass ejections (outbursts of particles) based on measurements of the sun's surface magnetic field
 * ML method(s) and concepts: 
@@ -28,7 +28,7 @@ Below is a short summary of each chapter. Each summary gives a brief overview of
 	* Solar disk-blocked coronal images > visible light > extracted ejection occurrence and time > SOHO/LASCO and STEREO/SECCHI/COR coronal mass ejection database
 * Published and refereed paper: [Bobra & Ilonidis, 2016, <i> Astrophysical Journal</i>, 821, 127](https://ui.adsabs.harvard.edu/#abs/2016ApJ...821..127B/abstract)
 
-## Chapter 3
+## Chapter 2
 * Author(s): Carlos José Díaz Baso and Andrés Asensio Ramos
 * Objective: Rapid and robust image resolution enhancement 
 * ML method(s) and concepts: 
@@ -41,7 +41,7 @@ Below is a short summary of each chapter. Each summary gives a brief overview of
 	* Solar surface images > visible light > Hinode/SOT
 * Published and refereed paper: [Díaz Baso & Asensio Ramos, 2018, <i> Astronomy & Astrophysics</i>, 614, A5](https://ui.adsabs.harvard.edu/#abs/2018A&A...614A...5D/abstract)
 
-## Chapter 4
+## Chapter 3
 * Author(s): Paul Wright, Mark Cheung, Rajat Thomas, Richard Galvez, Alexandre Szenicer, Meng Jin, Andrés Muñoz-Jaramillo, and David Fouhey
 * Objective: Simulating data from a lost instrument (EVE) based on another of a totally different type (AIA¹³)
 * ML method(s) and concepts: 
@@ -50,9 +50,9 @@ Below is a short summary of each chapter. Each summary gives a brief overview of
 * Data source(s): 
 	* Solar spectral images > extreme ultraviolet light > SDO/AIA
 	* Solar spectral irradiance > extreme ultraviolet light > extracted emission line time series > SDO/EVE
-* Published and refereed paper: In progress
+* Published and refereed paper: [Szenicer A. et al., 2019, <i> Science Advances </i>, 5, 10](https://dx.doi.org/10.1126/sciadv.aaw6548)
 
-## Chapter 5 
+## Chapter 4 
 * Author(s): Ryan M. McGranaghan, Anthony Mannucci, Brian Wilson, Chris Mattmann, Richard Chadwick
 * Objective: Predicting high-latitude ionospheric scintillation
 * ML method(s) and concepts:
@@ -69,8 +69,7 @@ Below is a short summary of each chapter. Each summary gives a brief overview of
     * Ionosphere > scintillation > GISTM
 * Published and refereed paper: [McGranaghan et al., 2018, <i> Space Weather</i>, 16, 11](https://ui.adsabs.harvard.edu/#abs/2018SpWea..16.1817M/abstract)
 
-## Chapter 6
-
+## Chapter 5
 * Author(s): Brandon Panos, Lucia Kleint, Cedric Huwyler, Säm Krucker, Martin Melchior, Denis Ullmann, Sviatoslav Voloshynovskiy
 * Objective: Analyzing the behavior of a single spectral line (MgII) across many different flaring active regions
 * ML method(s) and concepts: 
@@ -79,7 +78,7 @@ Below is a short summary of each chapter. Each summary gives a brief overview of
     * Solar spectral data > ultraviolet light > IRIS
 * Published and refereed paper: [Panos et al., 2018, <i> Astrophysical Journal</i>, 861, 1](https://ui.adsabs.harvard.edu/#abs/2018ApJ...861...62P/abstract)   
 
-## Chapter 7
+## Chapter 6
 * Author(s): Tobías Felipe and Andrés Asensio Ramos
 * Objective: Detection of far-side active regions
 * ML method(s) and concepts: 
@@ -90,7 +89,7 @@ Below is a short summary of each chapter. Each summary gives a brief overview of
 	* Solar far-side seismic maps > SDO/HMI	
 * Published and refereed paper: [Felipe & Asensio Ramos, 2019, <i> Astronomy & Astrophysics</i>, 632, A82](https://ui.adsabs.harvard.edu/abs/2019A%26A...632A..82F/abstract)
 
-## Chapter 8
+## Chapter 7
 * Author(s): Colin Small, Matthew R. Argall, Marek Petrik
 * Objective: Automated detection of magnetopause crossings
 * ML method(s) and concepts: 
@@ -100,7 +99,7 @@ Below is a short summary of each chapter. Each summary gives a brief overview of
     * Electron diffusion region > magnetopause > velocity and pressure > MMS
 * Published and refereed paper: [Argall, Small, et al., 2020, <i> Front. Astron. Space Sci.</i>, 7](https://www.frontiersin.org/articles/10.3389/fspas.2020.00054)
 
-## Chapter 9
+## Chapter 8
 * Author(s): Rafael Pires de Lima and Yue Chen
 * Objective: Forecast relativistic electrons in Earth's Outer Radiation Belt
 * ML method(s) and concepts:
@@ -112,7 +111,7 @@ Below is a short summary of each chapter. Each summary gives a brief overview of
     * Geomagnetic disturbance index Dst and upstream solar wind conditions > OMNI
     * Measurements from low-Earth-orbit satellite POES-15 for electrons with different energies > POES
     * 1 MeV electrons measurements > RBSP
-* Published and refereed paper: [Pires de Lima et al., 2020, <i> Space Weather</i>, 18, 2](https://ui.adsabs.harvard.edu/abs/2020SpWea..1802399P/abstract)
+* Published and refereed paper: [Pires de Lima et al., 2020, <i> Space Weather</i>, 18, 2](https://doi.org/10.1029/2019SW002399)
 
 ## Future Chapters
 * Contact us! Open an [issue on the GitHub repository](https://github.com/HelioML/HelioML/issues) with your idea. See our [guide for contributing here](https://github.com/HelioML/HelioML/blob/master/CONTRIBUTING.md). 

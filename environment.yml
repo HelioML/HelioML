@@ -6,15 +6,21 @@ channels:
 dependencies:
   - pip
   - pip:
-    - Pillow
+    - numpy >= 1.15.1
+    - scipy >= 1.0.1
+    - matplotlib >= 2.0.0,!=3.0.0
+    - networkx >= 2.0
+    - pillow >= 4.3.0,!=7.1.0,!=7.1.1
+    - imageio >= 2.3.0
+    - tifffile >= 2019.7.26
+    - PyWavelets >= 1.1.1
+    - scikit-image
     - bs4
     - tqdm
-    - numpy
     - pyyaml
     - nbformat
     - nbclean
     - pandas
-    - scipy
     - sklearn
     - seaborn
     - sunpy
@@ -22,16 +28,14 @@ dependencies:
     - astropy
     - drms
     - mpld3
-    - matplotlib
-    - mpld3
     - datetime
     - lime
     - torch
     - keras
     - jupyter_contrib_nbextensions
     - IPython
-    - scipy
     - git+https://github.com/i4Ds/IRISreader.git@master
     - plotly == 4.4.1
-    - tensorflow # Chapter 9 requires tensorflow == 2.3.0; Chapter 8 requires tensorflow<=1.15
+    #- tensorflow # Chapter 9 requires tensorflow == 2.3.0; Chapter 8 requires tensorflow<=1.15, for now, please manually install the version you prefer
     - nasa-pymms
+    - jupyter-book
