@@ -7,4 +7,4 @@ Ideally, stakeholders such as the space industry, service providers, and governm
 
 In the following notebook, we show case how flux distributions of one MeV electrons can be predicted by the PreMevE model using a machine learning approach. Here we rely on scikit-learn and TensorFlow packages for model algorithim implementation.
 
-The content we show is part of a bigger analysis published in the [Forecasting Megaelectron‐Volt Electrons Inside Earth's Outer Radiation Belt: PreMevE 2.0 Based on Supervised Machine Learning Algorithms](https://agupubs.onlinelibrary.wiley.com/doi/full/10.1029/2019SW002399) paper. 
+The content we show is part of a bigger analysis published in [Pires de Lima et al., 2020, <i> Space Weather</i>, 18, 2](https://doi.org/10.1029/2019SW002399).

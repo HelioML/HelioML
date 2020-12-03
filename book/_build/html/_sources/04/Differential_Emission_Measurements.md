@@ -9,7 +9,7 @@ In this chapter we will introduce a deep learning approach to do this, called Di
 
 The `DeepEM` example presented here takes every DEM solution with no regards to the quality or existence of the solution. As will be demonstrated, when this method is trained with a single set of <i>SDO</i>/AIA images and DEM solutions, `DeepEM` solutions have a similar fidelity to Basis Pursuit (with a significantly increased computation speed—on the order of 10 million DEM solutions per second), and additionally, `DeepEM` finds positive solutions for every pixel.
 
-This notebook was developed with [PyTorch](https://pytorch.org/), and `DeepEM` is currently under development on [Github](https://github.com/PaulJWright/DeepEM).
+This notebook was developed with [PyTorch](https://pytorch.org/). `DeepEM` is available on [Github](https://github.com/PaulJWright/DeepEM) and this work is published in the following paper: [Szenicer A. et al., 2019, <i> Science Advances </i>, 5, 10](https://dx.doi.org/10.1126/sciadv.aaw6548).
 
 ![example](docs/DeepEM_171_211.gif)
 Example of the `DeepEM` solutions for logT ~ 5.9 K and 6.3 K in comparison to the Basis Pursuit (and <i>SDO</i>/AIA images) for the same temperature.

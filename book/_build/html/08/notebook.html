@@ -161,11 +161,6 @@
    Notebook
   </a>
  </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../03/notebook.html#references">
-   References
-  </a>
- </li>
 </ul>
 <p class="caption collapsible-parent">
  <span class="caption-text">
@@ -280,16 +275,6 @@
    How to run this book
   </a>
  </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../Appendix/how_to_run_this_book.html#running-the-book-locally">
-   Running the book locally
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../Appendix/how_to_run_this_book.html#running-the-book-in-the-cloud">
-   Running the book in the cloud
-  </a>
- </li>
 </ul>
 
 </nav> <!-- To handle the deprecated key -->
@@ -367,23 +352,6 @@
                     class="fas fa-expand"></i></button></a>
 
         <!-- Launch buttons -->
-
-<div class="dropdown-buttons-trigger">
-    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn"
-        aria-label="Launch interactive content"><i class="fas fa-rocket"></i></button>
-    <div class="dropdown-buttons">
-        
-        <a class="binder-button" href="https://mybinder.org/v2/gh/HelioML/HelioML/master?urlpath=tree/book/08/notebook.ipynb"><button type="button"
-                class="btn btn-secondary topbarbtn" title="Launch Binder" data-toggle="tooltip"
-                data-placement="left"><img class="binder-button-logo"
-                    src="../_static/images/logo_binder.svg"
-                    alt="Interact on binder">Binder</button></a>
-        
-        
-        
-        
-    </div>
-</div>
 
     </div>
 
@@ -472,31 +440,23 @@
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Requirement already satisfied: nasa-pymms in /Users/mbobra/anaconda/envs/helioml/lib/python3.8/site-packages (0.3.1)
-Requirement already satisfied: matplotlib&gt;=3.1.1 in /Users/mbobra/anaconda/envs/helioml/lib/python3.8/site-packages (from nasa-pymms) (3.3.2)
-Requirement already satisfied: requests&gt;=2.22.0 in /Users/mbobra/anaconda/envs/helioml/lib/python3.8/site-packages (from nasa-pymms) (2.24.0)
-Requirement already satisfied: numpy&gt;=1.8 in /Users/mbobra/anaconda/envs/helioml/lib/python3.8/site-packages (from nasa-pymms) (1.19.2)
-Requirement already satisfied: cdflib in /Users/mbobra/anaconda/envs/helioml/lib/python3.8/site-packages (from nasa-pymms) (0.3.19)
-Requirement already satisfied: tqdm&gt;=4.36.1 in /Users/mbobra/anaconda/envs/helioml/lib/python3.8/site-packages (from nasa-pymms) (4.46.0)
-Requirement already satisfied: scipy&gt;=1.4.1 in /Users/mbobra/anaconda/envs/helioml/lib/python3.8/site-packages (from nasa-pymms) (1.5.2)
-Requirement already satisfied: attrs&gt;=19.2.0 in /Users/mbobra/anaconda/envs/helioml/lib/python3.8/site-packages (from cdflib-&gt;nasa-pymms) (20.2.0)
-Requirement already satisfied: numpy&gt;=1.8 in /Users/mbobra/anaconda/envs/helioml/lib/python3.8/site-packages (from nasa-pymms) (1.19.2)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Requirement already satisfied: pyparsing!=2.0.4,!=2.1.2,!=2.1.6,&gt;=2.0.3 in /Users/mbobra/anaconda/envs/helioml/lib/python3.8/site-packages (from matplotlib&gt;=3.1.1-&gt;nasa-pymms) (2.4.7)
-Requirement already satisfied: pillow&gt;=6.2.0 in /Users/mbobra/anaconda/envs/helioml/lib/python3.8/site-packages (from matplotlib&gt;=3.1.1-&gt;nasa-pymms) (7.2.0)
-Requirement already satisfied: cycler&gt;=0.10 in /Users/mbobra/anaconda/envs/helioml/lib/python3.8/site-packages (from matplotlib&gt;=3.1.1-&gt;nasa-pymms) (0.10.0)
-Requirement already satisfied: kiwisolver&gt;=1.0.1 in /Users/mbobra/anaconda/envs/helioml/lib/python3.8/site-packages (from matplotlib&gt;=3.1.1-&gt;nasa-pymms) (1.2.0)
-Requirement already satisfied: python-dateutil&gt;=2.1 in /Users/mbobra/anaconda/envs/helioml/lib/python3.8/site-packages (from matplotlib&gt;=3.1.1-&gt;nasa-pymms) (2.8.1)
-Requirement already satisfied: numpy&gt;=1.8 in /Users/mbobra/anaconda/envs/helioml/lib/python3.8/site-packages (from nasa-pymms) (1.19.2)
-Requirement already satisfied: certifi&gt;=2020.06.20 in /Users/mbobra/anaconda/envs/helioml/lib/python3.8/site-packages (from matplotlib&gt;=3.1.1-&gt;nasa-pymms) (2020.6.20)
-Requirement already satisfied: six in /Users/mbobra/anaconda/envs/helioml/lib/python3.8/site-packages (from cycler&gt;=0.10-&gt;matplotlib&gt;=3.1.1-&gt;nasa-pymms) (1.15.0)
-Requirement already satisfied: six in /Users/mbobra/anaconda/envs/helioml/lib/python3.8/site-packages (from cycler&gt;=0.10-&gt;matplotlib&gt;=3.1.1-&gt;nasa-pymms) (1.15.0)
-Requirement already satisfied: idna&lt;3,&gt;=2.5 in /Users/mbobra/anaconda/envs/helioml/lib/python3.8/site-packages (from requests&gt;=2.22.0-&gt;nasa-pymms) (2.10)
-Requirement already satisfied: chardet&lt;4,&gt;=3.0.2 in /Users/mbobra/anaconda/envs/helioml/lib/python3.8/site-packages (from requests&gt;=2.22.0-&gt;nasa-pymms) (3.0.4)
-Requirement already satisfied: urllib3!=1.25.0,!=1.25.1,&lt;1.26,&gt;=1.21.1 in /Users/mbobra/anaconda/envs/helioml/lib/python3.8/site-packages (from requests&gt;=2.22.0-&gt;nasa-pymms) (1.25.10)
-Requirement already satisfied: certifi&gt;=2020.06.20 in /Users/mbobra/anaconda/envs/helioml/lib/python3.8/site-packages (from matplotlib&gt;=3.1.1-&gt;nasa-pymms) (2020.6.20)
-Requirement already satisfied: numpy&gt;=1.8 in /Users/mbobra/anaconda/envs/helioml/lib/python3.8/site-packages (from nasa-pymms) (1.19.2)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Requirement already satisfied: nasa-pymms in /usr/local/lib/python3.6/dist-packages (0.3.1)
+Requirement already satisfied: tqdm&gt;=4.36.1 in /usr/local/lib/python3.6/dist-packages (from nasa-pymms) (4.41.1)
+Requirement already satisfied: matplotlib&gt;=3.1.1 in /usr/local/lib/python3.6/dist-packages (from nasa-pymms) (3.2.2)
+Requirement already satisfied: requests&gt;=2.22.0 in /usr/local/lib/python3.6/dist-packages (from nasa-pymms) (2.23.0)
+Requirement already satisfied: scipy&gt;=1.4.1 in /usr/local/lib/python3.6/dist-packages (from nasa-pymms) (1.4.1)
+Requirement already satisfied: cdflib in /usr/local/lib/python3.6/dist-packages (from nasa-pymms) (0.3.19)
+Requirement already satisfied: numpy&gt;=1.8 in /usr/local/lib/python3.6/dist-packages (from nasa-pymms) (1.18.5)
+Requirement already satisfied: kiwisolver&gt;=1.0.1 in /usr/local/lib/python3.6/dist-packages (from matplotlib&gt;=3.1.1-&gt;nasa-pymms) (1.2.0)
+Requirement already satisfied: cycler&gt;=0.10 in /usr/local/lib/python3.6/dist-packages (from matplotlib&gt;=3.1.1-&gt;nasa-pymms) (0.10.0)
+Requirement already satisfied: pyparsing!=2.0.4,!=2.1.2,!=2.1.6,&gt;=2.0.1 in /usr/local/lib/python3.6/dist-packages (from matplotlib&gt;=3.1.1-&gt;nasa-pymms) (2.4.7)
+Requirement already satisfied: python-dateutil&gt;=2.1 in /usr/local/lib/python3.6/dist-packages (from matplotlib&gt;=3.1.1-&gt;nasa-pymms) (2.8.1)
+Requirement already satisfied: certifi&gt;=2017.4.17 in /usr/local/lib/python3.6/dist-packages (from requests&gt;=2.22.0-&gt;nasa-pymms) (2020.6.20)
+Requirement already satisfied: chardet&lt;4,&gt;=3.0.2 in /usr/local/lib/python3.6/dist-packages (from requests&gt;=2.22.0-&gt;nasa-pymms) (3.0.4)
+Requirement already satisfied: urllib3!=1.25.0,!=1.25.1,&lt;1.26,&gt;=1.21.1 in /usr/local/lib/python3.6/dist-packages (from requests&gt;=2.22.0-&gt;nasa-pymms) (1.24.3)
+Requirement already satisfied: idna&lt;3,&gt;=2.5 in /usr/local/lib/python3.6/dist-packages (from requests&gt;=2.22.0-&gt;nasa-pymms) (2.10)
+Requirement already satisfied: attrs&gt;=19.2.0 in /usr/local/lib/python3.6/dist-packages (from cdflib-&gt;nasa-pymms) (20.2.0)
+Requirement already satisfied: six in /usr/local/lib/python3.6/dist-packages (from cycler&gt;=0.10-&gt;matplotlib&gt;=3.1.1-&gt;nasa-pymms) (1.15.0)
 </pre></div>
 </div>
 </div>
@@ -531,16 +491,14 @@ Requirement already satisfied: numpy&gt;=1.8 in /Users/mbobra/anaconda/envs/heli
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
-<span class="ne">ModuleNotFoundError</span><span class="g g-Whitespace">                       </span>Traceback (most recent call last)
-<span class="o">&lt;</span><span class="n">ipython</span><span class="o">-</span><span class="nb">input</span><span class="o">-</span><span class="mi">2</span><span class="o">-</span><span class="n">d5c02c2e666f</span><span class="o">&gt;</span> <span class="ow">in</span> <span class="o">&lt;</span><span class="n">module</span><span class="o">&gt;</span>
-<span class="g g-Whitespace">      </span><span class="mi">1</span> <span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
-<span class="g g-Whitespace">      </span><span class="mi">2</span> <span class="kn">from</span> <span class="nn">sklearn</span> <span class="kn">import</span> <span class="n">preprocessing</span>
-<span class="ne">----&gt; </span><span class="mi">3</span> <span class="kn">from</span> <span class="nn">tensorflow.keras.models</span> <span class="kn">import</span> <span class="n">Sequential</span>
-<span class="g g-Whitespace">      </span><span class="mi">4</span> <span class="kn">from</span> <span class="nn">tensorflow.keras.layers</span> <span class="kn">import</span> <span class="n">Dense</span><span class="p">,</span> <span class="n">Dropout</span><span class="p">,</span> <span class="n">LSTM</span><span class="p">,</span> <span class="n">CuDNNLSTM</span><span class="p">,</span> <span class="n">BatchNormalization</span><span class="p">,</span> <span class="n">Bidirectional</span><span class="p">,</span> <span class="n">Reshape</span><span class="p">,</span> <span class="n">TimeDistributed</span>
-<span class="g g-Whitespace">      </span><span class="mi">5</span> <span class="kn">from</span> <span class="nn">tensorflow.keras.callbacks</span> <span class="kn">import</span> <span class="n">TensorBoard</span><span class="p">,</span> <span class="n">ModelCheckpoint</span>
-
-<span class="ne">ModuleNotFoundError</span>: No module named &#39;tensorflow&#39;
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>TensorFlow 1.x selected.
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Using TensorFlow backend.
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Creating root data directory /root/data/mms
+Creating root data directory /root/data/mms/dropbox
 </pre></div>
 </div>
 </div>

@@ -859,10 +859,8 @@ plt.tight_layout()
 
 # ------
 
-# # References
+# ## References
 # <a id="references"></a>
-# 
-# 
 
 # - [Asensio Ramos, A. & de la Cruz Rodríguez, J. 2015, A&A, 577, A140](https://www.aanda.org/articles/aa/abs/2015/05/aa25508-14/aa25508-14.html)
 # - [Asensio Ramos, A., Requerey, I. S., & Vitas, N. 2017, A&A, 604, A11](https://www.aanda.org/articles/aa/abs/2017/08/aa30783-17/aa30783-17.html)

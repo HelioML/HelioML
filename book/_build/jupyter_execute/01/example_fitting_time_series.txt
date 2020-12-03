@@ -1,0 +1,93 @@
+# Standard modules
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+%matplotlib inline
+import seaborn as sns
+plt.style.use('seaborn')
+from scipy.io.idl import readsav
+from sklearn.pipeline import make_pipeline
+from sklearn.model_selection import validation_curve, ShuffleSplit
+from sklearn.metrics import explained_variance_score, make_scorer
+from sklearn.svm import SVR
+from pandas.plotting import register_matplotlib_converters
+register_matplotlib_converters()
+
+# Custom modules
+from jpm_time_conversions import metatimes_to_seconds_since_start, datetimeindex_to_human
+
+idl_generated_data = readsav('./Example Dimming Light Curve.sav')
+light_curve_df = pd.DataFrame({'irradiance':idl_generated_data.irradiance.byteswap().newbyteorder(),  # [W/m^2]
+                               'uncertainty':idl_generated_data.uncertainty.byteswap().newbyteorder()})  # [%]
+light_curve_df.index = pd.DatetimeIndex(idl_generated_data.datetime.astype(str))
+light_curve_df.head()
+
+plt.errorbar(x=light_curve_df.index, 
+             y=light_curve_df['irradiance'], 
+             yerr=light_curve_df['uncertainty'], 
+             fmt='o')
+plt.title("t$_0$ = " + datetimeindex_to_human(light_curve_df.index)[0])
+plt.xlabel('time')
+plt.ylabel('irradiance [%]');
+
+# Pull data out of the DataFrame for compatibility formatting
+X = metatimes_to_seconds_since_start(light_curve_df.index)
+y = light_curve_df['irradiance'].values
+
+finite_irradiance_indices = np.isfinite(y)
+X = X[finite_irradiance_indices]
+X = X.reshape(len(X), 1)
+uncertainty = light_curve_df['uncertainty'].values[np.isfinite(y)]
+y = y[finite_irradiance_indices]
+
+# Helper function for compatibility with validation_curve
+def svr_pipe(gamma=5e-8, **kwargs):
+    return make_pipeline(SVR(kernel='rbf', C=1e3, gamma=gamma, **kwargs))
+
+gamma = np.logspace(-10, -5, num=20, base=10)
+
+evs = make_scorer(explained_variance_score)
+
+shuffle_split = ShuffleSplit(n_splits=20, train_size=0.5, test_size=0.5, random_state=None)
+
+train_score, val_score = validation_curve(svr_pipe(), X, y,
+                                          'svr__gamma',
+                                          gamma, cv=shuffle_split, n_jobs=3, scoring=evs)
+
+p1 = plt.semilogx(gamma, np.median(train_score, 1), label='training score')
+p2 = plt.semilogx(gamma, np.median(val_score, 1), label='validation score')
+plt.title('Validation Curve')
+plt.xlabel('gamma')
+plt.ylabel('score')
+plt.ylim(0, 1)
+plt.legend(loc='best');
+
+scores = np.median(val_score, axis=1)
+best_fit_score = np.max(scores)
+best_fit_gamma = gamma[np.argmax(scores)]
+print('Scores: {}'.format(str(scores)))
+print('Best score: {}'.format(str(best_fit_score)))
+print('Best fit gamma: {}'.format(str(best_fit_gamma)))
+
+
+
+
+
+
+
+sample_weight = 1 / uncertainty
+model = SVR(kernel='rbf', C=1e3, gamma=best_fit_gamma).fit(X, y, sample_weight)
+y_fit = model.predict(X)
+
+plt.errorbar(X.ravel(), y, yerr=uncertainty, color='black', fmt='o', label='Input light curve')
+plt.plot(X.ravel(), y_fit, linewidth=6, label='Fit')
+plt.title("t$_0$ = " + datetimeindex_to_human(light_curve_df.index)[0])
+plt.xlabel('time [seconds since start]')
+plt.ylabel('irradiance [%]')
+plt.legend(loc='best');
+
+
+
+
+
+

@@ -161,11 +161,6 @@
    Notebook
   </a>
  </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../03/notebook.html#references">
-   References
-  </a>
- </li>
 </ul>
 <p class="caption collapsible-parent">
  <span class="caption-text">
@@ -280,16 +275,6 @@
    How to run this book
   </a>
  </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../Appendix/how_to_run_this_book.html#running-the-book-locally">
-   Running the book locally
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../Appendix/how_to_run_this_book.html#running-the-book-in-the-cloud">
-   Running the book in the cloud
-  </a>
- </li>
 </ul>
 
 </nav> <!-- To handle the deprecated key -->
@@ -386,7 +371,7 @@
 <p>The Atmospheric Imaging Assembly (AIA) instrument aboard the Solar Dynamics Observatory images the solar atmosphere nearly simultaneously using ten different filters in broad wavelengths ranging from 4500 Å to 94 Å, which correspond to temperatures ranging from 5000K up to 10MK (<a class="reference external" href="https://link.springer.com/article/10.1007%2Fs11207-011-9776-8">Lemen et al. 2012</a>). Solar features span a vast range of temperatures – for example, flaring regions can heat up to 10MK, while other features, such as coronal holes, remain several orders of magnitude cooler. By using near-simultaneous multi-wavelength observations of the solar corona, we can effectively constrain the temperature of localized solar features.</p>
 <p>In this chapter we will introduce a deep learning approach to do this, called Differential Emission Measure (DEM) Inversion. <i>For this notebook</i>, <code class="docutils literal notranslate"><span class="pre">DeepEM</span></code> is a trained on one set of <i>SDO</i>/AIA observations (six optically-thin channels; 6 x N x N) and DEM solutions (in 18 temperature bins from logT = 5.5 - 7.2 K, 18 x N x N; <a class="reference external" href="https://doi.org/10.1088/0004-637X/807/2/143">Cheung et al 2015</a>) at a resolution of 512 x 512 (N = 512) using a 1x1 2D Convolutional Neural Network with a single hidden layer.</p>
 <p>The <code class="docutils literal notranslate"><span class="pre">DeepEM</span></code> example presented here takes every DEM solution with no regards to the quality or existence of the solution. As will be demonstrated, when this method is trained with a single set of <i>SDO</i>/AIA images and DEM solutions, <code class="docutils literal notranslate"><span class="pre">DeepEM</span></code> solutions have a similar fidelity to Basis Pursuit (with a significantly increased computation speed—on the order of 10 million DEM solutions per second), and additionally, <code class="docutils literal notranslate"><span class="pre">DeepEM</span></code> finds positive solutions for every pixel.</p>
-<p>This notebook was developed with <a class="reference external" href="https://pytorch.org/">PyTorch</a>, and <code class="docutils literal notranslate"><span class="pre">DeepEM</span></code> is currently under development on <a class="reference external" href="https://github.com/PaulJWright/DeepEM">Github</a>.</p>
+<p>This notebook was developed with <a class="reference external" href="https://pytorch.org/">PyTorch</a>. <code class="docutils literal notranslate"><span class="pre">DeepEM</span></code> is available on <a class="reference external" href="https://github.com/PaulJWright/DeepEM">Github</a> and this work is published in the following paper: <a class="reference external" href="https://dx.doi.org/10.1126/sciadv.aaw6548">Szenicer A. et al., 2019, <i> Science Advances </i>, 5, 10</a>.</p>
 <p><img alt="example" src="../_images/DeepEM_171_211.gif" />
 Example of the <code class="docutils literal notranslate"><span class="pre">DeepEM</span></code> solutions for logT ~ 5.9 K and 6.3 K in comparison to the Basis Pursuit (and <i>SDO</i>/AIA images) for the same temperature.</p>
 <p>This project was initiated during the 2018 NASA Frontier Development Lab (FDL) program, a partnership between NASA, SETI, NVIDIA Corporation, Lockheed Martin, and Kx. We gratefully thank our mentors for guidance and useful discussion, as well as the SETI Institute for their hospitality.</p>

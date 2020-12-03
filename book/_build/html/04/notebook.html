@@ -161,11 +161,6 @@
    Notebook
   </a>
  </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../03/notebook.html#references">
-   References
-  </a>
- </li>
 </ul>
 <p class="caption collapsible-parent">
  <span class="caption-text">
@@ -280,16 +275,6 @@
    How to run this book
   </a>
  </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../Appendix/how_to_run_this_book.html#running-the-book-locally">
-   Running the book locally
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../Appendix/how_to_run_this_book.html#running-the-book-in-the-cloud">
-   Running the book in the cloud
-  </a>
- </li>
 </ul>
 
 </nav> <!-- To handle the deprecated key -->
@@ -367,23 +352,6 @@
                     class="fas fa-expand"></i></button></a>
 
         <!-- Launch buttons -->
-
-<div class="dropdown-buttons-trigger">
-    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn"
-        aria-label="Launch interactive content"><i class="fas fa-rocket"></i></button>
-    <div class="dropdown-buttons">
-        
-        <a class="binder-button" href="https://mybinder.org/v2/gh/HelioML/HelioML/master?urlpath=tree/book/04/notebook.ipynb"><button type="button"
-                class="btn btn-secondary topbarbtn" title="Launch Binder" data-toggle="tooltip"
-                data-placement="left"><img class="binder-button-logo"
-                    src="../_static/images/logo_binder.svg"
-                    alt="Interact on binder">Binder</button></a>
-        
-        
-        
-        
-    </div>
-</div>
 
     </div>
 
@@ -513,9 +481,10 @@
 <div class="section" id="introduction">
 <h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h2>
 <p>The intensity observed through optically-thin <i>SDO</i>/AIA filters (94 Å, 131 Å, 171 Å, 193 Å, 211 Å, 335 Å) can be related to the temperature distribution of the solar corona (the differential emission measure; DEM) as</p>
-<p>\begin{equation}
-g_{i} = \int_{T} K_{i}(T) \xi(T) dT , .
-\end{equation}</p>
+<div class="amsmath math notranslate nohighlight" id="equation-c128ed06-bfc2-4678-85c6-23d3818a6a25">
+<span class="eqno">(7)<a class="headerlink" href="#equation-c128ed06-bfc2-4678-85c6-23d3818a6a25" title="Permalink to this equation">¶</a></span>\[\begin{equation}
+g_{i} = \int_{T} K_{i}(T) \xi(T) dT \, .
+\end{equation}\]</div>
 <p>In this equation, <span class="math notranslate nohighlight">\(g_{i}\)</span> is the DN s<span class="math notranslate nohighlight">\(^{-1}\)</span> px<span class="math notranslate nohighlight">\(^{-1}\)</span> value in the <span class="math notranslate nohighlight">\(i\)</span>th SDO/AIA channel. This intensity corresponds to the <span class="math notranslate nohighlight">\(K_{i}(T)\)</span> temperature response function, and the DEM, <span class="math notranslate nohighlight">\(\xi(T)\)</span>, is in units of cm<span class="math notranslate nohighlight">\(^{-5}\)</span> K<span class="math notranslate nohighlight">\(^{-1}\)</span>. The matrix formulation of this integral equation can be represented in the form <span class="math notranslate nohighlight">\(\vec{g} = {\bf K}\vec{\xi}\)</span>, however this problem is an ill-posed inverse problem, and any attempt to directly recover <span class="math notranslate nohighlight">\(\vec{\xi}\)</span> leads to significant noise amplification.</p>
 <p>There are numerous methods to tackle mathematical problems of this kind, and there are an increasing number of methods in the literature for recovering the differential emission measure from <i>SDO</i>/AIA observations, including methods based techniques such as Tikhonov Regularisation (<a href="https://doi.org/10.1051/0004-6361/201117576">Hannah &amp; Kontar 2012</a>), on the concept of sparsity (<a href="https://doi.org/10.1088/0004-637X/807/2/143">Cheung <i>et al</i> 2015</a>).</p>
 <p>In this notebook we will introduce a deep learning approach for DEM Inversion. <i>For this notebook</i>, DeepEM is a trained on one set of <i>SDO</i>/AIA observations (six optically thin channels; 6 x N x N) and DEM solutions (in 18 temperature bins from log<span class="math notranslate nohighlight">\(_{10}\)</span>T = 5.5 - 7.2, 18 x N x N; Cheung <i>et al</i> 2015) at a resolution of 512 x 512 (N = 512) using a 1x1 2D Convolutional Neural Network with a single hidden layer.</p>
@@ -536,20 +505,6 @@ g_{i} = \int_{T} K_{i}(T) \xi(T) dT , .
 
 <span class="o">%</span><span class="k">matplotlib</span> inline
 <span class="o">%</span><span class="k">config</span> InlineBackend.figure_format = &#39;retina&#39;
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
-<span class="ne">ModuleNotFoundError</span><span class="g g-Whitespace">                       </span>Traceback (most recent call last)
-<span class="o">&lt;</span><span class="n">ipython</span><span class="o">-</span><span class="nb">input</span><span class="o">-</span><span class="mi">1</span><span class="o">-</span><span class="mi">499</span><span class="n">b3b013c66</span><span class="o">&gt;</span> <span class="ow">in</span> <span class="o">&lt;</span><span class="n">module</span><span class="o">&gt;</span>
-<span class="g g-Whitespace">      </span><span class="mi">3</span> <span class="kn">import</span> <span class="nn">json</span>
-<span class="g g-Whitespace">      </span><span class="mi">4</span> <span class="kn">import</span> <span class="nn">time</span>
-<span class="ne">----&gt; </span><span class="mi">5</span> <span class="kn">import</span> <span class="nn">torch</span>
-<span class="g g-Whitespace">      </span><span class="mi">6</span> <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="g g-Whitespace">      </span><span class="mi">7</span> <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
-
-<span class="ne">ModuleNotFoundError</span>: No module named &#39;torch&#39;
 </pre></div>
 </div>
 </div>

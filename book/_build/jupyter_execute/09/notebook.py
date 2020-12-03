@@ -1059,23 +1059,14 @@ print(f'\nOther cpu information:')
 get_ipython().system('cat /proc/cpuinfo')
 
 
-# List the versions of the libraries used in this notebook:
-
-# In[51]:
-
-
-import matplotlib # import the full library to get version
-import plotly     # import the full library to get version
-import sklearn    # import the full library to get version
-
-libs = {'numpy': np, 
-        'pandas': pd, 
-        'matplotlib': matplotlib,
-        'seaborn': sns,
-        'plotly': plotly,
-        'scikit-learn': sklearn, 
-        'tensorflow': tf}
-print(f'{"Library":20} version')
-for k in libs:
-    print(f'{k:19}  {libs[k].__version__}')        
-
+# To run this notebook, we used the following packages:
+# 
+# |Library|version|
+# |-------|-------|
+# |numpy|1.18.5|
+# |pandas|1.0.5|
+# |matplotlib|3.2.2|
+# |seaborn|0.10.1|
+# |plotly|4.4.1|
+# |scikit-learn|0.22.2.post1|
+# |tensorflow|2.3.0|
