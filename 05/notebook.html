@@ -161,11 +161,6 @@
    Notebook
   </a>
  </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../03/notebook.html#references">
-   References
-  </a>
- </li>
 </ul>
 <p class="caption collapsible-parent">
  <span class="caption-text">
@@ -280,16 +275,6 @@
    How to run this book
   </a>
  </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../Appendix/how_to_run_this_book.html#running-the-book-locally">
-   Running the book locally
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../Appendix/how_to_run_this_book.html#running-the-book-in-the-cloud">
-   Running the book in the cloud
-  </a>
- </li>
 </ul>
 
 </nav> <!-- To handle the deprecated key -->
@@ -367,23 +352,6 @@
                     class="fas fa-expand"></i></button></a>
 
         <!-- Launch buttons -->
-
-<div class="dropdown-buttons-trigger">
-    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn"
-        aria-label="Launch interactive content"><i class="fas fa-rocket"></i></button>
-    <div class="dropdown-buttons">
-        
-        <a class="binder-button" href="https://mybinder.org/v2/gh/HelioML/HelioML/master?urlpath=tree/book/05/notebook.ipynb"><button type="button"
-                class="btn btn-secondary topbarbtn" title="Launch Binder" data-toggle="tooltip"
-                data-placement="left"><img class="binder-button-logo"
-                    src="../_static/images/logo_binder.svg"
-                    alt="Interact on binder">Binder</button></a>
-        
-        
-        
-        
-    </div>
-</div>
 
     </div>
 
@@ -515,9 +483,8 @@
                 
   <div class="section" id="notebook">
 <h1>Notebook<a class="headerlink" href="#notebook" title="Permalink to this headline">¶</a></h1>
-<p>The purpose of this notebook is to detail the data science methodology used to produce classification (i.e., yes/no) predictions of high-latitude ionospheric phase scintillation. The reference for this work is:</p>
-<p><em>McGranaghan, R.M., A.J. Mannucci, B.D Wilson, C.A. Mattmann, and R. Chadwick. (2018), New capabilities for prediction of high‐latitude ionospheric scintillation: A novel approach with machine learning, Space Weather, 16. https://doi.org/10.1029/2018SW002018.</em></p>
-<p>and can be accessed <a class="reference external" href="https://agupubs.onlinelibrary.wiley.com/doi/abs/10.1029/2018SW002018">here</a>.</p>
+<p>The purpose of this notebook is to detail the data science methodology used to produce classification (i.e., yes/no) predictions of high-latitude ionospheric phase scintillation.</p>
+<p>The reference for this work is: <a class="reference external" href="https://doi.org/10.1029/2018SW002018">McGranaghan, R.M., A.J. Mannucci, B.D Wilson, C.A. Mattmann, and R. Chadwick. (2018), New capabilities for prediction of high‐latitude ionospheric scintillation: A novel approach with machine learning, Space Weather, 16</a>.</p>
 <div class="section" id="abstract">
 <h2>Abstract<a class="headerlink" href="#abstract" title="Permalink to this headline">¶</a></h2>
 <p>As societal dependence on trans-ionospheric radio signals grows, understanding the impact of space weather on these signals is both increasingly important and remains unresolved. The challenge is particularly acute at high-latitudes where the effects of space weather are most direct and no reliable predictive capability exists. We take advantage of a large volume of data from Global Navigation Satellite Systems (GNSS) signals, increasingly sophisticated tools for data-driven discovery, and a machine learning algorithm known as the Support Vector Machine (SVM) to develop a novel predictive model for high-latitude ionospheric phase scintillation. This work, to our knowledge, represents the first time a SVM model has been created to predict high-latitude phase scintillation. We define a metric known as the Total Skill Score (TSS), which can be used to robustly compare between predictive methods, to evaluate the SVM model, thereby establishing a benchmark for high-latitude ionospheric phase scintillation. We find that the SVM model significantly outperforms persistence, doubling the predictive skill according to the TSS for a one hour predictive task. The increase in is even more pronounced as prediction time is increased. For a prediction time of three hours, persistence prediction is comparable to a random chance prediction, suggesting that the ‘memory’ of the ionosphere in terms of high-latitude plasma irregularities is on the order of or shorter than hours. The SVM model predictive skill only slightly decreases between the one and three hour predictive task, pointing to the potential of this method. Our findings can serve as a foundation on which to evaluate future predictive models, a critical development toward the resolution of space weather impact on trans-ionospheric radio signals.</p>
@@ -539,7 +506,7 @@
 </div>
 <div class="section" id="how-is-machine-learning-applied-in-this-chapter">
 <h3>How is machine learning applied in this chapter?<a class="headerlink" href="#how-is-machine-learning-applied-in-this-chapter" title="Permalink to this headline">¶</a></h3>
-<p>While the proliferation of transionospheric radio signals and technologies dependent on them have produced a dire need to understand and predict scintillation, it has also created a much wider data set through which to study, understand, and, ultimately, predict the phenomenon. The operation of the United States’ Global Positioning System (http://www.igs.org/) constellation since 1993 coupled with the advent of Russian (Globalnaya Navigazionnaya Sputnikovaya Sistema), Chinese (<a class="reference external" href="http://www.beidou.gov.cn">Beidou</a>), and European (<a class="reference external" href="http://www.gsa.europa.eu/galileo/programme">Galileo</a>) systems and the proliferation of ground-based receivers and networks of receivers (e.g., <a class="reference external" href="http://www.igs.org/">the International GNSS Service high-latitude network</a>, (Cherniak et al., 2014), Canadian High Arctic Ionospheric Network <a class="reference external" href="http://chain.physics.unb.ca/chain/">CHAIN</a>, <a class="reference external" href="http://www.polar.dtu.dk/english/Research/Facilities/GNET">Greenland Global Positioning System Network</a>, <a class="reference external" href="http://www.eswua.ingv.it/ingv/home.php?res=1024">Istituto Nazionale di Geofisica e Vulcanologia Electronic Space Weather Upper Atmosphere</a>, <a class="reference external" href="http://datahouse1.gsi.go.jp/terras/terras_english.html">GNSS Earth Observation NETwork</a> provide a vast and powerful new data set through which ionospheric scintillation and, more generally, space weather can be studied (Beutler et al., 1999; Ren et al., 2016; Rizos et al., 2013). These data provide information at higher cadence and over a larger portion of the globe than any other single data set and are the premier remote sensing tools to facilitate new understanding of space weather phenomena (Coster &amp; Komjathy, 2008). GNSS data are voluminous (on the order of terabytes when considering data from the mid-1990s to now and taking into account the growing number of ground-based receivers) and heterogeneous (different satellite systems, receiver technologies, and archived in a variety of locations and formats). Appropriate utilization of these data can potentially revolutionize the study of space weather.</p>
+<p>While the proliferation of transionospheric radio signals and technologies dependent on them have produced a dire need to understand and predict scintillation, it has also created a much wider data set through which to study, understand, and, ultimately, predict the phenomenon. The operation of the <a class="reference external" href="http://www.igs.org/">United States’ Global Positioning System</a> constellation since 1993 coupled with the advent of Russian (Globalnaya Navigazionnaya Sputnikovaya Sistema), Chinese (<a class="reference external" href="http://www.beidou.gov.cn">Beidou</a>), and European (<a class="reference external" href="http://www.gsa.europa.eu/galileo/programme">Galileo</a>) systems and the proliferation of ground-based receivers and networks of receivers (e.g., <a class="reference external" href="http://www.igs.org/">the International GNSS Service high-latitude network</a>, (Cherniak et al., 2014), Canadian High Arctic Ionospheric Network <a class="reference external" href="http://chain.physics.unb.ca/chain/">CHAIN</a>, <a class="reference external" href="http://www.polar.dtu.dk/english/Research/Facilities/GNET">Greenland Global Positioning System Network</a>, <a class="reference external" href="http://www.eswua.ingv.it/ingv/home.php?res=1024">Istituto Nazionale di Geofisica e Vulcanologia Electronic Space Weather Upper Atmosphere</a>, <a class="reference external" href="http://datahouse1.gsi.go.jp/terras/terras_english.html">GNSS Earth Observation NETwork</a> provide a vast and powerful new data set through which ionospheric scintillation and, more generally, space weather can be studied (Beutler et al., 1999; Ren et al., 2016; Rizos et al., 2013). These data provide information at higher cadence and over a larger portion of the globe than any other single data set and are the premier remote sensing tools to facilitate new understanding of space weather phenomena (Coster &amp; Komjathy, 2008). GNSS data are voluminous (on the order of terabytes when considering data from the mid-1990s to now and taking into account the growing number of ground-based receivers) and heterogeneous (different satellite systems, receiver technologies, and archived in a variety of locations and formats). Appropriate utilization of these data can potentially revolutionize the study of space weather.</p>
 <p>The presence of large volumes of underutilized data motivates the investigation of machine learning approaches. Machine learning here is broadly defined as any approach that allows a computer system to learn from experience introduced in the form of data samples. Our definition of machine learning encapsulates a broad range of approaches, including linear regression, clustering, information theory, statistical modeling, and neural networks, to name a few. There are, in general, three keys to successful machine learning: (1) availability of a large volume of high-quality data, (2) a well-defined task, and (3) adequate computational resources. The advent of GNSS signals coupled with long histories of ground-based GNSS signal observation address the first requirement. To address the second requirement, we examine the explicit task of predicting the occurrence of ionospheric scintillation at any given location with 1-hr lead time given input solar wind and geospace data (e.g., <a class="reference external" href="https://www.ngdc.noaa.gov/stp/geomag/indices.html">geomagnetic activity indices</a>). Finally, to satisfy the computational demand, machine learning often takes advantage of increased availability of computational resources (e.g., high-performance computing) that have become commonplace in the digital age (Duderstadt, 2001).</p>
 <p>The emphasis of this chapter is to use an <em>explainable</em> machine learning technique known as support vector machines (SVMs) (Cortes and Vapnik, 1995) to establish new relationships between observed solar wind, geomagnetic activity, and ionospheric behavior and future phase scintillation occurrence in the high-latitude ionosphere without attempting to explain the complex and numerous physical mechanisms giving rise to ionospheric irregularities and the physical relationships that cause these irregularities to lead to scintillation for a given circumstance (i.e., at a given location with specific contextual conditions). We refer to the explainability of SVMs as the quality by which links are explicitly identified between the scintillation prediction and the input variables (for more information on explainable methods refer to, for example, the Defense Advance Research Projects Agency project, <a class="reference external" href="https://www.darpa.mil/program/explainable-artificial-intelligence">Explainable Artificial Intelligence</a>. SVMs are:</p>
 <ol class="simple">
@@ -663,76 +630,6 @@
 <span class="n">X</span> <span class="o">=</span> <span class="n">ml_db</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="n">ml_db</span><span class="o">.</span><span class="n">columns</span> <span class="o">!=</span> <span class="n">predicted_label</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
 <span class="n">feature_labels</span> <span class="o">=</span> <span class="n">ml_db</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="n">ml_db</span><span class="o">.</span><span class="n">columns</span> <span class="o">!=</span> <span class="n">predicted_label</span><span class="p">]</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">values</span>
 <span class="n">y</span> <span class="o">=</span> <span class="n">ml_db</span><span class="p">[</span><span class="n">predicted_label</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
-<span class="ne">OverflowError</span><span class="g g-Whitespace">                             </span>Traceback (most recent call last)
-<span class="o">&lt;</span><span class="n">ipython</span><span class="o">-</span><span class="nb">input</span><span class="o">-</span><span class="mi">2</span><span class="o">-</span><span class="n">fa8233b8b050</span><span class="o">&gt;</span> <span class="ow">in</span> <span class="o">&lt;</span><span class="n">module</span><span class="o">&gt;</span>
-<span class="g g-Whitespace">      </span><span class="mi">9</span>    <span class="c1"># TO DO: ADD MONITORING BAR WHEN READING DATA IN</span>
-<span class="g g-Whitespace">     </span><span class="mi">10</span> 
-<span class="ne">---&gt; </span><span class="mi">11</span> <span class="n">ml_db</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
-<span class="g g-Whitespace">     </span><span class="mi">12</span> <span class="c1"># Drop two saved index columns</span>
-<span class="g g-Whitespace">     </span><span class="mi">13</span> <span class="n">ml_db</span> <span class="o">=</span> <span class="n">ml_db</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="n">ml_db</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">1</span><span class="p">])</span>
-
-<span class="nn">~/anaconda/envs/helioml/lib/python3.8/site-packages/pandas/io/parsers.py</span> in <span class="ni">read_csv</span><span class="nt">(filepath_or_buffer, sep, delimiter, header, names, index_col, usecols, squeeze, prefix, mangle_dupe_cols, dtype, engine, converters, true_values, false_values, skipinitialspace, skiprows, skipfooter, nrows, na_values, keep_default_na, na_filter, verbose, skip_blank_lines, parse_dates, infer_datetime_format, keep_date_col, date_parser, dayfirst, cache_dates, iterator, chunksize, compression, thousands, decimal, lineterminator, quotechar, quoting, doublequote, escapechar, comment, encoding, dialect, error_bad_lines, warn_bad_lines, delim_whitespace, low_memory, memory_map, float_precision)</span>
-<span class="g g-Whitespace">    </span><span class="mi">684</span>     <span class="p">)</span>
-<span class="g g-Whitespace">    </span><span class="mi">685</span> 
-<span class="ne">--&gt; </span><span class="mi">686</span>     <span class="k">return</span> <span class="n">_read</span><span class="p">(</span><span class="n">filepath_or_buffer</span><span class="p">,</span> <span class="n">kwds</span><span class="p">)</span>
-<span class="g g-Whitespace">    </span><span class="mi">687</span> 
-<span class="g g-Whitespace">    </span><span class="mi">688</span> 
-
-<span class="nn">~/anaconda/envs/helioml/lib/python3.8/site-packages/pandas/io/parsers.py</span> in <span class="ni">_read</span><span class="nt">(filepath_or_buffer, kwds)</span>
-<span class="g g-Whitespace">    </span><span class="mi">432</span>     <span class="c1"># though mypy handling of conditional imports is difficult.</span>
-<span class="g g-Whitespace">    </span><span class="mi">433</span>     <span class="c1"># See https://github.com/python/mypy/issues/1297</span>
-<span class="ne">--&gt; </span><span class="mi">434</span>     <span class="n">fp_or_buf</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">compression</span><span class="p">,</span> <span class="n">should_close</span> <span class="o">=</span> <span class="n">get_filepath_or_buffer</span><span class="p">(</span>
-<span class="g g-Whitespace">    </span><span class="mi">435</span>         <span class="n">filepath_or_buffer</span><span class="p">,</span> <span class="n">encoding</span><span class="p">,</span> <span class="n">compression</span>
-<span class="g g-Whitespace">    </span><span class="mi">436</span>     <span class="p">)</span>
-
-<span class="nn">~/anaconda/envs/helioml/lib/python3.8/site-packages/pandas/io/common.py</span> in <span class="ni">get_filepath_or_buffer</span><span class="nt">(filepath_or_buffer, encoding, compression, mode, storage_options)</span>
-<span class="g g-Whitespace">    </span><span class="mi">186</span>             <span class="c1"># Override compression based on Content-Encoding header</span>
-<span class="g g-Whitespace">    </span><span class="mi">187</span>             <span class="n">compression</span> <span class="o">=</span> <span class="s2">&quot;gzip&quot;</span>
-<span class="ne">--&gt; </span><span class="mi">188</span>         <span class="n">reader</span> <span class="o">=</span> <span class="n">BytesIO</span><span class="p">(</span><span class="n">req</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
-<span class="g g-Whitespace">    </span><span class="mi">189</span>         <span class="n">req</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
-<span class="g g-Whitespace">    </span><span class="mi">190</span>         <span class="k">return</span> <span class="n">reader</span><span class="p">,</span> <span class="n">encoding</span><span class="p">,</span> <span class="n">compression</span><span class="p">,</span> <span class="kc">True</span>
-
-<span class="nn">~/anaconda/envs/helioml/lib/python3.8/http/client.py</span> in <span class="ni">read</span><span class="nt">(self, amt)</span>
-<span class="g g-Whitespace">    </span><span class="mi">465</span>             <span class="k">else</span><span class="p">:</span>
-<span class="g g-Whitespace">    </span><span class="mi">466</span>                 <span class="k">try</span><span class="p">:</span>
-<span class="ne">--&gt; </span><span class="mi">467</span>                     <span class="n">s</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_safe_read</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">length</span><span class="p">)</span>
-<span class="g g-Whitespace">    </span><span class="mi">468</span>                 <span class="k">except</span> <span class="n">IncompleteRead</span><span class="p">:</span>
-<span class="g g-Whitespace">    </span><span class="mi">469</span>                     <span class="bp">self</span><span class="o">.</span><span class="n">_close_conn</span><span class="p">()</span>
-
-<span class="nn">~/anaconda/envs/helioml/lib/python3.8/http/client.py</span> in <span class="ni">_safe_read</span><span class="nt">(self, amt)</span>
-<span class="g g-Whitespace">    </span><span class="mi">606</span>         <span class="n">IncompleteRead</span> <span class="n">exception</span> <span class="n">can</span> <span class="n">be</span> <span class="n">used</span> <span class="n">to</span> <span class="n">detect</span> <span class="n">the</span> <span class="n">problem</span><span class="o">.</span>
-<span class="g g-Whitespace">    </span><span class="mi">607</span>         <span class="s2">&quot;&quot;&quot;</span>
-<span class="ne">--&gt; </span><span class="mi">608</span><span class="s2">         data = self.fp.read(amt)</span>
-<span class="g g-Whitespace">    </span><span class="mi">609</span><span class="s2">         if len(data) &lt; amt:</span>
-<span class="g g-Whitespace">    </span><span class="mi">610</span><span class="s2">             raise IncompleteRead(data, amt-len(data))</span>
-
-<span class="nn">~/anaconda/envs/helioml/lib/python3.8/socket.py</span> in <span class="ni">readinto</span><span class="nt">(self, b)</span>
-<span class="g g-Whitespace">    </span><span class="mi">667</span><span class="s2">         while True:</span>
-<span class="g g-Whitespace">    </span><span class="mi">668</span><span class="s2">             try:</span>
-<span class="ne">--&gt; </span><span class="mi">669</span><span class="s2">                 return self._sock.recv_into(b)</span>
-<span class="g g-Whitespace">    </span><span class="mi">670</span><span class="s2">             except timeout:</span>
-<span class="g g-Whitespace">    </span><span class="mi">671</span><span class="s2">                 self._timeout_occurred = True</span>
-
-<span class="nn">~/anaconda/envs/helioml/lib/python3.8/ssl.py</span> in <span class="ni">recv_into</span><span class="nt">(self, buffer, nbytes, flags)</span>
-<span class="g g-Whitespace">   </span><span class="mi">1239</span><span class="s2">                   &quot;non-zero flags not allowed in calls to recv_into() on </span><span class="si">%s</span><span class="s2">&quot; %</span>
-<span class="g g-Whitespace">   </span><span class="mi">1240</span><span class="s2">                   self.__class__)</span>
-<span class="ne">-&gt; </span><span class="mi">1241</span><span class="s2">             return self.read(nbytes, buffer)</span>
-<span class="g g-Whitespace">   </span><span class="mi">1242</span><span class="s2">         else:</span>
-<span class="g g-Whitespace">   </span><span class="mi">1243</span><span class="s2">             return super().recv_into(buffer, nbytes, flags)</span>
-
-<span class="nn">~/anaconda/envs/helioml/lib/python3.8/ssl.py</span> in <span class="ni">read</span><span class="nt">(self, len, buffer)</span>
-<span class="g g-Whitespace">   </span><span class="mi">1097</span><span class="s2">         try:</span>
-<span class="g g-Whitespace">   </span><span class="mi">1098</span><span class="s2">             if buffer is not None:</span>
-<span class="ne">-&gt; </span><span class="mi">1099</span><span class="s2">                 return self._sslobj.read(len, buffer)</span>
-<span class="g g-Whitespace">   </span><span class="mi">1100</span><span class="s2">             else:</span>
-<span class="g g-Whitespace">   </span><span class="mi">1101</span><span class="s2">                 return self._sslobj.read(len)</span>
-
-<span class="ne">OverflowError</span>: signed integer is greater than maximum
 </pre></div>
 </div>
 </div>

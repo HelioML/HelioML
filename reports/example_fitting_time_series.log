@@ -1,0 +1,50 @@
+Traceback (most recent call last):
+  File "/Users/mbobra/anaconda/envs/helioml/lib/python3.9/site-packages/jupyter_cache/executors/utils.py", line 51, in single_nb_execution
+    executenb(
+  File "/Users/mbobra/anaconda/envs/helioml/lib/python3.9/site-packages/nbclient/client.py", line 1087, in execute
+    return NotebookClient(nb=nb, resources=resources, km=km, **kwargs).execute()
+  File "/Users/mbobra/anaconda/envs/helioml/lib/python3.9/site-packages/nbclient/util.py", line 74, in wrapped
+    return just_run(coro(*args, **kwargs))
+  File "/Users/mbobra/anaconda/envs/helioml/lib/python3.9/site-packages/nbclient/util.py", line 53, in just_run
+    return loop.run_until_complete(coro)
+  File "/Users/mbobra/anaconda/envs/helioml/lib/python3.9/asyncio/base_events.py", line 642, in run_until_complete
+    return future.result()
+  File "/Users/mbobra/anaconda/envs/helioml/lib/python3.9/site-packages/nbclient/client.py", line 540, in async_execute
+    await self.async_execute_cell(
+  File "/Users/mbobra/anaconda/envs/helioml/lib/python3.9/site-packages/nbclient/client.py", line 832, in async_execute_cell
+    self._check_raise_for_error(cell, exec_reply)
+  File "/Users/mbobra/anaconda/envs/helioml/lib/python3.9/site-packages/nbclient/client.py", line 740, in _check_raise_for_error
+    raise CellExecutionError.from_cell_and_msg(cell, exec_reply['content'])
+nbclient.exceptions.CellExecutionError: An error occurred while executing the following cell:
+------------------
+# Standard modules
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+%matplotlib inline
+import seaborn as sns
+plt.style.use('seaborn')
+from scipy.io.idl import readsav
+from sklearn.pipeline import make_pipeline
+from sklearn.model_selection import validation_curve, ShuffleSplit
+from sklearn.metrics import explained_variance_score, make_scorer
+from sklearn.svm import SVR
+from pandas.plotting import register_matplotlib_converters
+register_matplotlib_converters()
+
+# Custom modules
+from jpm_time_conversions import metatimes_to_seconds_since_start, datetimeindex_to_human
+------------------
+
+[0;31m---------------------------------------------------------------------------[0m
+[0;31mModuleNotFoundError[0m                       Traceback (most recent call last)
+[0;32m<ipython-input-1-614367af5afe>[0m in [0;36m<module>[0;34m[0m
+[1;32m      4[0m [0;32mimport[0m [0mmatplotlib[0m[0;34m.[0m[0mpyplot[0m [0;32mas[0m [0mplt[0m[0;34m[0m[0;34m[0m[0m
+[1;32m      5[0m [0mget_ipython[0m[0;34m([0m[0;34m)[0m[0;34m.[0m[0mrun_line_magic[0m[0;34m([0m[0;34m'matplotlib'[0m[0;34m,[0m [0;34m'inline'[0m[0;34m)[0m[0;34m[0m[0;34m[0m[0m
+[0;32m----> 6[0;31m [0;32mimport[0m [0mseaborn[0m [0;32mas[0m [0msns[0m[0;34m[0m[0;34m[0m[0m
+[0m[1;32m      7[0m [0mplt[0m[0;34m.[0m[0mstyle[0m[0;34m.[0m[0muse[0m[0;34m([0m[0;34m'seaborn'[0m[0;34m)[0m[0;34m[0m[0;34m[0m[0m
+[1;32m      8[0m [0;32mfrom[0m [0mscipy[0m[0;34m.[0m[0mio[0m[0;34m.[0m[0midl[0m [0;32mimport[0m [0mreadsav[0m[0;34m[0m[0;34m[0m[0m
+
+[0;31mModuleNotFoundError[0m: No module named 'seaborn'
+ModuleNotFoundError: No module named 'seaborn'
+
