@@ -10,5 +10,5 @@ More recent work has sought to create classification schemes which rely on fewer
 
 In this notebook, we will be performing unsupervised machine learning on solar wind data to see how such novel techniques can be used to gain insight into the solar wind. Specifically, we will demonstrate the application of a Bayesian Gaussian Mixture from the scikit-learn package, and we will also show how dimension reduction (UMAP) can be used in conjuction with clustering (HDBSCAN) to investigate a more complex parameter space for solar wind classification.
 
-The analysis in this notebook is published in [Bloch et al, 2020, Solar Physics, 295, 41](https://link.springer.com/article/10.1007/s11207-020-01609-z). If you use any of this code, we ask that you cite [Bloch et al. (2020)](https://link.springer.com/article/10.1007/s11207-020-01609-z).
+The analysis in this notebook is published in [Bloch et al, 2020, Solar Physics, 295, 41](https://link.springer.com/article/10.1007/s11207-020-01609-z). If you use any of this code, we ask that you cite the paper ([Bloch et al., 2020](https://link.springer.com/article/10.1007/s11207-020-01609-z)) and the code ([DOI: 10.5281/zenodo.4354341](https://doi.org/10.5281/zenodo.4354341)).
 
