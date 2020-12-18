@@ -135,6 +135,7 @@ Below is a short summary of each chapter. Each summary gives a brief overview of
 * EVE: Extreme Ultraviolet Variability Experiment onboard SDO
 * GISTM: Global Navigation Satellite System Ionospheric Scintillation and Total Electron Content Measurements Monitor
 * GOES: Geostationary Operational Environmental Satellites
+* HDBSCAN: Hierarchical Density-Based Spatial Clustering of Applications with Noise
 * HMI: Helioseismic Magnetic Imager onboard SDO'
 * IRIS: Iterface Region Imaging Spectrograph
 * Irradiance is the total output of light from the sun. Spectral irradiance is that intensity as a function of wavelength.
@@ -147,5 +148,6 @@ Below is a short summary of each chapter. Each summary gives a brief overview of
 * SOHO: Solar and Heliospheric Observatory
 * SOT: Solar Optical Telescope onboard Hinode
 * STEREO: Solar Terrestrial Relations Observatory
+* UMAP: Uniform Manifold Approximation and Prediction
 * WDCG: World Data Center for Geomagnetism
 * XRS: X-Ray Sensor
