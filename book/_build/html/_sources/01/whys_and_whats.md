@@ -1,8 +1,6 @@
 What is this book and why does it exist?
 ========================================
 
-*by James Paul Mason*
-
 This is a book that lives at the crossroads of heliophysics and machine learning. The authors are all heliophysicists that use the tools and techniques of machine learning to deal with large quantities of data in our daily work. This books sets out to show by example some of those real scenarios.
 
 ## Why this book?

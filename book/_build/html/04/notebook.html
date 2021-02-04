@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Notebook &#8212; Machine Learning, Statistics, and Data Mining for Heliophysics</title>
     
-  <link rel="stylesheet" href="../_static/css/index.73d71520a4ca3b99cfee5594769eaaae.css">
+  <link rel="stylesheet" href="../_static/css/index.f658d18f9b420779cfdf24aa0a7e2d77.css">
 
     
   <link rel="stylesheet"
@@ -34,13 +34,12 @@
     <link rel="stylesheet" type="text/css" href="../_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" />
     <link rel="stylesheet" type="text/css" href="../_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" />
     
-  <link rel="preload" as="script" href="../_static/js/index.3da636dd464baa7582d2.js">
+  <link rel="preload" as="script" href="../_static/js/index.d3f166471bb80abb5163.js">
 
     <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
     <script src="../_static/jquery.js"></script>
     <script src="../_static/underscore.js"></script>
     <script src="../_static/doctools.js"></script>
-    <script src="../_static/language_data.js"></script>
     <script src="../_static/togglebutton.js"></script>
     <script src="../_static/clipboard.min.js"></script>
     <script src="../_static/copybutton.js"></script>
@@ -468,7 +467,7 @@
   <div class="section" id="notebook">
 <h1>Notebook<a class="headerlink" href="#notebook" title="Permalink to this headline">¶</a></h1>
 <p>by Paul Wright<span class="math notranslate nohighlight">\(^{1}\)</span>, Mark Cheung<span class="math notranslate nohighlight">\(^{2,3}\)</span>, Rajat Thomas<span class="math notranslate nohighlight">\(^{4}\)</span>, Richard Galvez<span class="math notranslate nohighlight">\(^{5}\)</span>, Alexandre Szenicer<span class="math notranslate nohighlight">\(^{6}\)</span>, Meng Jin<span class="math notranslate nohighlight">\(^{2,7}\)</span>, Andrés Muñoz-Jaramillo<span class="math notranslate nohighlight">\(^{8}\)</span>, and David Fouhey<span class="math notranslate nohighlight">\(^{9}\)</span></p>
-<p><span class="math notranslate nohighlight">\(^{1}\)</span>University of Glasgow, email: paul&#64;pauljwright.co.uk;
+<p><span class="math notranslate nohighlight">\(^{1}\)</span>University of Glasgow, email: <a class="reference external" href="mailto:paul&#37;&#52;&#48;pauljwright&#46;co&#46;uk">paul<span>&#64;</span>pauljwright<span>&#46;</span>co<span>&#46;</span>uk</a>;
 <span class="math notranslate nohighlight">\(^{2}\)</span>Lockheed Martin Solar and Astrophysics Laboratory;
 <span class="math notranslate nohighlight">\(^{3}\)</span>Stanford University;
 <span class="math notranslate nohighlight">\(^{4}\)</span>University of Amsterdam;
@@ -481,8 +480,8 @@
 <div class="section" id="introduction">
 <h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h2>
 <p>The intensity observed through optically-thin <i>SDO</i>/AIA filters (94 Å, 131 Å, 171 Å, 193 Å, 211 Å, 335 Å) can be related to the temperature distribution of the solar corona (the differential emission measure; DEM) as</p>
-<div class="amsmath math notranslate nohighlight" id="equation-c128ed06-bfc2-4678-85c6-23d3818a6a25">
-<span class="eqno">(7)<a class="headerlink" href="#equation-c128ed06-bfc2-4678-85c6-23d3818a6a25" title="Permalink to this equation">¶</a></span>\[\begin{equation}
+<div class="amsmath math notranslate nohighlight" id="equation-b121ae6e-f247-446a-89d9-da4cd5298b5e">
+<span class="eqno">(7)<a class="headerlink" href="#equation-b121ae6e-f247-446a-89d9-da4cd5298b5e" title="Permalink to this equation">¶</a></span>\[\begin{equation}
 g_{i} = \int_{T} K_{i}(T) \xi(T) dT \, .
 \end{equation}\]</div>
 <p>In this equation, <span class="math notranslate nohighlight">\(g_{i}\)</span> is the DN s<span class="math notranslate nohighlight">\(^{-1}\)</span> px<span class="math notranslate nohighlight">\(^{-1}\)</span> value in the <span class="math notranslate nohighlight">\(i\)</span>th SDO/AIA channel. This intensity corresponds to the <span class="math notranslate nohighlight">\(K_{i}(T)\)</span> temperature response function, and the DEM, <span class="math notranslate nohighlight">\(\xi(T)\)</span>, is in units of cm<span class="math notranslate nohighlight">\(^{-5}\)</span> K<span class="math notranslate nohighlight">\(^{-1}\)</span>. The matrix formulation of this integral equation can be represented in the form <span class="math notranslate nohighlight">\(\vec{g} = {\bf K}\vec{\xi}\)</span>, however this problem is an ill-posed inverse problem, and any attempt to directly recover <span class="math notranslate nohighlight">\(\vec{\xi}\)</span> leads to significant noise amplification.</p>
@@ -1311,7 +1310,7 @@ Inference on the other hand is fast.</p>
     </div>
 
     
-  <script src="../_static/js/index.3da636dd464baa7582d2.js"></script>
+  <script src="../_static/js/index.d3f166471bb80abb5163.js"></script>
 
 
     
