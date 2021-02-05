@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Table of Contents &#8212; Machine Learning, Statistics, and Data Mining for Heliophysics</title>
     
-  <link rel="stylesheet" href="../_static/css/index.73d71520a4ca3b99cfee5594769eaaae.css">
+  <link rel="stylesheet" href="../_static/css/index.f658d18f9b420779cfdf24aa0a7e2d77.css">
 
     
   <link rel="stylesheet"
@@ -34,13 +34,12 @@
     <link rel="stylesheet" type="text/css" href="../_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" />
     <link rel="stylesheet" type="text/css" href="../_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" />
     
-  <link rel="preload" as="script" href="../_static/js/index.3da636dd464baa7582d2.js">
+  <link rel="preload" as="script" href="../_static/js/index.d3f166471bb80abb5163.js">
 
     <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
     <script src="../_static/jquery.js"></script>
     <script src="../_static/underscore.js"></script>
     <script src="../_static/doctools.js"></script>
-    <script src="../_static/language_data.js"></script>
     <script src="../_static/togglebutton.js"></script>
     <script src="../_static/clipboard.min.js"></script>
     <script src="../_static/copybutton.js"></script>
@@ -266,6 +265,23 @@
 </ul>
 <p class="caption collapsible-parent">
  <span class="caption-text">
+  Chapter 9
+ </span>
+</p>
+<ul class="nav sidenav_l1">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../10/Unsupervised_Classification_of_Solar_Wind_Source_Regions.html">
+   Unsupervised Classification of Solar Wind Source Regions
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../10/notebook.html">
+   Notebook
+  </a>
+ </li>
+</ul>
+<p class="caption collapsible-parent">
+ <span class="caption-text">
   Appendix
  </span>
 </p>
@@ -406,6 +422,11 @@
  <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#chapter-8">
    Chapter 8
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#chapter-9">
+   Chapter 9
   </a>
  </li>
  <li class="toc-h2 nav-item toc-entry">
@@ -622,6 +643,27 @@
 <li><p>Published and refereed paper: <a class="reference external" href="https://doi.org/10.1029/2019SW002399">Pires de Lima et al., 2020, <i> Space Weather</i>, 18, 2</a></p></li>
 </ul>
 </div>
+<div class="section" id="chapter-9">
+<h2>Chapter 9<a class="headerlink" href="#chapter-9" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>Author(s): Téo Bloch, Clare Watt, Mathew Owens, Leland McInnes &amp; Allan R. Macneil</p></li>
+<li><p>Objective: Characterising the latent structure in the solar wind to determine the solar source regions.</p></li>
+<li><p>ML method(s) and concepts:</p>
+<ul>
+<li><p>Preprocessing &gt; data management &gt; splitting data into training, science sets</p></li>
+<li><p>Unsupervised machine learning &gt; Clustering &gt; Bayesian Gaussian Mixture model (<a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.mixture.BayesianGaussianMixture.html">sklearn.mixture.BayesianGaussianMixture</a>)</p></li>
+<li><p>Unsupervised machine learning &gt; Clustering &gt; HDBSCAN (<a class="reference external" href="https://hdbscan.readthedocs.io/en/latest/api.html">hdbscan.hdbscan_.HDBSCAN</a>)</p></li>
+<li><p>Unsupervised machine learning &gt; Dimension Reduction &gt; UMAP (<a class="reference external" href="https://umap-learn.readthedocs.io/en/latest/api.html">umap.umap_.UMAP</a>)</p></li>
+</ul>
+</li>
+<li><p>Data source(s):</p>
+<ul>
+<li><p>Solar wind data &gt; Ulysses and ACE</p></li>
+</ul>
+</li>
+<li><p>Published and refereed paper: <a class="reference external" href="https://doi.org/10.1007/s11207-020-01609-z">Bloch et al., 2020, <i> Solar Physics</i>, 295, 41</a></p></li>
+</ul>
+</div>
 <div class="section" id="future-chapters">
 <h2>Future Chapters<a class="headerlink" href="#future-chapters" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
@@ -637,6 +679,7 @@
 <li><p>EVE: Extreme Ultraviolet Variability Experiment onboard SDO</p></li>
 <li><p>GISTM: Global Navigation Satellite System Ionospheric Scintillation and Total Electron Content Measurements Monitor</p></li>
 <li><p>GOES: Geostationary Operational Environmental Satellites</p></li>
+<li><p>HDBSCAN: Hierarchical Density-Based Spatial Clustering of Applications with Noise</p></li>
 <li><p>HMI: Helioseismic Magnetic Imager onboard SDO’</p></li>
 <li><p>IRIS: Iterface Region Imaging Spectrograph</p></li>
 <li><p>Irradiance is the total output of light from the sun. Spectral irradiance is that intensity as a function of wavelength.</p></li>
@@ -649,6 +692,7 @@
 <li><p>SOHO: Solar and Heliospheric Observatory</p></li>
 <li><p>SOT: Solar Optical Telescope onboard Hinode</p></li>
 <li><p>STEREO: Solar Terrestrial Relations Observatory</p></li>
+<li><p>UMAP: Uniform Manifold Approximation and Prediction</p></li>
 <li><p>WDCG: World Data Center for Geomagnetism</p></li>
 <li><p>XRS: X-Ray Sensor</p></li>
 </ul>
@@ -703,7 +747,7 @@
     </div>
 
     
-  <script src="../_static/js/index.3da636dd464baa7582d2.js"></script>
+  <script src="../_static/js/index.d3f166471bb80abb5163.js"></script>
 
 
     

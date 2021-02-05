@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Notebook &#8212; Machine Learning, Statistics, and Data Mining for Heliophysics</title>
     
-  <link rel="stylesheet" href="../_static/css/index.73d71520a4ca3b99cfee5594769eaaae.css">
+  <link rel="stylesheet" href="../_static/css/index.f658d18f9b420779cfdf24aa0a7e2d77.css">
 
     
   <link rel="stylesheet"
@@ -34,13 +34,12 @@
     <link rel="stylesheet" type="text/css" href="../_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" />
     <link rel="stylesheet" type="text/css" href="../_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" />
     
-  <link rel="preload" as="script" href="../_static/js/index.3da636dd464baa7582d2.js">
+  <link rel="preload" as="script" href="../_static/js/index.d3f166471bb80abb5163.js">
 
     <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
     <script src="../_static/jquery.js"></script>
     <script src="../_static/underscore.js"></script>
     <script src="../_static/doctools.js"></script>
-    <script src="../_static/language_data.js"></script>
     <script src="../_static/togglebutton.js"></script>
     <script src="../_static/clipboard.min.js"></script>
     <script src="../_static/copybutton.js"></script>
@@ -260,6 +259,23 @@
  </li>
  <li class="toctree-l1">
   <a class="reference internal" href="../09/notebook.html">
+   Notebook
+  </a>
+ </li>
+</ul>
+<p class="caption collapsible-parent">
+ <span class="caption-text">
+  Chapter 9
+ </span>
+</p>
+<ul class="nav sidenav_l1">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../10/Unsupervised_Classification_of_Solar_Wind_Source_Regions.html">
+   Unsupervised Classification of Solar Wind Source Regions
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../10/notebook.html">
    Notebook
   </a>
  </li>
@@ -1232,7 +1248,7 @@ Wall time: 10min 22s
 </div>
 <div class="section" id="step-5-svm-evaluation">
 <h2>Step 5: SVM evaluation<a class="headerlink" href="#step-5-svm-evaluation" title="Permalink to this headline">¶</a></h2>
-<p>We use a variety of evaluation metrics to gauge model performance, but emphasize the Total Skill Score (TSS) here due to its insensitivity on class imbalance ratio [<a class="reference external" href="http://iopscience.iop.org/article/10.1088/2041-8205/747/2/L41/meta">Bloomfield et al., 2012</a>]. All metrics require the use of the entries of the contingency, or confusion matix. For the scintillation/no-scintillation classification problem the matrix is https://github.com/rmcgranaghan/machine-learning-with-GNSS-data/blob/master/confusion_matrix_schematic.png.</p>
+<p>We use a variety of evaluation metrics to gauge model performance, but emphasize the Total Skill Score (TSS) here due to its insensitivity on class imbalance ratio [<a class="reference external" href="http://iopscience.iop.org/article/10.1088/2041-8205/747/2/L41/meta">Bloomfield et al., 2012</a>]. All metrics require the use of the entries of the contingency, or confusion matix. For the scintillation/no-scintillation classification problem the matrix is <a class="reference external" href="https://github.com/rmcgranaghan/machine-learning-with-GNSS-data/blob/master/confusion_matrix_schematic.png">https://github.com/rmcgranaghan/machine-learning-with-GNSS-data/blob/master/confusion_matrix_schematic.png</a>.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Function to calculate the confusion matrix entries</span>
@@ -1730,20 +1746,20 @@ Confusion matrix, without normalization
 <div class="section" id="references">
 <h2>References<a class="headerlink" href="#references" title="Permalink to this headline">¶</a></h2>
 <p>Aarons, J., &amp; Basu, S. (1994). Ionospheric amplitude and phase fluctuations at the GPS frequencies. In Proceedings of the 7th International Technical Meeting of the Satellite Division of The Institute of Navigation (ION GPS 1994), The Institute of Navigation, pp. 1569–1578.</p>
-<p>Basu, S., MacKenzie, E., &amp; Basu, S. (1988). Ionospheric constraints on VHF/UHF communications links during solar maximum and minimum periods. Radio Science, 23(3), 363–378. https://doi.org/10.1029/RS023i003p00363.</p>
-<p>Beutler, G., Rothacher, M., Schaer, S., Springer, T., Kouba, J., &amp; Neilan, R. (1999). The International GPS Service (IGS): An interdisciplinary service in support of Earth sciences. Advances in Space Research, 23(4), 631–653. https://doi.org/10.1016/S0273-1177(99)00160-X, satellite Dynamics, Orbit Analysis and Combination of Space Techniques.</p>
-<p>Cherniak, I., Krankowski, A., &amp; Zakharenkova, I. (2014). Observation of the ionospheric irregularities over the Northern Hemisphere: Methodology and service. Radio Science, 49, 653–662. https://doi.org/10.1002/2014RS005433.</p>
-<p>Cortes, C., &amp; Vapnik, V. (1995). Support-vector networks. Machine Learning, 20(3), 273–297. https://doi.org/10.1007/BF00994018.</p>
+<p>Basu, S., MacKenzie, E., &amp; Basu, S. (1988). Ionospheric constraints on VHF/UHF communications links during solar maximum and minimum periods. Radio Science, 23(3), 363–378. <a class="reference external" href="https://doi.org/10.1029/RS023i003p00363">https://doi.org/10.1029/RS023i003p00363</a>.</p>
+<p>Beutler, G., Rothacher, M., Schaer, S., Springer, T., Kouba, J., &amp; Neilan, R. (1999). The International GPS Service (IGS): An interdisciplinary service in support of Earth sciences. Advances in Space Research, 23(4), 631–653. <a class="reference external" href="https://doi.org/10.1016/S0273-1177(99)00160-X">https://doi.org/10.1016/S0273-1177(99)00160-X</a>, satellite Dynamics, Orbit Analysis and Combination of Space Techniques.</p>
+<p>Cherniak, I., Krankowski, A., &amp; Zakharenkova, I. (2014). Observation of the ionospheric irregularities over the Northern Hemisphere: Methodology and service. Radio Science, 49, 653–662. <a class="reference external" href="https://doi.org/10.1002/2014RS005433">https://doi.org/10.1002/2014RS005433</a>.</p>
+<p>Cortes, C., &amp; Vapnik, V. (1995). Support-vector networks. Machine Learning, 20(3), 273–297. <a class="reference external" href="https://doi.org/10.1007/BF00994018">https://doi.org/10.1007/BF00994018</a>.</p>
 <p>Coster, A., &amp; Komjathy, A. (2008). Space weather and the global positioning system. Space Weather, 6, S06D04.
-https://doi.org/10.1029/2008SW000400.</p>
+<a class="reference external" href="https://doi.org/10.1029/2008SW000400">https://doi.org/10.1029/2008SW000400</a>.</p>
 <p>Duderstadt, J. J. (2001). Issues for science and engineering researchers in the digital age. Washington, DC: National Academy Press.</p>
-<p>Kintner, P. M. (2001). Fading timescales associated with GPS signals and potential consequences. Radio Science, 36(4), 731–743. https://doi.org/10.1029/1999RS002310.</p>
-<p>Kintner, P. M., Ledvina, B. M., &amp; de Paula, E. R. (2007). GPS and ionospheric scintillations. Space Weather, 5, S09003. https://doi.org/10.1029/2006SW000260.</p>
-<p>McGranaghan, R.M., A.J. Mannucci, B.D Wilson, C.A. Mattmann, and R. Chadwick. (2018), New capabilities for prediction of high‐latitude ionospheric scintillation: A novel approach with machine learning, Space Weather, 16. https://doi.org/10.1029/2018SW002018.</p>
-<p>Ren, X., Zhang, X., Xie, W., Zhang, K., Yuan, Y., &amp; Li, X. (2016). Global ionospheric modelling using multi-GNSS: BeiDou, Galileo, GLONASS and GPS. Scientific Reports, 6(1), 33499. https://doi.org/10.1038/srep33499.</p>
+<p>Kintner, P. M. (2001). Fading timescales associated with GPS signals and potential consequences. Radio Science, 36(4), 731–743. <a class="reference external" href="https://doi.org/10.1029/1999RS002310">https://doi.org/10.1029/1999RS002310</a>.</p>
+<p>Kintner, P. M., Ledvina, B. M., &amp; de Paula, E. R. (2007). GPS and ionospheric scintillations. Space Weather, 5, S09003. <a class="reference external" href="https://doi.org/10.1029/2006SW000260">https://doi.org/10.1029/2006SW000260</a>.</p>
+<p>McGranaghan, R.M., A.J. Mannucci, B.D Wilson, C.A. Mattmann, and R. Chadwick. (2018), New capabilities for prediction of high‐latitude ionospheric scintillation: A novel approach with machine learning, Space Weather, 16. <a class="reference external" href="https://doi.org/10.1029/2018SW002018">https://doi.org/10.1029/2018SW002018</a>.</p>
+<p>Ren, X., Zhang, X., Xie, W., Zhang, K., Yuan, Y., &amp; Li, X. (2016). Global ionospheric modelling using multi-GNSS: BeiDou, Galileo, GLONASS and GPS. Scientific Reports, 6(1), 33499. <a class="reference external" href="https://doi.org/10.1038/srep33499">https://doi.org/10.1038/srep33499</a>.</p>
 <p>Rizos, C., Montenbruck, O., Weber, G. R., Weber, R., &amp; Neilan, U. H. (2013). The IGS MGEX experiment as a milestone for a comprehensive multi-GNSS service. In Proceedings of the ION 2013 Pacific PNT Meeting, The Institute of Navigation, pp. 289–295.</p>
 <p>Sadlier, G., Flytkjær, R., Sabri, F., &amp; Herr, D. (2017). The economic impact on the UK of a sisruption to GNSS. Innovate UK, UK Space Agency: Royal Institute of Navigation.</p>
-<p>Tzelepis, C., &amp; Carreno, A. (2016). Concepts for NASA’s Communication and Navigation Architecture in Near Earth and Deep Space Domains; Strategies for affordable and scalable implementation of next generation relay systems with improved mission experience and reduced burden. In 34th AIAA International Communications Satellite Systems Conference. https://doi.org/10.2514/6.2016-5706.</p>
+<p>Tzelepis, C., &amp; Carreno, A. (2016). Concepts for NASA’s Communication and Navigation Architecture in Near Earth and Deep Space Domains; Strategies for affordable and scalable implementation of next generation relay systems with improved mission experience and reduced burden. In 34th AIAA International Communications Satellite Systems Conference. <a class="reference external" href="https://doi.org/10.2514/6.2016-5706">https://doi.org/10.2514/6.2016-5706</a>.</p>
 </div>
 </div>
 
@@ -1795,7 +1811,7 @@ https://doi.org/10.1029/2008SW000400.</p>
     </div>
 
     
-  <script src="../_static/js/index.3da636dd464baa7582d2.js"></script>
+  <script src="../_static/js/index.d3f166471bb80abb5163.js"></script>
 
 
     
