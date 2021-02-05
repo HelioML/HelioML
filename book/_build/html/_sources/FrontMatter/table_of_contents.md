@@ -113,6 +113,18 @@ Below is a short summary of each chapter. Each summary gives a brief overview of
     * 1 MeV electrons measurements > RBSP
 * Published and refereed paper: [Pires de Lima et al., 2020, <i> Space Weather</i>, 18, 2](https://doi.org/10.1029/2019SW002399)
 
+
+## Chapter 9
+* Author(s): Téo Bloch, Clare Watt, Mathew Owens, Leland McInnes & Allan R. Macneil 
+* Objective: Characterising the latent structure in the solar wind to determine the solar source regions.
+* ML method(s) and concepts:
+	* Preprocessing > data management > splitting data into training, science sets 
+	* Unsupervised machine learning > Clustering > Bayesian Gaussian Mixture model ([sklearn.mixture.BayesianGaussianMixture](https://scikit-learn.org/stable/modules/generated/sklearn.mixture.BayesianGaussianMixture.html))
+	* Unsupervised machine learning > Clustering > HDBSCAN ([hdbscan.hdbscan_.HDBSCAN](https://hdbscan.readthedocs.io/en/latest/api.html))
+	* Unsupervised machine learning > Dimension Reduction > UMAP ([umap.umap_.UMAP](https://umap-learn.readthedocs.io/en/latest/api.html)) 
+* Data source(s): 
+    * Solar wind data > Ulysses and ACE
+* Published and refereed paper: [Bloch et al., 2020, <i> Solar Physics</i>, 295, 41](https://doi.org/10.1007/s11207-020-01609-z)
 ## Future Chapters
 * Contact us! Open an [issue on the GitHub repository](https://github.com/HelioML/HelioML/issues) with your idea. See our [guide for contributing here](https://github.com/HelioML/HelioML/blob/master/CONTRIBUTING.md). 
 
@@ -123,6 +135,7 @@ Below is a short summary of each chapter. Each summary gives a brief overview of
 * EVE: Extreme Ultraviolet Variability Experiment onboard SDO
 * GISTM: Global Navigation Satellite System Ionospheric Scintillation and Total Electron Content Measurements Monitor
 * GOES: Geostationary Operational Environmental Satellites
+* HDBSCAN: Hierarchical Density-Based Spatial Clustering of Applications with Noise
 * HMI: Helioseismic Magnetic Imager onboard SDO'
 * IRIS: Iterface Region Imaging Spectrograph
 * Irradiance is the total output of light from the sun. Spectral irradiance is that intensity as a function of wavelength.
@@ -135,5 +148,6 @@ Below is a short summary of each chapter. Each summary gives a brief overview of
 * SOHO: Solar and Heliospheric Observatory
 * SOT: Solar Optical Telescope onboard Hinode
 * STEREO: Solar Terrestrial Relations Observatory
+* UMAP: Uniform Manifold Approximation and Prediction
 * WDCG: World Data Center for Geomagnetism
 * XRS: X-Ray Sensor

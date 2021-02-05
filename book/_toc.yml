@@ -51,6 +51,11 @@
   - file: 09/Forecasting_Relativistic_Electrons_Outer_Radiation_Belt.md
   - file: 09/notebook.ipynb
 
+- part: Chapter 9
+  chapters:
+  - file: 10/Unsupervised_Classification_of_Solar_Wind_Source_Regions.md
+  - file: 10/notebook.ipynb
+
 - part: Appendix
   chapters:
     - file: Appendix/how_to_run_this_book.md
