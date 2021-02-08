@@ -23,7 +23,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 * Chapters 7-9
 
 ### Changed
-* Using an updated architecture for `jupyter-book` (version 0.10.0)
+* Using an updated architecture for `jupyter-book` (version 0.8.3)
 
 
 ## [v0.3.0](https://github.com/HelioML/HelioML/releases/tag/v0.3.0)
