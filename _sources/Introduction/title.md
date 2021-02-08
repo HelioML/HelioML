@@ -3,7 +3,7 @@ Machine Learning, Statistics, and Data Mining for Heliophysics
 
 **By [Monica Bobra](https://web.stanford.edu/~mbobra/) and [James Mason](http://jamespaulmason.strikingly.com/)**
 
-Contributions by Matthew R. Argall, Carlos José Díaz Baso, Téo Bloch, Yue Chen, Mark Cheung, Tobías Felipe, David Fouhey, Richard Galvez, Meng Jin, Andrés Muñoz-Jaramillo, Brandon Panos, Rafael Pires de Lima, Marek Petrik, Andrés Asensio Ramos, Colin Small, Alexandre Szenicer, Rajat Thomas, and Paul Wright.
+Contributions by Matthew R. Argall, Carlos José Díaz Baso, Téo Bloch, Yue Chen, Mark Cheung, Tobías Felipe, David Fouhey, Richard Galvez, Meng Jin, Andrés Muñoz-Jaramillo, Brandon Panos, Rafael Pires de Lima, Allan R. Macneil, Leland McInnes, Mathew Owens, Marek Petrik, Andrés Asensio Ramos, Colin Small, Alexandre Szenicer, Rajat Thomas, Clare Watt, and Paul Wright.
 
 This is a book about machine learning, statistics, and data mining for heliophysics.
 
@@ -17,5 +17,6 @@ The contents of this book are licensed for free consumption under the following 
 | [v0.1.0](https://github.com/HelioML/HelioML/releases/tag/v0.1.0) | 2018-09-10 | [https://doi.org/10.5281/zenodo.1412825](https://doi.org/10.5281/zenodo.1412825) |
 | [v0.2.0](https://github.com/HelioML/HelioML/releases/tag/v0.2.0) | 2019-02-22 | [https://doi.org/10.5281/zenodo.2575738](https://doi.org/10.5281/zenodo.2575738) |
 | [v0.3.0](https://github.com/HelioML/HelioML/releases/tag/v0.3.0) | 2020-05-11 | [https://doi.org/10.5281/zenodo.3820932](https://doi.org/10.5281/zenodo.3820932) |
+| [v0.4.0](https://github.com/HelioML/HelioML/releases/tag/v0.4.0) | 2021-02-08 | [https://doi.org/10.5281/zenodo.4521380](https://doi.org/10.5281/zenodo.4521380) |
 
 If you'd like to cite the evolving book, instead of a specific version, use the following DOI: [https://doi.org/10.5281/zenodo.1412824](https://doi.org/10.5281/zenodo.1412824).
