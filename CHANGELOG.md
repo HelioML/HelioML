@@ -7,7 +7,6 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ## [Unreleased]
 
 ### Added
-* Chapters 7-9
 * environment.yml file for each chapter. This allows each chapter to define the versions of every package they depend on, particularly in cases where different chapters use different versions of the same package. 
 
 ### Changed
@@ -17,6 +16,15 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ### Removed
 
 ### Fixed
+
+## [v0.4.0](https://github.com/HelioML/HelioML/releases/tag/0.4.0)
+
+### Added
+* Chapters 7-9
+
+### Changed
+* Using an updated architecture for `jupyter-book` (version 0.10.0)
+
 
 ## [v0.3.0](https://github.com/HelioML/HelioML/releases/tag/v0.3.0)
 
