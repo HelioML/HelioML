@@ -13,9 +13,10 @@ When contributing a chapter, we recommend the following scientific workflow:
    1. Fork this entire repository.
    2. Modify the title page and add your name, in alphabetical order, to the list of contributors.
    3. Modify the Table of Contents and add a short description of your chapter.
-   4. Add another enumerated folder within in the content folder (e.g. HelioML/content/13). Within this enumerated folder, add two documents: 
-       * A .md file that acts as an introduction to the chapter, and
-       * A folder named /1 that contains the Jupyter notebook named as `notebook.ipynb` and any ancillary files. Please include a Markdown cell at the beginning of your notebook listing all the required packages and version numbers to run the notebook (e.g. "This notebook uses NumPy version 1.19.2, SunPy version 2.0.1, and scikit-learn version 0.23.").
+   4. Add another enumerated folder within in the content folder (e.g. HelioML/content/13). Within this enumerated folder, add three documents: 
+       1. A .md file that acts as an introduction to the chapter, and
+       2. A folder named /1 that contains the Jupyter notebook named as `notebook.ipynb` and any ancillary files.
+       3. A .yml file containing your environment information, ideally generated simply by activating the environment you used to run your code and doing, `conda env export > environment_ch#.yml`, where # is your chapter (e.g., environment_ch13). [See here for more information](https://conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html#sharing-an-environment).
    5. Create a pull request. We will review your submission, work with you to make sure it's good to go, and approve the merge.
 
 Contributors are required to abide by our [Code of Conduct](https://github.com/HelioML/HelioML/blob/master/CODE_OF_CONDUCT.md).
