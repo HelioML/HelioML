@@ -1,0 +1,16 @@
+name: helioml_ch8
+
+channels:
+  - defaults
+  - conda-forge
+
+dependencies:
+  - python=3.8.*
+  - numpy=1.19*
+  - pandas=1.1*
+  - matplotlib=3.2.2
+  - seaborn=0.11.1
+  - plotly=4.4.1
+  - scikit-learn=0.24
+  - tensorflow=2.3
+  - jupyter=1.0.0
