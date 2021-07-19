@@ -1,0 +1,21 @@
+name: helioml_ch1
+
+channels:
+  - conda-forge
+
+dependencies:
+  - python=3.8.3
+  - pip
+  - pip:
+    - jupyter
+    - jupyterlab==1.0.2
+    - jupyter_contrib_nbextensions
+    - IPython==7.15.0
+    - numpy==1.16.4
+    - pandas==0.24.2
+    - scipy==1.3.0
+    - sklearn==0.21.0
+    - seaborn==0.9.0
+    - matplotlib==3.1.0
+    - jupyter_contrib_nbextensions
+    - IPython==7.6.1
