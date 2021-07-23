@@ -1,35 +1,34 @@
+import warnings
+# To deactivate future warnings:
+# warnings.simplefilter(action='ignore', category=FutureWarning)
+warnings.filterwarnings("ignore")
+
 import numpy as np
 import platform
 import os
 import time
 import argparse
 from astropy.io import fits
+import tensorflow as tf
+import keras as krs
+import keras.backend.tensorflow_backend as ktf
+import models as nn_model
 
 # To deactivate warnings: https://github.com/tensorflow/tensorflow/issues/7778
 os.environ['TF_CPP_MIN_LOG_LEVEL']='2'
+tf.logging.set_verbosity(tf.logging.ERROR)
 
-if (platform.node() == 'viga'):
-    os.environ["THEANO_FLAGS"] = "mode=FAST_RUN,device=cpu,floatX=float32"
 
+# Using TensorFlow backend
 os.environ["KERAS_BACKEND"] = "tensorflow"
 
-if (platform.node() != 'viga'):
-    os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 
-import tensorflow as tf
-import keras.backend.tensorflow_backend as ktf
-
-import models as nn_model
+print('tensorflow version:',tf.__version__)
+print('keras version:',krs.__version__)
 
 class enhance(object):
 
     def __init__(self, inputFile, depth, model, activation, ntype, output):
-
-# Only allocate needed memory
-        config = tf.ConfigProto()
-        config.gpu_options.allow_growth=True
-        session = tf.Session(config=config)
-        ktf.set_session(session)
 
         self.input = inputFile
         self.depth = depth

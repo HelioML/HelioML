@@ -4,33 +4,19 @@ channels:
   - conda-forge
 
 dependencies:
-  - python=3.6
+  - python=3.7
   - pip
   - pip:
     - jupyter
     - jupyterlab
     - jupyter_contrib_nbextensions
-    - IPython
-    - Pillow
-    - bs4
     - tqdm
     - numpy
-    - pyyaml
-    - nbformat
-    - nbclean
-    - pandas
     - scipy
-    - sklearn
-    - seaborn
     - sunpy
-    - suds-jurko
     - astropy
-    - drms
-    - mpld3
     - matplotlib
-    - datetime
-    - lime
-    - torch
     - keras==2.2.4
     - tensorflow==1.13.1
-    - git+https://github.com/i4Ds/IRISreader.git@master
+    - h5py==2.10.0
+# https://github.com/tensorflow/tensorflow/issues/44467
