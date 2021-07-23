@@ -36,6 +36,10 @@ from astropy.convolution import convolve_fft
 import astropy.io.fits as fits
 import scipy.special as sp
 
+import sys
+import os
+print(sys.version)
+
 ---
 
 ## Introduction
@@ -269,10 +273,16 @@ from keras.engine.topology import Layer
 from keras.engine import InputSpec
 from keras.utils import conv_utils
 from models import ReflectionPadding2D
+tf.logging.set_verbosity(tf.logging.ERROR)
 
 # You can check your version of keras doing this
 import keras
-keras.__version__
+print('keras.__version__',keras.__version__)
+print('tf.__version__',tf.__version__)
+
+# https://github.com/tensorflow/tensorflow/issues/44467
+import h5py
+print('h5py.__version__',h5py.__version__)
 
 def Enhance_model(nx, ny, noise, depth, activation='relu', n_filters=64):
     """
@@ -433,11 +443,12 @@ def old_PSF3D():
 
 # We load two images of QS from the simulation and from the HMI satellite
 imSIMU = np.load('simulation.npy'); imHMI = np.load('hmi.npy')
-plt.rcParams['font.size'] = 8
 
 dx = 108 # Size of the sample
 
-plt.figure(figsize=(7,7))
+plt.figure(figsize=(10,10))
+plt.rcParams['font.size'] = 10
+
 plt.subplot(221)
 pHMI = imHMI[:dx,:dx]
 plt.title('HMI - Observation')
@@ -574,36 +585,36 @@ hdu.writeto('samples/nhmi.fits')
 
 run enhance.py -i samples/nhmi.fits -t intensity -o output/hmi_enhanced.fits
 
-plt.figure(figsize=(10,6))
-plt.rcParams['font.size'] = 8
+plt.figure(figsize=(10,10))
+plt.rcParams['font.size'] = 10
 
 mymap2 = fits.open('output/hmi_enhanced.fits')
 submap2 = np.nan_to_num(mymap2[0].data)
 plt.subplot(212); plt.title('HMI - Enhanced')
-plt.imshow(submap2[0:400,:],cmap='gray',interpolation='None',vmin=submap2.min(),vmax=submap2.max())
+plt.imshow(submap2[0:400,:],cmap='gray',interpolation='None',vmin=submap2.min(),vmax=submap2.max(),origin='lower')
 plt.xlabel('X [pixel]'); plt.ylabel('Y [pixel]')
 plt.locator_params(axis='y', nbins=4)
 plt.tight_layout()
 
 plt.subplot(211); plt.title('HMI - Original')
-plt.imshow(submap[0:200,:],cmap='gray',interpolation='None',vmin=submap2.min(),vmax=submap2.max())
+plt.imshow(submap[0:200,:],cmap='gray',interpolation='None',vmin=submap2.min(),vmax=submap2.max(),origin='lower')
 plt.tick_params(axis='x',labelbottom='off'); plt.ylabel('Y [pixel]')
-plt.tight_layout()
 plt.locator_params(axis='y', nbins=4)
+plt.tight_layout()
 
 However, we note that structures seen in the limb, such as elongated granules, share some similarity to some penumbral filaments, so these cases are already present in the training set.
 The fundamental reason for the failure is that the spatial contrast in the limb is very small, so the neural network does not know how to reconstruct the structures, thus creating artifacts. We speculate that these artifacts will not be significantly reduced even if limb synthetic observations are included in the training set.
 
-plt.figure()
-plt.rcParams['font.size'] = 8
+plt.figure(figsize=(10,10))
+plt.rcParams['font.size'] = 10
 
 plt.subplot(122); plt.title('HMI - Enhanced')
-plt.imshow(submap2[200:400,200:400],cmap='gray',interpolation='None',vmax=np.max(submap2[200:400,200:400]))
-plt.xlabel('X [pixel]'); plt.ylabel('Y [pixel]'); plt.locator_params(axis='y', nbins=4)
+plt.imshow(submap2[200:400,200:400],cmap='gray',interpolation='None',vmax=np.max(submap2[200:400,200:400]),origin='lower')
+plt.xlabel('X [pixel]'); plt.ylabel('Y [pixel]'); plt.locator_params(axis='both', nbins=4)
 
 plt.subplot(121); plt.title('HMI - Original')
-plt.imshow(submap[100:200,100:200],cmap='gray',interpolation='None',vmax=np.max(submap2[200:400,200:400]))
-plt.xlabel('X [pixel]'); plt.ylabel('Y [pixel]')
+plt.imshow(submap[100:200,100:200],cmap='gray',interpolation='None',vmax=np.max(submap2[200:400,200:400]),origin='lower')
+plt.xlabel('X [pixel]'); plt.ylabel('Y [pixel]'); plt.locator_params(axis='both', nbins=4)
 plt.tight_layout()
 
 ### A magnetogram example: AR 11158
@@ -728,21 +739,20 @@ pEhnhace = np.load('blos_paper1.npy')*1000.
 # It can be enable/disabled using damped=True/False in this function:
 pLucy = rlucy(pHMI, psf=psfHMI, niter=20, damped=False, verbose=False)
 
-plt.figure(figsize=(10,3.5))
-plt.rcParams['font.size'] = 8
+plt.figure(figsize=(10,10))
+plt.rcParams['font.size'] = 10
 
 plt.subplot(131)
-plt.imshow(pEhnhace,vmin=-1500,vmax=1500,cmap='gray',interpolation='None')
-plt.xlabel('X [pixel]'); plt.ylabel('Y [pixel]')
+plt.imshow(pEhnhace,vmin=-1500,vmax=1500,cmap='gray',interpolation='None',origin='lower')
+plt.xlabel('X [pixel]'); plt.ylabel('Y [pixel]'); plt.locator_params(axis='both', nbins=4)
 
 plt.subplot(132)
-plt.imshow(pLucy,vmin=-1500,vmax=1500,cmap='gray',interpolation='None')
-plt.xlabel('X [pixel]'); plt.tick_params(axis='y',labelleft='off');
-plt.tight_layout()
+plt.imshow(pLucy,vmin=-1500,vmax=1500,cmap='gray',interpolation='None',origin='lower')
+plt.xlabel('X [pixel]'); plt.tick_params(axis='y',labelleft='off'); plt.locator_params(axis='both', nbins=4)
 
 plt.subplot(133)
-plt.imshow(pLucy-pEhnhace,vmin=-200,vmax=200,cmap='gray',interpolation='None')
-plt.xlabel('X [pixel]'); plt.tick_params(axis='y',labelleft='off');
+plt.imshow(pLucy-pEhnhace,vmin=-200,vmax=200,cmap='gray',interpolation='None',origin='lower')
+plt.xlabel('X [pixel]'); plt.tick_params(axis='y',labelleft='off'); plt.locator_params(axis='both', nbins=4)
 plt.tight_layout()
 
 <a id="fig:compara2"></a>
