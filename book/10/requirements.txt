@@ -3,7 +3,7 @@ cdflib==0.3.19
 hdbscan==0.8.26
 HelioPy==0.15.0
 ipykernel==4.10.1
-ipython==5.5.0
+ipython==7.16.3
 ipython-genutils==0.2.0
 matplotlib==3.2.2
 numpy==1.18.5
