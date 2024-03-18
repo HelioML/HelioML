@@ -1,4 +1,4 @@
-astropy==4.1
+astropy==5.3.3
 cdflib==0.3.19
 hdbscan==0.8.26
 HelioPy==0.15.0
