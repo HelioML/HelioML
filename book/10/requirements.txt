@@ -9,7 +9,7 @@ matplotlib==3.2.2
 numpy==1.22.0
 pandas==1.1.5
 scikit-learn==1.5.0
-requests==2.32.0
+requests==2.32.4
 seaborn==0.11.0
 sunpy==2.0.5
 umap-learn==0.4.6
